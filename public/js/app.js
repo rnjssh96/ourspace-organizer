@@ -61597,6 +61597,44 @@ if (token) {
 
 /***/ }),
 
+/***/ "./resources/js/components/os-images-editor.tsx":
+/*!******************************************************!*\
+  !*** ./resources/js/components/os-images-editor.tsx ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const IMAGES = [
+    './demo-images/about_img_03.jpg',
+    './demo-images/item_image_05b.jpg',
+    './demo-images/item_image_06.jpg',
+];
+class OSImagesEditor extends react_1.default.Component {
+    _renderImages() {
+        return IMAGES.map((image) => (react_1.default.createElement("img", { src: image, className: "rounded" })));
+    }
+    render() {
+        return (react_1.default.createElement("div", { id: "os-images-editor" },
+            react_1.default.createElement("div", { id: "header" },
+                react_1.default.createElement("a", null,
+                    react_1.default.createElement("p", { className: "h5 os-grey-1" }, "\uCD94\uAC00"))),
+            react_1.default.createElement("div", { id: "body" }, this._renderImages()),
+            react_1.default.createElement("div", { id: "footer" },
+                react_1.default.createElement("p", { className: "h6 os-grey-1" }, "\uC0AC\uC9C4 \uC0AD\uC81C\uB294 Super-organizer \uC0AC\uC6A9\uC790\uB9CC \uAC00\uB2A5\uD569\uB2C8\uB2E4."))));
+    }
+}
+exports.default = OSImagesEditor;
+
+
+/***/ }),
+
 /***/ "./resources/js/components/os-rate-display.tsx":
 /*!*****************************************************!*\
   !*** ./resources/js/components/os-rate-display.tsx ***!
@@ -61617,8 +61655,8 @@ class OSRateDisplay extends react_1.default.Component {
             react_1.default.createElement("img", { src: "./assets/star-filled.svg" }),
             react_1.default.createElement("img", { src: "./assets/star-filled.svg" }),
             react_1.default.createElement("img", { src: "./assets/star-filled.svg" }),
-            react_1.default.createElement("img", { src: "./assets/star-filled.svg" }),
-            react_1.default.createElement("img", { src: "./assets/star-filled.svg" })));
+            react_1.default.createElement("img", { src: "./assets/star-outline.svg" }),
+            react_1.default.createElement("img", { src: "./assets/star-outline.svg" })));
     }
 }
 exports.default = OSRateDisplay;
@@ -61679,7 +61717,11 @@ const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules
 class HomeHeader extends react_1.default.Component {
     render() {
         return (react_1.default.createElement("header", { id: "home-header", className: "row" },
-            react_1.default.createElement("div", { id: "main" }),
+            react_1.default.createElement("div", { id: "main" },
+                react_1.default.createElement("img", { src: "./demo-images/item_image_02.jpg", className: "rounded-circle" }),
+                react_1.default.createElement("div", { id: "profile-text" },
+                    react_1.default.createElement("p", { className: "h4" }, "\uAC15\uB0A8\uAC74\uBB3C\uC8FC"),
+                    react_1.default.createElement("p", { className: "h6 os-grey-1" }, "Organizer"))),
             react_1.default.createElement("div", { id: "left-buttons" },
                 react_1.default.createElement("button", { type: "button", className: "btn btn-outline-secondary" }, "Logout"))));
     }
@@ -61705,6 +61747,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 const os_seat_controller_1 = __importDefault(__webpack_require__(/*! ../components/os-seat-controller */ "./resources/js/components/os-seat-controller.tsx"));
 const os_rate_display_1 = __importDefault(__webpack_require__(/*! ../components/os-rate-display */ "./resources/js/components/os-rate-display.tsx"));
+const os_images_editor_1 = __importDefault(__webpack_require__(/*! ../components/os-images-editor */ "./resources/js/components/os-images-editor.tsx"));
 class HomeMainView extends react_1.default.Component {
     render() {
         return (react_1.default.createElement("div", { id: "home-main-view" },
@@ -61714,15 +61757,22 @@ class HomeMainView extends react_1.default.Component {
                     react_1.default.createElement("div", { id: "general-info" },
                         react_1.default.createElement("div", { id: "title-row" },
                             react_1.default.createElement("p", { className: "h4" }, "\uC2A4\uD0C0\uBC85\uC2A4 \uC790\uC591\uC810"),
-                            react_1.default.createElement("p", { id: "txt-types", className: "h5 os-grey-1" }, "\uB3C4\uC11C\uAD00 | \uCE74\uD398")),
+                            react_1.default.createElement("p", { id: "txt-types", className: "h6 os-grey-1" }, "\uB3C4\uC11C\uAD00 | \uCE74\uD398")),
                         react_1.default.createElement("div", { className: "info-row" },
-                            react_1.default.createElement("p", { className: "h6 os-grey-1" }, "\uC6D0\uC8FC the potato factory")),
+                            react_1.default.createElement("p", { className: "h6 os-grey-1" }, "\uC6D0\uC8FC the potato factory"),
+                            react_1.default.createElement("a", null,
+                                react_1.default.createElement("p", { className: "h6 os-grey-1" }, "\uC218\uC815"))),
                         react_1.default.createElement("div", { className: "info-row" },
-                            react_1.default.createElement("p", { className: "h6 os-grey-1" }, "00:00 - 24:00 / Mon ~ Sun")))),
+                            react_1.default.createElement("p", { className: "h6 os-grey-1" }, "00:00 - 24:00 / Mon ~ Sun"),
+                            react_1.default.createElement("a", null,
+                                react_1.default.createElement("p", { className: "h6 os-grey-1" }, "\uC218\uC815"))))),
                 react_1.default.createElement("div", { id: "right" },
                     react_1.default.createElement(os_rate_display_1.default, null),
                     react_1.default.createElement(os_seat_controller_1.default, null))),
-            react_1.default.createElement("div", { id: "body" })));
+            react_1.default.createElement("div", { id: "body" },
+                react_1.default.createElement("div", { id: "left" },
+                    react_1.default.createElement(os_images_editor_1.default, null)),
+                react_1.default.createElement("div", { id: "right" }))));
     }
 }
 exports.default = HomeMainView;

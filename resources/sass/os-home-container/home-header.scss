@@ -17,11 +17,34 @@
     background-color: $white;
 
     // border
-    border-bottom: 1px solid $grey-1;
+    border-bottom: 0.5px solid $grey-2;
 
     & > #main {
         // size
         flex: 1;
+
+        // flex
+        display: flex;
+        align-items: center;
+
+        & > img {
+            height: $os-header-profile-image-size;
+            width: $os-header-profile-image-size;
+        }
+
+        #profile-text {
+            // flex
+            display: flex;
+            flex-direction: column;
+
+            // margin
+            margin-left: 1rem;
+
+            p {
+                // margin
+                margin-bottom: 0;
+            }
+        }
     }
 
     & > #left-buttons {

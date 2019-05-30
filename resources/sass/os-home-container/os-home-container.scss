@@ -8,24 +8,21 @@
 
         & > #spaces-tab {
             // size
-            flex: 1;
-            max-height: 100%;
+            width: 25%;
+            height: 100%;
 
             // flex
             display: flex;
             flex-direction: column;
 
             // border
-            border-right: 1px solid $grey-1;
+            border-right: 0.5px solid $grey-2;
         }
 
         & > #main-view {
             // size
-            flex: 3;
-
-            // flex
-            display: flex;
-            flex-direction: column;
+            width: 75%;
+            height: 100%;
         }
     }
 }

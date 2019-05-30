@@ -1,10 +1,29 @@
 #home-main-view {
     // size
-    flex: 1;
+    height: 100%;
+    width: 100%;
 
     // flex
     display: flex;
     flex-direction: column;
+
+    #left {
+        // size
+        flex: 1;
+
+        // padding
+        padding-right: 1rem;
+        padding-left: 1rem;
+    }
+
+    #right {
+        // size
+        width: $os-main-view-left-width;
+
+        // margin
+        margin-right: 1rem;
+        margin-left: 1rem;
+    }
 
     & > #overview {
         // flex
@@ -15,16 +34,12 @@
         padding-bottom: 1rem;
 
         & > #left {
-            // size
-            flex: 1;
-
             // flex
             display: flex;
             align-items: center;
 
-            // padding
-            padding-right: 1rem;
-            padding-left: 1rem;
+            // border
+            border-right: 1px solid $grey-1;
 
             & > img {
                 // size
@@ -76,13 +91,6 @@
             flex-direction: column;
             align-items: center;
 
-            // border
-            border-left: 1px solid $grey-1;
-
-            // padding
-            padding-right: 1rem;
-            padding-left: 1rem;
-
             & > :not(:first-child) {
                 // margin
                 margin-top: 1rem;
@@ -93,5 +101,23 @@
     & > #body {
         // size
         flex: 1;
+        width: 100%;
+
+        // flex
+        display: flex;
+
+        & > #left {
+            // flex
+            display: flex;
+            flex-direction: column;
+
+            // scrollable
+            max-height: 100%;
+            overflow: scroll;
+        }
+
+        & > #right {
+            background-color: firebrick;
+        }
     }
 }

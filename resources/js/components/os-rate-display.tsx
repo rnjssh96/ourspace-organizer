@@ -7,8 +7,8 @@ export default class OSRateDisplay extends React.Component {
                 <img src="./assets/star-filled.svg" />
                 <img src="./assets/star-filled.svg" />
                 <img src="./assets/star-filled.svg" />
-                <img src="./assets/star-filled.svg" />
-                <img src="./assets/star-filled.svg" />
+                <img src="./assets/star-outline.svg" />
+                <img src="./assets/star-outline.svg" />
             </div>
         );
     }
