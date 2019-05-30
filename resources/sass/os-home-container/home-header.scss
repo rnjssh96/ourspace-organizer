@@ -1,0 +1,32 @@
+#home-header {
+    // fixed top
+    position: absolute;
+    top: 0;
+    z-index: 10;
+
+    // size
+    height: $os-header-height;
+    width: 100vw;
+
+    // flex
+    display: flex;
+    padding-right: $os-horizontal-paading;
+    padding-left: $os-horizontal-paading;
+
+    // background
+    background-color: $white;
+
+    // border
+    border-bottom: 1px solid $grey-1;
+
+    & > #main {
+        // size
+        flex: 1;
+    }
+
+    & > #left-buttons {
+        // flex
+        display: flex;
+        align-items: center;
+    }
+}

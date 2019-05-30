@@ -61535,7 +61535,7 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
  */
 
 
-__webpack_require__(/*! ./components/Example */ "./resources/js/components/Example.tsx");
+__webpack_require__(/*! ./os-home-container */ "./resources/js/os-home-container/index.tsx");
 
 /***/ }),
 
@@ -61597,10 +61597,176 @@ if (token) {
 
 /***/ }),
 
-/***/ "./resources/js/components/Example.tsx":
-/*!*********************************************!*\
-  !*** ./resources/js/components/Example.tsx ***!
-  \*********************************************/
+/***/ "./resources/js/components/os-rate-display.tsx":
+/*!*****************************************************!*\
+  !*** ./resources/js/components/os-rate-display.tsx ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+class OSRateDisplay extends react_1.default.Component {
+    render() {
+        return (react_1.default.createElement("div", { id: "os-rate-display" },
+            react_1.default.createElement("img", { src: "./assets/star-filled.svg" }),
+            react_1.default.createElement("img", { src: "./assets/star-filled.svg" }),
+            react_1.default.createElement("img", { src: "./assets/star-filled.svg" }),
+            react_1.default.createElement("img", { src: "./assets/star-filled.svg" }),
+            react_1.default.createElement("img", { src: "./assets/star-filled.svg" })));
+    }
+}
+exports.default = OSRateDisplay;
+
+
+/***/ }),
+
+/***/ "./resources/js/components/os-seat-controller.tsx":
+/*!********************************************************!*\
+  !*** ./resources/js/components/os-seat-controller.tsx ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+class OSSeatController extends react_1.default.Component {
+    render() {
+        return (react_1.default.createElement("div", { id: "os-seat-controller" },
+            react_1.default.createElement("p", { className: "h6 os-grey-1" },
+                react_1.default.createElement("b", null, "\uC88C\uC11D \uD604\uD669")),
+            react_1.default.createElement("div", { id: "controller" },
+                react_1.default.createElement("div", { id: "current-seats" },
+                    react_1.default.createElement("p", { className: "h4 os-grey-1" },
+                        react_1.default.createElement("b", null, "15"))),
+                react_1.default.createElement("div", { id: "bottom-controll" },
+                    react_1.default.createElement("div", { className: "input-group" },
+                        react_1.default.createElement("input", { id: "increment-input", type: "number", className: "form-control", placeholder: "\uC88C\uC11D \uC218" }),
+                        react_1.default.createElement("div", { className: "input-group-append" },
+                            react_1.default.createElement("button", { className: "btn btn-secondary", type: "button" }, "\uCD94\uAC00"),
+                            react_1.default.createElement("button", { className: "btn btn-secondary", type: "button" }, "\uC81C\uAC70")))))));
+    }
+}
+exports.default = OSSeatController;
+
+
+/***/ }),
+
+/***/ "./resources/js/os-home-container/home-header.tsx":
+/*!********************************************************!*\
+  !*** ./resources/js/os-home-container/home-header.tsx ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+class HomeHeader extends react_1.default.Component {
+    render() {
+        return (react_1.default.createElement("header", { id: "home-header", className: "row" },
+            react_1.default.createElement("div", { id: "main" }),
+            react_1.default.createElement("div", { id: "left-buttons" },
+                react_1.default.createElement("button", { type: "button", className: "btn btn-outline-secondary" }, "Logout"))));
+    }
+}
+exports.default = HomeHeader;
+
+
+/***/ }),
+
+/***/ "./resources/js/os-home-container/home-main-view.tsx":
+/*!***********************************************************!*\
+  !*** ./resources/js/os-home-container/home-main-view.tsx ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const os_seat_controller_1 = __importDefault(__webpack_require__(/*! ../components/os-seat-controller */ "./resources/js/components/os-seat-controller.tsx"));
+const os_rate_display_1 = __importDefault(__webpack_require__(/*! ../components/os-rate-display */ "./resources/js/components/os-rate-display.tsx"));
+class HomeMainView extends react_1.default.Component {
+    render() {
+        return (react_1.default.createElement("div", { id: "home-main-view" },
+            react_1.default.createElement("div", { id: "overview" },
+                react_1.default.createElement("div", { id: "left" },
+                    react_1.default.createElement("img", { src: "./demo-images/about_img_01.jpg", className: "rounded" }),
+                    react_1.default.createElement("div", { id: "general-info" },
+                        react_1.default.createElement("div", { id: "title-row" },
+                            react_1.default.createElement("p", { className: "h4" }, "\uC2A4\uD0C0\uBC85\uC2A4 \uC790\uC591\uC810"),
+                            react_1.default.createElement("p", { id: "txt-types", className: "h5 os-grey-1" }, "\uB3C4\uC11C\uAD00 | \uCE74\uD398")),
+                        react_1.default.createElement("div", { className: "info-row" },
+                            react_1.default.createElement("p", { className: "h6 os-grey-1" }, "\uC6D0\uC8FC the potato factory")),
+                        react_1.default.createElement("div", { className: "info-row" },
+                            react_1.default.createElement("p", { className: "h6 os-grey-1" }, "00:00 - 24:00 / Mon ~ Sun")))),
+                react_1.default.createElement("div", { id: "right" },
+                    react_1.default.createElement(os_rate_display_1.default, null),
+                    react_1.default.createElement(os_seat_controller_1.default, null))),
+            react_1.default.createElement("div", { id: "body" })));
+    }
+}
+exports.default = HomeMainView;
+
+
+/***/ }),
+
+/***/ "./resources/js/os-home-container/home-spaces-tab.tsx":
+/*!************************************************************!*\
+  !*** ./resources/js/os-home-container/home-spaces-tab.tsx ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+class HomeSpacesTab extends react_1.default.Component {
+    _renderSpace() {
+        return (react_1.default.createElement("a", { className: "space-item" },
+            react_1.default.createElement("img", { src: "./demo-images/about_img_01.jpg", className: "rounded" }),
+            react_1.default.createElement("div", { className: "space-item-body" },
+                react_1.default.createElement("p", { className: "h5" }, "\uC2A4\uD0C0\uBC85\uC2A4 \uC790\uC591\uC810"),
+                react_1.default.createElement("p", { className: "h6 os-grey-1" }, "\uC11C\uC6B8 \uC1A1\uD30C\uAD6C \uC62C\uB9BC\uD53D\uB85C 35\uAE38 104"))));
+    }
+    render() {
+        return (react_1.default.createElement("div", { id: "home-spaces-tab" },
+            this._renderSpace(),
+            this._renderSpace()));
+    }
+}
+exports.default = HomeSpacesTab;
+
+
+/***/ }),
+
+/***/ "./resources/js/os-home-container/index.tsx":
+/*!**************************************************!*\
+  !*** ./resources/js/os-home-container/index.tsx ***!
+  \**************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -61612,19 +61778,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 const react_dom_1 = __importDefault(__webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js"));
-class Example extends react_1.default.Component {
+const home_header_1 = __importDefault(__webpack_require__(/*! ./home-header */ "./resources/js/os-home-container/home-header.tsx"));
+const home_spaces_tab_1 = __importDefault(__webpack_require__(/*! ./home-spaces-tab */ "./resources/js/os-home-container/home-spaces-tab.tsx"));
+const home_main_view_1 = __importDefault(__webpack_require__(/*! ./home-main-view */ "./resources/js/os-home-container/home-main-view.tsx"));
+class OSHomeContainer extends react_1.default.Component {
     render() {
-        return (react_1.default.createElement("div", { className: "container" },
-            react_1.default.createElement("div", { className: "row justify-content-center" },
-                react_1.default.createElement("div", { className: "col-md-8" },
-                    react_1.default.createElement("div", { className: "card" },
-                        react_1.default.createElement("div", { className: "card-header" }, "Example Component"),
-                        react_1.default.createElement("div", { className: "card-body" }, "I'm an example component!"))))));
+        return (react_1.default.createElement("div", { id: "os-home-container", className: "container-fluid" },
+            react_1.default.createElement(home_header_1.default, null),
+            react_1.default.createElement("div", { id: "body", className: "row" },
+                react_1.default.createElement("div", { id: "spaces-tab" },
+                    react_1.default.createElement(home_spaces_tab_1.default, null)),
+                react_1.default.createElement("div", { id: "main-view" },
+                    react_1.default.createElement(home_main_view_1.default, null)))));
     }
 }
-exports.default = Example;
-if (document.getElementById('example')) {
-    react_dom_1.default.render(react_1.default.createElement(Example, null), document.getElementById('example'));
+if (document.getElementById('os-home-container')) {
+    react_dom_1.default.render(react_1.default.createElement(OSHomeContainer, null), document.getElementById('os-home-container'));
 }
 
 

@@ -1,0 +1,45 @@
+#home-spaces-tab {
+    // size
+    flex: 1;
+
+    // flex
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    // overflow
+    max-height: 100%;
+    overflow: scroll;
+
+    .space-item {
+        // flex
+        display: flex;
+        align-items: flex-end;
+
+        // padding
+        padding-left: $os-horizontal-paading;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+
+        &:hover {
+            // hover effect
+            background-color: $grey-2;
+        }
+
+        & > img {
+            // size
+            height: 5rem;
+            width: 5rem;
+        }
+
+        & > .space-item-body {
+            //flex
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+
+            // margin
+            margin-left: 0.7rem;
+        }
+    }
+}

@@ -1,0 +1,97 @@
+#home-main-view {
+    // size
+    flex: 1;
+
+    // flex
+    display: flex;
+    flex-direction: column;
+
+    & > #overview {
+        // flex
+        display: flex;
+
+        // padding
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+
+        & > #left {
+            // size
+            flex: 1;
+
+            // flex
+            display: flex;
+            align-items: center;
+
+            // padding
+            padding-right: 1rem;
+            padding-left: 1rem;
+
+            & > img {
+                // size
+                height: 8rem;
+                width: 8rem;
+            }
+
+            & > #general-info {
+                // size
+                flex: 1;
+
+                // flex
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+
+                // padding
+                padding-top: 0.5rem;
+                padding-bottom: 0.5rem;
+
+                // margin
+                margin-left: 1rem;
+
+                & > #title-row {
+                    // flex
+                    display: flex;
+                    align-items: flex-end;
+
+                    // margin
+                    margin-bottom: 0.5rem;
+
+                    & > #txt-types {
+                        // margin
+                        margin-left: 1rem;
+                    }
+                }
+
+                & > .info-row {
+                    // flex
+                    display: flex;
+                    justify-content: space-between;
+                }
+            }
+        }
+
+        & > #right {
+            // flex
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            // border
+            border-left: 1px solid $grey-1;
+
+            // padding
+            padding-right: 1rem;
+            padding-left: 1rem;
+
+            & > :not(:first-child) {
+                // margin
+                margin-top: 1rem;
+            }
+        }
+    }
+
+    & > #body {
+        // size
+        flex: 1;
+    }
+}
