@@ -2,7 +2,12 @@
     // size
     height: 100%;
 
-    // border
-    border-radius: 1rem;
-    border: 0.5px solid $grey-2;
+    & > #map {
+        // size
+        height: 100%;
+
+        // border
+        border-radius: 1rem;
+        border: 0.5px solid $grey-2;
+    }
 }
