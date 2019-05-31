@@ -61597,6 +61597,42 @@ if (token) {
 
 /***/ }),
 
+/***/ "./resources/js/components/os-amenity-tags.tsx":
+/*!*****************************************************!*\
+  !*** ./resources/js/components/os-amenity-tags.tsx ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+class OSAmenityTags extends react_1.default.Component {
+    _renderAmenity(amenity, name) {
+        return (react_1.default.createElement("div", { className: "amenity" },
+            react_1.default.createElement("i", { className: "material-icons" }, amenity),
+            react_1.default.createElement("p", { className: "h6" }, name)));
+    }
+    render() {
+        return (react_1.default.createElement("div", { id: "os-amenity-tags" },
+            react_1.default.createElement("div", { id: "amenities" },
+                this._renderAmenity('wifi', 'Wi-Fi'),
+                this._renderAmenity('local_cafe', 'Coffee'),
+                this._renderAmenity('local_dining', 'Food'),
+                this._renderAmenity('wifi', 'Wi-Fi'),
+                this._renderAmenity('local_cafe', 'Coffee'),
+                this._renderAmenity('local_dining', 'Food'))));
+    }
+}
+exports.default = OSAmenityTags;
+
+
+/***/ }),
+
 /***/ "./resources/js/components/os-comments-viewer.tsx":
 /*!********************************************************!*\
   !*** ./resources/js/components/os-comments-viewer.tsx ***!
@@ -61708,6 +61744,31 @@ class OSImagesEditor extends react_1.default.Component {
     }
 }
 exports.default = OSImagesEditor;
+
+
+/***/ }),
+
+/***/ "./resources/js/components/os-loaction-map.tsx":
+/*!*****************************************************!*\
+  !*** ./resources/js/components/os-loaction-map.tsx ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+class OSLoactionMap extends react_1.default.Component {
+    render() {
+        return (react_1.default.createElement("div", { id: "os-location-map" },
+            react_1.default.createElement("div", { id: "amenities" })));
+    }
+}
+exports.default = OSLoactionMap;
 
 
 /***/ }),
@@ -61826,6 +61887,8 @@ const os_seat_controller_1 = __importDefault(__webpack_require__(/*! ../componen
 const os_rate_display_1 = __importDefault(__webpack_require__(/*! ../components/os-rate-display */ "./resources/js/components/os-rate-display.tsx"));
 const os_images_editor_1 = __importDefault(__webpack_require__(/*! ../components/os-images-editor */ "./resources/js/components/os-images-editor.tsx"));
 const os_comments_viewer_1 = __importDefault(__webpack_require__(/*! ../components/os-comments-viewer */ "./resources/js/components/os-comments-viewer.tsx"));
+const os_amenity_tags_1 = __importDefault(__webpack_require__(/*! ../components/os-amenity-tags */ "./resources/js/components/os-amenity-tags.tsx"));
+const os_loaction_map_1 = __importDefault(__webpack_require__(/*! ../components/os-loaction-map */ "./resources/js/components/os-loaction-map.tsx"));
 class HomeMainView extends react_1.default.Component {
     render() {
         return (react_1.default.createElement("div", { id: "home-main-view" },
@@ -61859,7 +61922,10 @@ class HomeMainView extends react_1.default.Component {
                 react_1.default.createElement("div", { id: "left" },
                     react_1.default.createElement(os_images_editor_1.default, null),
                     react_1.default.createElement(os_comments_viewer_1.default, null)),
-                react_1.default.createElement("div", { id: "right" }))));
+                react_1.default.createElement("div", { id: "right" },
+                    react_1.default.createElement(os_amenity_tags_1.default, null),
+                    react_1.default.createElement("div", { id: "location-map" },
+                        react_1.default.createElement(os_loaction_map_1.default, null))))));
     }
 }
 exports.default = HomeMainView;

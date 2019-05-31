@@ -10865,21 +10865,25 @@ a.text-dark:focus {
   display: flex;
 }
 
-#home-main-view > #body > #left {
+#home-main-view > #body > * {
   display: flex;
   flex-direction: column;
-  max-height: 100%;
-  overflow: scroll;
   padding-top: 1rem;
   padding-bottom: 1rem;
+}
+
+#home-main-view > #body > #left {
+  max-height: 100%;
+  overflow: scroll;
 }
 
 #home-main-view > #body > #left > :not(:first-child) {
   margin-top: 2.5rem;
 }
 
-#home-main-view > #body > #right {
-  background-color: firebrick;
+#home-main-view > #body > #right > #location-map {
+  flex: 1;
+  margin-top: 1rem;
 }
 
 #os-seat-controller {
@@ -11014,5 +11018,36 @@ a.text-dark:focus {
 
 #os-comments-viewer > #body > .comment p {
   margin-bottom: 0;
+}
+
+#os-amenity-tags > #amenities {
+  display: flex;
+  max-width: 100%;
+  overflow: scroll;
+  padding: 1rem;
+}
+
+#os-amenity-tags > #amenities > .amenity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#os-amenity-tags > #amenities > .amenity:not(:first-child) {
+  margin-left: 1rem;
+}
+
+#os-amenity-tags > #amenities > .amenity > i {
+  font-size: 2.5rem;
+}
+
+#os-amenity-tags > #amenities > .amenity > p {
+  margin-bottom: 0;
+}
+
+#os-location-map {
+  height: 100%;
+  border-radius: 1rem;
+  border: 0.5px solid #e5e5e5;
 }
 

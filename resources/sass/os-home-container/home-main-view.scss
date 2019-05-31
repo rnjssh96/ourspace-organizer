@@ -117,18 +117,20 @@
         // flex
         display: flex;
 
-        & > #left {
+        & > * {
             // flex
             display: flex;
             flex-direction: column;
 
-            // scrollable
-            max-height: 100%;
-            overflow: scroll;
-
             // padding
             padding-top: 1rem;
             padding-bottom: 1rem;
+        }
+
+        & > #left {
+            // scrollable
+            max-height: 100%;
+            overflow: scroll;
 
             & > :not(:first-child) {
                 // margin
@@ -137,7 +139,13 @@
         }
 
         & > #right {
-            background-color: firebrick;
+            & > #location-map {
+                // size
+                flex: 1;
+
+                // margin
+                margin-top: 1rem;
+            }
         }
     }
 }

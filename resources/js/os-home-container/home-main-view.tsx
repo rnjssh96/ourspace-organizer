@@ -4,6 +4,8 @@ import OSSeatController from '../components/os-seat-controller';
 import OSRateDisplay from '../components/os-rate-display';
 import OSImagesEditor from '../components/os-images-editor';
 import OSCommentsViewer from '../components/os-comments-viewer';
+import OSAmenityTags from '../components/os-amenity-tags';
+import OSLoactionMap from '../components/os-loaction-map';
 
 export default class HomeMainView extends React.Component {
     render() {
@@ -67,7 +69,12 @@ export default class HomeMainView extends React.Component {
                         <OSImagesEditor />
                         <OSCommentsViewer />
                     </div>
-                    <div id="right" />
+                    <div id="right">
+                        <OSAmenityTags />
+                        <div id="location-map">
+                            <OSLoactionMap />
+                        </div>
+                    </div>
                 </div>
             </div>
         );
