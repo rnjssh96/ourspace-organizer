@@ -61597,6 +61597,79 @@ if (token) {
 
 /***/ }),
 
+/***/ "./resources/js/components/os-comments-viewer.tsx":
+/*!********************************************************!*\
+  !*** ./resources/js/components/os-comments-viewer.tsx ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const COMMENTS = [
+    {
+        commentID: 1,
+        userUsername: 'Inchan',
+        date: '2019-0-29 | 오후 5시 30분',
+        comment: 'this is a great place to work',
+    },
+    {
+        commentID: 2,
+        userUsername: 'Inchan',
+        date: '2019-0-29 | 오후 5시 30분',
+        comment: 'this is a great place to work',
+    },
+    {
+        commentID: 3,
+        userUsername: 'Inchan',
+        date: '2019-0-29 | 오후 5시 30분',
+        comment: 'this is a great place to work',
+    },
+    {
+        commentID: 4,
+        userUsername: 'Inchan',
+        date: '2019-0-29 | 오후 5시 30분',
+        comment: 'this is a great place to work',
+    },
+];
+class OSCommentsViewer extends react_1.default.Component {
+    _renderEmpty() {
+        return (react_1.default.createElement("div", { id: "empty-comment", className: "comment" },
+            react_1.default.createElement("p", { className: "h6 os-grey-1" }, "\uC0AC\uC6A9\uC790\uAC00 \uB0A8\uAE34 \uD6C4\uAE30\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.")));
+    }
+    _renderComment(comment) {
+        return (react_1.default.createElement("div", { key: comment.commentID, className: "comment" },
+            react_1.default.createElement("div", { id: "top" },
+                react_1.default.createElement("p", { className: "h5" },
+                    react_1.default.createElement("b", null, "inchan")),
+                react_1.default.createElement("p", { className: "h6 os-grey-1" }, "2019-0-29 | \uC624\uD6C4 5\uC2DC 30\uBD84")),
+            react_1.default.createElement("p", { className: "h5" }, "this is a great place to work")));
+    }
+    _renderCommentsBox(comments) {
+        if (comments.length <= 0) {
+            return this._renderEmpty();
+        }
+        else {
+            return comments.map((comment) => this._renderComment(comment));
+        }
+    }
+    render() {
+        return (react_1.default.createElement("div", { id: "os-comments-viewer" },
+            react_1.default.createElement("div", { id: "header" },
+                react_1.default.createElement("p", { className: "h4" }, "\uD6C4\uAE30")),
+            react_1.default.createElement("div", { id: "body" }, this._renderCommentsBox(COMMENTS))));
+    }
+}
+exports.default = OSCommentsViewer;
+
+
+/***/ }),
+
 /***/ "./resources/js/components/os-images-editor.tsx":
 /*!******************************************************!*\
   !*** ./resources/js/components/os-images-editor.tsx ***!
@@ -61618,16 +61691,20 @@ const IMAGES = [
 ];
 class OSImagesEditor extends react_1.default.Component {
     _renderImages() {
-        return IMAGES.map((image) => (react_1.default.createElement("img", { src: image, className: "rounded" })));
+        return IMAGES.map((image) => (react_1.default.createElement("img", { key: image, src: image, className: "rounded" })));
     }
     render() {
         return (react_1.default.createElement("div", { id: "os-images-editor" },
             react_1.default.createElement("div", { id: "header" },
                 react_1.default.createElement("a", null,
-                    react_1.default.createElement("p", { className: "h5 os-grey-1" }, "\uCD94\uAC00"))),
+                    react_1.default.createElement("p", { className: "h6 os-grey-1" },
+                        react_1.default.createElement("i", { className: "material-icons" }, "add"),
+                        "\uCD94\uAC00"))),
             react_1.default.createElement("div", { id: "body" }, this._renderImages()),
             react_1.default.createElement("div", { id: "footer" },
-                react_1.default.createElement("p", { className: "h6 os-grey-1" }, "\uC0AC\uC9C4 \uC0AD\uC81C\uB294 Super-organizer \uC0AC\uC6A9\uC790\uB9CC \uAC00\uB2A5\uD569\uB2C8\uB2E4."))));
+                react_1.default.createElement("p", { className: "h6 os-grey-1" },
+                    react_1.default.createElement("i", { className: "material-icons" }, "info"),
+                    "\uC0AC\uC9C4 \uC0AD\uC81C\uB294 Super-organizer \uC0AC\uC6A9\uC790\uB9CC \uAC00\uB2A5\uD569\uB2C8\uB2E4."))));
     }
 }
 exports.default = OSImagesEditor;
@@ -61723,7 +61800,7 @@ class HomeHeader extends react_1.default.Component {
                     react_1.default.createElement("p", { className: "h4" }, "\uAC15\uB0A8\uAC74\uBB3C\uC8FC"),
                     react_1.default.createElement("p", { className: "h6 os-grey-1" }, "Organizer"))),
             react_1.default.createElement("div", { id: "left-buttons" },
-                react_1.default.createElement("button", { type: "button", className: "btn btn-outline-secondary" }, "Logout"))));
+                react_1.default.createElement("button", { type: "button", className: "btn btn-outline-light" }, "Logout"))));
     }
 }
 exports.default = HomeHeader;
@@ -61748,6 +61825,7 @@ const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules
 const os_seat_controller_1 = __importDefault(__webpack_require__(/*! ../components/os-seat-controller */ "./resources/js/components/os-seat-controller.tsx"));
 const os_rate_display_1 = __importDefault(__webpack_require__(/*! ../components/os-rate-display */ "./resources/js/components/os-rate-display.tsx"));
 const os_images_editor_1 = __importDefault(__webpack_require__(/*! ../components/os-images-editor */ "./resources/js/components/os-images-editor.tsx"));
+const os_comments_viewer_1 = __importDefault(__webpack_require__(/*! ../components/os-comments-viewer */ "./resources/js/components/os-comments-viewer.tsx"));
 class HomeMainView extends react_1.default.Component {
     render() {
         return (react_1.default.createElement("div", { id: "home-main-view" },
@@ -61756,22 +61834,31 @@ class HomeMainView extends react_1.default.Component {
                     react_1.default.createElement("img", { src: "./demo-images/about_img_01.jpg", className: "rounded" }),
                     react_1.default.createElement("div", { id: "general-info" },
                         react_1.default.createElement("div", { id: "title-row" },
-                            react_1.default.createElement("p", { className: "h4" }, "\uC2A4\uD0C0\uBC85\uC2A4 \uC790\uC591\uC810"),
-                            react_1.default.createElement("p", { id: "txt-types", className: "h6 os-grey-1" }, "\uB3C4\uC11C\uAD00 | \uCE74\uD398")),
+                            react_1.default.createElement("p", { className: "h4 os-text-ellipsis" }, "\uC2A4\uD0C0\uBC85\uC2A4 \uC790\uC591\uC810"),
+                            react_1.default.createElement("p", { id: "txt-types", className: "h6 os-grey-1 os-text-ellipsis" }, "\uB3C4\uC11C\uAD00 | \uCE74\uD398")),
                         react_1.default.createElement("div", { className: "info-row" },
-                            react_1.default.createElement("p", { className: "h6 os-grey-1" }, "\uC6D0\uC8FC the potato factory"),
+                            react_1.default.createElement("p", { className: "h6 os-grey-1 os-text-ellipsis" },
+                                react_1.default.createElement("i", { className: "material-icons" }, "location_on"),
+                                "\uC6D0\uC8FC the potato factory"),
                             react_1.default.createElement("a", null,
-                                react_1.default.createElement("p", { className: "h6 os-grey-1" }, "\uC218\uC815"))),
+                                react_1.default.createElement("p", { className: "h6 os-grey-1" },
+                                    react_1.default.createElement("i", { className: "material-icons" }, "edit"),
+                                    "\uC218\uC815"))),
                         react_1.default.createElement("div", { className: "info-row" },
-                            react_1.default.createElement("p", { className: "h6 os-grey-1" }, "00:00 - 24:00 / Mon ~ Sun"),
+                            react_1.default.createElement("p", { className: "h6 os-grey-1 os-text-ellipsis" },
+                                react_1.default.createElement("i", { className: "material-icons" }, "access_time"),
+                                "00:00 - 24:00 / Mon ~ Sun"),
                             react_1.default.createElement("a", null,
-                                react_1.default.createElement("p", { className: "h6 os-grey-1" }, "\uC218\uC815"))))),
+                                react_1.default.createElement("p", { className: "h6 os-grey-1" },
+                                    react_1.default.createElement("i", { className: "material-icons" }, "edit"),
+                                    "\uC218\uC815"))))),
                 react_1.default.createElement("div", { id: "right" },
                     react_1.default.createElement(os_rate_display_1.default, null),
                     react_1.default.createElement(os_seat_controller_1.default, null))),
             react_1.default.createElement("div", { id: "body" },
                 react_1.default.createElement("div", { id: "left" },
-                    react_1.default.createElement(os_images_editor_1.default, null)),
+                    react_1.default.createElement(os_images_editor_1.default, null),
+                    react_1.default.createElement(os_comments_viewer_1.default, null)),
                 react_1.default.createElement("div", { id: "right" }))));
     }
 }
@@ -61795,16 +61882,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 class HomeSpacesTab extends react_1.default.Component {
-    _renderSpace() {
-        return (react_1.default.createElement("a", { className: "space-item" },
+    _renderSpace(selcted = false) {
+        return (react_1.default.createElement("a", { className: `space-item ${selcted ? 'selected' : ''}` },
             react_1.default.createElement("img", { src: "./demo-images/about_img_01.jpg", className: "rounded" }),
             react_1.default.createElement("div", { className: "space-item-body" },
-                react_1.default.createElement("p", { className: "h5" }, "\uC2A4\uD0C0\uBC85\uC2A4 \uC790\uC591\uC810"),
-                react_1.default.createElement("p", { className: "h6 os-grey-1" }, "\uC11C\uC6B8 \uC1A1\uD30C\uAD6C \uC62C\uB9BC\uD53D\uB85C 35\uAE38 104"))));
+                react_1.default.createElement("p", { className: "h5 os-text-ellipsis" }, "\uC2A4\uD0C0\uBC85\uC2A4 \uC790\uC591\uC810"),
+                react_1.default.createElement("p", { className: "h6 os-grey-1" },
+                    react_1.default.createElement("i", { className: "material-icons" }, "location_on"),
+                    "\uC11C\uC6B8 \uC1A1\uD30C\uAD6C \uC62C\uB9BC\uD53D\uB85C 35\uAE38 104"))));
     }
     render() {
         return (react_1.default.createElement("div", { id: "home-spaces-tab" },
-            this._renderSpace(),
+            this._renderSpace(true),
             this._renderSpace()));
     }
 }

@@ -15,7 +15,7 @@ export default class HomeHeader extends React.Component {
                     </div>
                 </div>
                 <div id="left-buttons">
-                    <button type="button" className="btn btn-outline-secondary">
+                    <button type="button" className="btn btn-outline-light">
                         Logout
                     </button>
                 </div>

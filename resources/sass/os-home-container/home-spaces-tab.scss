@@ -7,6 +7,10 @@
     flex-direction: column;
     align-items: stretch;
 
+    // padding
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+
     // scrollable
     max-height: 100%;
     overflow: scroll;
@@ -17,13 +21,21 @@
         align-items: flex-end;
 
         // padding
-        padding-left: $os-horizontal-paading;
-        padding-top: 1rem;
-        padding-bottom: 1rem;
+        padding: 0.5rem;
 
-        &:hover {
-            // hover effect
-            background-color: $grey-2;
+        // margin
+        margin: 0.5rem;
+
+        // border
+        border-radius: 0.5rem;
+
+        &.selected {
+            // selected effect
+            background-color: $sub-theme;
+
+            & > .space-item-body > p {
+                color: $white;
+            }
         }
 
         & > img {
@@ -33,10 +45,16 @@
         }
 
         & > .space-item-body {
-            //flex
+            // size
+            flex: 1;
+
+            // flex
             display: flex;
             flex-direction: column;
             align-items: flex-start;
+
+            // overflow
+            overflow: hidden;
 
             // margin
             margin-left: 0.7rem;

@@ -20,9 +20,9 @@
         // size
         width: $os-main-view-left-width;
 
-        // margin
-        margin-right: 1rem;
-        margin-left: 1rem;
+        // padding
+        padding-right: 1rem;
+        padding-left: 1rem;
     }
 
     & > #overview {
@@ -33,6 +33,9 @@
         padding-top: 1rem;
         padding-bottom: 1rem;
 
+        // background
+        background-color: $grey-3;
+
         & > #left {
             // flex
             display: flex;
@@ -40,6 +43,11 @@
 
             // border
             border-right: 1px solid $grey-1;
+
+            & > * {
+                // size
+                width: 100%;
+            }
 
             & > img {
                 // size
@@ -80,7 +88,10 @@
                 & > .info-row {
                     // flex
                     display: flex;
-                    justify-content: space-between;
+
+                    & > p:first-child {
+                        flex: 1;
+                    }
                 }
             }
         }
@@ -114,6 +125,15 @@
             // scrollable
             max-height: 100%;
             overflow: scroll;
+
+            // padding
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+
+            & > :not(:first-child) {
+                // margin
+                margin-top: 2.5rem;
+            }
         }
 
         & > #right {
