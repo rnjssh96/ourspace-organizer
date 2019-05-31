@@ -61619,6 +61619,12 @@ class OSAmenityTags extends react_1.default.Component {
     }
     render() {
         return (react_1.default.createElement("div", { id: "os-amenity-tags" },
+            react_1.default.createElement("div", { id: "header" },
+                react_1.default.createElement("p", { className: "h5" }, "\uD3B8\uC758\uC2DC\uC124"),
+                react_1.default.createElement("a", null,
+                    react_1.default.createElement("p", { className: "h6 os-grey-1" },
+                        react_1.default.createElement("i", { className: "material-icons" }, "add"),
+                        "\uCD94\uAC00"))),
             react_1.default.createElement("div", { id: "amenities" },
                 this._renderAmenity('wifi', 'Wi-Fi'),
                 this._renderAmenity('local_cafe', 'Coffee'),
@@ -61629,6 +61635,39 @@ class OSAmenityTags extends react_1.default.Component {
     }
 }
 exports.default = OSAmenityTags;
+
+
+/***/ }),
+
+/***/ "./resources/js/components/os-busy-level-selector.tsx":
+/*!************************************************************!*\
+  !*** ./resources/js/components/os-busy-level-selector.tsx ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+class OSBusyLevelSelector extends react_1.default.Component {
+    render() {
+        return (react_1.default.createElement("div", { id: "os-busy-level-selector" },
+            react_1.default.createElement("p", { className: "h3" },
+                react_1.default.createElement("b", null, "\uBC14\uC068")),
+            react_1.default.createElement("div", { id: "buttons" },
+                react_1.default.createElement("button", { className: "selected" },
+                    react_1.default.createElement("p", { className: "h6" }, "\uBC14\uC068")),
+                react_1.default.createElement("button", null,
+                    react_1.default.createElement("p", { className: "h6" }, "\uBCF4\uD1B5")),
+                react_1.default.createElement("button", null,
+                    react_1.default.createElement("p", { className: "h6" }, "\uC5EC\uC720")))));
+    }
+}
+exports.default = OSBusyLevelSelector;
 
 
 /***/ }),
@@ -61697,7 +61736,7 @@ class OSCommentsViewer extends react_1.default.Component {
     render() {
         return (react_1.default.createElement("div", { id: "os-comments-viewer" },
             react_1.default.createElement("div", { id: "header" },
-                react_1.default.createElement("p", { className: "h4" }, "\uD6C4\uAE30")),
+                react_1.default.createElement("p", { className: "h5" }, "\uD6C4\uAE30")),
             react_1.default.createElement("div", { id: "body" }, this._renderCommentsBox(COMMENTS))));
     }
 }
@@ -61732,6 +61771,7 @@ class OSImagesEditor extends react_1.default.Component {
     render() {
         return (react_1.default.createElement("div", { id: "os-images-editor" },
             react_1.default.createElement("div", { id: "header" },
+                react_1.default.createElement("p", { className: "h5" }, "\uB9E4\uC7A5\uC0AC\uC9C4"),
                 react_1.default.createElement("a", null,
                     react_1.default.createElement("p", { className: "h6 os-grey-1" },
                         react_1.default.createElement("i", { className: "material-icons" }, "add"),
@@ -61763,9 +61803,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 class OSLoactionMap extends react_1.default.Component {
+    // private _renderMap() {
+    //     map = new google.maps.Map(document.getElementById('map'), {
+    //         center: { lat: -34.397, lng: 150.644 },
+    //         zoom: 8,
+    //     });
+    // }
     render() {
-        return (react_1.default.createElement("div", { id: "os-location-map" },
-            react_1.default.createElement("div", { id: "amenities" })));
+        return (react_1.default.createElement("div", { id: "os-location-map" }));
     }
 }
 exports.default = OSLoactionMap;
@@ -61798,42 +61843,6 @@ class OSRateDisplay extends react_1.default.Component {
     }
 }
 exports.default = OSRateDisplay;
-
-
-/***/ }),
-
-/***/ "./resources/js/components/os-seat-controller.tsx":
-/*!********************************************************!*\
-  !*** ./resources/js/components/os-seat-controller.tsx ***!
-  \********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-class OSSeatController extends react_1.default.Component {
-    render() {
-        return (react_1.default.createElement("div", { id: "os-seat-controller" },
-            react_1.default.createElement("p", { className: "h6 os-grey-1" },
-                react_1.default.createElement("b", null, "\uC88C\uC11D \uD604\uD669")),
-            react_1.default.createElement("div", { id: "controller" },
-                react_1.default.createElement("div", { id: "current-seats" },
-                    react_1.default.createElement("p", { className: "h4 os-grey-1" },
-                        react_1.default.createElement("b", null, "15"))),
-                react_1.default.createElement("div", { id: "bottom-controll" },
-                    react_1.default.createElement("div", { className: "input-group" },
-                        react_1.default.createElement("input", { id: "increment-input", type: "number", className: "form-control", placeholder: "\uC88C\uC11D \uC218" }),
-                        react_1.default.createElement("div", { className: "input-group-append" },
-                            react_1.default.createElement("button", { className: "btn btn-secondary", type: "button" }, "\uCD94\uAC00"),
-                            react_1.default.createElement("button", { className: "btn btn-secondary", type: "button" }, "\uC81C\uAC70")))))));
-    }
-}
-exports.default = OSSeatController;
 
 
 /***/ }),
@@ -61883,12 +61892,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const os_seat_controller_1 = __importDefault(__webpack_require__(/*! ../components/os-seat-controller */ "./resources/js/components/os-seat-controller.tsx"));
 const os_rate_display_1 = __importDefault(__webpack_require__(/*! ../components/os-rate-display */ "./resources/js/components/os-rate-display.tsx"));
 const os_images_editor_1 = __importDefault(__webpack_require__(/*! ../components/os-images-editor */ "./resources/js/components/os-images-editor.tsx"));
 const os_comments_viewer_1 = __importDefault(__webpack_require__(/*! ../components/os-comments-viewer */ "./resources/js/components/os-comments-viewer.tsx"));
 const os_amenity_tags_1 = __importDefault(__webpack_require__(/*! ../components/os-amenity-tags */ "./resources/js/components/os-amenity-tags.tsx"));
 const os_loaction_map_1 = __importDefault(__webpack_require__(/*! ../components/os-loaction-map */ "./resources/js/components/os-loaction-map.tsx"));
+const os_busy_level_selector_1 = __importDefault(__webpack_require__(/*! ../components/os-busy-level-selector */ "./resources/js/components/os-busy-level-selector.tsx"));
 class HomeMainView extends react_1.default.Component {
     render() {
         return (react_1.default.createElement("div", { id: "home-main-view" },
@@ -61917,15 +61926,14 @@ class HomeMainView extends react_1.default.Component {
                                     "\uC218\uC815"))))),
                 react_1.default.createElement("div", { id: "right" },
                     react_1.default.createElement(os_rate_display_1.default, null),
-                    react_1.default.createElement(os_seat_controller_1.default, null))),
+                    react_1.default.createElement(os_busy_level_selector_1.default, null))),
             react_1.default.createElement("div", { id: "body" },
                 react_1.default.createElement("div", { id: "left" },
+                    react_1.default.createElement(os_amenity_tags_1.default, null),
                     react_1.default.createElement(os_images_editor_1.default, null),
                     react_1.default.createElement(os_comments_viewer_1.default, null)),
                 react_1.default.createElement("div", { id: "right" },
-                    react_1.default.createElement(os_amenity_tags_1.default, null),
-                    react_1.default.createElement("div", { id: "location-map" },
-                        react_1.default.createElement(os_loaction_map_1.default, null))))));
+                    react_1.default.createElement(os_loaction_map_1.default, null)))));
     }
 }
 exports.default = HomeMainView;

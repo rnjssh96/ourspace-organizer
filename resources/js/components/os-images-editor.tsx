@@ -17,6 +17,7 @@ export default class OSImagesEditor extends React.Component {
         return (
             <div id="os-images-editor">
                 <div id="header">
+                    <p className="h5">매장사진</p>
                     <a>
                         <p className="h6 os-grey-1">
                             <i className="material-icons">add</i>

@@ -13,6 +13,15 @@ export default class OSAmenityTags extends React.Component {
     render() {
         return (
             <div id="os-amenity-tags">
+                <div id="header">
+                    <p className="h5">편의시설</p>
+                    <a>
+                        <p className="h6 os-grey-1">
+                            <i className="material-icons">add</i>
+                            추가
+                        </p>
+                    </a>
+                </div>
                 <div id="amenities">
                     {this._renderAmenity('wifi', 'Wi-Fi')}
                     {this._renderAmenity('local_cafe', 'Coffee')}

@@ -62,7 +62,7 @@ export default class OSCommentsViewer extends React.Component {
         return (
             <div id="os-comments-viewer">
                 <div id="header">
-                    <p className="h4">후기</p>
+                    <p className="h5">후기</p>
                 </div>
                 <div id="body">{this._renderCommentsBox(COMMENTS)}</div>
             </div>

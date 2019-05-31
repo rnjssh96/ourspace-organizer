@@ -10804,6 +10804,7 @@ a.text-dark:focus {
   padding-top: 1rem;
   padding-bottom: 1rem;
   background-color: #f5f5f5;
+  border-bottom: 0.5px solid #e5e5e5;
 }
 
 #home-main-view > #overview > #left {
@@ -10852,6 +10853,7 @@ a.text-dark:focus {
 #home-main-view > #overview > #right {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
 }
 
@@ -10878,51 +10880,58 @@ a.text-dark:focus {
 }
 
 #home-main-view > #body > #left > :not(:first-child) {
-  margin-top: 2.5rem;
+  margin-top: 2rem;
 }
 
-#home-main-view > #body > #right > #location-map {
+#home-main-view > #body > #left #header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+#home-main-view > #body > #left #header p {
+  margin-bottom: 0;
+}
+
+#home-main-view > #body > #right {
+  border-left: 0.5px solid #e5e5e5;
+}
+
+#os-busy-level-selector {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#os-busy-level-selector p {
+  color: #f3a930;
+  margin-bottom: 0;
+}
+
+#os-busy-level-selector > #buttons {
+  width: 100%;
+  display: flex;
+  margin-top: 0.5rem;
+  border: 1px solid #f3a930;
+}
+
+#os-busy-level-selector > #buttons > button {
   flex: 1;
-  margin-top: 1rem;
-}
-
-#os-seat-controller {
-  display: flex;
-  align-items: center;
-}
-
-#os-seat-controller #controller {
-  border: 1px solid grey;
-  border-radius: 1rem;
-  margin-left: 1rem;
-}
-
-#os-seat-controller #controller #current-seats {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-top: 0.3rem;
-  border-bottom: 1px solid #707070;
-}
-
-#os-seat-controller #controller #bottom-controll {
-  display: flex;
-}
-
-#os-seat-controller #controller #bottom-controll #increment-input {
-  width: 7rem;
-  border: 0;
-  border-radius: 0;
-  border-bottom-left-radius: 1rem;
   background-color: transparent;
+  border: 0;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
-#os-seat-controller #controller #bottom-controll button {
-  border-radius: 0;
+#os-busy-level-selector > #buttons > button.selected {
+  background-color: #f3a930;
 }
 
-#os-seat-controller #controller #bottom-controll button:last-child {
-  border-bottom-right-radius: 1rem;
+#os-busy-level-selector > #buttons > button.selected > p {
+  color: #ffffff;
 }
 
 #os-rate-display {
@@ -10949,17 +10958,11 @@ a.text-dark:focus {
   margin: 0;
 }
 
-#os-images-editor > #header {
-  display: flex;
-  justify-content: flex-end;
-}
-
 #os-images-editor > #body {
   height: 15rem;
   display: flex;
   max-width: 100%;
   overflow: scroll;
-  margin-top: 0.5rem;
   margin-bottom: 0.5rem;
 }
 
@@ -10982,10 +10985,6 @@ a.text-dark:focus {
 
 #os-comments-viewer > #header > p {
   margin-bottom: 0;
-}
-
-#os-comments-viewer > #body {
-  margin-top: 1rem;
 }
 
 #os-comments-viewer > #body > .comment {
@@ -11024,7 +11023,12 @@ a.text-dark:focus {
   display: flex;
   max-width: 100%;
   overflow: scroll;
-  padding: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border: 0.5px solid #e5e5e5;
+  border-radius: 0.5rem;
 }
 
 #os-amenity-tags > #amenities > .amenity {
@@ -11034,7 +11038,7 @@ a.text-dark:focus {
 }
 
 #os-amenity-tags > #amenities > .amenity:not(:first-child) {
-  margin-left: 1rem;
+  margin-left: 1.5rem;
 }
 
 #os-amenity-tags > #amenities > .amenity > i {

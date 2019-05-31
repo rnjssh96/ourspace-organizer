@@ -36,6 +36,9 @@
         // background
         background-color: $grey-3;
 
+        // border
+        border-bottom: 0.5px solid $grey-2;
+
         & > #left {
             // flex
             display: flex;
@@ -100,6 +103,7 @@
             // flex
             display: flex;
             flex-direction: column;
+            justify-content: center;
             align-items: center;
 
             & > :not(:first-child) {
@@ -134,18 +138,27 @@
 
             & > :not(:first-child) {
                 // margin
-                margin-top: 2.5rem;
+                margin-top: 2rem;
+            }
+
+            #header {
+                // flex
+                display: flex;
+                justify-content: space-between;
+
+                // margin
+                margin-bottom: 0.5rem;
+
+                p {
+                    // margin
+                    margin-bottom: 0;
+                }
             }
         }
 
         & > #right {
-            & > #location-map {
-                // size
-                flex: 1;
-
-                // margin
-                margin-top: 1rem;
-            }
+            // border
+            border-left: 0.5px solid $grey-2;
         }
     }
 }
