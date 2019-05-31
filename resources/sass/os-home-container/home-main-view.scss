@@ -1,0 +1,151 @@
+#home-main-view {
+    // size
+    height: 100%;
+    width: 100%;
+
+    // flex
+    display: flex;
+    flex-direction: column;
+
+    #left {
+        // size
+        flex: 1;
+
+        // padding
+        padding-right: 1rem;
+        padding-left: 1rem;
+    }
+
+    #right {
+        // size
+        width: $os-main-view-left-width;
+
+        // padding
+        padding-right: 1rem;
+        padding-left: 1rem;
+    }
+
+    & > #overview {
+        // flex
+        display: flex;
+
+        // padding
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+
+        // background
+        background-color: $grey-3;
+
+        & > #left {
+            // flex
+            display: flex;
+            align-items: center;
+
+            // border
+            border-right: 1px solid $grey-1;
+
+            & > * {
+                // size
+                width: 100%;
+            }
+
+            & > img {
+                // size
+                height: 8rem;
+                width: 8rem;
+            }
+
+            & > #general-info {
+                // size
+                flex: 1;
+
+                // flex
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+
+                // padding
+                padding-top: 0.5rem;
+                padding-bottom: 0.5rem;
+
+                // margin
+                margin-left: 1rem;
+
+                & > #title-row {
+                    // flex
+                    display: flex;
+                    align-items: flex-end;
+
+                    // margin
+                    margin-bottom: 0.5rem;
+
+                    & > #txt-types {
+                        // margin
+                        margin-left: 1rem;
+                    }
+                }
+
+                & > .info-row {
+                    // flex
+                    display: flex;
+
+                    & > p:first-child {
+                        flex: 1;
+                    }
+                }
+            }
+        }
+
+        & > #right {
+            // flex
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            & > :not(:first-child) {
+                // margin
+                margin-top: 1rem;
+            }
+        }
+    }
+
+    & > #body {
+        // size
+        flex: 1;
+        width: 100%;
+
+        // flex
+        display: flex;
+
+        & > * {
+            // flex
+            display: flex;
+            flex-direction: column;
+
+            // padding
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+
+        & > #left {
+            // scrollable
+            max-height: 100%;
+            overflow: scroll;
+
+            & > :not(:first-child) {
+                // margin
+                margin-top: 2.5rem;
+            }
+        }
+
+        & > #right {
+            & > #location-map {
+                // size
+                flex: 1;
+
+                // margin
+                margin-top: 1rem;
+            }
+        }
+    }
+}

@@ -1,0 +1,51 @@
+#os-images-editor {
+    // size
+    width: 100%;
+
+    // flex
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    p {
+        // margin
+        margin: 0;
+    }
+
+    & > #header {
+        // flex
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    & > #body {
+        // size
+        height: $os-image-editor-height;
+
+        // flex
+        display: flex;
+
+        // scrollable
+        max-width: 100%;
+        overflow: scroll;
+
+        // margin
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+
+        & > img {
+            height: 100%;
+
+            &:not(:first-child) {
+                // margin
+                margin-left: 1rem;
+            }
+        }
+    }
+
+    & > #footer {
+        // flex
+        display: flex;
+        justify-content: flex-end;
+    }
+}

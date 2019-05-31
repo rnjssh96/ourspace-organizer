@@ -1,0 +1,59 @@
+#os-comments-viewer {
+    height: 50rem;
+
+    & > #header {
+        & > p {
+            // margin
+            margin-bottom: 0;
+        }
+    }
+
+    & > #body {
+        // margin
+        margin-top: 1rem;
+
+        & > .comment {
+            // flex
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+
+            // padding
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+
+            // border
+            border-bottom: 0.5px solid $grey-2;
+
+            &#empty-comment {
+                // flex
+                justify-content: center;
+                align-items: center;
+            }
+
+            &:first-child {
+                // border
+                border-top: 0.5px solid $grey-2;
+            }
+
+            & > #top {
+                // flex
+                display: flex;
+                align-items: flex-end;
+
+                // margin
+                margin-bottom: 0.5rem;
+
+                & > :not(:first-child) {
+                    // margin
+                    margin-left: 1rem;
+                }
+            }
+
+            p {
+                // margin
+                margin-bottom: 0;
+            }
+        }
+    }
+}

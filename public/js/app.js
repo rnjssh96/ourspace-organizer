@@ -61535,7 +61535,7 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
  */
 
 
-__webpack_require__(/*! ./components/Example */ "./resources/js/components/Example.tsx");
+__webpack_require__(/*! ./os-home-container */ "./resources/js/os-home-container/index.tsx");
 
 /***/ }),
 
@@ -61597,10 +61597,381 @@ if (token) {
 
 /***/ }),
 
-/***/ "./resources/js/components/Example.tsx":
-/*!*********************************************!*\
-  !*** ./resources/js/components/Example.tsx ***!
-  \*********************************************/
+/***/ "./resources/js/components/os-amenity-tags.tsx":
+/*!*****************************************************!*\
+  !*** ./resources/js/components/os-amenity-tags.tsx ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+class OSAmenityTags extends react_1.default.Component {
+    _renderAmenity(amenity, name) {
+        return (react_1.default.createElement("div", { className: "amenity" },
+            react_1.default.createElement("i", { className: "material-icons" }, amenity),
+            react_1.default.createElement("p", { className: "h6" }, name)));
+    }
+    render() {
+        return (react_1.default.createElement("div", { id: "os-amenity-tags" },
+            react_1.default.createElement("div", { id: "amenities" },
+                this._renderAmenity('wifi', 'Wi-Fi'),
+                this._renderAmenity('local_cafe', 'Coffee'),
+                this._renderAmenity('local_dining', 'Food'),
+                this._renderAmenity('wifi', 'Wi-Fi'),
+                this._renderAmenity('local_cafe', 'Coffee'),
+                this._renderAmenity('local_dining', 'Food'))));
+    }
+}
+exports.default = OSAmenityTags;
+
+
+/***/ }),
+
+/***/ "./resources/js/components/os-comments-viewer.tsx":
+/*!********************************************************!*\
+  !*** ./resources/js/components/os-comments-viewer.tsx ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const COMMENTS = [
+    {
+        commentID: 1,
+        userUsername: 'Inchan',
+        date: '2019-0-29 | 오후 5시 30분',
+        comment: 'this is a great place to work',
+    },
+    {
+        commentID: 2,
+        userUsername: 'Inchan',
+        date: '2019-0-29 | 오후 5시 30분',
+        comment: 'this is a great place to work',
+    },
+    {
+        commentID: 3,
+        userUsername: 'Inchan',
+        date: '2019-0-29 | 오후 5시 30분',
+        comment: 'this is a great place to work',
+    },
+    {
+        commentID: 4,
+        userUsername: 'Inchan',
+        date: '2019-0-29 | 오후 5시 30분',
+        comment: 'this is a great place to work',
+    },
+];
+class OSCommentsViewer extends react_1.default.Component {
+    _renderEmpty() {
+        return (react_1.default.createElement("div", { id: "empty-comment", className: "comment" },
+            react_1.default.createElement("p", { className: "h6 os-grey-1" }, "\uC0AC\uC6A9\uC790\uAC00 \uB0A8\uAE34 \uD6C4\uAE30\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.")));
+    }
+    _renderComment(comment) {
+        return (react_1.default.createElement("div", { key: comment.commentID, className: "comment" },
+            react_1.default.createElement("div", { id: "top" },
+                react_1.default.createElement("p", { className: "h5" },
+                    react_1.default.createElement("b", null, "inchan")),
+                react_1.default.createElement("p", { className: "h6 os-grey-1" }, "2019-0-29 | \uC624\uD6C4 5\uC2DC 30\uBD84")),
+            react_1.default.createElement("p", { className: "h5" }, "this is a great place to work")));
+    }
+    _renderCommentsBox(comments) {
+        if (comments.length <= 0) {
+            return this._renderEmpty();
+        }
+        else {
+            return comments.map((comment) => this._renderComment(comment));
+        }
+    }
+    render() {
+        return (react_1.default.createElement("div", { id: "os-comments-viewer" },
+            react_1.default.createElement("div", { id: "header" },
+                react_1.default.createElement("p", { className: "h4" }, "\uD6C4\uAE30")),
+            react_1.default.createElement("div", { id: "body" }, this._renderCommentsBox(COMMENTS))));
+    }
+}
+exports.default = OSCommentsViewer;
+
+
+/***/ }),
+
+/***/ "./resources/js/components/os-images-editor.tsx":
+/*!******************************************************!*\
+  !*** ./resources/js/components/os-images-editor.tsx ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const IMAGES = [
+    './demo-images/about_img_03.jpg',
+    './demo-images/item_image_05b.jpg',
+    './demo-images/item_image_06.jpg',
+];
+class OSImagesEditor extends react_1.default.Component {
+    _renderImages() {
+        return IMAGES.map((image) => (react_1.default.createElement("img", { key: image, src: image, className: "rounded" })));
+    }
+    render() {
+        return (react_1.default.createElement("div", { id: "os-images-editor" },
+            react_1.default.createElement("div", { id: "header" },
+                react_1.default.createElement("a", null,
+                    react_1.default.createElement("p", { className: "h6 os-grey-1" },
+                        react_1.default.createElement("i", { className: "material-icons" }, "add"),
+                        "\uCD94\uAC00"))),
+            react_1.default.createElement("div", { id: "body" }, this._renderImages()),
+            react_1.default.createElement("div", { id: "footer" },
+                react_1.default.createElement("p", { className: "h6 os-grey-1" },
+                    react_1.default.createElement("i", { className: "material-icons" }, "info"),
+                    "\uC0AC\uC9C4 \uC0AD\uC81C\uB294 Super-organizer \uC0AC\uC6A9\uC790\uB9CC \uAC00\uB2A5\uD569\uB2C8\uB2E4."))));
+    }
+}
+exports.default = OSImagesEditor;
+
+
+/***/ }),
+
+/***/ "./resources/js/components/os-loaction-map.tsx":
+/*!*****************************************************!*\
+  !*** ./resources/js/components/os-loaction-map.tsx ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+class OSLoactionMap extends react_1.default.Component {
+    render() {
+        return (react_1.default.createElement("div", { id: "os-location-map" },
+            react_1.default.createElement("div", { id: "amenities" })));
+    }
+}
+exports.default = OSLoactionMap;
+
+
+/***/ }),
+
+/***/ "./resources/js/components/os-rate-display.tsx":
+/*!*****************************************************!*\
+  !*** ./resources/js/components/os-rate-display.tsx ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+class OSRateDisplay extends react_1.default.Component {
+    render() {
+        return (react_1.default.createElement("div", { id: "os-rate-display" },
+            react_1.default.createElement("img", { src: "./assets/star-filled.svg" }),
+            react_1.default.createElement("img", { src: "./assets/star-filled.svg" }),
+            react_1.default.createElement("img", { src: "./assets/star-filled.svg" }),
+            react_1.default.createElement("img", { src: "./assets/star-outline.svg" }),
+            react_1.default.createElement("img", { src: "./assets/star-outline.svg" })));
+    }
+}
+exports.default = OSRateDisplay;
+
+
+/***/ }),
+
+/***/ "./resources/js/components/os-seat-controller.tsx":
+/*!********************************************************!*\
+  !*** ./resources/js/components/os-seat-controller.tsx ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+class OSSeatController extends react_1.default.Component {
+    render() {
+        return (react_1.default.createElement("div", { id: "os-seat-controller" },
+            react_1.default.createElement("p", { className: "h6 os-grey-1" },
+                react_1.default.createElement("b", null, "\uC88C\uC11D \uD604\uD669")),
+            react_1.default.createElement("div", { id: "controller" },
+                react_1.default.createElement("div", { id: "current-seats" },
+                    react_1.default.createElement("p", { className: "h4 os-grey-1" },
+                        react_1.default.createElement("b", null, "15"))),
+                react_1.default.createElement("div", { id: "bottom-controll" },
+                    react_1.default.createElement("div", { className: "input-group" },
+                        react_1.default.createElement("input", { id: "increment-input", type: "number", className: "form-control", placeholder: "\uC88C\uC11D \uC218" }),
+                        react_1.default.createElement("div", { className: "input-group-append" },
+                            react_1.default.createElement("button", { className: "btn btn-secondary", type: "button" }, "\uCD94\uAC00"),
+                            react_1.default.createElement("button", { className: "btn btn-secondary", type: "button" }, "\uC81C\uAC70")))))));
+    }
+}
+exports.default = OSSeatController;
+
+
+/***/ }),
+
+/***/ "./resources/js/os-home-container/home-header.tsx":
+/*!********************************************************!*\
+  !*** ./resources/js/os-home-container/home-header.tsx ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+class HomeHeader extends react_1.default.Component {
+    render() {
+        return (react_1.default.createElement("header", { id: "home-header", className: "row" },
+            react_1.default.createElement("div", { id: "main" },
+                react_1.default.createElement("img", { src: "./demo-images/item_image_02.jpg", className: "rounded-circle" }),
+                react_1.default.createElement("div", { id: "profile-text" },
+                    react_1.default.createElement("p", { className: "h4" }, "\uAC15\uB0A8\uAC74\uBB3C\uC8FC"),
+                    react_1.default.createElement("p", { className: "h6 os-grey-1" }, "Organizer"))),
+            react_1.default.createElement("div", { id: "left-buttons" },
+                react_1.default.createElement("button", { type: "button", className: "btn btn-outline-light" }, "Logout"))));
+    }
+}
+exports.default = HomeHeader;
+
+
+/***/ }),
+
+/***/ "./resources/js/os-home-container/home-main-view.tsx":
+/*!***********************************************************!*\
+  !*** ./resources/js/os-home-container/home-main-view.tsx ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const os_seat_controller_1 = __importDefault(__webpack_require__(/*! ../components/os-seat-controller */ "./resources/js/components/os-seat-controller.tsx"));
+const os_rate_display_1 = __importDefault(__webpack_require__(/*! ../components/os-rate-display */ "./resources/js/components/os-rate-display.tsx"));
+const os_images_editor_1 = __importDefault(__webpack_require__(/*! ../components/os-images-editor */ "./resources/js/components/os-images-editor.tsx"));
+const os_comments_viewer_1 = __importDefault(__webpack_require__(/*! ../components/os-comments-viewer */ "./resources/js/components/os-comments-viewer.tsx"));
+const os_amenity_tags_1 = __importDefault(__webpack_require__(/*! ../components/os-amenity-tags */ "./resources/js/components/os-amenity-tags.tsx"));
+const os_loaction_map_1 = __importDefault(__webpack_require__(/*! ../components/os-loaction-map */ "./resources/js/components/os-loaction-map.tsx"));
+class HomeMainView extends react_1.default.Component {
+    render() {
+        return (react_1.default.createElement("div", { id: "home-main-view" },
+            react_1.default.createElement("div", { id: "overview" },
+                react_1.default.createElement("div", { id: "left" },
+                    react_1.default.createElement("img", { src: "./demo-images/about_img_01.jpg", className: "rounded" }),
+                    react_1.default.createElement("div", { id: "general-info" },
+                        react_1.default.createElement("div", { id: "title-row" },
+                            react_1.default.createElement("p", { className: "h4 os-text-ellipsis" }, "\uC2A4\uD0C0\uBC85\uC2A4 \uC790\uC591\uC810"),
+                            react_1.default.createElement("p", { id: "txt-types", className: "h6 os-grey-1 os-text-ellipsis" }, "\uB3C4\uC11C\uAD00 | \uCE74\uD398")),
+                        react_1.default.createElement("div", { className: "info-row" },
+                            react_1.default.createElement("p", { className: "h6 os-grey-1 os-text-ellipsis" },
+                                react_1.default.createElement("i", { className: "material-icons" }, "location_on"),
+                                "\uC6D0\uC8FC the potato factory"),
+                            react_1.default.createElement("a", null,
+                                react_1.default.createElement("p", { className: "h6 os-grey-1" },
+                                    react_1.default.createElement("i", { className: "material-icons" }, "edit"),
+                                    "\uC218\uC815"))),
+                        react_1.default.createElement("div", { className: "info-row" },
+                            react_1.default.createElement("p", { className: "h6 os-grey-1 os-text-ellipsis" },
+                                react_1.default.createElement("i", { className: "material-icons" }, "access_time"),
+                                "00:00 - 24:00 / Mon ~ Sun"),
+                            react_1.default.createElement("a", null,
+                                react_1.default.createElement("p", { className: "h6 os-grey-1" },
+                                    react_1.default.createElement("i", { className: "material-icons" }, "edit"),
+                                    "\uC218\uC815"))))),
+                react_1.default.createElement("div", { id: "right" },
+                    react_1.default.createElement(os_rate_display_1.default, null),
+                    react_1.default.createElement(os_seat_controller_1.default, null))),
+            react_1.default.createElement("div", { id: "body" },
+                react_1.default.createElement("div", { id: "left" },
+                    react_1.default.createElement(os_images_editor_1.default, null),
+                    react_1.default.createElement(os_comments_viewer_1.default, null)),
+                react_1.default.createElement("div", { id: "right" },
+                    react_1.default.createElement(os_amenity_tags_1.default, null),
+                    react_1.default.createElement("div", { id: "location-map" },
+                        react_1.default.createElement(os_loaction_map_1.default, null))))));
+    }
+}
+exports.default = HomeMainView;
+
+
+/***/ }),
+
+/***/ "./resources/js/os-home-container/home-spaces-tab.tsx":
+/*!************************************************************!*\
+  !*** ./resources/js/os-home-container/home-spaces-tab.tsx ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+class HomeSpacesTab extends react_1.default.Component {
+    _renderSpace(selcted = false) {
+        return (react_1.default.createElement("a", { className: `space-item ${selcted ? 'selected' : ''}` },
+            react_1.default.createElement("img", { src: "./demo-images/about_img_01.jpg", className: "rounded" }),
+            react_1.default.createElement("div", { className: "space-item-body" },
+                react_1.default.createElement("p", { className: "h5 os-text-ellipsis" }, "\uC2A4\uD0C0\uBC85\uC2A4 \uC790\uC591\uC810"),
+                react_1.default.createElement("p", { className: "h6 os-grey-1" },
+                    react_1.default.createElement("i", { className: "material-icons" }, "location_on"),
+                    "\uC11C\uC6B8 \uC1A1\uD30C\uAD6C \uC62C\uB9BC\uD53D\uB85C 35\uAE38 104"))));
+    }
+    render() {
+        return (react_1.default.createElement("div", { id: "home-spaces-tab" },
+            this._renderSpace(true),
+            this._renderSpace()));
+    }
+}
+exports.default = HomeSpacesTab;
+
+
+/***/ }),
+
+/***/ "./resources/js/os-home-container/index.tsx":
+/*!**************************************************!*\
+  !*** ./resources/js/os-home-container/index.tsx ***!
+  \**************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -61612,19 +61983,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 const react_dom_1 = __importDefault(__webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js"));
-class Example extends react_1.default.Component {
+const home_header_1 = __importDefault(__webpack_require__(/*! ./home-header */ "./resources/js/os-home-container/home-header.tsx"));
+const home_spaces_tab_1 = __importDefault(__webpack_require__(/*! ./home-spaces-tab */ "./resources/js/os-home-container/home-spaces-tab.tsx"));
+const home_main_view_1 = __importDefault(__webpack_require__(/*! ./home-main-view */ "./resources/js/os-home-container/home-main-view.tsx"));
+class OSHomeContainer extends react_1.default.Component {
     render() {
-        return (react_1.default.createElement("div", { className: "container" },
-            react_1.default.createElement("div", { className: "row justify-content-center" },
-                react_1.default.createElement("div", { className: "col-md-8" },
-                    react_1.default.createElement("div", { className: "card" },
-                        react_1.default.createElement("div", { className: "card-header" }, "Example Component"),
-                        react_1.default.createElement("div", { className: "card-body" }, "I'm an example component!"))))));
+        return (react_1.default.createElement("div", { id: "os-home-container", className: "container-fluid" },
+            react_1.default.createElement(home_header_1.default, null),
+            react_1.default.createElement("div", { id: "body", className: "row" },
+                react_1.default.createElement("div", { id: "spaces-tab" },
+                    react_1.default.createElement(home_spaces_tab_1.default, null)),
+                react_1.default.createElement("div", { id: "main-view" },
+                    react_1.default.createElement(home_main_view_1.default, null)))));
     }
 }
-exports.default = Example;
-if (document.getElementById('example')) {
-    react_dom_1.default.render(react_1.default.createElement(Example, null), document.getElementById('example'));
+if (document.getElementById('os-home-container')) {
+    react_dom_1.default.render(react_1.default.createElement(OSHomeContainer, null), document.getElementById('os-home-container'));
 }
 
 

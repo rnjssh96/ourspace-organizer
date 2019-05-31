@@ -1,8 +1,27 @@
 // Fonts
 @import url('https://fonts.googleapis.com/css?family=Nunito');
 
+// Material Icons
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import 'material';
+
 // Variables
 @import 'variables';
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+
+// Styles
+@import 'general';
+
+@import 'os-home-container/os-home-container';
+@import 'os-home-container/home-header';
+@import 'os-home-container/home-spaces-tab';
+@import 'os-home-container/home-main-view';
+
+@import 'components/os-seat-controller';
+@import 'components/os-rate-display';
+@import 'components/os-images-editor';
+@import 'components/os-comments-viewer';
+@import 'components/os-amenity-tags';
+@import 'components/os-location-map';
