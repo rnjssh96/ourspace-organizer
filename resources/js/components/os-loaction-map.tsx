@@ -10,7 +10,7 @@ import {
 const OSLoactionMap = compose(
     withProps({
         googleMapURL:
-            'https://maps.googleapis.com/maps/api/js?key=AIzaSyDQKkNsepBOaIiSSp4OUIFZGKmCOFTrho4&callback=initMap',
+            'https://maps.googleapis.com/maps/api/js?key=AIzaSyDQKkNsepBOaIiSSp4OUIFZGKmCOFTrho4',
         loadingElement: <div style={{ height: '100%' }} />,
         containerElement: <div id="os-location-map" />,
         mapElement: <div id="map" />,

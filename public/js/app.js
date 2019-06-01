@@ -81918,7 +81918,7 @@ const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules
 const recompose_1 = __webpack_require__(/*! recompose */ "./node_modules/recompose/dist/Recompose.esm.js");
 const react_google_maps_1 = __webpack_require__(/*! react-google-maps */ "./node_modules/react-google-maps/lib/index.js");
 const OSLoactionMap = recompose_1.compose(recompose_1.withProps({
-    googleMapURL: 'https://maps.googleapis.com/maps/api/js?key=AIzaSyDQKkNsepBOaIiSSp4OUIFZGKmCOFTrho4&callback=initMap',
+    googleMapURL: 'https://maps.googleapis.com/maps/api/js?key=AIzaSyDQKkNsepBOaIiSSp4OUIFZGKmCOFTrho4',
     loadingElement: react_1.default.createElement("div", { style: { height: '100%' } }),
     containerElement: react_1.default.createElement("div", { id: "os-location-map" }),
     mapElement: react_1.default.createElement("div", { id: "map" }),
