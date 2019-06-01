@@ -1,5 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
+
+import RootReducer from '../reducer';
 
 import HomeHeader from './home-header';
 import HomeSpacesTab from './home-spaces-tab';
@@ -23,9 +27,13 @@ class OSHomeContainer extends React.Component {
     }
 }
 
+const rootStore = createStore(RootReducer);
+
 if (document.getElementById('os-home-container')) {
     ReactDOM.render(
-        <OSHomeContainer />,
+        <Provider store={rootStore}>
+            <OSHomeContainer />
+        </Provider>,
         document.getElementById('os-home-container'),
     );
 }
