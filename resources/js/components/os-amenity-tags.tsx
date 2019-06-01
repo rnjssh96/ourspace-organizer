@@ -1,14 +1,35 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
-export default class OSAmenityTags extends React.Component {
-    private _renderAmenity(amenity: any, name: any) {
+import RootState from '../redux-types';
+
+import { AmenityTag, interpretAmenity } from '../model/space';
+
+interface _ReduxProps {
+    /**
+     * Amenity tabs of the space
+     */
+    amenityTags: AmenityTag[];
+}
+
+interface OSAmenityTagsProps extends _ReduxProps {}
+
+class _OSAmenityTags extends React.Component<OSAmenityTagsProps> {
+    private _renderAmenity = (tag: AmenityTag) => {
+        let amenity = interpretAmenity(tag, 'ko');
         return (
-            <div className="amenity">
-                <i className="material-icons">{amenity}</i>
-                <p className="h6">{name}</p>
+            <div key={tag} className="amenity">
+                <p className="h1">
+                    <i className={amenity.faicon} />
+                </p>
             </div>
         );
-    }
+    };
+
+    private _rednerAmenities = () =>
+        this.props.amenityTags.map((tag: AmenityTag) =>
+            this._renderAmenity(tag),
+        );
 
     render() {
         return (
@@ -22,15 +43,21 @@ export default class OSAmenityTags extends React.Component {
                         </p>
                     </a>
                 </div>
-                <div id="amenities">
-                    {this._renderAmenity('wifi', 'Wi-Fi')}
-                    {this._renderAmenity('local_cafe', 'Coffee')}
-                    {this._renderAmenity('local_dining', 'Food')}
-                    {this._renderAmenity('wifi', 'Wi-Fi')}
-                    {this._renderAmenity('local_cafe', 'Coffee')}
-                    {this._renderAmenity('local_dining', 'Food')}
-                </div>
+                <div id="amenities">{this._rednerAmenities()}</div>
             </div>
         );
     }
 }
+
+const mapStateToProps = (state: RootState): _ReduxProps => ({
+    amenityTags: state.currentSpace.amenityTags,
+});
+
+const mapDispatchToProps = {};
+
+const OSAmenityTags = connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(_OSAmenityTags);
+
+export default OSAmenityTags;

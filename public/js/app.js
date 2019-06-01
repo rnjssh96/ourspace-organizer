@@ -83803,11 +83803,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-class OSAmenityTags extends react_1.default.Component {
-    _renderAmenity(amenity, name) {
-        return (react_1.default.createElement("div", { className: "amenity" },
-            react_1.default.createElement("i", { className: "material-icons" }, amenity),
-            react_1.default.createElement("p", { className: "h6" }, name)));
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const space_1 = __webpack_require__(/*! ../model/space */ "./resources/js/model/space.ts");
+class _OSAmenityTags extends react_1.default.Component {
+    constructor() {
+        super(...arguments);
+        this._renderAmenity = (tag) => {
+            let amenity = space_1.interpretAmenity(tag, 'ko');
+            return (react_1.default.createElement("div", { key: tag, className: "amenity" },
+                react_1.default.createElement("p", { className: "h1" },
+                    react_1.default.createElement("i", { className: amenity.faicon }))));
+        };
+        this._rednerAmenities = () => this.props.amenityTags.map((tag) => this._renderAmenity(tag));
     }
     render() {
         return (react_1.default.createElement("div", { id: "os-amenity-tags" },
@@ -83817,15 +83824,14 @@ class OSAmenityTags extends react_1.default.Component {
                     react_1.default.createElement("p", { className: "h6 os-grey-1" },
                         react_1.default.createElement("i", { className: "material-icons" }, "add"),
                         "\uCD94\uAC00"))),
-            react_1.default.createElement("div", { id: "amenities" },
-                this._renderAmenity('wifi', 'Wi-Fi'),
-                this._renderAmenity('local_cafe', 'Coffee'),
-                this._renderAmenity('local_dining', 'Food'),
-                this._renderAmenity('wifi', 'Wi-Fi'),
-                this._renderAmenity('local_cafe', 'Coffee'),
-                this._renderAmenity('local_dining', 'Food'))));
+            react_1.default.createElement("div", { id: "amenities" }, this._rednerAmenities())));
     }
 }
+const mapStateToProps = (state) => ({
+    amenityTags: state.currentSpace.amenityTags,
+});
+const mapDispatchToProps = {};
+const OSAmenityTags = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_OSAmenityTags);
 exports.default = OSAmenityTags;
 
 
@@ -84260,10 +84266,10 @@ exports.default = OSRateDisplay;
 /*!*************************************************!*\
   !*** ./resources/js/model/space-interpret.json ***!
   \*************************************************/
-/*! exports provided: busy-level, type, default */
+/*! exports provided: busy-level, type, amenity, default */
 /***/ (function(module) {
 
-module.exports = {"busy-level":{"1":{"en":"Normal","ko":"보통"},"2":{"en":"Busy","ko":"바쁨"},"3":{"en":"Very Busy","ko":"매우 바쁨"}},"type":{"0":{"en":"library","ko":"도서관"},"1":{"en":"startup","ko":"창업공간"},"2":{"en":"museum","ko":"박물관"},"3":{"en":"bookstore","ko":"서점"},"4":{"en":"experience","ko":"체험공간"},"5":{"en":"nature","ko":"공원"},"6":{"en":"youth","ko":"청년공간"},"7":{"en":"lounge","ko":"라운지"},"8":{"en":"starbucks","ko":"스타벅스"},"9":{"en":"cafe","ko":"카페"}}};
+module.exports = {"busy-level":{"1":{"en":"Normal","ko":"보통"},"2":{"en":"Busy","ko":"바쁨"},"3":{"en":"Very Busy","ko":"매우 바쁨"}},"type":{"0":{"en":"library","ko":"도서관"},"1":{"en":"startup","ko":"창업공간"},"2":{"en":"museum","ko":"박물관"},"3":{"en":"bookstore","ko":"서점"},"4":{"en":"experience","ko":"체험공간"},"5":{"en":"nature","ko":"공원"},"6":{"en":"youth","ko":"청년공간"},"7":{"en":"lounge","ko":"라운지"},"8":{"en":"starbucks","ko":"스타벅스"},"9":{"en":"cafe","ko":"카페"}},"amenity":{"apple-pay":{"name":{"en":"Apple Pay","ko":"애플페이"},"faicon":"fab fa-cc-apple-pay"},"shower":{"name":{"en":"Shower","ko":"샤워시설"},"faicon":"fas fa-shower"},"sleep-area":{"name":{"en":"Sleep Area","ko":"수면실"},"faicon":"fas fa-bed"},"amazon-pay":{"name":{"en":"Amazon Pay","ko":"아마존페이"},"faicon":"fab fa-cc-amazon-pay"},"paypal":{"name":{"en":"PayPal","ko":"페이팔"},"faicon":"fab fa-cc-paypal"},"mastercard":{"name":{"en":"Mastercard","ko":"마스터카드"},"faicon":"fab fa-cc-mastercard"},"visa":{"name":{"en":"Visa","ko":"비자"},"faicon":"fab fa-cc-visa"},"classroom":{"name":{"en":"Classroom","ko":"강의실"},"faicon":"fas fa-chalkboard"},"coffee":{"name":{"en":"Coffee","ko":"커피"},"faicon":"fas fa-coffee"},"sofa":{"name":{"en":"Sofa","ko":"소파"},"faicon":"fas fa-couch"},"pet":{"name":{"en":"Pet","ko":"동물출입"},"faicon":"fas fa-dog"},"gym":{"name":{"en":"Gym","ko":"헬스장"},"faicon":"fas fa-dumbbell"},"bar":{"name":{"en":"Bar","ko":"바"},"faicon":"fas fa-glass-cheers"},"snack":{"name":{"en":"Snack","ko":"먹거리"},"faicon":"fas fa-hamburger"},"science-lab":{"name":{"en":"Science Lab","ko":"실험실"},"faicon":"fas fa-microscope"},"private-area":{"name":{"en":"Private Area","ko":"개인공간"},"faicon":"fas fa-person-booth"},"plug":{"name":{"en":"Plug","ko":"플러그"},"faicon":"fas fa-plug"},"toilet":{"name":{"en":"Toilet","ko":"화장실"},"faicon":"fas fa-restroom"},"smoking-area":{"name":{"en":"Smoking Area","ko":"흡연실"},"faicon":"fas fa-smoking"},"no-smoking":{"name":{"en":"No Smoking","ko":"금연"},"faicon":"fas fa-smoking-ban"},"dining-area":{"name":{"en":"Dining Area","ko":"식당"},"faicon":"fas fa-utensils"},"quiet-zone":{"name":{"en":"Quiet Zone","ko":"정숙공간"},"faicon":"fas fa-volume-mute"},"disabled-facility":{"name":{"en":"Disabled Facilities","ko":"장애인시설"},"faicon":"fas fa-wheelchair"},"wifi":{"name":{"en":"Wi-Fi","ko":"와이파이"},"faicon":"fas fa-wifi"},"game-zone":{"name":{"en":"Game Zone","ko":"게임존"},"faicon":"fas fa-gamepad"}}};
 
 /***/ }),
 
@@ -84285,13 +84291,20 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const SpaceInterpret = __importStar(__webpack_require__(/*! ./space-interpret.json */ "./resources/js/model/space-interpret.json"));
+const busyLevels = SpaceInterpret['busy-level'];
 exports.interpretBusyLevel = (level, locale = 'en') => {
-    const busyLevels = SpaceInterpret['busy-level'];
     return busyLevels[level][locale] || busyLevels[level]['en'];
 };
+const spaceTypes = SpaceInterpret['type'];
 exports.interpretSpaceType = (type, locale = 'en') => {
-    const spaceTypes = SpaceInterpret['type'];
     return spaceTypes[type][locale] || spaceTypes[type]['en'];
+};
+const amenities = SpaceInterpret['amenity'];
+exports.interpretAmenity = (tag, locale = 'en') => {
+    return {
+        name: amenities[tag].name[locale] || amenities[tag].name['en'],
+        faicon: amenities[tag].faicon,
+    };
 };
 
 
@@ -84500,7 +84513,33 @@ const initialState = {
         long: 37.5035985,
     },
     operatingHours: ['00:00 - 23:59 / 월, 수, 금'],
-    amenityTags: ['wifi', 'shower', 'bathroom'],
+    amenityTags: [
+        'amazon-pay',
+        'apple-pay',
+        'bar',
+        'classroom',
+        'coffee',
+        'dining-area',
+        'disabled-facility',
+        'game-zone',
+        'gym',
+        'mastercard',
+        'no-smoking',
+        'paypal',
+        'pet',
+        'plug',
+        'private-area',
+        'quiet-zone',
+        'science-lab',
+        'shower',
+        'sleep-area',
+        'smoking-area',
+        'snack',
+        'sofa',
+        'toilet',
+        'visa',
+        'wifi',
+    ],
     images: [
         './demo-images/about_img_03.jpg',
         './demo-images/item_image_05b.jpg',

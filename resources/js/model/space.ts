@@ -4,24 +4,58 @@ export interface SpaceNames {
     [lan: string]: string;
 }
 
+/**
+ * Busy Level
+ */
 export type BusyLevel = keyof typeof SpaceInterpret['busy-level'];
 
-export type SpaceType = keyof typeof SpaceInterpret['type'];
+const busyLevels: { [level in BusyLevel]: { [lan: string]: string } } =
+    SpaceInterpret['busy-level'];
 
-export const interpretBusyLevel = (level: BusyLevel, locale: string = 'en') => {
-    const busyLevels: { [key in BusyLevel]: { [key: string]: string } } =
-        SpaceInterpret['busy-level'];
-
+export const interpretBusyLevel = (
+    level: BusyLevel,
+    locale: string = 'en',
+): string => {
     return busyLevels[level][locale] || busyLevels[level]['en'];
 };
 
-export const interpretSpaceType = (type: SpaceType, locale: string = 'en') => {
-    const spaceTypes: { [key in SpaceType]: { [key: string]: string } } =
-        SpaceInterpret['type'];
+/**
+ * Space Type
+ */
+export type SpaceType = keyof typeof SpaceInterpret['type'];
 
+const spaceTypes: { [type in SpaceType]: { [lan: string]: string } } =
+    SpaceInterpret['type'];
+
+export const interpretSpaceType = (
+    type: SpaceType,
+    locale: string = 'en',
+): string => {
     return spaceTypes[type][locale] || spaceTypes[type]['en'];
 };
 
+/**
+ * Amenity
+ */
+export type AmenityTag = keyof typeof SpaceInterpret['amenity'];
+
+const amenities: {
+    [tag in AmenityTag]: { name: { [lan: string]: string }; faicon: string }
+} = SpaceInterpret['amenity'];
+
+export const interpretAmenity = (
+    tag: AmenityTag,
+    locale: string = 'en',
+): { name: string; faicon: string } => {
+    return {
+        name: amenities[tag].name[locale] || amenities[tag].name['en'],
+        faicon: amenities[tag].faicon,
+    };
+};
+
+/**
+ * Space
+ */
 interface Space {
     spaceNames: SpaceNames;
     types: SpaceType[];
@@ -31,7 +65,7 @@ interface Space {
         long: number;
     };
     operatingHours: string[];
-    amenityTags: string[];
+    amenityTags: AmenityTag[];
     images: string[];
     rank: number;
     busyLevel: BusyLevel;
