@@ -19,7 +19,7 @@ const OSLoactionMap = compose(
     withGoogleMap,
 )(props => (
     <GoogleMap
-        defaultZoom={8}
+        defaultZoom={12}
         defaultCenter={{ lat: -34.397, lng: 150.644 }}
         mapTypeId={'roadmap'}
     >

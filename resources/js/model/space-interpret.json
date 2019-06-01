@@ -1,0 +1,19 @@
+{
+    "busy-level": {
+        "1": { "en": "Normal", "ko": "보통" },
+        "2": { "en": "Busy", "ko": "바쁨" },
+        "3": { "en": "Very Busy", "ko": "매우 바쁨" }
+    },
+    "type": {
+        "0": { "en": "library", "ko": "도서관" },
+        "1": { "en": "startup", "ko": "창업공간" },
+        "2": { "en": "museum", "ko": "박물관" },
+        "3": { "en": "bookstore", "ko": "서점" },
+        "4": { "en": "experience", "ko": "체험공간" },
+        "5": { "en": "nature", "ko": "공원" },
+        "6": { "en": "youth", "ko": "청년공간" },
+        "7": { "en": "lounge", "ko": "라운지" },
+        "8": { "en": "starbucks", "ko": "스타벅스" },
+        "9": { "en": "cafe", "ko": "카페" }
+    }
+}

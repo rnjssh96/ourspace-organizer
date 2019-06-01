@@ -1,14 +1,17 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
-const IMAGES = [
-    './demo-images/about_img_03.jpg',
-    './demo-images/item_image_05b.jpg',
-    './demo-images/item_image_06.jpg',
-];
+import RootState from '../redux-types';
 
-export default class OSImagesEditor extends React.Component {
+interface _ReduxProps {
+    images: string[];
+}
+
+interface OSImagesEditorProps extends _ReduxProps {}
+
+class _OSImagesEditor extends React.Component<OSImagesEditorProps> {
     private _renderImages() {
-        return IMAGES.map((image: string) => (
+        return this.props.images.map((image: string) => (
             <img key={image} src={image} className="rounded" />
         ));
     }
@@ -36,3 +39,16 @@ export default class OSImagesEditor extends React.Component {
         );
     }
 }
+
+const mapStateToProps = (state: RootState): _ReduxProps => ({
+    images: state.currentSpace.images,
+});
+
+const mapDispatchToProps = {};
+
+const OSImagesEditor = connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(_OSImagesEditor);
+
+export default OSImagesEditor;

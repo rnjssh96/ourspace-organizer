@@ -83842,34 +83842,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const space_1 = __webpack_require__(/*! ../model/space */ "./resources/js/model/space.ts");
 const current_space_1 = __webpack_require__(/*! ../actions/current-space */ "./resources/js/actions/current-space.ts");
 class _OSBusyLevelSelector extends react_1.default.Component {
     constructor() {
         super(...arguments);
-        this._interpretBusyLevel = (level) => {
-            if (level == 'busy') {
-                return '바쁨';
-            }
-            if (level == 'normal') {
-                return '보통';
-            }
-            else {
-                return '여유';
-            }
-        };
         this._renderButton = (level) => (react_1.default.createElement("button", { className: `${this.props.busyLevel == level ? 'selected' : ''}`, onClick: () => {
                 this.props.setBusyLevel(level);
             } },
-            react_1.default.createElement("p", { className: "h6" }, this._interpretBusyLevel(level))));
+            react_1.default.createElement("p", { className: "h6" }, space_1.interpretBusyLevel(level, 'ko'))));
     }
     render() {
         return (react_1.default.createElement("div", { id: "os-busy-level-selector" },
             react_1.default.createElement("p", { className: "h3" },
-                react_1.default.createElement("b", null, this._interpretBusyLevel(this.props.busyLevel))),
+                react_1.default.createElement("b", null, space_1.interpretBusyLevel(this.props.busyLevel, 'ko'))),
             react_1.default.createElement("div", { id: "buttons" },
-                this._renderButton('busy'),
-                this._renderButton('normal'),
-                this._renderButton('free'))));
+                this._renderButton('3'),
+                this._renderButton('2'),
+                this._renderButton('1'))));
     }
 }
 const mapStateToProps = (state) => ({
@@ -83971,18 +83961,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-class OSGeneralInfo extends react_1.default.Component {
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const space_1 = __webpack_require__(/*! ../model/space */ "./resources/js/model/space.ts");
+class _OSGeneralInfo extends react_1.default.Component {
     render() {
+        let typesText = '';
+        this.props.types.map((type, index) => {
+            if (index > 0) {
+                typesText += ' | ';
+            }
+            typesText += space_1.interpretSpaceType(type, 'ko');
+        });
         return (react_1.default.createElement("div", { id: "os-general-info" },
             react_1.default.createElement("img", { src: "./demo-images/about_img_01.jpg", className: "rounded" }),
             react_1.default.createElement("div", { id: "general-info" },
                 react_1.default.createElement("div", { id: "title-row" },
-                    react_1.default.createElement("p", { className: "h4 os-text-ellipsis" }, "\uC2A4\uD0C0\uBC85\uC2A4 \uC790\uC591\uC810"),
-                    react_1.default.createElement("p", { id: "txt-types", className: "h6 os-grey-1 os-text-ellipsis" }, "\uB3C4\uC11C\uAD00 | \uCE74\uD398")),
+                    react_1.default.createElement("p", { className: "h4 os-text-ellipsis" }, this.props.spaceNames['ko']),
+                    react_1.default.createElement("p", { id: "txt-types", className: "h6 os-grey-1 os-text-ellipsis" }, typesText)),
                 react_1.default.createElement("div", { className: "info-row" },
                     react_1.default.createElement("p", { className: "h6 os-grey-1 os-text-ellipsis" },
                         react_1.default.createElement("i", { className: "material-icons" }, "location_on"),
-                        "\uC6D0\uC8FC the potato factory"),
+                        this.props.locationText),
                     react_1.default.createElement("a", null,
                         react_1.default.createElement("p", { className: "h6 os-grey-1" },
                             react_1.default.createElement("i", { className: "material-icons" }, "edit"),
@@ -83990,13 +83989,21 @@ class OSGeneralInfo extends react_1.default.Component {
                 react_1.default.createElement("div", { className: "info-row" },
                     react_1.default.createElement("p", { className: "h6 os-grey-1 os-text-ellipsis" },
                         react_1.default.createElement("i", { className: "material-icons" }, "access_time"),
-                        "00:00 - 24:00 / Mon ~ Sun"),
+                        this.props.operatingHours),
                     react_1.default.createElement("a", null,
                         react_1.default.createElement("p", { className: "h6 os-grey-1" },
                             react_1.default.createElement("i", { className: "material-icons" }, "edit"),
                             "\uC218\uC815"))))));
     }
 }
+const mapStateToProps = (state) => ({
+    spaceNames: state.currentSpace.spaceNames,
+    types: state.currentSpace.types,
+    locationText: state.currentSpace.locationText,
+    operatingHours: state.currentSpace.operatingHours,
+});
+const mapDispatchToProps = {};
+const OSGeneralInfo = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_OSGeneralInfo);
 exports.default = OSGeneralInfo;
 
 
@@ -84016,14 +84023,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const IMAGES = [
-    './demo-images/about_img_03.jpg',
-    './demo-images/item_image_05b.jpg',
-    './demo-images/item_image_06.jpg',
-];
-class OSImagesEditor extends react_1.default.Component {
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+class _OSImagesEditor extends react_1.default.Component {
     _renderImages() {
-        return IMAGES.map((image) => (react_1.default.createElement("img", { key: image, src: image, className: "rounded" })));
+        return this.props.images.map((image) => (react_1.default.createElement("img", { key: image, src: image, className: "rounded" })));
     }
     render() {
         return (react_1.default.createElement("div", { id: "os-images-editor" },
@@ -84040,6 +84043,11 @@ class OSImagesEditor extends react_1.default.Component {
                     "\uC0AC\uC9C4 \uC0AD\uC81C\uB294 Super-organizer \uC0AC\uC6A9\uC790\uB9CC \uAC00\uB2A5\uD569\uB2C8\uB2E4."))));
     }
 }
+const mapStateToProps = (state) => ({
+    images: state.currentSpace.images,
+});
+const mapDispatchToProps = {};
+const OSImagesEditor = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_OSImagesEditor);
 exports.default = OSImagesEditor;
 
 
@@ -84066,7 +84074,7 @@ const OSLoactionMap = recompose_1.compose(recompose_1.withProps({
     loadingElement: react_1.default.createElement("div", { style: { height: '100%' } }),
     containerElement: react_1.default.createElement("div", { id: "os-location-map" }),
     mapElement: react_1.default.createElement("div", { id: "map" }),
-}), react_google_maps_1.withScriptjs, react_google_maps_1.withGoogleMap)(props => (react_1.default.createElement(react_google_maps_1.GoogleMap, { defaultZoom: 8, defaultCenter: { lat: -34.397, lng: 150.644 }, mapTypeId: 'roadmap' },
+}), react_google_maps_1.withScriptjs, react_google_maps_1.withGoogleMap)(props => (react_1.default.createElement(react_google_maps_1.GoogleMap, { defaultZoom: 12, defaultCenter: { lat: -34.397, lng: 150.644 }, mapTypeId: 'roadmap' },
     react_1.default.createElement(react_google_maps_1.Marker, { position: { lat: -34.397, lng: 150.644 } }))));
 exports.default = OSLoactionMap;
 
@@ -84098,6 +84106,47 @@ class OSRateDisplay extends react_1.default.Component {
     }
 }
 exports.default = OSRateDisplay;
+
+
+/***/ }),
+
+/***/ "./resources/js/model/space-interpret.json":
+/*!*************************************************!*\
+  !*** ./resources/js/model/space-interpret.json ***!
+  \*************************************************/
+/*! exports provided: busy-level, type, default */
+/***/ (function(module) {
+
+module.exports = {"busy-level":{"1":{"en":"Normal","ko":"보통"},"2":{"en":"Busy","ko":"바쁨"},"3":{"en":"Very Busy","ko":"매우 바쁨"}},"type":{"0":{"en":"library","ko":"도서관"},"1":{"en":"startup","ko":"창업공간"},"2":{"en":"museum","ko":"박물관"},"3":{"en":"bookstore","ko":"서점"},"4":{"en":"experience","ko":"체험공간"},"5":{"en":"nature","ko":"공원"},"6":{"en":"youth","ko":"청년공간"},"7":{"en":"lounge","ko":"라운지"},"8":{"en":"starbucks","ko":"스타벅스"},"9":{"en":"cafe","ko":"카페"}}};
+
+/***/ }),
+
+/***/ "./resources/js/model/space.ts":
+/*!*************************************!*\
+  !*** ./resources/js/model/space.ts ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const SpaceInterpret = __importStar(__webpack_require__(/*! ./space-interpret.json */ "./resources/js/model/space-interpret.json"));
+exports.interpretBusyLevel = (level, locale = 'en') => {
+    const busyLevels = SpaceInterpret['busy-level'];
+    return busyLevels[level][locale] || busyLevels[level]['en'];
+};
+exports.interpretSpaceType = (type, locale = 'en') => {
+    const spaceTypes = SpaceInterpret['type'];
+    return spaceTypes[type][locale] || spaceTypes[type]['en'];
+};
 
 
 /***/ }),
@@ -84294,11 +84343,11 @@ const current_space_1 = __webpack_require__(/*! ../redux-types/current-space */ 
  * Initial State
  */
 const initialState = {
-    spaceNames: [
-        { lang: 'ko', localizedName: '스타벅스 자양점' },
-        { lang: 'ko', localizedName: '스타벅스 자양점' },
-    ],
-    type: [2, 4],
+    spaceNames: {
+        ko: '스타벅스 자양점',
+        en: 'Starbucks Jayang',
+    },
+    types: ['2', '4'],
     locationText: '원주 the potato factory',
     location: {
         lat: 127.0038577,
@@ -84306,9 +84355,13 @@ const initialState = {
     },
     operatingHours: '00:00 - 24:00 / Mon ~ Sun',
     amenityTags: ['wifi', 'shower', 'bathroom'],
-    images: ['link_to_image', 'another_link_to_image'],
+    images: [
+        './demo-images/about_img_03.jpg',
+        './demo-images/item_image_05b.jpg',
+        './demo-images/item_image_06.jpg',
+    ],
     rank: 3.5,
-    busyLevel: 'free',
+    busyLevel: '1',
 };
 /**
  * CurrentSpaceReducer

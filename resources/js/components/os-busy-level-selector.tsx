@@ -1,9 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { BusyLevel } from '../model/space';
-
 import RootState from '../redux-types';
+
+import { BusyLevel, interpretBusyLevel } from '../model/space';
+
 import { setBusyLevel } from '../actions/current-space';
 
 interface _ReduxProps {
@@ -13,27 +14,16 @@ interface _ReduxProps {
     busyLevel: BusyLevel;
 }
 
-interface _RedusActionCreators {
+interface _ReduxActionCreators {
     /**
      * Set busy level of the space
      */
     setBusyLevel: typeof setBusyLevel;
 }
 
-interface OSBusyLevelSelectorProps extends _ReduxProps, _RedusActionCreators {}
+interface OSBusyLevelSelectorProps extends _ReduxProps, _ReduxActionCreators {}
 
 class _OSBusyLevelSelector extends React.Component<OSBusyLevelSelectorProps> {
-    private _interpretBusyLevel = (level: BusyLevel) => {
-        if (level == 'busy') {
-            return '바쁨';
-        }
-        if (level == 'normal') {
-            return '보통';
-        } else {
-            return '여유';
-        }
-    };
-
     private _renderButton = (level: BusyLevel) => (
         <button
             className={`${this.props.busyLevel == level ? 'selected' : ''}`}
@@ -41,7 +31,7 @@ class _OSBusyLevelSelector extends React.Component<OSBusyLevelSelectorProps> {
                 this.props.setBusyLevel(level);
             }}
         >
-            <p className="h6">{this._interpretBusyLevel(level)}</p>
+            <p className="h6">{interpretBusyLevel(level, 'ko')}</p>
         </button>
     );
 
@@ -49,12 +39,12 @@ class _OSBusyLevelSelector extends React.Component<OSBusyLevelSelectorProps> {
         return (
             <div id="os-busy-level-selector">
                 <p className="h3">
-                    <b>{this._interpretBusyLevel(this.props.busyLevel)}</b>
+                    <b>{interpretBusyLevel(this.props.busyLevel, 'ko')}</b>
                 </p>
                 <div id="buttons">
-                    {this._renderButton('busy')}
-                    {this._renderButton('normal')}
-                    {this._renderButton('free')}
+                    {this._renderButton('3')}
+                    {this._renderButton('2')}
+                    {this._renderButton('1')}
                 </div>
             </div>
         );
