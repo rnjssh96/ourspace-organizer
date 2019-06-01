@@ -83957,6 +83957,51 @@ exports.default = OSCommentsViewer;
 
 /***/ }),
 
+/***/ "./resources/js/components/os-general-info.tsx":
+/*!*****************************************************!*\
+  !*** ./resources/js/components/os-general-info.tsx ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+class OSGeneralInfo extends react_1.default.Component {
+    render() {
+        return (react_1.default.createElement("div", { id: "os-general-info" },
+            react_1.default.createElement("img", { src: "./demo-images/about_img_01.jpg", className: "rounded" }),
+            react_1.default.createElement("div", { id: "general-info" },
+                react_1.default.createElement("div", { id: "title-row" },
+                    react_1.default.createElement("p", { className: "h4 os-text-ellipsis" }, "\uC2A4\uD0C0\uBC85\uC2A4 \uC790\uC591\uC810"),
+                    react_1.default.createElement("p", { id: "txt-types", className: "h6 os-grey-1 os-text-ellipsis" }, "\uB3C4\uC11C\uAD00 | \uCE74\uD398")),
+                react_1.default.createElement("div", { className: "info-row" },
+                    react_1.default.createElement("p", { className: "h6 os-grey-1 os-text-ellipsis" },
+                        react_1.default.createElement("i", { className: "material-icons" }, "location_on"),
+                        "\uC6D0\uC8FC the potato factory"),
+                    react_1.default.createElement("a", null,
+                        react_1.default.createElement("p", { className: "h6 os-grey-1" },
+                            react_1.default.createElement("i", { className: "material-icons" }, "edit"),
+                            "\uC218\uC815"))),
+                react_1.default.createElement("div", { className: "info-row" },
+                    react_1.default.createElement("p", { className: "h6 os-grey-1 os-text-ellipsis" },
+                        react_1.default.createElement("i", { className: "material-icons" }, "access_time"),
+                        "00:00 - 24:00 / Mon ~ Sun"),
+                    react_1.default.createElement("a", null,
+                        react_1.default.createElement("p", { className: "h6 os-grey-1" },
+                            react_1.default.createElement("i", { className: "material-icons" }, "edit"),
+                            "\uC218\uC815"))))));
+    }
+}
+exports.default = OSGeneralInfo;
+
+
+/***/ }),
+
 /***/ "./resources/js/components/os-images-editor.tsx":
 /*!******************************************************!*\
   !*** ./resources/js/components/os-images-editor.tsx ***!
@@ -84108,32 +84153,13 @@ const os_comments_viewer_1 = __importDefault(__webpack_require__(/*! ../componen
 const os_amenity_tags_1 = __importDefault(__webpack_require__(/*! ../components/os-amenity-tags */ "./resources/js/components/os-amenity-tags.tsx"));
 const os_loaction_map_1 = __importDefault(__webpack_require__(/*! ../components/os-loaction-map */ "./resources/js/components/os-loaction-map.tsx"));
 const os_busy_level_selector_1 = __importDefault(__webpack_require__(/*! ../components/os-busy-level-selector */ "./resources/js/components/os-busy-level-selector.tsx"));
+const os_general_info_1 = __importDefault(__webpack_require__(/*! ../components/os-general-info */ "./resources/js/components/os-general-info.tsx"));
 class HomeMainView extends react_1.default.Component {
     render() {
         return (react_1.default.createElement("div", { id: "home-main-view" },
             react_1.default.createElement("div", { id: "overview" },
                 react_1.default.createElement("div", { id: "left" },
-                    react_1.default.createElement("img", { src: "./demo-images/about_img_01.jpg", className: "rounded" }),
-                    react_1.default.createElement("div", { id: "general-info" },
-                        react_1.default.createElement("div", { id: "title-row" },
-                            react_1.default.createElement("p", { className: "h4 os-text-ellipsis" }, "\uC2A4\uD0C0\uBC85\uC2A4 \uC790\uC591\uC810"),
-                            react_1.default.createElement("p", { id: "txt-types", className: "h6 os-grey-1 os-text-ellipsis" }, "\uB3C4\uC11C\uAD00 | \uCE74\uD398")),
-                        react_1.default.createElement("div", { className: "info-row" },
-                            react_1.default.createElement("p", { className: "h6 os-grey-1 os-text-ellipsis" },
-                                react_1.default.createElement("i", { className: "material-icons" }, "location_on"),
-                                "\uC6D0\uC8FC the potato factory"),
-                            react_1.default.createElement("a", null,
-                                react_1.default.createElement("p", { className: "h6 os-grey-1" },
-                                    react_1.default.createElement("i", { className: "material-icons" }, "edit"),
-                                    "\uC218\uC815"))),
-                        react_1.default.createElement("div", { className: "info-row" },
-                            react_1.default.createElement("p", { className: "h6 os-grey-1 os-text-ellipsis" },
-                                react_1.default.createElement("i", { className: "material-icons" }, "access_time"),
-                                "00:00 - 24:00 / Mon ~ Sun"),
-                            react_1.default.createElement("a", null,
-                                react_1.default.createElement("p", { className: "h6 os-grey-1" },
-                                    react_1.default.createElement("i", { className: "material-icons" }, "edit"),
-                                    "\uC218\uC815"))))),
+                    react_1.default.createElement(os_general_info_1.default, null)),
                 react_1.default.createElement("div", { id: "right" },
                     react_1.default.createElement(os_rate_display_1.default, null),
                     react_1.default.createElement(os_busy_level_selector_1.default, null))),
