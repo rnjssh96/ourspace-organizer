@@ -1,7 +1,8 @@
 import {
     CurrentSpaceActions,
-    SET_BUSY_LEVEL,
     CurrentSpaceState,
+    SET_OPERATING_HOURS,
+    SET_BUSY_LEVEL,
 } from '../redux-types/current-space';
 
 /**
@@ -18,7 +19,7 @@ const initialState: CurrentSpaceState = {
         lat: 127.0038577,
         long: 37.5035985,
     },
-    operatingHours: '00:00 - 24:00 / Mon ~ Sun', //ok
+    operatingHours: ['00:00 - 23:59 / 월, 수, 금'], // ok
     amenityTags: ['wifi', 'shower', 'bathroom'],
     images: [
         './demo-images/about_img_03.jpg',
@@ -37,6 +38,12 @@ export default function CurrentSpaceReducer(
     action: CurrentSpaceActions,
 ) {
     switch (action.type) {
+        case SET_OPERATING_HOURS:
+            return {
+                ...state,
+                operatingHours: action.operatingHours,
+            };
+
         case SET_BUSY_LEVEL:
             return {
                 ...state,

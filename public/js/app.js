@@ -83695,6 +83695,10 @@ const current_space_1 = __webpack_require__(/*! ../redux-types/current-space */ 
 /**
  * Action Creators
  */
+exports.setOperatingHours = (operatingHours) => ({
+    type: current_space_1.SET_OPERATING_HOURS,
+    operatingHours,
+});
 exports.setBusyLevel = (busyLevel) => ({
     type: current_space_1.SET_BUSY_LEVEL,
     busyLevel,
@@ -83947,10 +83951,21 @@ exports.default = OSCommentsViewer;
 
 /***/ }),
 
-/***/ "./resources/js/components/os-general-info.tsx":
-/*!*****************************************************!*\
-  !*** ./resources/js/components/os-general-info.tsx ***!
-  \*****************************************************/
+/***/ "./resources/js/components/os-general-info/day-interpret.json":
+/*!********************************************************************!*\
+  !*** ./resources/js/components/os-general-info/day-interpret.json ***!
+  \********************************************************************/
+/*! exports provided: MON, TUE, WED, THU, FRI, SAT, SUN, default */
+/***/ (function(module) {
+
+module.exports = {"MON":{"en":"Mon","ko":"월"},"TUE":{"en":"Tue","ko":"화"},"WED":{"en":"Wed","ko":"수"},"THU":{"en":"Thu","ko":"목"},"FRI":{"en":"Fri","ko":"금"},"SAT":{"en":"Sat","ko":"토"},"SUN":{"en":"Sun","ko":"일"}};
+
+/***/ }),
+
+/***/ "./resources/js/components/os-general-info/index.tsx":
+/*!***********************************************************!*\
+  !*** ./resources/js/components/os-general-info/index.tsx ***!
+  \***********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -83959,10 +83974,19 @@ exports.default = OSCommentsViewer;
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-const space_1 = __webpack_require__(/*! ../model/space */ "./resources/js/model/space.ts");
+const space_1 = __webpack_require__(/*! ../../model/space */ "./resources/js/model/space.ts");
+const current_space_1 = __webpack_require__(/*! ../../actions/current-space */ "./resources/js/actions/current-space.ts");
+const operating_hour_edit_modal_1 = __importStar(__webpack_require__(/*! ./operating-hour-edit-modal */ "./resources/js/components/os-general-info/operating-hour-edit-modal.tsx"));
 class _OSGeneralInfo extends react_1.default.Component {
     render() {
         let typesText = '';
@@ -83980,20 +84004,22 @@ class _OSGeneralInfo extends react_1.default.Component {
                     react_1.default.createElement("p", { id: "txt-types", className: "h6 os-grey-1 os-text-ellipsis" }, typesText)),
                 react_1.default.createElement("div", { className: "info-row" },
                     react_1.default.createElement("p", { className: "h6 os-grey-1 os-text-ellipsis" },
-                        react_1.default.createElement("i", { className: "material-icons" }, "location_on"),
-                        this.props.locationText),
-                    react_1.default.createElement("a", null,
+                        react_1.default.createElement("i", { className: "material-icons" }, "location_on")),
+                    react_1.default.createElement("div", { className: "text" },
+                        react_1.default.createElement("p", { className: "h6 os-grey-1 os-text-ellipsis" }, this.props.locationText)),
+                    react_1.default.createElement("button", { id: "edit-button", "data-toggle": "modal", "data-target": `#${operating_hour_edit_modal_1.OperatingHourEditModalID}` },
                         react_1.default.createElement("p", { className: "h6 os-grey-1" },
                             react_1.default.createElement("i", { className: "material-icons" }, "edit"),
                             "\uC218\uC815"))),
                 react_1.default.createElement("div", { className: "info-row" },
                     react_1.default.createElement("p", { className: "h6 os-grey-1 os-text-ellipsis" },
-                        react_1.default.createElement("i", { className: "material-icons" }, "access_time"),
-                        this.props.operatingHours),
-                    react_1.default.createElement("a", null,
+                        react_1.default.createElement("i", { className: "material-icons" }, "access_time")),
+                    react_1.default.createElement("div", { className: "text" }, this.props.operatingHours.map((workingHour) => (react_1.default.createElement("p", { key: workingHour, className: "h6 os-grey-1 os-text-ellipsis" }, workingHour)))),
+                    react_1.default.createElement("button", { id: "edit-button", "data-toggle": "modal", "data-target": `#${operating_hour_edit_modal_1.OperatingHourEditModalID}` },
                         react_1.default.createElement("p", { className: "h6 os-grey-1" },
                             react_1.default.createElement("i", { className: "material-icons" }, "edit"),
-                            "\uC218\uC815"))))));
+                            "\uC218\uC815")),
+                    react_1.default.createElement(operating_hour_edit_modal_1.default, { setOperatingHours: this.props.setOperatingHours })))));
     }
 }
 const mapStateToProps = (state) => ({
@@ -84002,9 +84028,129 @@ const mapStateToProps = (state) => ({
     locationText: state.currentSpace.locationText,
     operatingHours: state.currentSpace.operatingHours,
 });
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+    setOperatingHours: current_space_1.setOperatingHours,
+};
 const OSGeneralInfo = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_OSGeneralInfo);
 exports.default = OSGeneralInfo;
+
+
+/***/ }),
+
+/***/ "./resources/js/components/os-general-info/operating-hour-edit-modal.tsx":
+/*!*******************************************************************************!*\
+  !*** ./resources/js/components/os-general-info/operating-hour-edit-modal.tsx ***!
+  \*******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const DayInterpret = __importStar(__webpack_require__(/*! ./day-interpret.json */ "./resources/js/components/os-general-info/day-interpret.json"));
+exports.OperatingHourEditModalID = 'operating-hour-edit-modal';
+class OperatingHourEditModal extends react_1.default.Component {
+    constructor() {
+        super(...arguments);
+        this.state = {
+            MON: { off: true, startTime: '00:00', endTime: '23:59' },
+            TUE: { off: true, startTime: '00:00', endTime: '23:59' },
+            WED: { off: true, startTime: '00:00', endTime: '23:59' },
+            THU: { off: true, startTime: '00:00', endTime: '23:59' },
+            FRI: { off: true, startTime: '00:00', endTime: '23:59' },
+            SAT: { off: true, startTime: '00:00', endTime: '23:59' },
+            SUN: { off: true, startTime: '00:00', endTime: '23:59' },
+        };
+        this._saveOperatingHour = (event) => {
+            event.preventDefault();
+            let map = {};
+            let priority = [];
+            Object.keys(this.state).map((day) => {
+                if (this.state[day].off) {
+                    return;
+                }
+                let timeKey = `${this.state[day].startTime} - ${this.state[day].endTime}`;
+                if (map[timeKey]) {
+                    map[timeKey].push(day);
+                }
+                else {
+                    map[timeKey] = [day];
+                    priority.push(timeKey);
+                }
+            });
+            let temp = '';
+            let result = priority.map((timeKey) => {
+                temp = `${timeKey} / `;
+                map[timeKey].map((day, index) => {
+                    if (index > 0) {
+                        temp += ', ';
+                    }
+                    temp += DayInterpret[day]['ko'];
+                });
+                return temp;
+            });
+            this.props.setOperatingHours(result);
+        };
+        this._renderRow = (day) => {
+            const operatingTime = this.state[day];
+            const changeState = (key, value) => {
+                this.setState({
+                    ...this.state,
+                    [day]: {
+                        ...operatingTime,
+                        [key]: value,
+                    },
+                });
+            };
+            return (react_1.default.createElement("div", { key: day, className: `table-row ${operatingTime.off ? 'day-off' : 'day-on'}` },
+                react_1.default.createElement("div", { className: "table-col table-col-day", onClick: () => {
+                        changeState('off', !operatingTime.off);
+                    } },
+                    react_1.default.createElement("p", { className: "h6" }, DayInterpret[day]['ko'])),
+                operatingTime.off && (react_1.default.createElement("div", { className: "table-col day-off" },
+                    react_1.default.createElement("p", { className: "h6" }, "\uD734\uBB34"))),
+                !operatingTime.off && (react_1.default.createElement("div", { className: "table-col" },
+                    react_1.default.createElement("input", { type: "time", value: operatingTime.startTime, required: true, onChange: (e) => {
+                            changeState('startTime', e.target.value);
+                        } }))),
+                !operatingTime.off && (react_1.default.createElement("div", { className: "table-col" },
+                    react_1.default.createElement("input", { type: "time", value: operatingTime.endTime, required: true, onChange: (e) => {
+                            changeState('endTime', e.target.value);
+                        } })))));
+        };
+        this._renderTable = () => {
+            return (react_1.default.createElement("div", { id: "table" }, Object.keys(this.state).map((day) => this._renderRow(day))));
+        };
+    }
+    render() {
+        return (react_1.default.createElement("div", { id: exports.OperatingHourEditModalID, className: "modal fade", tabIndex: -1, role: "dialog", "aria-labelledby": "exampleModalLabel", "aria-hidden": "true" },
+            react_1.default.createElement("div", { className: "modal-dialog", role: "document" },
+                react_1.default.createElement("form", null,
+                    react_1.default.createElement("div", { className: "modal-content" },
+                        react_1.default.createElement("div", { className: "modal-header" },
+                            react_1.default.createElement("p", { className: "modal-title h5", id: "exampleModalLabel" }, "\uC6B4\uC601\uC2DC\uAC04 \uC218\uC815")),
+                        react_1.default.createElement("div", { className: "modal-body" },
+                            this._renderTable(),
+                            react_1.default.createElement("p", { className: "h6" },
+                                react_1.default.createElement("i", { className: "material-icons" }, "info"),
+                                "\uC694\uC77C\uC744 \uD074\uB9AD\uD558\uC5EC \uD734\uBB34\uC5EC\uBD80\uB97C \uBCC0\uACBD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4.")),
+                        react_1.default.createElement("div", { className: "modal-footer" },
+                            react_1.default.createElement("button", { type: "button", className: "btn btn-secondary", "data-dismiss": "modal" }, "\uB2EB\uAE30"),
+                            react_1.default.createElement("button", { type: "submit", className: "btn btn-primary", "data-dismiss": "modal", onClick: this._saveOperatingHour }, "\uC800\uC7A5")))))));
+    }
+}
+exports.default = OperatingHourEditModal;
 
 
 /***/ }),
@@ -84202,7 +84348,7 @@ const os_comments_viewer_1 = __importDefault(__webpack_require__(/*! ../componen
 const os_amenity_tags_1 = __importDefault(__webpack_require__(/*! ../components/os-amenity-tags */ "./resources/js/components/os-amenity-tags.tsx"));
 const os_loaction_map_1 = __importDefault(__webpack_require__(/*! ../components/os-loaction-map */ "./resources/js/components/os-loaction-map.tsx"));
 const os_busy_level_selector_1 = __importDefault(__webpack_require__(/*! ../components/os-busy-level-selector */ "./resources/js/components/os-busy-level-selector.tsx"));
-const os_general_info_1 = __importDefault(__webpack_require__(/*! ../components/os-general-info */ "./resources/js/components/os-general-info.tsx"));
+const os_general_info_1 = __importDefault(__webpack_require__(/*! ../components/os-general-info */ "./resources/js/components/os-general-info/index.tsx"));
 class HomeMainView extends react_1.default.Component {
     render() {
         return (react_1.default.createElement("div", { id: "home-main-view" },
@@ -84353,7 +84499,7 @@ const initialState = {
         lat: 127.0038577,
         long: 37.5035985,
     },
-    operatingHours: '00:00 - 24:00 / Mon ~ Sun',
+    operatingHours: ['00:00 - 23:59 / 월, 수, 금'],
     amenityTags: ['wifi', 'shower', 'bathroom'],
     images: [
         './demo-images/about_img_03.jpg',
@@ -84368,6 +84514,11 @@ const initialState = {
  */
 function CurrentSpaceReducer(state = initialState, action) {
     switch (action.type) {
+        case current_space_1.SET_OPERATING_HOURS:
+            return {
+                ...state,
+                operatingHours: action.operatingHours,
+            };
         case current_space_1.SET_BUSY_LEVEL:
             return {
                 ...state,
@@ -84395,6 +84546,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * Action Constants
  */
+// prettier-ignore
+exports.SET_OPERATING_HOURS = 'our-space-organizer/home/SET_OPERATING_HOURS';
 // prettier-ignore
 exports.SET_BUSY_LEVEL = 'our-space-organizer/home/SET_BUSY_LEVEL';
 

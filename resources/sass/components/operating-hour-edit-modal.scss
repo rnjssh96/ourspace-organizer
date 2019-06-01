@@ -1,0 +1,99 @@
+#operating-hour-edit-modal {
+    .modal-body {
+        // flex
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+
+        p {
+            // margin
+            margin-bottom: 0;
+        }
+
+        & > p {
+            // margin
+            margin-top: 0.5rem;
+
+            // color
+            color: $grey-1;
+        }
+
+        #table {
+            // size
+            width: 100%;
+
+            // border
+            border: 0.5px solid $grey-2;
+
+            & > .table-row {
+                // flex
+                display: flex;
+
+                &.day-on {
+                    .table-col-day {
+                        // background
+                        background-color: $sub-theme;
+
+                        p {
+                            // font-color
+                            color: $white;
+                        }
+                    }
+                }
+
+                &:not(:last-child) {
+                    // border
+                    border-bottom: 0.5px solid $grey-2;
+                }
+
+                & > .table-col {
+                    // flex
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+
+                    & > input {
+                        // border
+                        border: 0;
+
+                        // text
+                        text-align: center;
+                        font-size: 0.8rem;
+
+                        // cursor
+                        cursor: text;
+                    }
+
+                    &.table-col-day {
+                        // size
+                        width: 3rem;
+
+                        // padding
+                        padding-top: 0.8rem;
+                        padding-bottom: 0.8rem;
+
+                        // cursor
+                        cursor: pointer;
+                    }
+
+                    &:not(:last-child) {
+                        // border
+                        border-right: 0.5px solid $grey-2;
+                    }
+
+                    &:not(:first-child) {
+                        // size
+                        flex: 1;
+                    }
+
+                    &.day-off {
+                        p {
+                            // font-color
+                            color: $grey-1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

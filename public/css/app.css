@@ -11025,6 +11025,10 @@ a.text-dark:focus {
   align-items: center;
 }
 
+#os-general-info p {
+  margin-bottom: 0;
+}
+
 #os-general-info > * {
   width: 100%;
 }
@@ -11039,15 +11043,13 @@ a.text-dark:focus {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
   margin-left: 1rem;
 }
 
 #os-general-info > #general-info > #title-row {
   display: flex;
   align-items: flex-end;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 #os-general-info > #general-info > #title-row > #txt-types {
@@ -11056,9 +11058,92 @@ a.text-dark:focus {
 
 #os-general-info > #general-info > .info-row {
   display: flex;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
 }
 
-#os-general-info > #general-info > .info-row > p:first-child {
+#os-general-info > #general-info > .info-row > :first-child {
+  margin-right: 0.3rem;
+}
+
+#os-general-info > #general-info > .info-row > .text {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+#os-general-info > #general-info > .info-row > #edit-button {
+  background-color: transparent;
+  padding: 0;
+  border: 0;
+}
+
+#operating-hour-edit-modal .modal-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+#operating-hour-edit-modal .modal-body p {
+  margin-bottom: 0;
+}
+
+#operating-hour-edit-modal .modal-body > p {
+  margin-top: 0.5rem;
+  color: #707070;
+}
+
+#operating-hour-edit-modal .modal-body #table {
+  width: 100%;
+  border: 0.5px solid #e5e5e5;
+}
+
+#operating-hour-edit-modal .modal-body #table > .table-row {
+  display: flex;
+}
+
+#operating-hour-edit-modal .modal-body #table > .table-row.day-on .table-col-day {
+  background-color: #f2bf54;
+}
+
+#operating-hour-edit-modal .modal-body #table > .table-row.day-on .table-col-day p {
+  color: #ffffff;
+}
+
+#operating-hour-edit-modal .modal-body #table > .table-row:not(:last-child) {
+  border-bottom: 0.5px solid #e5e5e5;
+}
+
+#operating-hour-edit-modal .modal-body #table > .table-row > .table-col {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#operating-hour-edit-modal .modal-body #table > .table-row > .table-col > input {
+  border: 0;
+  text-align: center;
+  font-size: 0.8rem;
+  cursor: text;
+}
+
+#operating-hour-edit-modal .modal-body #table > .table-row > .table-col.table-col-day {
+  width: 3rem;
+  padding-top: 0.8rem;
+  padding-bottom: 0.8rem;
+  cursor: pointer;
+}
+
+#operating-hour-edit-modal .modal-body #table > .table-row > .table-col:not(:last-child) {
+  border-right: 0.5px solid #e5e5e5;
+}
+
+#operating-hour-edit-modal .modal-body #table > .table-row > .table-col:not(:first-child) {
+  flex: 1;
+}
+
+#operating-hour-edit-modal .modal-body #table > .table-row > .table-col.day-off p {
+  color: #707070;
 }
 

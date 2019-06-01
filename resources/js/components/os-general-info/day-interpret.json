@@ -1,0 +1,9 @@
+{
+    "MON": { "en": "Mon", "ko": "월" },
+    "TUE": { "en": "Tue", "ko": "화" },
+    "WED": { "en": "Wed", "ko": "수" },
+    "THU": { "en": "Thu", "ko": "목" },
+    "FRI": { "en": "Fri", "ko": "금" },
+    "SAT": { "en": "Sat", "ko": "토" },
+    "SUN": { "en": "Sun", "ko": "일" }
+}

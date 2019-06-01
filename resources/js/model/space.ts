@@ -30,7 +30,7 @@ interface Space {
         lat: number;
         long: number;
     };
-    operatingHours: string;
+    operatingHours: string[];
     amenityTags: string[];
     images: string[];
     rank: number;
