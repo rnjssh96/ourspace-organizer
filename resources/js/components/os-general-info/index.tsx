@@ -77,7 +77,6 @@ class _OSGeneralInfo extends React.Component<OSGeneralInfoProps> {
                             </p>
                         </div>
                         <button
-                            id="edit-button"
                             data-toggle="modal"
                             data-target={`#${OperatingHourEditModalID}`}
                         >
@@ -104,7 +103,6 @@ class _OSGeneralInfo extends React.Component<OSGeneralInfoProps> {
                             )}
                         </div>
                         <button
-                            id="edit-button"
                             data-toggle="modal"
                             data-target={`#${OperatingHourEditModalID}`}
                         >

@@ -146,19 +146,13 @@ export default class OperatingHourEditModal extends React.Component<
                 className="modal fade"
                 tabIndex={-1}
                 role="dialog"
-                aria-labelledby="exampleModalLabel"
                 aria-hidden="true"
             >
                 <div className="modal-dialog" role="document">
                     <form>
                         <div className="modal-content">
                             <div className="modal-header">
-                                <p
-                                    className="modal-title h5"
-                                    id="exampleModalLabel"
-                                >
-                                    운영시간 수정
-                                </p>
+                                <p className="modal-title h5">운영시간 수정</p>
                             </div>
                             <div className="modal-body">
                                 {this._renderTable()}

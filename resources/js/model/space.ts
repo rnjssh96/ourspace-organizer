@@ -1,4 +1,4 @@
-import * as SpaceInterpret from './space-interpret.json';
+import SpaceInterpret from './space-interpret.json';
 
 export interface SpaceNames {
     [lan: string]: string;
@@ -39,14 +39,19 @@ export const interpretSpaceType = (
  */
 export type AmenityTag = keyof typeof SpaceInterpret['amenity'];
 
-const amenities: {
+export const amenities: {
     [tag in AmenityTag]: { name: { [lan: string]: string }; faicon: string }
 } = SpaceInterpret['amenity'];
+
+export interface interpretedAmentiy {
+    name: string;
+    faicon: string;
+}
 
 export const interpretAmenity = (
     tag: AmenityTag,
     locale: string = 'en',
-): { name: string; faicon: string } => {
+): interpretedAmentiy => {
     return {
         name: amenities[tag].name[locale] || amenities[tag].name['en'],
         faicon: amenities[tag].faicon,

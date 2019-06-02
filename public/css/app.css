@@ -10696,6 +10696,12 @@ h6,
   margin-bottom: 0;
 }
 
+button {
+  background-color: transparent;
+  padding: 0;
+  border: 0;
+}
+
 #os-home-container > #body {
   height: 100vh;
   padding-top: 4rem;
@@ -11074,12 +11080,6 @@ h6,
   align-items: stretch;
 }
 
-#os-general-info > #general-info > .info-row > #edit-button {
-  background-color: transparent;
-  padding: 0;
-  border: 0;
-}
-
 #operating-hour-edit-modal .modal-body {
   display: flex;
   flex-direction: column;
@@ -11142,5 +11142,44 @@ h6,
 
 #operating-hour-edit-modal .modal-body #table > .table-row > .table-col.day-off p {
   color: #707070;
+}
+
+#amenities-edit-modal #amenity-table {
+  width: 100%;
+}
+
+#amenities-edit-modal #amenity-table > tbody {
+  width: 100%;
+}
+
+#amenities-edit-modal #amenity-table > tbody > tr > td {
+  width: 25%;
+  padding: 0.5rem;
+}
+
+#amenities-edit-modal #amenity-table > tbody > tr > td > .amenity {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem;
+  border-radius: 0.7rem;
+  border: 2px solid #f3a930;
+}
+
+#amenities-edit-modal #amenity-table > tbody > tr > td > .amenity.selected {
+  background-color: #f3a930;
+}
+
+#amenities-edit-modal #amenity-table > tbody > tr > td > .amenity.selected > p {
+  color: #ffffff;
+}
+
+#amenities-edit-modal #amenity-table > tbody > tr > td > .amenity > p {
+  color: #f3a930;
+}
+
+#amenities-edit-modal #amenity-table > tbody > tr > td > .amenity > p:last-child {
+  margin-top: 0.3rem;
 }
 

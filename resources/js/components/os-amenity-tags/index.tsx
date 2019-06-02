@@ -1,13 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import RootState from '../redux-types';
+import RootState from '../../redux-types';
 
-import { AmenityTag, interpretAmenity } from '../model/space';
+import { AmenityTag, interpretAmenity } from '../../model/space';
+
+import AmenitiesEditModal, {
+    AmenitiesEditModalID,
+} from './amenities-edit-modal';
 
 interface _ReduxProps {
     /**
-     * Amenity tabs of the space
+     * Amenity tags of the space
      */
     amenityTags: AmenityTag[];
 }
@@ -42,12 +46,16 @@ class _OSAmenityTags extends React.Component<OSAmenityTagsProps> {
             <div id="os-amenity-tags">
                 <div id="header">
                     <p className="h5">편의시설</p>
-                    <a>
+                    <button
+                        data-toggle="modal"
+                        data-target={`#${AmenitiesEditModalID}`}
+                    >
                         <p className="h6 os-grey-1">
                             <i className="material-icons">add</i>
                             추가
                         </p>
-                    </a>
+                    </button>
+                    <AmenitiesEditModal amenityTags={this.props.amenityTags} />
                 </div>
                 <div id="body">
                     <div id="amenities">{this._rednerAmenities()}</div>

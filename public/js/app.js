@@ -83789,10 +83789,10 @@ if (token) {
 
 /***/ }),
 
-/***/ "./resources/js/components/os-amenity-tags.tsx":
-/*!*****************************************************!*\
-  !*** ./resources/js/components/os-amenity-tags.tsx ***!
-  \*****************************************************/
+/***/ "./resources/js/components/os-amenity-tags/amenities-edit-modal.tsx":
+/*!**************************************************************************!*\
+  !*** ./resources/js/components/os-amenity-tags/amenities-edit-modal.tsx ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -83803,8 +83803,92 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const space_1 = __webpack_require__(/*! ../../model/space */ "./resources/js/model/space.ts");
+exports.AmenitiesEditModalID = 'amenities-edit-modal';
+const COL_PER_ROW = 4;
+const tags = Object.keys(space_1.amenities);
+class AmenitiesEditModal extends react_1.default.Component {
+    constructor() {
+        super(...arguments);
+        this.state = {};
+        this._amenityTableStructure = [];
+        this._toggleTag = (tag) => {
+            this.setState({ ...this.state, [tag]: !this.state[tag] });
+        };
+        this._renderTable = () => {
+            const renderColumn = (col) => (react_1.default.createElement("td", { key: col.key },
+                react_1.default.createElement("button", { type: "button", className: `amenity ${this.state[col.key] ? 'selected' : ''}`, onClick: () => {
+                        this._toggleTag(col.key);
+                    } },
+                    react_1.default.createElement("p", { className: "h1" },
+                        react_1.default.createElement("i", { className: col.value.faicon })),
+                    react_1.default.createElement("p", { className: "h6" }, col.value.name))));
+            return (react_1.default.createElement("table", { id: "amenity-table" },
+                react_1.default.createElement("tbody", null, this._amenityTableStructure.map((row, index) => (react_1.default.createElement("tr", { key: index }, row.map((col) => renderColumn(col))))))));
+        };
+    }
+    componentWillMount() {
+        let initialState = {};
+        let row;
+        let col;
+        tags.map((tag, index) => {
+            initialState[tag] = this.props.amenityTags.includes(tag);
+            col = index % COL_PER_ROW;
+            if (col == 0) {
+                row = [];
+            }
+            row.push({
+                key: tag,
+                value: space_1.interpretAmenity(tag, 'ko'),
+            });
+            if (col == COL_PER_ROW - 1 || index == tags.length - 1) {
+                this._amenityTableStructure.push(row);
+            }
+        });
+        this.setState(initialState);
+    }
+    render() {
+        return (react_1.default.createElement("div", { id: exports.AmenitiesEditModalID, className: "modal fade", tabIndex: -1, role: "dialog", "aria-hidden": "true" },
+            react_1.default.createElement("div", { className: "modal-dialog", role: "document" },
+                react_1.default.createElement("form", null,
+                    react_1.default.createElement("div", { className: "modal-content" },
+                        react_1.default.createElement("div", { className: "modal-header" },
+                            react_1.default.createElement("p", { className: "modal-title h5" }, "\uD3B8\uC758\uC2DC\uC124 \uC124\uC815")),
+                        react_1.default.createElement("div", { className: "modal-body" }, this._renderTable()),
+                        react_1.default.createElement("div", { className: "modal-footer" },
+                            react_1.default.createElement("button", { type: "button", className: "btn btn-secondary", "data-dismiss": "modal" }, "\uB2EB\uAE30"),
+                            react_1.default.createElement("button", { type: "submit", className: "btn btn-primary", "data-dismiss": "modal" }, "\uC800\uC7A5")))))));
+    }
+}
+exports.default = AmenitiesEditModal;
+
+
+/***/ }),
+
+/***/ "./resources/js/components/os-amenity-tags/index.tsx":
+/*!***********************************************************!*\
+  !*** ./resources/js/components/os-amenity-tags/index.tsx ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-const space_1 = __webpack_require__(/*! ../model/space */ "./resources/js/model/space.ts");
+const space_1 = __webpack_require__(/*! ../../model/space */ "./resources/js/model/space.ts");
+const amenities_edit_modal_1 = __importStar(__webpack_require__(/*! ./amenities-edit-modal */ "./resources/js/components/os-amenity-tags/amenities-edit-modal.tsx"));
 class _OSAmenityTags extends react_1.default.Component {
     constructor() {
         super(...arguments);
@@ -83821,10 +83905,11 @@ class _OSAmenityTags extends react_1.default.Component {
         return (react_1.default.createElement("div", { id: "os-amenity-tags" },
             react_1.default.createElement("div", { id: "header" },
                 react_1.default.createElement("p", { className: "h5" }, "\uD3B8\uC758\uC2DC\uC124"),
-                react_1.default.createElement("a", null,
+                react_1.default.createElement("button", { "data-toggle": "modal", "data-target": `#${amenities_edit_modal_1.AmenitiesEditModalID}` },
                     react_1.default.createElement("p", { className: "h6 os-grey-1" },
                         react_1.default.createElement("i", { className: "material-icons" }, "add"),
-                        "\uCD94\uAC00"))),
+                        "\uCD94\uAC00")),
+                react_1.default.createElement(amenities_edit_modal_1.default, { amenityTags: this.props.amenityTags })),
             react_1.default.createElement("div", { id: "body" },
                 react_1.default.createElement("div", { id: "amenities" }, this._rednerAmenities())),
             react_1.default.createElement("div", { id: "footer" },
@@ -84019,7 +84104,7 @@ class _OSGeneralInfo extends react_1.default.Component {
                         react_1.default.createElement("i", { className: "material-icons" }, "location_on")),
                     react_1.default.createElement("div", { className: "text" },
                         react_1.default.createElement("p", { className: "h6 os-grey-1 os-text-ellipsis" }, this.props.locationText)),
-                    react_1.default.createElement("button", { id: "edit-button", "data-toggle": "modal", "data-target": `#${operating_hour_edit_modal_1.OperatingHourEditModalID}` },
+                    react_1.default.createElement("button", { "data-toggle": "modal", "data-target": `#${operating_hour_edit_modal_1.OperatingHourEditModalID}` },
                         react_1.default.createElement("p", { className: "h6 os-grey-1" },
                             react_1.default.createElement("i", { className: "material-icons" }, "edit"),
                             "\uC218\uC815"))),
@@ -84027,7 +84112,7 @@ class _OSGeneralInfo extends react_1.default.Component {
                     react_1.default.createElement("p", { className: "h6 os-grey-1 os-text-ellipsis" },
                         react_1.default.createElement("i", { className: "material-icons" }, "access_time")),
                     react_1.default.createElement("div", { className: "text" }, this.props.operatingHours.map((workingHour) => (react_1.default.createElement("p", { key: workingHour, className: "h6 os-grey-1 os-text-ellipsis" }, workingHour)))),
-                    react_1.default.createElement("button", { id: "edit-button", "data-toggle": "modal", "data-target": `#${operating_hour_edit_modal_1.OperatingHourEditModalID}` },
+                    react_1.default.createElement("button", { "data-toggle": "modal", "data-target": `#${operating_hour_edit_modal_1.OperatingHourEditModalID}` },
                         react_1.default.createElement("p", { className: "h6 os-grey-1" },
                             react_1.default.createElement("i", { className: "material-icons" }, "edit"),
                             "\uC218\uC815")),
@@ -84146,12 +84231,12 @@ class OperatingHourEditModal extends react_1.default.Component {
         };
     }
     render() {
-        return (react_1.default.createElement("div", { id: exports.OperatingHourEditModalID, className: "modal fade", tabIndex: -1, role: "dialog", "aria-labelledby": "exampleModalLabel", "aria-hidden": "true" },
+        return (react_1.default.createElement("div", { id: exports.OperatingHourEditModalID, className: "modal fade", tabIndex: -1, role: "dialog", "aria-hidden": "true" },
             react_1.default.createElement("div", { className: "modal-dialog", role: "document" },
                 react_1.default.createElement("form", null,
                     react_1.default.createElement("div", { className: "modal-content" },
                         react_1.default.createElement("div", { className: "modal-header" },
-                            react_1.default.createElement("p", { className: "modal-title h5", id: "exampleModalLabel" }, "\uC6B4\uC601\uC2DC\uAC04 \uC218\uC815")),
+                            react_1.default.createElement("p", { className: "modal-title h5" }, "\uC6B4\uC601\uC2DC\uAC04 \uC218\uC815")),
                         react_1.default.createElement("div", { className: "modal-body" },
                             this._renderTable(),
                             react_1.default.createElement("p", { className: "h6" },
@@ -84288,28 +84373,24 @@ module.exports = {"busy-level":{"1":{"en":"Normal","ko":"보통"},"2":{"en":"Bus
 
 "use strict";
 
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const SpaceInterpret = __importStar(__webpack_require__(/*! ./space-interpret.json */ "./resources/js/model/space-interpret.json"));
-const busyLevels = SpaceInterpret['busy-level'];
+const space_interpret_json_1 = __importDefault(__webpack_require__(/*! ./space-interpret.json */ "./resources/js/model/space-interpret.json"));
+const busyLevels = space_interpret_json_1.default['busy-level'];
 exports.interpretBusyLevel = (level, locale = 'en') => {
     return busyLevels[level][locale] || busyLevels[level]['en'];
 };
-const spaceTypes = SpaceInterpret['type'];
+const spaceTypes = space_interpret_json_1.default['type'];
 exports.interpretSpaceType = (type, locale = 'en') => {
     return spaceTypes[type][locale] || spaceTypes[type]['en'];
 };
-const amenities = SpaceInterpret['amenity'];
+exports.amenities = space_interpret_json_1.default['amenity'];
 exports.interpretAmenity = (tag, locale = 'en') => {
     return {
-        name: amenities[tag].name[locale] || amenities[tag].name['en'],
-        faicon: amenities[tag].faicon,
+        name: exports.amenities[tag].name[locale] || exports.amenities[tag].name['en'],
+        faicon: exports.amenities[tag].faicon,
     };
 };
 
@@ -84364,7 +84445,7 @@ const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules
 const os_rate_display_1 = __importDefault(__webpack_require__(/*! ../components/os-rate-display */ "./resources/js/components/os-rate-display.tsx"));
 const os_images_editor_1 = __importDefault(__webpack_require__(/*! ../components/os-images-editor */ "./resources/js/components/os-images-editor.tsx"));
 const os_comments_viewer_1 = __importDefault(__webpack_require__(/*! ../components/os-comments-viewer */ "./resources/js/components/os-comments-viewer.tsx"));
-const os_amenity_tags_1 = __importDefault(__webpack_require__(/*! ../components/os-amenity-tags */ "./resources/js/components/os-amenity-tags.tsx"));
+const os_amenity_tags_1 = __importDefault(__webpack_require__(/*! ../components/os-amenity-tags */ "./resources/js/components/os-amenity-tags/index.tsx"));
 const os_loaction_map_1 = __importDefault(__webpack_require__(/*! ../components/os-loaction-map */ "./resources/js/components/os-loaction-map.tsx"));
 const os_busy_level_selector_1 = __importDefault(__webpack_require__(/*! ../components/os-busy-level-selector */ "./resources/js/components/os-busy-level-selector.tsx"));
 const os_general_info_1 = __importDefault(__webpack_require__(/*! ../components/os-general-info */ "./resources/js/components/os-general-info/index.tsx"));
@@ -84519,33 +84600,7 @@ const initialState = {
         long: 37.5035985,
     },
     operatingHours: ['00:00 - 23:59 / 월, 수, 금'],
-    amenityTags: [
-        'amazon-pay',
-        'apple-pay',
-        'bar',
-        'classroom',
-        'coffee',
-        'dining-area',
-        'disabled-facility',
-        'game-zone',
-        'gym',
-        'mastercard',
-        'no-smoking',
-        'paypal',
-        'pet',
-        'plug',
-        'private-area',
-        'quiet-zone',
-        'science-lab',
-        'shower',
-        'sleep-area',
-        'smoking-area',
-        'snack',
-        'sofa',
-        'toilet',
-        'visa',
-        'wifi',
-    ],
+    amenityTags: ['amazon-pay', 'apple-pay', 'toilet', 'visa', 'wifi'],
     images: [
         './demo-images/about_img_03.jpg',
         './demo-images/item_image_05b.jpg',
