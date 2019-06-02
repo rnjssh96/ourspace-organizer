@@ -90,14 +90,18 @@
                 // flex
                 display: flex;
                 justify-content: space-between;
+            }
 
+            #body {
                 // margin
+                margin-top: 0.5rem;
                 margin-bottom: 0.5rem;
+            }
 
-                p {
-                    // margin
-                    margin-bottom: 0;
-                }
+            #footer {
+                // flex
+                display: flex;
+                justify-content: flex-end;
             }
         }
 

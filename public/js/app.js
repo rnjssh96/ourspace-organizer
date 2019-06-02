@@ -83811,8 +83811,9 @@ class _OSAmenityTags extends react_1.default.Component {
         this._renderAmenity = (tag) => {
             let amenity = space_1.interpretAmenity(tag, 'ko');
             return (react_1.default.createElement("div", { key: tag, className: "amenity" },
-                react_1.default.createElement("p", { className: "h1" },
-                    react_1.default.createElement("i", { className: amenity.faicon }))));
+                react_1.default.createElement("a", { "data-toggle": "tooltip", "data-placement": "top", title: amenity.name },
+                    react_1.default.createElement("p", { className: "h1", "data-toggle": "tooltip" },
+                        react_1.default.createElement("i", { className: amenity.faicon })))));
         };
         this._rednerAmenities = () => this.props.amenityTags.map((tag) => this._renderAmenity(tag));
     }
@@ -83824,7 +83825,12 @@ class _OSAmenityTags extends react_1.default.Component {
                     react_1.default.createElement("p", { className: "h6 os-grey-1" },
                         react_1.default.createElement("i", { className: "material-icons" }, "add"),
                         "\uCD94\uAC00"))),
-            react_1.default.createElement("div", { id: "amenities" }, this._rednerAmenities())));
+            react_1.default.createElement("div", { id: "body" },
+                react_1.default.createElement("div", { id: "amenities" }, this._rednerAmenities())),
+            react_1.default.createElement("div", { id: "footer" },
+                react_1.default.createElement("p", { className: "h6 os-grey-1" },
+                    react_1.default.createElement("i", { className: "material-icons" }, "info"),
+                    "\uB9C8\uC6B0\uC2A4\uB97C \uC544\uC774\uCF58 \uC704\uC5D0 \uC62C\uB9AC\uC2DC\uBA74 \uC124\uBA85\uC744 \uBCFC \uC218 \uC788\uC2B5\uB2C8\uB2E4."))));
     }
 }
 const mapStateToProps = (state) => ({

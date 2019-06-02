@@ -19,9 +19,15 @@ class _OSAmenityTags extends React.Component<OSAmenityTagsProps> {
         let amenity = interpretAmenity(tag, 'ko');
         return (
             <div key={tag} className="amenity">
-                <p className="h1">
-                    <i className={amenity.faicon} />
-                </p>
+                <a
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title={amenity.name}
+                >
+                    <p className="h1" data-toggle="tooltip">
+                        <i className={amenity.faicon} />
+                    </p>
+                </a>
             </div>
         );
     };
@@ -43,7 +49,15 @@ class _OSAmenityTags extends React.Component<OSAmenityTagsProps> {
                         </p>
                     </a>
                 </div>
-                <div id="amenities">{this._rednerAmenities()}</div>
+                <div id="body">
+                    <div id="amenities">{this._rednerAmenities()}</div>
+                </div>
+                <div id="footer">
+                    <p className="h6 os-grey-1">
+                        <i className="material-icons">info</i>
+                        마우스를 아이콘 위에 올리시면 설명을 볼 수 있습니다.
+                    </p>
+                </div>
             </div>
         );
     }

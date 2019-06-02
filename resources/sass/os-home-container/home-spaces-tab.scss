@@ -58,6 +58,11 @@
 
             // margin
             margin-left: 0.7rem;
+
+            & > p:last-child {
+                // margin
+                margin-top: 0.5rem;
+            }
         }
     }
 }

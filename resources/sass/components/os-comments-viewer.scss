@@ -1,13 +1,6 @@
 #os-comments-viewer {
     height: 50rem;
 
-    & > #header {
-        & > p {
-            // margin
-            margin-bottom: 0;
-        }
-    }
-
     & > #body {
         & > .comment {
             // flex
@@ -45,11 +38,6 @@
                     // margin
                     margin-left: 1rem;
                 }
-            }
-
-            p {
-                // margin
-                margin-bottom: 0;
             }
         }
     }

@@ -11,9 +11,10 @@
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
-// Styles
-@import 'general';
+// Custom
+@import 'custom';
 
+// Styles
 @import 'os-home-container/os-home-container';
 @import 'os-home-container/home-header';
 @import 'os-home-container/home-spaces-tab';

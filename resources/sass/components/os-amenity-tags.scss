@@ -1,5 +1,10 @@
 #os-amenity-tags {
-    & > #amenities {
+    // flex
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    #amenities {
         // flex
         display: flex;
 
@@ -31,11 +36,6 @@
             &:last-child {
                 // padding
                 padding-right: 1.5rem;
-            }
-
-            & > p {
-                // margin
-                margin-bottom: 0;
             }
         }
     }
