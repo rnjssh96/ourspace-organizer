@@ -15,18 +15,18 @@ const initialState: CurrentSpaceState = {
         en: 'Starbucks Jayang',
     }, //ok
     types: ['2', '4'], //ok
-    locationText: '원주 the potato factory', //ok
+    locationText: '원주 the potato factory',
     location: {
         lat: 127.0038577,
         long: 37.5035985,
     },
     operatingHours: ['00:00 - 23:59 / 월, 수, 금'], // ok
-    amenityTags: ['amazon-pay', 'apple-pay', 'toilet', 'visa', 'wifi'],
+    amenityTags: ['amazon-pay', 'apple-pay', 'toilet', 'visa', 'wifi'], //ok
     images: [
         './demo-images/about_img_03.jpg',
         './demo-images/item_image_05b.jpg',
         './demo-images/item_image_06.jpg',
-    ], //ok
+    ],
     rank: 3.5,
     busyLevel: '1', //ok
 };

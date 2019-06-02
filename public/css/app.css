@@ -10959,38 +10959,6 @@ button {
   margin-left: 1rem;
 }
 
-#os-comments-viewer {
-  height: 50rem;
-}
-
-#os-comments-viewer > #body > .comment {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  border-bottom: 0.5px solid #e5e5e5;
-}
-
-#os-comments-viewer > #body > .comment#empty-comment {
-  justify-content: center;
-  align-items: center;
-}
-
-#os-comments-viewer > #body > .comment:first-child {
-  border-top: 0.5px solid #e5e5e5;
-}
-
-#os-comments-viewer > #body > .comment > #top {
-  display: flex;
-  align-items: flex-end;
-  margin-bottom: 0.5rem;
-}
-
-#os-comments-viewer > #body > .comment > #top > :not(:first-child) {
-  margin-left: 1rem;
-}
-
 #os-amenity-tags {
   display: flex;
   flex-direction: column;
