@@ -84232,10 +84232,10 @@ exports.default = OperatingHourEditModal;
 
 /***/ }),
 
-/***/ "./resources/js/components/os-images-editor.tsx":
-/*!******************************************************!*\
-  !*** ./resources/js/components/os-images-editor.tsx ***!
-  \******************************************************/
+/***/ "./resources/js/components/os-images-editor/image-upload-modal.tsx":
+/*!*************************************************************************!*\
+  !*** ./resources/js/components/os-images-editor/image-upload-modal.tsx ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -84247,6 +84247,52 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+exports.ImageUploadModalID = 'image-upload-modal';
+class _ImageUploadModal extends react_1.default.Component {
+    render() {
+        return (react_1.default.createElement("div", { id: exports.ImageUploadModalID, className: "modal fade", tabIndex: -1, role: "dialog", "aria-hidden": "true" },
+            react_1.default.createElement("div", { className: "modal-dialog", role: "document" },
+                react_1.default.createElement("form", null,
+                    react_1.default.createElement("div", { className: "modal-content" },
+                        react_1.default.createElement("div", { className: "modal-header" },
+                            react_1.default.createElement("p", { className: "modal-title h5" }, "\uC0AC\uC9C4 \uC5C5\uB85C\uB4DC")),
+                        react_1.default.createElement("div", { className: "modal-body" }),
+                        react_1.default.createElement("div", { className: "modal-footer" },
+                            react_1.default.createElement("button", { type: "button", className: "btn btn-secondary", "data-dismiss": "modal" }, "\uB2EB\uAE30"),
+                            react_1.default.createElement("button", { type: "submit", className: "btn btn-primary", "data-dismiss": "modal" }, "\uC5C5\uB85C\uB4DC")))))));
+    }
+}
+const mapStateToProps = (state) => ({});
+const mapDispatchToProps = {};
+const ImageUploadModal = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_ImageUploadModal);
+exports.default = ImageUploadModal;
+
+
+/***/ }),
+
+/***/ "./resources/js/components/os-images-editor/index.tsx":
+/*!************************************************************!*\
+  !*** ./resources/js/components/os-images-editor/index.tsx ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const image_upload_modal_1 = __importStar(__webpack_require__(/*! ./image-upload-modal */ "./resources/js/components/os-images-editor/image-upload-modal.tsx"));
 class _OSImagesEditor extends react_1.default.Component {
     _renderImages() {
         return this.props.images.map((image) => (react_1.default.createElement("img", { key: image, src: image, className: "rounded" })));
@@ -84255,10 +84301,11 @@ class _OSImagesEditor extends react_1.default.Component {
         return (react_1.default.createElement("div", { id: "os-images-editor" },
             react_1.default.createElement("div", { id: "header" },
                 react_1.default.createElement("p", { className: "h5" }, "\uB9E4\uC7A5\uC0AC\uC9C4"),
-                react_1.default.createElement("a", null,
+                react_1.default.createElement("button", { "data-toggle": "modal", "data-target": `#${image_upload_modal_1.ImageUploadModalID}` },
                     react_1.default.createElement("p", { className: "h6 os-grey-1" },
                         react_1.default.createElement("i", { className: "material-icons" }, "add"),
-                        "\uCD94\uAC00"))),
+                        "\uCD94\uAC00")),
+                react_1.default.createElement(image_upload_modal_1.default, null)),
             react_1.default.createElement("div", { id: "body" }, this._renderImages()),
             react_1.default.createElement("div", { id: "footer" },
                 react_1.default.createElement("p", { className: "h6 os-grey-1" },
@@ -84423,7 +84470,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 const os_rate_display_1 = __importDefault(__webpack_require__(/*! ../components/os-rate-display */ "./resources/js/components/os-rate-display.tsx"));
-const os_images_editor_1 = __importDefault(__webpack_require__(/*! ../components/os-images-editor */ "./resources/js/components/os-images-editor.tsx"));
+const os_images_editor_1 = __importDefault(__webpack_require__(/*! ../components/os-images-editor */ "./resources/js/components/os-images-editor/index.tsx"));
 const os_amenity_tags_1 = __importDefault(__webpack_require__(/*! ../components/os-amenity-tags */ "./resources/js/components/os-amenity-tags/index.tsx"));
 const os_loaction_map_1 = __importDefault(__webpack_require__(/*! ../components/os-loaction-map */ "./resources/js/components/os-loaction-map.tsx"));
 const os_busy_level_selector_1 = __importDefault(__webpack_require__(/*! ../components/os-busy-level-selector */ "./resources/js/components/os-busy-level-selector.tsx"));

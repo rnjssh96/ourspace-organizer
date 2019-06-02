@@ -1,7 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import RootState from '../redux-types';
+import RootState from '../../redux-types';
+
+import ImageUploadModal, { ImageUploadModalID } from './image-upload-modal';
 
 interface _ReduxProps {
     images: string[];
@@ -21,12 +23,16 @@ class _OSImagesEditor extends React.Component<OSImagesEditorProps> {
             <div id="os-images-editor">
                 <div id="header">
                     <p className="h5">매장사진</p>
-                    <a>
+                    <button
+                        data-toggle="modal"
+                        data-target={`#${ImageUploadModalID}`}
+                    >
                         <p className="h6 os-grey-1">
                             <i className="material-icons">add</i>
                             추가
                         </p>
-                    </a>
+                    </button>
+                    <ImageUploadModal />
                 </div>
                 <div id="body">{this._renderImages()}</div>
                 <div id="footer">
