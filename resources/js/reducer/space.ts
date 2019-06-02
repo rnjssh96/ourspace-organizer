@@ -3,6 +3,7 @@ import {
     CurrentSpaceState,
     SET_OPERATING_HOURS,
     SET_BUSY_LEVEL,
+    SET_AMENITY_TAGS,
 } from '../redux-types/current-space';
 
 /**
@@ -48,6 +49,12 @@ export default function CurrentSpaceReducer(
             return {
                 ...state,
                 busyLevel: action.busyLevel,
+            };
+
+        case SET_AMENITY_TAGS:
+            return {
+                ...state,
+                amenityTags: action.amenityTags,
             };
 
         default:

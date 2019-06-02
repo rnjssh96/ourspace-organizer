@@ -5,6 +5,8 @@ import RootState from '../../redux-types';
 
 import { AmenityTag, interpretAmenity } from '../../model/space';
 
+import { setSelected } from '../../actions/selected-amenities';
+
 import AmenitiesEditModal, {
     AmenitiesEditModalID,
 } from './amenities-edit-modal';
@@ -16,7 +18,14 @@ interface _ReduxProps {
     amenityTags: AmenityTag[];
 }
 
-interface OSAmenityTagsProps extends _ReduxProps {}
+interface _ReduxActionCreators {
+    /**
+     * Set selected amenities
+     */
+    setSelected: typeof setSelected;
+}
+
+interface OSAmenityTagsProps extends _ReduxProps, _ReduxActionCreators {}
 
 class _OSAmenityTags extends React.Component<OSAmenityTagsProps> {
     private _renderAmenity = (tag: AmenityTag) => {
@@ -41,6 +50,10 @@ class _OSAmenityTags extends React.Component<OSAmenityTagsProps> {
             this._renderAmenity(tag),
         );
 
+    private _resetSelectedAmenities = () => {
+        this.props.setSelected(new Set(this.props.amenityTags));
+    };
+
     render() {
         return (
             <div id="os-amenity-tags">
@@ -49,13 +62,14 @@ class _OSAmenityTags extends React.Component<OSAmenityTagsProps> {
                     <button
                         data-toggle="modal"
                         data-target={`#${AmenitiesEditModalID}`}
+                        onClick={this._resetSelectedAmenities}
                     >
                         <p className="h6 os-grey-1">
                             <i className="material-icons">add</i>
                             추가
                         </p>
                     </button>
-                    <AmenitiesEditModal amenityTags={this.props.amenityTags} />
+                    <AmenitiesEditModal />
                 </div>
                 <div id="body">
                     <div id="amenities">{this._rednerAmenities()}</div>
@@ -75,7 +89,9 @@ const mapStateToProps = (state: RootState): _ReduxProps => ({
     amenityTags: state.currentSpace.amenityTags,
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+    setSelected,
+};
 
 const OSAmenityTags = connect(
     mapStateToProps,

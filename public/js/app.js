@@ -83703,6 +83703,32 @@ exports.setBusyLevel = (busyLevel) => ({
     type: current_space_1.SET_BUSY_LEVEL,
     busyLevel,
 });
+exports.setAmenityTags = (amenityTags) => ({
+    type: current_space_1.SET_AMENITY_TAGS,
+    amenityTags,
+});
+
+
+/***/ }),
+
+/***/ "./resources/js/actions/selected-amenities.ts":
+/*!****************************************************!*\
+  !*** ./resources/js/actions/selected-amenities.ts ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const selected_amenities_1 = __webpack_require__(/*! ../redux-types/selected-amenities */ "./resources/js/redux-types/selected-amenities.ts");
+/**
+ * Action Creators
+ */
+exports.setSelected = (selected) => ({
+    type: selected_amenities_1.SET_SELECTED,
+    selected,
+});
 
 
 /***/ }),
@@ -83803,22 +83829,38 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 const space_1 = __webpack_require__(/*! ../../model/space */ "./resources/js/model/space.ts");
+const selected_amenities_1 = __webpack_require__(/*! ../../actions/selected-amenities */ "./resources/js/actions/selected-amenities.ts");
+const current_space_1 = __webpack_require__(/*! ../../actions/current-space */ "./resources/js/actions/current-space.ts");
 exports.AmenitiesEditModalID = 'amenities-edit-modal';
 const COL_PER_ROW = 4;
 const tags = Object.keys(space_1.amenities);
-class AmenitiesEditModal extends react_1.default.Component {
+class _AmenitiesEditModal extends react_1.default.Component {
     constructor() {
         super(...arguments);
-        this.state = {};
         this._amenityTableStructure = [];
-        this._toggleTag = (tag) => {
-            this.setState({ ...this.state, [tag]: !this.state[tag] });
+        this._saveAmenityTags = (event) => {
+            event.preventDefault();
+            let result = [];
+            this.props.selected.forEach((tag) => {
+                result.push(tag);
+            });
+            this.props.setAmenityTags(result);
+        };
+        this._toggleSelected = (tag) => {
+            if (this.props.selected.has(tag)) {
+                this.props.selected.delete(tag);
+            }
+            else {
+                this.props.selected.add(tag);
+            }
+            this.props.setSelected(new Set(this.props.selected));
         };
         this._renderTable = () => {
             const renderColumn = (col) => (react_1.default.createElement("td", { key: col.key },
-                react_1.default.createElement("button", { type: "button", className: `amenity ${this.state[col.key] ? 'selected' : ''}`, onClick: () => {
-                        this._toggleTag(col.key);
+                react_1.default.createElement("button", { type: "button", className: `amenity ${this.props.selected.has(col.key) ? 'selected' : ''}`, onClick: () => {
+                        this._toggleSelected(col.key);
                     } },
                     react_1.default.createElement("p", { className: "h1" },
                         react_1.default.createElement("i", { className: col.value.faicon })),
@@ -83828,11 +83870,9 @@ class AmenitiesEditModal extends react_1.default.Component {
         };
     }
     componentWillMount() {
-        let initialState = {};
         let row;
         let col;
         tags.map((tag, index) => {
-            initialState[tag] = this.props.amenityTags.includes(tag);
             col = index % COL_PER_ROW;
             if (col == 0) {
                 row = [];
@@ -83845,7 +83885,6 @@ class AmenitiesEditModal extends react_1.default.Component {
                 this._amenityTableStructure.push(row);
             }
         });
-        this.setState(initialState);
     }
     render() {
         return (react_1.default.createElement("div", { id: exports.AmenitiesEditModalID, className: "modal fade", tabIndex: -1, role: "dialog", "aria-hidden": "true" },
@@ -83857,9 +83896,17 @@ class AmenitiesEditModal extends react_1.default.Component {
                         react_1.default.createElement("div", { className: "modal-body" }, this._renderTable()),
                         react_1.default.createElement("div", { className: "modal-footer" },
                             react_1.default.createElement("button", { type: "button", className: "btn btn-secondary", "data-dismiss": "modal" }, "\uB2EB\uAE30"),
-                            react_1.default.createElement("button", { type: "submit", className: "btn btn-primary", "data-dismiss": "modal" }, "\uC800\uC7A5")))))));
+                            react_1.default.createElement("button", { type: "submit", className: "btn btn-primary", "data-dismiss": "modal", onClick: this._saveAmenityTags }, "\uC800\uC7A5")))))));
     }
 }
+const mapStateToProps = (state) => ({
+    selected: state.selectedAmenities.selected,
+});
+const mapDispatchToProps = {
+    setSelected: selected_amenities_1.setSelected,
+    setAmenityTags: current_space_1.setAmenityTags,
+};
+const AmenitiesEditModal = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_AmenitiesEditModal);
 exports.default = AmenitiesEditModal;
 
 
@@ -83888,6 +83935,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 const space_1 = __webpack_require__(/*! ../../model/space */ "./resources/js/model/space.ts");
+const selected_amenities_1 = __webpack_require__(/*! ../../actions/selected-amenities */ "./resources/js/actions/selected-amenities.ts");
 const amenities_edit_modal_1 = __importStar(__webpack_require__(/*! ./amenities-edit-modal */ "./resources/js/components/os-amenity-tags/amenities-edit-modal.tsx"));
 class _OSAmenityTags extends react_1.default.Component {
     constructor() {
@@ -83900,16 +83948,19 @@ class _OSAmenityTags extends react_1.default.Component {
                         react_1.default.createElement("i", { className: amenity.faicon })))));
         };
         this._rednerAmenities = () => this.props.amenityTags.map((tag) => this._renderAmenity(tag));
+        this._resetSelectedAmenities = () => {
+            this.props.setSelected(new Set(this.props.amenityTags));
+        };
     }
     render() {
         return (react_1.default.createElement("div", { id: "os-amenity-tags" },
             react_1.default.createElement("div", { id: "header" },
                 react_1.default.createElement("p", { className: "h5" }, "\uD3B8\uC758\uC2DC\uC124"),
-                react_1.default.createElement("button", { "data-toggle": "modal", "data-target": `#${amenities_edit_modal_1.AmenitiesEditModalID}` },
+                react_1.default.createElement("button", { "data-toggle": "modal", "data-target": `#${amenities_edit_modal_1.AmenitiesEditModalID}`, onClick: this._resetSelectedAmenities },
                     react_1.default.createElement("p", { className: "h6 os-grey-1" },
                         react_1.default.createElement("i", { className: "material-icons" }, "add"),
                         "\uCD94\uAC00")),
-                react_1.default.createElement(amenities_edit_modal_1.default, { amenityTags: this.props.amenityTags })),
+                react_1.default.createElement(amenities_edit_modal_1.default, null)),
             react_1.default.createElement("div", { id: "body" },
                 react_1.default.createElement("div", { id: "amenities" }, this._rednerAmenities())),
             react_1.default.createElement("div", { id: "footer" },
@@ -83921,7 +83972,9 @@ class _OSAmenityTags extends react_1.default.Component {
 const mapStateToProps = (state) => ({
     amenityTags: state.currentSpace.amenityTags,
 });
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+    setSelected: selected_amenities_1.setSelected,
+};
 const OSAmenityTags = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_OSAmenityTags);
 exports.default = OSAmenityTags;
 
@@ -84563,13 +84616,49 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const redux_1 = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
 const space_1 = __importDefault(__webpack_require__(/*! ./space */ "./resources/js/reducer/space.ts"));
+const selected_amenities_1 = __importDefault(__webpack_require__(/*! ./selected-amenities */ "./resources/js/reducer/selected-amenities.ts"));
 /**
  * Root Reducer
  */
 const RootReducer = redux_1.combineReducers({
     currentSpace: space_1.default,
+    selectedAmenities: selected_amenities_1.default,
 });
 exports.default = RootReducer;
+
+
+/***/ }),
+
+/***/ "./resources/js/reducer/selected-amenities.ts":
+/*!****************************************************!*\
+  !*** ./resources/js/reducer/selected-amenities.ts ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const selected_amenities_1 = __webpack_require__(/*! ../redux-types/selected-amenities */ "./resources/js/redux-types/selected-amenities.ts");
+/**
+ * Initial State
+ */
+const initialState = { selected: new Set(['shower']) };
+/**
+ * SelectedAmenitiesReducer
+ */
+function SelectedAmenitiesReducer(state = initialState, action) {
+    switch (action.type) {
+        case selected_amenities_1.SET_SELECTED:
+            return {
+                ...state,
+                selected: action.selected,
+            };
+        default:
+            return state;
+    }
+}
+exports.default = SelectedAmenitiesReducer;
 
 
 /***/ }),
@@ -84624,6 +84713,11 @@ function CurrentSpaceReducer(state = initialState, action) {
                 ...state,
                 busyLevel: action.busyLevel,
             };
+        case current_space_1.SET_AMENITY_TAGS:
+            return {
+                ...state,
+                amenityTags: action.amenityTags,
+            };
         default:
             return state;
     }
@@ -84647,9 +84741,30 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * Action Constants
  */
 // prettier-ignore
-exports.SET_OPERATING_HOURS = 'our-space-organizer/home/SET_OPERATING_HOURS';
+exports.SET_OPERATING_HOURS = 'our-space-organizer/current-space/SET_OPERATING_HOURS';
 // prettier-ignore
-exports.SET_BUSY_LEVEL = 'our-space-organizer/home/SET_BUSY_LEVEL';
+exports.SET_BUSY_LEVEL = 'our-space-organizer/current-space/SET_BUSY_LEVEL';
+// prettier-ignore
+exports.SET_AMENITY_TAGS = 'our-space-organizer/current-space/SET_AMENITY_TAGS';
+
+
+/***/ }),
+
+/***/ "./resources/js/redux-types/selected-amenities.ts":
+/*!********************************************************!*\
+  !*** ./resources/js/redux-types/selected-amenities.ts ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Action Constants
+ */
+// prettier-ignore
+exports.SET_SELECTED = 'our-space-organizer/selected-amenities/SET_SELECTED';
 
 
 /***/ }),

@@ -1,4 +1,7 @@
-import React from 'react';
+import React, { MouseEvent } from 'react';
+import { connect } from 'react-redux';
+
+import RootState from '../../redux-types';
 
 import {
     AmenityTag,
@@ -6,6 +9,9 @@ import {
     interpretAmenity,
     interpretedAmentiy,
 } from '../../model/space';
+
+import { setSelected } from '../../actions/selected-amenities';
+import { setAmenityTags } from '../../actions/current-space';
 
 export const AmenitiesEditModalID = 'amenities-edit-modal';
 
@@ -17,26 +23,44 @@ type amenityTuple = {
     value: interpretedAmentiy;
 };
 
-interface AmenitiesEditModalProps {
+interface _ReduxProps {
     /**
-     * Amenity tags of the space
+     * Selected amenities set
      */
-    amenityTags: AmenityTag[];
+    selected: Set<AmenityTag>;
 }
 
-export default class AmenitiesEditModal extends React.Component<
-    AmenitiesEditModalProps
-> {
-    state: { [tag in AmenityTag]?: boolean } = {};
+interface _ReduxActionCreators {
+    /**
+     * Set selected amenities
+     */
+    setSelected: typeof setSelected;
 
+    /**
+     * Set amenity tags
+     */
+    setAmenityTags: typeof setAmenityTags;
+}
+
+interface AmenitiesEditModalProps extends _ReduxProps, _ReduxActionCreators {}
+
+class _AmenitiesEditModal extends React.Component<AmenitiesEditModalProps> {
     private _amenityTableStructure: amenityTuple[][] = [];
 
+    private _saveAmenityTags = (event: MouseEvent) => {
+        event.preventDefault();
+
+        let result: AmenityTag[] = [];
+        this.props.selected.forEach((tag: AmenityTag) => {
+            result.push(tag);
+        });
+        this.props.setAmenityTags(result);
+    };
+
     componentWillMount() {
-        let initialState: { [tag in AmenityTag]?: boolean } = {};
         let row: amenityTuple[];
         let col: number;
         tags.map((tag: AmenityTag, index: number) => {
-            initialState[tag] = this.props.amenityTags.includes(tag);
             col = index % COL_PER_ROW;
             if (col == 0) {
                 row = [];
@@ -49,11 +73,15 @@ export default class AmenitiesEditModal extends React.Component<
                 this._amenityTableStructure.push(row);
             }
         });
-        this.setState(initialState);
     }
 
-    private _toggleTag = (tag: AmenityTag) => {
-        this.setState({ ...this.state, [tag]: !this.state[tag] });
+    private _toggleSelected = (tag: AmenityTag) => {
+        if (this.props.selected.has(tag)) {
+            this.props.selected.delete(tag);
+        } else {
+            this.props.selected.add(tag);
+        }
+        this.props.setSelected(new Set(this.props.selected));
     };
 
     private _renderTable = () => {
@@ -65,10 +93,10 @@ export default class AmenitiesEditModal extends React.Component<
                 <button
                     type="button"
                     className={`amenity ${
-                        this.state[col.key] ? 'selected' : ''
+                        this.props.selected.has(col.key) ? 'selected' : ''
                     }`}
                     onClick={() => {
-                        this._toggleTag(col.key);
+                        this._toggleSelected(col.key);
                     }}
                 >
                     <p className="h1">
@@ -126,6 +154,7 @@ export default class AmenitiesEditModal extends React.Component<
                                     type="submit"
                                     className="btn btn-primary"
                                     data-dismiss="modal"
+                                    onClick={this._saveAmenityTags}
                                 >
                                     저장
                                 </button>
@@ -137,3 +166,19 @@ export default class AmenitiesEditModal extends React.Component<
         );
     }
 }
+
+const mapStateToProps = (state: RootState): _ReduxProps => ({
+    selected: state.selectedAmenities.selected,
+});
+
+const mapDispatchToProps = {
+    setSelected,
+    setAmenityTags,
+};
+
+const AmenitiesEditModal = connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(_AmenitiesEditModal);
+
+export default AmenitiesEditModal;

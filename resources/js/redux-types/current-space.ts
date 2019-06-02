@@ -1,4 +1,4 @@
-import Space, { BusyLevel } from '../model/space';
+import Space, { BusyLevel, AmenityTag } from '../model/space';
 
 /**
  * Current Space State
@@ -9,9 +9,11 @@ export type CurrentSpaceState = Space;
  * Action Constants
  */
 // prettier-ignore
-export const SET_OPERATING_HOURS = 'our-space-organizer/home/SET_OPERATING_HOURS';
+export const SET_OPERATING_HOURS = 'our-space-organizer/current-space/SET_OPERATING_HOURS';
 // prettier-ignore
-export const SET_BUSY_LEVEL = 'our-space-organizer/home/SET_BUSY_LEVEL';
+export const SET_BUSY_LEVEL = 'our-space-organizer/current-space/SET_BUSY_LEVEL';
+// prettier-ignore
+export const SET_AMENITY_TAGS = 'our-space-organizer/current-space/SET_AMENITY_TAGS';
 
 /**
  * Action Interfaces
@@ -26,7 +28,15 @@ export interface SetBusyLevelAction {
     busyLevel: BusyLevel;
 }
 
+export interface SetAmenityTagsAction {
+    type: typeof SET_AMENITY_TAGS;
+    amenityTags: AmenityTag[];
+}
+
 /**
  * Action Types
  */
-export type CurrentSpaceActions = SetOperatingHoursAction | SetBusyLevelAction;
+export type CurrentSpaceActions =
+    | SetOperatingHoursAction
+    | SetBusyLevelAction
+    | SetAmenityTagsAction;
