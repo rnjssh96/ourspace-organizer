@@ -10681,18 +10681,7 @@ a.text-dark:focus {
   color: #707070;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-.h1,
-.h2,
-.h3,
-.h4,
-.h5,
-.h6 {
+p {
   margin-bottom: 0;
 }
 
@@ -11149,5 +11138,98 @@ button {
 
 #amenities-edit-modal #amenity-table > tbody > tr > td > .amenity > p:last-child {
   margin-top: 0.3rem;
+}
+
+#image-upload-modal .modal-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+#image-upload-modal .modal-body > p {
+  margin-top: 0.5rem;
+  color: #707070;
+}
+
+#image-upload-modal .modal-body > #image-uploader {
+  width: 100%;
+}
+
+#image-upload-modal .modal-body > #image-uploader > #upload-images {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+#image-upload-modal .modal-body > #image-uploader > #upload-images > .upload-image-row {
+  display: flex;
+  align-items: center;
+}
+
+#image-upload-modal .modal-body > #image-uploader > #upload-images > .upload-image-row > .upload-image {
+  width: 90px;
+  height: 90px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#image-upload-modal .modal-body > #image-uploader > #upload-images > .upload-image-row > .upload-image > img {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 5px;
+}
+
+#image-upload-modal .modal-body > #image-uploader > #upload-images > .upload-image-row > .upload-image-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
+  margin-left: 0.7rem;
+  margin-right: 0.7rem;
+}
+
+#image-upload-modal .modal-body > #image-uploader > #upload-images > .upload-image-row > .upload-image-content > .image-name {
+  margin-bottom: 0.5rem;
+}
+
+#image-upload-modal .modal-body > #image-uploader > #upload-images > .upload-image-row > .upload-image-content > .image-size {
+  color: #707070;
+  text-align: end;
+}
+
+#image-upload-modal .modal-body > #image-uploader > #upload-images > .upload-image-row > .delete-image-button {
+  color: #dc3545;
+  font-size: 1.7rem;
+}
+
+#image-upload-modal .modal-body > #image-uploader > #upload-images > .upload-image-row:not(:first-child) {
+  margin-top: 1rem;
+}
+
+#image-upload-modal .modal-body > #image-uploader #image-drop-area {
+  width: 100%;
+  border: 5px dashed #f3a930;
+  border-radius: 1rem;
+  margin-top: 1rem;
+}
+
+#image-upload-modal .modal-body > #image-uploader #image-drop-area #uploading-info {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  border-radius: 1rem;
+}
+
+#image-upload-modal .modal-body > #image-uploader #image-drop-area #uploading-info > p {
+  color: #f3a930;
+  text-align: center;
+}
+
+#image-upload-modal .modal-body > #image-uploader #image-drop-area #uploading-info > p#upload-icon {
+  font-size: 3rem;
 }
 

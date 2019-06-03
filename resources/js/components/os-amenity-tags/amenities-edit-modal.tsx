@@ -10,7 +10,7 @@ import {
     interpretedAmentiy,
 } from '../../model/space';
 
-import { setSelected } from '../../actions/selected-amenities';
+import { setSelectedAmenities } from '../../actions/selected-amenities';
 import { setAmenityTags } from '../../actions/current-space';
 
 export const AmenitiesEditModalID = 'amenities-edit-modal';
@@ -25,16 +25,21 @@ type amenityTuple = {
 
 interface _ReduxProps {
     /**
+     * Amenity tags of the space
+     */
+    amenityTags: AmenityTag[];
+
+    /**
      * Selected amenities set
      */
-    selected: Set<AmenityTag>;
+    selectedAmenities: Set<AmenityTag>;
 }
 
 interface _ReduxActionCreators {
     /**
      * Set selected amenities
      */
-    setSelected: typeof setSelected;
+    setSelectedAmenities: typeof setSelectedAmenities;
 
     /**
      * Set amenity tags
@@ -51,7 +56,7 @@ class _AmenitiesEditModal extends React.Component<AmenitiesEditModalProps> {
         event.preventDefault();
 
         let result: AmenityTag[] = [];
-        this.props.selected.forEach((tag: AmenityTag) => {
+        this.props.selectedAmenities.forEach((tag: AmenityTag) => {
             result.push(tag);
         });
         this.props.setAmenityTags(result);
@@ -76,12 +81,12 @@ class _AmenitiesEditModal extends React.Component<AmenitiesEditModalProps> {
     }
 
     private _toggleSelected = (tag: AmenityTag) => {
-        if (this.props.selected.has(tag)) {
-            this.props.selected.delete(tag);
+        if (this.props.selectedAmenities.has(tag)) {
+            this.props.selectedAmenities.delete(tag);
         } else {
-            this.props.selected.add(tag);
+            this.props.selectedAmenities.add(tag);
         }
-        this.props.setSelected(new Set(this.props.selected));
+        this.props.setSelectedAmenities(new Set(this.props.selectedAmenities));
     };
 
     private _renderTable = () => {
@@ -93,7 +98,9 @@ class _AmenitiesEditModal extends React.Component<AmenitiesEditModalProps> {
                 <button
                     type="button"
                     className={`amenity ${
-                        this.props.selected.has(col.key) ? 'selected' : ''
+                        this.props.selectedAmenities.has(col.key)
+                            ? 'selected'
+                            : ''
                     }`}
                     onClick={() => {
                         this._toggleSelected(col.key);
@@ -134,33 +141,29 @@ class _AmenitiesEditModal extends React.Component<AmenitiesEditModalProps> {
                 aria-hidden="true"
             >
                 <div className="modal-dialog" role="document">
-                    <form>
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <p className="modal-title h5">편의시설 설정</p>
-                            </div>
-                            <div className="modal-body">
-                                {this._renderTable()}
-                            </div>
-                            <div className="modal-footer">
-                                <button
-                                    type="button"
-                                    className="btn btn-secondary"
-                                    data-dismiss="modal"
-                                >
-                                    닫기
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="btn btn-primary"
-                                    data-dismiss="modal"
-                                    onClick={this._saveAmenityTags}
-                                >
-                                    저장
-                                </button>
-                            </div>
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <p className="modal-title h5">편의시설 설정</p>
                         </div>
-                    </form>
+                        <div className="modal-body">{this._renderTable()}</div>
+                        <div className="modal-footer">
+                            <button
+                                type="button"
+                                className="btn btn-secondary"
+                                data-dismiss="modal"
+                            >
+                                닫기
+                            </button>
+                            <button
+                                type="submit"
+                                className="btn btn-primary"
+                                data-dismiss="modal"
+                                onClick={this._saveAmenityTags}
+                            >
+                                저장
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         );
@@ -168,11 +171,12 @@ class _AmenitiesEditModal extends React.Component<AmenitiesEditModalProps> {
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
-    selected: state.selectedAmenities.selected,
+    amenityTags: state.currentSpace.amenityTags,
+    selectedAmenities: state.selectedAmenities.selectedAmenities,
 });
 
 const mapDispatchToProps = {
-    setSelected,
+    setSelectedAmenities,
     setAmenityTags,
 };
 

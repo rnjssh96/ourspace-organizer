@@ -1,0 +1,140 @@
+#image-upload-modal {
+    .modal-body {
+        // flex
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+
+        & > p {
+            // margin
+            margin-top: 0.5rem;
+
+            // color
+            color: $grey-1;
+        }
+
+        & > #image-uploader {
+            // size
+            width: 100%;
+
+            & > #upload-images {
+                // size
+                width: 100%;
+
+                // flex
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+
+                & > .upload-image-row {
+                    // flex
+                    display: flex;
+                    align-items: center;
+
+                    & > .upload-image {
+                        // size
+                        width: 90px;
+                        height: 90px;
+
+                        // flex
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+
+                        & > img {
+                            // size
+                            max-width: 100%;
+                            max-height: 100%;
+
+                            // border
+                            border-radius: 5px;
+                        }
+                    }
+
+                    & > .upload-image-content {
+                        // size
+                        flex: 1;
+
+                        // flex
+                        display: flex;
+                        flex-direction: column;
+
+                        // padding
+                        padding-top: 0.7rem;
+                        padding-bottom: 0.7rem;
+
+                        // margin
+                        margin-left: 0.7rem;
+                        margin-right: 0.7rem;
+
+                        & > .image-name {
+                            // margin
+                            margin-bottom: 0.5rem;
+                        }
+
+                        & > .image-size {
+                            // text-color
+                            color: $grey-1;
+
+                            // align text right
+                            text-align: end;
+                        }
+                    }
+
+                    & > .delete-image-button {
+                        // color
+                        color: $red;
+
+                        // size
+                        font-size: 1.7rem;
+                    }
+
+                    &:not(:first-child) {
+                        // margin
+                        margin-top: 1rem;
+                    }
+                }
+            }
+
+            #image-drop-area {
+                // size
+                width: 100%;
+
+                // border
+                border: 5px dashed $main-theme;
+                border-radius: 1rem;
+
+                // margin
+                margin-top: 1rem;
+
+                #uploading-info {
+                    // size
+                    width: 100%;
+
+                    // flex
+                    display: flex;
+                    flex-direction: column;
+
+                    // padding
+                    padding: 1rem;
+
+                    // border
+                    border-radius: 1rem;
+
+                    & > p {
+                        // font color
+                        color: $main-theme;
+
+                        // text align
+                        text-align: center;
+
+                        &#upload-icon {
+                            // icon size
+                            font-size: 3rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

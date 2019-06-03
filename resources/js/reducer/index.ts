@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 
 import CurrentSpaceReducer from './space';
 import SelectedAmenitiesReducer from './selected-amenities';
+import SelectedImagesReducer from './upload-images';
 
 /**
  * Root Reducer
@@ -9,6 +10,7 @@ import SelectedAmenitiesReducer from './selected-amenities';
 const RootReducer = combineReducers({
     currentSpace: CurrentSpaceReducer,
     selectedAmenities: SelectedAmenitiesReducer,
+    selectedImages: SelectedImagesReducer,
 });
 
 export default RootReducer;

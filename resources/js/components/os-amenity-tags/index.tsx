@@ -5,7 +5,7 @@ import RootState from '../../redux-types';
 
 import { AmenityTag, interpretAmenity } from '../../model/space';
 
-import { setSelected } from '../../actions/selected-amenities';
+import { setSelectedAmenities } from '../../actions/selected-amenities';
 
 import AmenitiesEditModal, {
     AmenitiesEditModalID,
@@ -22,7 +22,7 @@ interface _ReduxActionCreators {
     /**
      * Set selected amenities
      */
-    setSelected: typeof setSelected;
+    setSelectedAmenities: typeof setSelectedAmenities;
 }
 
 interface OSAmenityTagsProps extends _ReduxProps, _ReduxActionCreators {}
@@ -45,13 +45,13 @@ class _OSAmenityTags extends React.Component<OSAmenityTagsProps> {
         );
     };
 
-    private _rednerAmenities = () =>
+    private _renderAmenities = () =>
         this.props.amenityTags.map((tag: AmenityTag) =>
             this._renderAmenity(tag),
         );
 
     private _resetSelectedAmenities = () => {
-        this.props.setSelected(new Set(this.props.amenityTags));
+        this.props.setSelectedAmenities(new Set(this.props.amenityTags));
     };
 
     render() {
@@ -72,7 +72,7 @@ class _OSAmenityTags extends React.Component<OSAmenityTagsProps> {
                     <AmenitiesEditModal />
                 </div>
                 <div id="body">
-                    <div id="amenities">{this._rednerAmenities()}</div>
+                    <div id="amenities">{this._renderAmenities()}</div>
                 </div>
                 <div id="footer">
                     <p className="h6 os-grey-1">
@@ -90,7 +90,7 @@ const mapStateToProps = (state: RootState): _ReduxProps => ({
 });
 
 const mapDispatchToProps = {
-    setSelected,
+    setSelectedAmenities,
 };
 
 const OSAmenityTags = connect(

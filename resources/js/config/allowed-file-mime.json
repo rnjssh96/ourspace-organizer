@@ -1,0 +1,6 @@
+{
+    "image": {
+        ".jpg/.jpeg": "image/jpeg",
+        ".png": "image/png"
+    }
+}
