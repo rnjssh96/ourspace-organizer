@@ -10990,10 +10990,6 @@ button {
 
 #os-location-map {
   height: 100%;
-}
-
-#os-location-map > #map {
-  height: 100%;
   border-radius: 1rem;
   border: 0.5px solid #e5e5e5;
 }
@@ -11246,5 +11242,19 @@ button {
 #image-upload-modal .modal-body > #image-uploader #image-drop-area #uploading-info > p#upload-icon {
   font-size: 3rem;
   margin-bottom: 0;
+}
+
+#location-edit-modal > .modal-dialog {
+  height: 90%;
+  width: 80%;
+  max-width: none;
+}
+
+#location-edit-modal > .modal-dialog > .modal-content {
+  height: 100%;
+}
+
+#location-edit-modal > .modal-dialog > .modal-content > .modal-body > #location-search-map {
+  height: 100%;
 }
 

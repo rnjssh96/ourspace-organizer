@@ -10,6 +10,7 @@ import { setOperatingHours } from '../../actions/current-space';
 import OperatingHourEditModal, {
     OperatingHourEditModalID,
 } from './operating-hour-edit-modal';
+import LocationEditModal, { LocationEditModalID } from './location-edit-modal';
 
 interface _ReduxProps {
     /**
@@ -78,13 +79,14 @@ class _OSGeneralInfo extends React.Component<OSGeneralInfoProps> {
                         </div>
                         <button
                             data-toggle="modal"
-                            data-target={`#${OperatingHourEditModalID}`}
+                            data-target={`#${LocationEditModalID}`}
                         >
                             <p className="h6 os-grey-1">
                                 <i className="material-icons">edit</i>
                                 수정
                             </p>
                         </button>
+                        <LocationEditModal />
                     </div>
                     <div className="info-row">
                         <p className="h6 os-grey-1 os-text-ellipsis">
