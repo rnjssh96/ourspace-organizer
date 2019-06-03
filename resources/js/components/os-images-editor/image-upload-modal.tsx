@@ -154,7 +154,11 @@ class _ImageUploadModal extends React.Component<ImageUploadModalProps> {
         <Dropzone onDrop={this._onFileDrop}>
             {({ getRootProps, getInputProps }) => (
                 <div id="image-uploader">
-                    <div id="upload-images">{this._renderSelectedImages()}</div>
+                    {this.props.imagesCount > 0 && (
+                        <div id="upload-images">
+                            {this._renderSelectedImages()}
+                        </div>
+                    )}
                     <section id="image-drop-area">
                         <div {...getRootProps()}>
                             <input {...getInputProps()} />

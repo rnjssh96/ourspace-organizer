@@ -11166,6 +11166,10 @@ button {
   width: 100%;
 }
 
+#image-upload-modal .modal-body > #image-uploader > :not(:first-child) {
+  margin-top: 1rem;
+}
+
 #image-upload-modal .modal-body > #image-uploader > #upload-images {
   width: 100%;
   display: flex;
@@ -11224,7 +11228,6 @@ button {
   width: 100%;
   border: 5px dashed #f3a930;
   border-radius: 1rem;
-  margin-top: 1rem;
 }
 
 #image-upload-modal .modal-body > #image-uploader #image-drop-area #uploading-info {

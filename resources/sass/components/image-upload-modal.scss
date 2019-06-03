@@ -17,6 +17,11 @@
             // size
             width: 100%;
 
+            & > :not(:first-child) {
+                // margin
+                margin-top: 1rem;
+            }
+
             & > #upload-images {
                 // size
                 width: 100%;
@@ -103,9 +108,6 @@
                 // border
                 border: 5px dashed $main-theme;
                 border-radius: 1rem;
-
-                // margin
-                margin-top: 1rem;
 
                 #uploading-info {
                     // size

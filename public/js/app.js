@@ -86113,7 +86113,7 @@ class _ImageUploadModal extends react_1.default.Component {
                     react_1.default.createElement("i", { className: "material-icons" }, "cancel")))));
         };
         this._renderDropzone = () => (react_1.default.createElement(react_dropzone_1.default, { onDrop: this._onFileDrop }, ({ getRootProps, getInputProps }) => (react_1.default.createElement("div", { id: "image-uploader" },
-            react_1.default.createElement("div", { id: "upload-images" }, this._renderSelectedImages()),
+            this.props.imagesCount > 0 && (react_1.default.createElement("div", { id: "upload-images" }, this._renderSelectedImages())),
             react_1.default.createElement("section", { id: "image-drop-area" },
                 react_1.default.createElement("div", Object.assign({}, getRootProps()),
                     react_1.default.createElement("input", Object.assign({}, getInputProps())),
