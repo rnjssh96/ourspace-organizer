@@ -10681,7 +10681,18 @@ a.text-dark:focus {
   color: #707070;
 }
 
-p {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
   margin-bottom: 0;
 }
 
@@ -11231,5 +11242,6 @@ button {
 
 #image-upload-modal .modal-body > #image-uploader #image-drop-area #uploading-info > p#upload-icon {
   font-size: 3rem;
+  margin-bottom: 0;
 }
 
