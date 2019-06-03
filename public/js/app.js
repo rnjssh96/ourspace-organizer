@@ -66904,10 +66904,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const google_maps_api_1 = __importDefault(__webpack_require__(/*! ../../../google-maps-api */ "./resources/js/google-maps-api/index.ts"));
 class LocationSearchMap extends react_1.default.Component {
     componentDidMount() {
-        const map = google_maps_api_1.default('location-search-map', {
+        const map = new google.maps.Map(document.getElementById('location-search-map'), {
             center: { lat: 41.0082, lng: 28.9784 },
             zoom: 8,
         });
@@ -67226,11 +67225,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const google_maps_api_1 = __importDefault(__webpack_require__(/*! ../google-maps-api */ "./resources/js/google-maps-api/index.ts"));
-class OSLoactionMap extends react_1.default.Component {
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+class _OSLoactionMap extends react_1.default.Component {
     componentDidMount() {
-        const map = google_maps_api_1.default('os-location-map', {
-            center: { lat: 41.0082, lng: 28.9784 },
+        console.log(this.props.location.lat);
+        const map = new google.maps.Map(document.getElementById('os-location-map'), {
+            center: {
+                lat: this.props.location.lat,
+                lng: this.props.location.lng,
+            },
             zoom: 8,
         });
     }
@@ -67238,6 +67241,11 @@ class OSLoactionMap extends react_1.default.Component {
         return react_1.default.createElement("div", { id: "os-location-map" });
     }
 }
+const mapStateToProps = (state) => ({
+    location: state.currentSpace.location,
+});
+const mapDispatchToProps = {};
+const OSLoactionMap = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_OSLoactionMap);
 exports.default = OSLoactionMap;
 
 
@@ -67303,25 +67311,6 @@ var AllowedFileMime;
     AllowedFileMime.FORMATS = Object.keys(allowed_file_mime_json_1.default.image);
     AllowedFileMime.MIMES = Object.values(allowed_file_mime_json_1.default.image);
 })(AllowedFileMime = exports.AllowedFileMime || (exports.AllowedFileMime = {}));
-
-
-/***/ }),
-
-/***/ "./resources/js/google-maps-api/index.ts":
-/*!***********************************************!*\
-  !*** ./resources/js/google-maps-api/index.ts ***!
-  \***********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * createGoogleMap
- */
-const createGoogleMap = (elementId, properties) => new window.google.maps.Map(document.getElementById(elementId), properties);
-exports.default = createGoogleMap;
 
 
 /***/ }),
@@ -67519,6 +67508,70 @@ if (document.getElementById('os-home-container')) {
 
 /***/ }),
 
+/***/ "./resources/js/reducer/current-space.ts":
+/*!***********************************************!*\
+  !*** ./resources/js/reducer/current-space.ts ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const current_space_1 = __webpack_require__(/*! ../redux-types/current-space */ "./resources/js/redux-types/current-space.ts");
+/**
+ * Initial State
+ */
+const initialState = {
+    spaceNames: {
+        ko: '스타벅스 자양점',
+        en: 'Starbucks Jayang',
+    },
+    types: ['2', '4'],
+    locationText: '원주 the potato factory',
+    location: {
+        lat: -25.344,
+        lng: 131.036,
+    },
+    operatingHours: ['00:00 - 23:59 / 월, 수, 금'],
+    amenityTags: ['amazon-pay', 'apple-pay', 'toilet', 'visa', 'wifi'],
+    images: [
+        './demo-images/about_img_03.jpg',
+        './demo-images/item_image_05b.jpg',
+        './demo-images/item_image_06.jpg',
+    ],
+    rank: 3.5,
+    busyLevel: '1',
+};
+/**
+ * CurrentSpaceReducer
+ */
+function CurrentSpaceReducer(state = initialState, action) {
+    switch (action.type) {
+        case current_space_1.SET_OPERATING_HOURS:
+            return {
+                ...state,
+                operatingHours: action.operatingHours,
+            };
+        case current_space_1.SET_BUSY_LEVEL:
+            return {
+                ...state,
+                busyLevel: action.busyLevel,
+            };
+        case current_space_1.SET_AMENITY_TAGS:
+            return {
+                ...state,
+                amenityTags: action.amenityTags,
+            };
+        default:
+            return state;
+    }
+}
+exports.default = CurrentSpaceReducer;
+
+
+/***/ }),
+
 /***/ "./resources/js/reducer/index.ts":
 /*!***************************************!*\
   !*** ./resources/js/reducer/index.ts ***!
@@ -67533,14 +67586,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const redux_1 = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
-const space_1 = __importDefault(__webpack_require__(/*! ./space */ "./resources/js/reducer/space.ts"));
+const current_space_1 = __importDefault(__webpack_require__(/*! ./current-space */ "./resources/js/reducer/current-space.ts"));
 const selected_amenities_1 = __importDefault(__webpack_require__(/*! ./selected-amenities */ "./resources/js/reducer/selected-amenities.ts"));
 const upload_images_1 = __importDefault(__webpack_require__(/*! ./upload-images */ "./resources/js/reducer/upload-images.ts"));
 /**
  * Root Reducer
  */
 const RootReducer = redux_1.combineReducers({
-    currentSpace: space_1.default,
+    currentSpace: current_space_1.default,
     selectedAmenities: selected_amenities_1.default,
     selectedImages: upload_images_1.default,
 });
@@ -67581,70 +67634,6 @@ function SelectedAmenitiesReducer(state = initialState, action) {
     }
 }
 exports.default = SelectedAmenitiesReducer;
-
-
-/***/ }),
-
-/***/ "./resources/js/reducer/space.ts":
-/*!***************************************!*\
-  !*** ./resources/js/reducer/space.ts ***!
-  \***************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-const current_space_1 = __webpack_require__(/*! ../redux-types/current-space */ "./resources/js/redux-types/current-space.ts");
-/**
- * Initial State
- */
-const initialState = {
-    spaceNames: {
-        ko: '스타벅스 자양점',
-        en: 'Starbucks Jayang',
-    },
-    types: ['2', '4'],
-    locationText: '원주 the potato factory',
-    location: {
-        lat: 127.0038577,
-        long: 37.5035985,
-    },
-    operatingHours: ['00:00 - 23:59 / 월, 수, 금'],
-    amenityTags: ['amazon-pay', 'apple-pay', 'toilet', 'visa', 'wifi'],
-    images: [
-        './demo-images/about_img_03.jpg',
-        './demo-images/item_image_05b.jpg',
-        './demo-images/item_image_06.jpg',
-    ],
-    rank: 3.5,
-    busyLevel: '1',
-};
-/**
- * CurrentSpaceReducer
- */
-function CurrentSpaceReducer(state = initialState, action) {
-    switch (action.type) {
-        case current_space_1.SET_OPERATING_HOURS:
-            return {
-                ...state,
-                operatingHours: action.operatingHours,
-            };
-        case current_space_1.SET_BUSY_LEVEL:
-            return {
-                ...state,
-                busyLevel: action.busyLevel,
-            };
-        case current_space_1.SET_AMENITY_TAGS:
-            return {
-                ...state,
-                amenityTags: action.amenityTags,
-            };
-        default:
-            return state;
-    }
-}
-exports.default = CurrentSpaceReducer;
 
 
 /***/ }),

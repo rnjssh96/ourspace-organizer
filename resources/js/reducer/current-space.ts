@@ -17,8 +17,8 @@ const initialState: CurrentSpaceState = {
     types: ['2', '4'], //ok
     locationText: '원주 the potato factory',
     location: {
-        lat: 127.0038577,
-        long: 37.5035985,
+        lat: -25.344,
+        lng: 131.036,
     },
     operatingHours: ['00:00 - 23:59 / 월, 수, 금'], // ok
     amenityTags: ['amazon-pay', 'apple-pay', 'toilet', 'visa', 'wifi'], //ok

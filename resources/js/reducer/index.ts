@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-import CurrentSpaceReducer from './space';
+import CurrentSpaceReducer from './current-space';
 import SelectedAmenitiesReducer from './selected-amenities';
 import SelectedImagesReducer from './upload-images';
 

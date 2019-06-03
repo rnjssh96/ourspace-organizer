@@ -61,14 +61,16 @@ export const interpretAmenity = (
 /**
  * Space
  */
+export interface GeoCoordinate {
+    lat: number;
+    lng: number;
+}
+
 interface Space {
     spaceNames: SpaceNames;
     types: SpaceType[];
     locationText: string;
-    location: {
-        lat: number;
-        long: number;
-    };
+    location: GeoCoordinate;
     operatingHours: string[];
     amenityTags: AmenityTag[];
     images: string[];
