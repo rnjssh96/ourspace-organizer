@@ -26,7 +26,7 @@ const initialState: CurrentSpaceState = {
         './demo-images/about_img_03.jpg',
         './demo-images/item_image_05b.jpg',
         './demo-images/item_image_06.jpg',
-    ],
+    ], // ok
     rank: 3.5,
     busyLevel: '1', //ok
 };

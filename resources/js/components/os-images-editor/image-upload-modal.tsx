@@ -4,7 +4,7 @@ import Dropzone from 'react-dropzone';
 import ContentLoader from 'react-content-loader';
 import filesize from 'filesize';
 
-import AllowedFileMime from '../../config/allowed-file-mime.json';
+import { AllowedFileMime } from '../../config';
 
 import RootState from '../../redux-types';
 import {
@@ -20,10 +20,6 @@ import {
 } from '../../actions/upload-images';
 
 export const ImageUploadModalID = 'image-upload-modal';
-
-// Allowed uploading file formats and mimes
-const ALLOWED_FILE_FORMATS = Object.keys(AllowedFileMime.image);
-const ALLOWED_FILE_MIMES = Object.values(AllowedFileMime.image);
 
 interface _ReduxProps {
     /**
@@ -64,7 +60,7 @@ interface ImageUploadModalProps extends _ReduxProps, _ReduxActionCreators {}
 class _ImageUploadModal extends React.Component<ImageUploadModalProps> {
     private _onFileDrop = (acceptedFiles: File[]) => {
         acceptedFiles.forEach((file: File) => {
-            if (ALLOWED_FILE_MIMES.indexOf(file.type) != -1) {
+            if (AllowedFileMime.MIMES.indexOf(file.type) != -1) {
                 const imageKey: number = Date.now();
                 this.props.addUploadImage(imageKey, {
                     key: imageKey,
@@ -199,7 +195,7 @@ class _ImageUploadModal extends React.Component<ImageUploadModalProps> {
                             <p className="h6">
                                 <i className="material-icons">info</i>
                                 업로드 가능한 파일형식:
-                                {ALLOWED_FILE_FORMATS.map(
+                                {AllowedFileMime.FORMATS.map(
                                     (format: string) => ` ${format}`,
                                 )}
                             </p>

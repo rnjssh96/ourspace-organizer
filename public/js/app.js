@@ -86059,18 +86059,15 @@ const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/rea
 const react_dropzone_1 = __importDefault(__webpack_require__(/*! react-dropzone */ "./node_modules/react-dropzone/dist/es/index.js"));
 const react_content_loader_1 = __importDefault(__webpack_require__(/*! react-content-loader */ "./node_modules/react-content-loader/dist/react-content-loader.es.js"));
 const filesize_1 = __importDefault(__webpack_require__(/*! filesize */ "./node_modules/filesize/lib/filesize.js"));
-const allowed_file_mime_json_1 = __importDefault(__webpack_require__(/*! ../../config/allowed-file-mime.json */ "./resources/js/config/allowed-file-mime.json"));
+const config_1 = __webpack_require__(/*! ../../config */ "./resources/js/config/index.ts");
 const upload_images_1 = __webpack_require__(/*! ../../actions/upload-images */ "./resources/js/actions/upload-images.ts");
 exports.ImageUploadModalID = 'image-upload-modal';
-// Allowed uploading file formats and mimes
-const ALLOWED_FILE_FORMATS = Object.keys(allowed_file_mime_json_1.default.image);
-const ALLOWED_FILE_MIMES = Object.values(allowed_file_mime_json_1.default.image);
 class _ImageUploadModal extends react_1.default.Component {
     constructor() {
         super(...arguments);
         this._onFileDrop = (acceptedFiles) => {
             acceptedFiles.forEach((file) => {
-                if (ALLOWED_FILE_MIMES.indexOf(file.type) != -1) {
+                if (config_1.AllowedFileMime.MIMES.indexOf(file.type) != -1) {
                     const imageKey = Date.now();
                     this.props.addUploadImage(imageKey, {
                         key: imageKey,
@@ -86133,7 +86130,7 @@ class _ImageUploadModal extends react_1.default.Component {
                         react_1.default.createElement("p", { className: "h6" },
                             react_1.default.createElement("i", { className: "material-icons" }, "info"),
                             "\uC5C5\uB85C\uB4DC \uAC00\uB2A5\uD55C \uD30C\uC77C\uD615\uC2DD:",
-                            ALLOWED_FILE_FORMATS.map((format) => ` ${format}`))),
+                            config_1.AllowedFileMime.FORMATS.map((format) => ` ${format}`))),
                     react_1.default.createElement("div", { className: "modal-footer" },
                         react_1.default.createElement("button", { type: "button", className: "btn btn-secondary", "data-dismiss": "modal" }, "\uB2EB\uAE30"),
                         react_1.default.createElement("button", { type: "submit", className: "btn btn-primary", "data-dismiss": "modal" }, "\uC5C5\uB85C\uB4DC"))))));
@@ -86233,13 +86230,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 const recompose_1 = __webpack_require__(/*! recompose */ "./node_modules/recompose/dist/Recompose.esm.js");
 const react_google_maps_1 = __webpack_require__(/*! react-google-maps */ "./node_modules/react-google-maps/lib/index.js");
+const config_1 = __webpack_require__(/*! ../config */ "./resources/js/config/index.ts");
+class _OSLocationMap extends react_1.default.Component {
+    render() {
+        return (react_1.default.createElement(react_google_maps_1.GoogleMap, { defaultZoom: 12, defaultCenter: { lat: -34.397, lng: 150.644 }, mapTypeId: 'roadmap' },
+            react_1.default.createElement(react_google_maps_1.Marker, { position: { lat: -34.397, lng: 150.644 } })));
+    }
+}
 const OSLoactionMap = recompose_1.compose(recompose_1.withProps({
-    googleMapURL: 'https://maps.googleapis.com/maps/api/js?key=AIzaSyDQKkNsepBOaIiSSp4OUIFZGKmCOFTrho4',
-    loadingElement: react_1.default.createElement("div", { style: { height: '100%' } }),
+    // withGoogleMap props
     containerElement: react_1.default.createElement("div", { id: "os-location-map" }),
     mapElement: react_1.default.createElement("div", { id: "map" }),
-}), react_google_maps_1.withScriptjs, react_google_maps_1.withGoogleMap)(props => (react_1.default.createElement(react_google_maps_1.GoogleMap, { defaultZoom: 12, defaultCenter: { lat: -34.397, lng: 150.644 }, mapTypeId: 'roadmap' },
-    react_1.default.createElement(react_google_maps_1.Marker, { position: { lat: -34.397, lng: 150.644 } }))));
+    // withScriptjs props
+    googleMapURL: `https://maps.googleapis.com/maps/api/js?key=${config_1.GoogleMapsApi.API_KEY}`,
+    loadingElement: react_1.default.createElement("div", { id: "what", style: { height: '100%' } }),
+}), react_google_maps_1.withScriptjs, react_google_maps_1.withGoogleMap)(_OSLocationMap);
 exports.default = OSLoactionMap;
 
 
@@ -86282,6 +86287,47 @@ exports.default = OSRateDisplay;
 /***/ (function(module) {
 
 module.exports = {"image":{".jpg/.jpeg":"image/jpeg",".png":"image/png"}};
+
+/***/ }),
+
+/***/ "./resources/js/config/google-maps-api.json":
+/*!**************************************************!*\
+  !*** ./resources/js/config/google-maps-api.json ***!
+  \**************************************************/
+/*! exports provided: api-key, default */
+/***/ (function(module) {
+
+module.exports = {"api-key":"AIzaSyDQKkNsepBOaIiSSp4OUIFZGKmCOFTrho4"};
+
+/***/ }),
+
+/***/ "./resources/js/config/index.ts":
+/*!**************************************!*\
+  !*** ./resources/js/config/index.ts ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+// allowed-file-mime
+const allowed_file_mime_json_1 = __importDefault(__webpack_require__(/*! ./allowed-file-mime.json */ "./resources/js/config/allowed-file-mime.json"));
+var AllowedFileMime;
+(function (AllowedFileMime) {
+    AllowedFileMime.FORMATS = Object.keys(allowed_file_mime_json_1.default.image);
+    AllowedFileMime.MIMES = Object.values(allowed_file_mime_json_1.default.image);
+})(AllowedFileMime = exports.AllowedFileMime || (exports.AllowedFileMime = {}));
+// google-maps-api
+const google_maps_api_json_1 = __importDefault(__webpack_require__(/*! ./google-maps-api.json */ "./resources/js/config/google-maps-api.json"));
+var GoogleMapsApi;
+(function (GoogleMapsApi) {
+    GoogleMapsApi.API_KEY = google_maps_api_json_1.default['api-key'];
+})(GoogleMapsApi = exports.GoogleMapsApi || (exports.GoogleMapsApi = {}));
+
 
 /***/ }),
 
