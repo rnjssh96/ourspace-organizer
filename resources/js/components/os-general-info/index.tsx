@@ -10,7 +10,6 @@ import { setOperatingHours } from '../../actions/current-space';
 import OperatingHourEditModal, {
     OperatingHourEditModalID,
 } from './operating-hour-edit-modal';
-import LocationEditModal, { LocationEditModalID } from './location-edit-modal';
 
 interface _ReduxProps {
     /**
