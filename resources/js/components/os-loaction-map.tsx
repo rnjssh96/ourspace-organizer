@@ -15,9 +15,10 @@ interface _ReduxProps {
 interface OSLoactionMapProps extends _ReduxProps {}
 
 class _OSLoactionMap extends React.Component<OSLoactionMapProps> {
+    private _map?: google.maps.Map;
+
     componentDidMount() {
-        console.log(this.props.location.lat);
-        const map = new google.maps.Map(
+        this._map = new google.maps.Map(
             document.getElementById('os-location-map'),
             {
                 center: {

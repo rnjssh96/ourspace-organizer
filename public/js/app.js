@@ -67229,7 +67229,7 @@ const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/rea
 class _OSLoactionMap extends react_1.default.Component {
     componentDidMount() {
         console.log(this.props.location.lat);
-        const map = new google.maps.Map(document.getElementById('os-location-map'), {
+        this._map = new google.maps.Map(document.getElementById('os-location-map'), {
             center: {
                 lat: this.props.location.lat,
                 lng: this.props.location.lng,
@@ -67500,6 +67500,7 @@ class OSHomeContainer extends react_1.default.Component {
     }
 }
 const rootStore = redux_1.createStore(reducer_1.default);
+rootStore.subscribe(() => console.log('df'));
 if (document.getElementById('os-home-container')) {
     react_dom_1.default.render(react_1.default.createElement(react_redux_1.Provider, { store: rootStore },
         react_1.default.createElement(OSHomeContainer, null)), document.getElementById('os-home-container'));
