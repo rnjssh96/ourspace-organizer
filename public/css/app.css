@@ -11244,17 +11244,3 @@ button {
   margin-bottom: 0;
 }
 
-#location-edit-modal > .modal-dialog {
-  height: 90%;
-  width: 80%;
-  max-width: none;
-}
-
-#location-edit-modal > .modal-dialog > .modal-content {
-  height: 100%;
-}
-
-#location-edit-modal > .modal-dialog > .modal-content > .modal-body > #location-search-map {
-  height: 100%;
-}
-

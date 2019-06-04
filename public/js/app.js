@@ -66803,7 +66803,6 @@ const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/rea
 const space_1 = __webpack_require__(/*! ../../model/space */ "./resources/js/model/space.ts");
 const current_space_1 = __webpack_require__(/*! ../../actions/current-space */ "./resources/js/actions/current-space.ts");
 const operating_hour_edit_modal_1 = __importStar(__webpack_require__(/*! ./operating-hour-edit-modal */ "./resources/js/components/os-general-info/operating-hour-edit-modal.tsx"));
-const location_edit_modal_1 = __importStar(__webpack_require__(/*! ./location-edit-modal */ "./resources/js/components/os-general-info/location-edit-modal/index.tsx"));
 class _OSGeneralInfo extends react_1.default.Component {
     render() {
         let typesText = '';
@@ -66823,12 +66822,7 @@ class _OSGeneralInfo extends react_1.default.Component {
                     react_1.default.createElement("p", { className: "h6 os-grey-1 os-text-ellipsis" },
                         react_1.default.createElement("i", { className: "material-icons" }, "location_on")),
                     react_1.default.createElement("div", { className: "text" },
-                        react_1.default.createElement("p", { className: "h6 os-grey-1 os-text-ellipsis" }, this.props.locationText)),
-                    react_1.default.createElement("button", { "data-toggle": "modal", "data-target": `#${location_edit_modal_1.LocationEditModalID}` },
-                        react_1.default.createElement("p", { className: "h6 os-grey-1" },
-                            react_1.default.createElement("i", { className: "material-icons" }, "edit"),
-                            "\uC218\uC815")),
-                    react_1.default.createElement(location_edit_modal_1.default, null)),
+                        react_1.default.createElement("p", { className: "h6 os-grey-1 os-text-ellipsis" }, this.props.locationText))),
                 react_1.default.createElement("div", { className: "info-row" },
                     react_1.default.createElement("p", { className: "h6 os-grey-1 os-text-ellipsis" },
                         react_1.default.createElement("i", { className: "material-icons" }, "access_time")),
@@ -66851,71 +66845,6 @@ const mapDispatchToProps = {
 };
 const OSGeneralInfo = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_OSGeneralInfo);
 exports.default = OSGeneralInfo;
-
-
-/***/ }),
-
-/***/ "./resources/js/components/os-general-info/location-edit-modal/index.tsx":
-/*!*******************************************************************************!*\
-  !*** ./resources/js/components/os-general-info/location-edit-modal/index.tsx ***!
-  \*******************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const location_search_map_1 = __importDefault(__webpack_require__(/*! ./location-search-map */ "./resources/js/components/os-general-info/location-edit-modal/location-search-map.tsx"));
-exports.LocationEditModalID = 'location-edit-modal';
-class LocationEditModal extends react_1.default.Component {
-    render() {
-        return (react_1.default.createElement("div", { id: exports.LocationEditModalID, className: "modal fade", tabIndex: -1, role: "dialog", "aria-hidden": "true" },
-            react_1.default.createElement("div", { className: "modal-dialog", role: "document" },
-                react_1.default.createElement("div", { className: "modal-content" },
-                    react_1.default.createElement("div", { className: "modal-header" },
-                        react_1.default.createElement("p", { className: "modal-title h5" }, "\uC8FC\uC18C \uC218\uC815")),
-                    react_1.default.createElement("div", { className: "modal-body" },
-                        react_1.default.createElement(location_search_map_1.default, null)),
-                    react_1.default.createElement("div", { className: "modal-footer" },
-                        react_1.default.createElement("button", { type: "button", className: "btn btn-secondary", "data-dismiss": "modal" }, "\uB2EB\uAE30"),
-                        react_1.default.createElement("button", { type: "submit", className: "btn btn-primary", "data-dismiss": "modal" }, "\uC800\uC7A5"))))));
-    }
-}
-exports.default = LocationEditModal;
-
-
-/***/ }),
-
-/***/ "./resources/js/components/os-general-info/location-edit-modal/location-search-map.tsx":
-/*!*********************************************************************************************!*\
-  !*** ./resources/js/components/os-general-info/location-edit-modal/location-search-map.tsx ***!
-  \*********************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-class LocationSearchMap extends react_1.default.Component {
-    componentDidMount() {
-        const map = new google.maps.Map(document.getElementById('location-search-map'), {
-            center: { lat: 41.0082, lng: 28.9784 },
-            zoom: 8,
-        });
-    }
-    render() {
-        return react_1.default.createElement("div", { id: "location-search-map" });
-    }
-}
-exports.default = LocationSearchMap;
 
 
 /***/ }),
@@ -67034,6 +66963,54 @@ class OperatingHourEditModal extends react_1.default.Component {
     }
 }
 exports.default = OperatingHourEditModal;
+
+
+/***/ }),
+
+/***/ "./resources/js/components/os-google-map/index.tsx":
+/*!*********************************************************!*\
+  !*** ./resources/js/components/os-google-map/index.tsx ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+class OSGoogleMap extends react_1.default.Component {
+    componentDidMount() {
+        this._map = new google.maps.Map(document.getElementById(this.props.id), {
+            center: this.props.center,
+            zoom: this.props.zoom,
+            // default setting
+            clickableIcons: false,
+            mapTypeControl: false,
+            fullscreenControl: false,
+            streetViewControl: false,
+        });
+        // Display temporary marker
+        let marker = new google.maps.Marker({
+            position: this.props.center,
+            map: this._map,
+        });
+    }
+    componentDidUpdate(prevProps) {
+        if (this._map) {
+            // center changed
+            if (prevProps.center !== this.props.center) {
+                this._map.setCenter(this.props.center);
+            }
+        }
+    }
+    render() {
+        return react_1.default.createElement("div", { id: this.props.id });
+    }
+}
+exports.default = OSGoogleMap;
 
 
 /***/ }),
@@ -67226,19 +67203,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const os_google_map_1 = __importDefault(__webpack_require__(/*! ./os-google-map */ "./resources/js/components/os-google-map/index.tsx"));
 class _OSLoactionMap extends react_1.default.Component {
-    componentDidMount() {
-        console.log(this.props.location.lat);
-        this._map = new google.maps.Map(document.getElementById('os-location-map'), {
-            center: {
+    render() {
+        return (react_1.default.createElement(os_google_map_1.default, { id: "os-location-map", center: {
                 lat: this.props.location.lat,
                 lng: this.props.location.lng,
-            },
-            zoom: 8,
-        });
-    }
-    render() {
-        return react_1.default.createElement("div", { id: "os-location-map" });
+            }, zoom: 8 }));
     }
 }
 const mapStateToProps = (state) => ({
@@ -67500,7 +67471,6 @@ class OSHomeContainer extends react_1.default.Component {
     }
 }
 const rootStore = redux_1.createStore(reducer_1.default);
-rootStore.subscribe(() => console.log('df'));
 if (document.getElementById('os-home-container')) {
     react_dom_1.default.render(react_1.default.createElement(react_redux_1.Provider, { store: rootStore },
         react_1.default.createElement(OSHomeContainer, null)), document.getElementById('os-home-container'));

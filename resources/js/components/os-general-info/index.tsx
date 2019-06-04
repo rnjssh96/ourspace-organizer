@@ -77,7 +77,7 @@ class _OSGeneralInfo extends React.Component<OSGeneralInfoProps> {
                                 {this.props.locationText}
                             </p>
                         </div>
-                        <button
+                        {/* <button
                             data-toggle="modal"
                             data-target={`#${LocationEditModalID}`}
                         >
@@ -86,7 +86,7 @@ class _OSGeneralInfo extends React.Component<OSGeneralInfoProps> {
                                 수정
                             </p>
                         </button>
-                        <LocationEditModal />
+                        <LocationEditModal /> */}
                     </div>
                     <div className="info-row">
                         <p className="h6 os-grey-1 os-text-ellipsis">

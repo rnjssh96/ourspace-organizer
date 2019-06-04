@@ -1,17 +1,18 @@
 import React from 'react';
 
-export default class LocationSearchMap extends React.Component {
-    componentDidMount() {
-        const map = new google.maps.Map(
-            document.getElementById('location-search-map'),
-            {
-                center: { lat: 41.0082, lng: 28.9784 },
-                zoom: 8,
-            },
-        );
-    }
+import OSGoogleMap from '../../os-google-map';
 
+export default class LocationSearchMap extends React.Component {
     render() {
-        return <div id="location-search-map" />;
+        return (
+            <OSGoogleMap
+                id="location-search-map"
+                center={{
+                    lat: 41.0082,
+                    lng: 28.9784,
+                }}
+                zoom={8}
+            />
+        );
     }
 }

@@ -5,6 +5,8 @@ import RootState from '../redux-types';
 
 import { GeoCoordinate } from '../model/space';
 
+import OSGoogleMap from './os-google-map';
+
 interface _ReduxProps {
     /**
      * Geographical coordinate of the space location
@@ -15,23 +17,17 @@ interface _ReduxProps {
 interface OSLoactionMapProps extends _ReduxProps {}
 
 class _OSLoactionMap extends React.Component<OSLoactionMapProps> {
-    private _map?: google.maps.Map;
-
-    componentDidMount() {
-        this._map = new google.maps.Map(
-            document.getElementById('os-location-map'),
-            {
-                center: {
+    render() {
+        return (
+            <OSGoogleMap
+                id="os-location-map"
+                center={{
                     lat: this.props.location.lat,
                     lng: this.props.location.lng,
-                },
-                zoom: 8,
-            },
+                }}
+                zoom={8}
+            />
         );
-    }
-
-    render() {
-        return <div id="os-location-map" />;
     }
 }
 
