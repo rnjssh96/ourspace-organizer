@@ -4,8 +4,8 @@ import OSRankDisplay from '../components/os-rank-display';
 import OSImagesEditor from '../components/os-images-editor';
 import OSAmenityTags from '../components/os-amenity-tags';
 import OSLoactionMap from '../components/os-loaction-map';
-import OSBusyLevelSelector from '../components/os-busy-level-selector';
 import OSGeneralInfo from '../components/os-general-info';
+import OSSpaceIntroduce from '../components/os-space-introduce';
 
 export default class HomeMainView extends React.Component {
     render() {
@@ -22,6 +22,7 @@ export default class HomeMainView extends React.Component {
                 </div>
                 <div id="body">
                     <div id="left">
+                        <OSSpaceIntroduce />
                         <OSAmenityTags />
                         <OSImagesEditor />
                         {/* <OSCommentsViewer /> */}

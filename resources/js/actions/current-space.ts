@@ -6,11 +6,20 @@ import {
     SetBusyLevelAction,
     SetAmenityTagsAction,
     SET_AMENITY_TAGS,
+    UpdateSpaceIntroduceAction,
+    UPDATE_SPACE_INTRODUCE,
 } from '../redux-types/current-space';
 
 /**
  * Action Creators
  */
+export const updateSpaceIntroduce = (
+    spaceIntroduce: string,
+): UpdateSpaceIntroduceAction => ({
+    type: UPDATE_SPACE_INTRODUCE,
+    spaceIntroduce,
+});
+
 export const setOperatingHours = (
     operatingHours: string[],
 ): SetOperatingHoursAction => ({

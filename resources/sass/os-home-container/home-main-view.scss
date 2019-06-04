@@ -86,19 +86,19 @@
                 margin-top: 2rem;
             }
 
-            #header {
+            .header {
                 // flex
                 display: flex;
                 justify-content: space-between;
             }
 
-            #body {
+            .body {
                 // margin
                 margin-top: 0.5rem;
                 margin-bottom: 0.5rem;
             }
 
-            #footer {
+            .footer {
                 // flex
                 display: flex;
                 justify-content: flex-end;

@@ -4,6 +4,7 @@ import {
     SET_OPERATING_HOURS,
     SET_BUSY_LEVEL,
     SET_AMENITY_TAGS,
+    UPDATE_SPACE_INTRODUCE,
 } from '../redux-types/current-space';
 
 /**
@@ -22,12 +23,13 @@ const initialState: CurrentSpaceState = {
     },
     operatingHours: ['00:00 - 23:59 / 월, 수, 금'], // ok
     amenityTags: ['amazon-pay', 'apple-pay', 'toilet', 'visa', 'wifi'], //ok
+    spaceIntroduce: "", //ok
     images: [
         './demo-images/about_img_03.jpg',
         './demo-images/item_image_05b.jpg',
         './demo-images/item_image_06.jpg',
     ], // ok
-    rank: 3.5,
+    rank: 3.5, // ok
     busyLevel: '1', //ok
 };
 
@@ -39,6 +41,13 @@ export default function CurrentSpaceReducer(
     action: CurrentSpaceActions,
 ) {
     switch (action.type) {
+        case UPDATE_SPACE_INTRODUCE:
+            return {
+                ...state,
+                spaceIntroduce: action.spaceIntroduce,
+            };
+
+
         case SET_OPERATING_HOURS:
             return {
                 ...state,

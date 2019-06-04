@@ -1,6 +1,7 @@
 import React from 'react';
-import RootState from '../redux-types';
 import { connect } from 'react-redux';
+
+import RootState from '../redux-types';
 
 interface _ReduxProps {
     /**
@@ -12,8 +13,8 @@ interface _ReduxProps {
 interface OSRankDisplayProps extends _ReduxProps {}
 
 class _OSRankDisplay extends React.Component<OSRankDisplayProps> {
-    private _renderStar = (percentage: number) => (
-        <div className="star">
+    private _renderStar = (index: number, percentage: number) => (
+        <div key={index} className="star">
             <i className="far fa-star" />
             <div className="fill" style={{ width: `${percentage * 100}%` }}>
                 <i className="fas fa-star" />
@@ -27,7 +28,7 @@ class _OSRankDisplay extends React.Component<OSRankDisplayProps> {
         for (let i = 0; i < 5; i++) {
             p = this.props.rank - i;
             p = p > 1 ? 1 : p < 0 ? 0 : p;
-            rtn.push(this._renderStar(p));
+            rtn.push(this._renderStar(i, p));
         }
         return rtn;
     };

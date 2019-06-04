@@ -9,6 +9,8 @@ export type CurrentSpaceState = Space;
  * Action Constants
  */
 // prettier-ignore
+export const UPDATE_SPACE_INTRODUCE = 'our-space-organizer/current-space/UPDATE_SPACE_INTRODUCE';
+// prettier-ignore
 export const SET_OPERATING_HOURS = 'our-space-organizer/current-space/SET_OPERATING_HOURS';
 // prettier-ignore
 export const SET_BUSY_LEVEL = 'our-space-organizer/current-space/SET_BUSY_LEVEL';
@@ -18,6 +20,11 @@ export const SET_AMENITY_TAGS = 'our-space-organizer/current-space/SET_AMENITY_T
 /**
  * Action Interfaces
  */
+export interface UpdateSpaceIntroduceAction {
+    type: typeof UPDATE_SPACE_INTRODUCE;
+    spaceIntroduce: string;
+}
+
 export interface SetOperatingHoursAction {
     type: typeof SET_OPERATING_HOURS;
     operatingHours: string[];
@@ -37,6 +44,7 @@ export interface SetAmenityTagsAction {
  * Action Types
  */
 export type CurrentSpaceActions =
+    |UpdateSpaceIntroduceAction
     | SetOperatingHoursAction
     | SetBusyLevelAction
     | SetAmenityTagsAction;

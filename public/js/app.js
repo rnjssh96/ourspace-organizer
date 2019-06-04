@@ -66392,6 +66392,10 @@ const current_space_1 = __webpack_require__(/*! ../redux-types/current-space */ 
 /**
  * Action Creators
  */
+exports.updateSpaceIntroduce = (spaceIntroduce) => ({
+    type: current_space_1.UPDATE_SPACE_INTRODUCE,
+    spaceIntroduce,
+});
 exports.setOperatingHours = (operatingHours) => ({
     type: current_space_1.SET_OPERATING_HOURS,
     operatingHours,
@@ -66693,16 +66697,16 @@ class _OSAmenityTags extends react_1.default.Component {
     }
     render() {
         return (react_1.default.createElement("div", { id: "os-amenity-tags" },
-            react_1.default.createElement("div", { id: "header" },
+            react_1.default.createElement("div", { className: "header" },
                 react_1.default.createElement("p", { className: "h5" }, "\uD3B8\uC758\uC2DC\uC124"),
                 react_1.default.createElement("button", { "data-toggle": "modal", "data-target": `#${amenities_edit_modal_1.AmenitiesEditModalID}`, onClick: this._resetSelectedAmenities },
                     react_1.default.createElement("p", { className: "h6 os-grey-1" },
                         react_1.default.createElement("i", { className: "material-icons" }, "add"),
                         "\uCD94\uAC00")),
                 react_1.default.createElement(amenities_edit_modal_1.default, null)),
-            react_1.default.createElement("div", { id: "body" },
+            react_1.default.createElement("div", { className: "body" },
                 react_1.default.createElement("div", { id: "amenities" }, this._renderAmenities())),
-            react_1.default.createElement("div", { id: "footer" },
+            react_1.default.createElement("div", { className: "footer" },
                 react_1.default.createElement("p", { className: "h6 os-grey-1" },
                     react_1.default.createElement("i", { className: "material-icons" }, "info"),
                     "\uB9C8\uC6B0\uC2A4\uB97C \uC544\uC774\uCF58 \uC704\uC5D0 \uC62C\uB9AC\uC2DC\uBA74 \uC124\uBA85\uC744 \uBCFC \uC218 \uC788\uC2B5\uB2C8\uB2E4."))));
@@ -67115,15 +67119,15 @@ class _OSImagesEditor extends react_1.default.Component {
     }
     render() {
         return (react_1.default.createElement("div", { id: "os-images-editor" },
-            react_1.default.createElement("div", { id: "header" },
+            react_1.default.createElement("div", { className: "header" },
                 react_1.default.createElement("p", { className: "h5" }, "\uB9E4\uC7A5\uC0AC\uC9C4"),
                 react_1.default.createElement("button", { "data-toggle": "modal", "data-target": `#${image_upload_modal_1.ImageUploadModalID}`, onClick: this._resetUploadImages },
                     react_1.default.createElement("p", { className: "h6 os-grey-1" },
                         react_1.default.createElement("i", { className: "material-icons" }, "add"),
                         "\uCD94\uAC00")),
                 react_1.default.createElement(image_upload_modal_1.default, null)),
-            react_1.default.createElement("div", { id: "body" }, this._renderImages()),
-            react_1.default.createElement("div", { id: "footer" },
+            react_1.default.createElement("div", { className: "body" }, this._renderImages()),
+            react_1.default.createElement("div", { className: "footer" },
                 react_1.default.createElement("p", { className: "h6 os-grey-1" },
                     react_1.default.createElement("i", { className: "material-icons" }, "info"),
                     "\uC0AC\uC9C4 \uC0AD\uC81C\uB294 Super-organizer \uC0AC\uC6A9\uC790\uB9CC \uAC00\uB2A5\uD569\uB2C8\uB2E4."))));
@@ -67193,16 +67197,16 @@ const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/rea
 class _OSRankDisplay extends react_1.default.Component {
     constructor() {
         super(...arguments);
-        this._renderStar = (percentage) => (react_1.default.createElement("div", { className: "star" },
+        this._renderStar = (index, percentage) => (react_1.default.createElement("div", { key: index, className: "star" },
             react_1.default.createElement("i", { className: "far fa-star" }),
             react_1.default.createElement("div", { className: "fill", style: { width: `${percentage * 100}%` } },
                 react_1.default.createElement("i", { className: "fas fa-star" }))));
         this._renderStars = () => {
             let p, rtn = [];
             for (let i = 0; i < 5; i++) {
-                p = 0 - i;
+                p = this.props.rank - i;
                 p = p > 1 ? 1 : p < 0 ? 0 : p;
-                rtn.push(this._renderStar(p));
+                rtn.push(this._renderStar(i, p));
             }
             return rtn;
         };
@@ -67219,6 +67223,80 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {};
 const OSRankDisplay = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_OSRankDisplay);
 exports.default = OSRankDisplay;
+
+
+/***/ }),
+
+/***/ "./resources/js/components/os-space-introduce.tsx":
+/*!********************************************************!*\
+  !*** ./resources/js/components/os-space-introduce.tsx ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const current_space_1 = __webpack_require__(/*! ../actions/current-space */ "./resources/js/actions/current-space.ts");
+class _OSSpaceIntroduce extends react_1.default.Component {
+    constructor() {
+        super(...arguments);
+        this.state = {
+            mode: 'display',
+            textValue: '',
+        };
+        this._swtichMode = (m) => {
+            this.setState({ mode: m, textValue: this.props.spaceIntroduce });
+        };
+        this._onTextChange = (ev) => {
+            this.setState({
+                ...this.state,
+                textValue: ev.target.value,
+            });
+        };
+        this._save = () => {
+            this.props.updateSpaceIntroduce(this.state.textValue);
+            this._swtichMode('display');
+        };
+        this._renderDisplayMode = () => this.props.spaceIntroduce === '' ? (react_1.default.createElement("p", { id: "no-intro", className: "h6" }, "\uB4F1\uB85D\uB41C \uC18C\uAC1C\uAE00\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.")) : (react_1.default.createElement("p", { className: "h6" }, this.props.spaceIntroduce));
+        this._renderEditMode = () => (react_1.default.createElement("div", { id: "editor" },
+            react_1.default.createElement("textarea", { className: "form-control", rows: 5, value: this.state.textValue, onChange: this._onTextChange }),
+            react_1.default.createElement("div", { id: "buttons" },
+                react_1.default.createElement("button", { type: "button", className: "btn btn-secondary", onClick: () => {
+                        this._swtichMode('display');
+                    } }, "\uCDE8\uC18C"),
+                react_1.default.createElement("button", { type: "button", className: "btn btn-primary", onClick: () => {
+                        this._save();
+                    } }, "\uC800\uC7A5"))));
+    }
+    render() {
+        return (react_1.default.createElement("div", { id: "os-space-introduce" },
+            react_1.default.createElement("div", { className: "header" },
+                react_1.default.createElement("p", { className: "h5" }, "\uC18C\uAC1C"),
+                this.state.mode === 'display' && (react_1.default.createElement("button", { onClick: () => {
+                        this._swtichMode('edit');
+                    } },
+                    react_1.default.createElement("p", { className: "h6 os-grey-1" },
+                        react_1.default.createElement("i", { className: "material-icons" }, "edit"),
+                        "\uC218\uC815")))),
+            react_1.default.createElement("div", { className: "body" }, this.state.mode === 'display'
+                ? this._renderDisplayMode()
+                : this._renderEditMode())));
+    }
+}
+const mapStateToProps = (state) => ({
+    spaceIntroduce: state.currentSpace.spaceIntroduce,
+});
+const mapDispatchToProps = {
+    updateSpaceIntroduce: current_space_1.updateSpaceIntroduce,
+};
+const OSSpaceIntroduce = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_OSSpaceIntroduce);
+exports.default = OSSpaceIntroduce;
 
 
 /***/ }),
@@ -67352,6 +67430,7 @@ const os_images_editor_1 = __importDefault(__webpack_require__(/*! ../components
 const os_amenity_tags_1 = __importDefault(__webpack_require__(/*! ../components/os-amenity-tags */ "./resources/js/components/os-amenity-tags/index.tsx"));
 const os_loaction_map_1 = __importDefault(__webpack_require__(/*! ../components/os-loaction-map */ "./resources/js/components/os-loaction-map.tsx"));
 const os_general_info_1 = __importDefault(__webpack_require__(/*! ../components/os-general-info */ "./resources/js/components/os-general-info/index.tsx"));
+const os_space_introduce_1 = __importDefault(__webpack_require__(/*! ../components/os-space-introduce */ "./resources/js/components/os-space-introduce.tsx"));
 class HomeMainView extends react_1.default.Component {
     render() {
         return (react_1.default.createElement("div", { id: "home-main-view" },
@@ -67362,6 +67441,7 @@ class HomeMainView extends react_1.default.Component {
                     react_1.default.createElement(os_rank_display_1.default, null))),
             react_1.default.createElement("div", { id: "body" },
                 react_1.default.createElement("div", { id: "left" },
+                    react_1.default.createElement(os_space_introduce_1.default, null),
                     react_1.default.createElement(os_amenity_tags_1.default, null),
                     react_1.default.createElement(os_images_editor_1.default, null)),
                 react_1.default.createElement("div", { id: "right" },
@@ -67476,6 +67556,7 @@ const initialState = {
     },
     operatingHours: ['00:00 - 23:59 / 월, 수, 금'],
     amenityTags: ['amazon-pay', 'apple-pay', 'toilet', 'visa', 'wifi'],
+    spaceIntroduce: "",
     images: [
         './demo-images/about_img_03.jpg',
         './demo-images/item_image_05b.jpg',
@@ -67489,6 +67570,11 @@ const initialState = {
  */
 function CurrentSpaceReducer(state = initialState, action) {
     switch (action.type) {
+        case current_space_1.UPDATE_SPACE_INTRODUCE:
+            return {
+                ...state,
+                spaceIntroduce: action.spaceIntroduce,
+            };
         case current_space_1.SET_OPERATING_HOURS:
             return {
                 ...state,
@@ -67669,6 +67755,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * Action Constants
  */
+// prettier-ignore
+exports.UPDATE_SPACE_INTRODUCE = 'our-space-organizer/current-space/UPDATE_SPACE_INTRODUCE';
 // prettier-ignore
 exports.SET_OPERATING_HOURS = 'our-space-organizer/current-space/SET_OPERATING_HOURS';
 // prettier-ignore

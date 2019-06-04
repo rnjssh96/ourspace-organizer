@@ -57,7 +57,7 @@ class _OSAmenityTags extends React.Component<OSAmenityTagsProps> {
     render() {
         return (
             <div id="os-amenity-tags">
-                <div id="header">
+                <div className="header">
                     <p className="h5">편의시설</p>
                     <button
                         data-toggle="modal"
@@ -71,10 +71,10 @@ class _OSAmenityTags extends React.Component<OSAmenityTagsProps> {
                     </button>
                     <AmenitiesEditModal />
                 </div>
-                <div id="body">
+                <div className="body">
                     <div id="amenities">{this._renderAmenities()}</div>
                 </div>
-                <div id="footer">
+                <div className="footer">
                     <p className="h6 os-grey-1">
                         <i className="material-icons">info</i>
                         마우스를 아이콘 위에 올리시면 설명을 볼 수 있습니다.

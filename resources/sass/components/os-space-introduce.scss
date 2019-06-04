@@ -1,0 +1,47 @@
+#os-space-introduce {
+    & > .body {
+        // border
+        border-top: 0.5px solid $grey-2;
+        border-bottom: 0.5px solid $grey-2;
+
+        // padding
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+
+        & > p {
+            // padding
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+
+            // text color
+            color: $grey-1;
+
+            // space between lines
+            line-height: 2;
+
+            // apply line breaks
+            white-space: pre-wrap;
+
+            &#no-intro {
+                // align text
+                text-align: center;
+            }
+        }
+
+        & > #editor {
+            & > #buttons {
+                // flex
+                display: flex;
+                justify-content: flex-end;
+
+                // margin
+                margin-top: 1rem;
+
+                & > :not(:first-child) {
+                    // margin
+                    margin-left: 0.5rem;
+                }
+            }
+        }
+    }
+}

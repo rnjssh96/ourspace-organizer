@@ -73,6 +73,7 @@ interface Space {
     location: GeoCoordinate;
     operatingHours: string[];
     amenityTags: AmenityTag[];
+    spaceIntroduce: string;
     images: string[];
     rank: number;
     busyLevel: BusyLevel;

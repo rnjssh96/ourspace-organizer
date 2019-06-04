@@ -37,7 +37,7 @@ class _OSImagesEditor extends React.Component<OSImagesEditorProps> {
     render() {
         return (
             <div id="os-images-editor">
-                <div id="header">
+                <div className="header">
                     <p className="h5">매장사진</p>
                     <button
                         data-toggle="modal"
@@ -51,8 +51,8 @@ class _OSImagesEditor extends React.Component<OSImagesEditorProps> {
                     </button>
                     <ImageUploadModal />
                 </div>
-                <div id="body">{this._renderImages()}</div>
-                <div id="footer">
+                <div className="body">{this._renderImages()}</div>
+                <div className="footer">
                     <p className="h6 os-grey-1">
                         <i className="material-icons">info</i>
                         사진 삭제는 Super-organizer 사용자만 가능합니다.
