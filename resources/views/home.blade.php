@@ -15,7 +15,7 @@
         <script src="https://kit.fontawesome.com/5732b3fc1a.js"></script>
 
         <!-- Google Maps API -->
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQKkNsepBOaIiSSp4OUIFZGKmCOFTrho4" async defer></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQKkNsepBOaIiSSp4OUIFZGKmCOFTrho4"></script>
     </head>
     <body>
         <div id="os-home-container"></div>
