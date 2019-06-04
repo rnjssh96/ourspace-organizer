@@ -25,13 +25,13 @@ export default class OperatingHourEditModal extends React.Component<
     OperatingHourEditModalProps
 > {
     state: { [key in Day]: DayOperatingTime } = {
-        MON: { off: true, startTime: '00:00', endTime: '23:59' },
-        TUE: { off: true, startTime: '00:00', endTime: '23:59' },
-        WED: { off: true, startTime: '00:00', endTime: '23:59' },
-        THU: { off: true, startTime: '00:00', endTime: '23:59' },
-        FRI: { off: true, startTime: '00:00', endTime: '23:59' },
-        SAT: { off: true, startTime: '00:00', endTime: '23:59' },
-        SUN: { off: true, startTime: '00:00', endTime: '23:59' },
+        MON: { off: true, startTime: '00:00', endTime: '00:00' },
+        TUE: { off: true, startTime: '00:00', endTime: '00:00' },
+        WED: { off: true, startTime: '00:00', endTime: '00:00' },
+        THU: { off: true, startTime: '00:00', endTime: '00:00' },
+        FRI: { off: true, startTime: '00:00', endTime: '00:00' },
+        SAT: { off: true, startTime: '00:00', endTime: '00:00' },
+        SUN: { off: true, startTime: '00:00', endTime: '00:00' },
     };
 
     private _saveOperatingHour = (event: MouseEvent) => {

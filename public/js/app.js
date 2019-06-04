@@ -66720,53 +66720,6 @@ exports.default = OSAmenityTags;
 
 /***/ }),
 
-/***/ "./resources/js/components/os-busy-level-selector.tsx":
-/*!************************************************************!*\
-  !*** ./resources/js/components/os-busy-level-selector.tsx ***!
-  \************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-const space_1 = __webpack_require__(/*! ../model/space */ "./resources/js/model/space.ts");
-const current_space_1 = __webpack_require__(/*! ../actions/current-space */ "./resources/js/actions/current-space.ts");
-class _OSBusyLevelSelector extends react_1.default.Component {
-    constructor() {
-        super(...arguments);
-        this._renderButton = (level) => (react_1.default.createElement("button", { className: `${this.props.busyLevel == level ? 'selected' : ''}`, onClick: () => {
-                this.props.setBusyLevel(level);
-            } },
-            react_1.default.createElement("p", { className: "h6" }, space_1.interpretBusyLevel(level, 'ko'))));
-    }
-    render() {
-        return (react_1.default.createElement("div", { id: "os-busy-level-selector" },
-            react_1.default.createElement("p", { className: "h3" },
-                react_1.default.createElement("b", null, space_1.interpretBusyLevel(this.props.busyLevel, 'ko'))),
-            react_1.default.createElement("div", { id: "buttons" },
-                this._renderButton('3'),
-                this._renderButton('2'),
-                this._renderButton('1'))));
-    }
-}
-const mapStateToProps = (state) => ({
-    busyLevel: state.currentSpace.busyLevel,
-});
-const mapDispatchToProps = {
-    setBusyLevel: current_space_1.setBusyLevel,
-};
-const OSBusyLevelSelector = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_OSBusyLevelSelector);
-exports.default = OSBusyLevelSelector;
-
-
-/***/ }),
-
 /***/ "./resources/js/components/os-general-info/day-interpret.json":
 /*!********************************************************************!*\
   !*** ./resources/js/components/os-general-info/day-interpret.json ***!
@@ -66876,13 +66829,13 @@ class OperatingHourEditModal extends react_1.default.Component {
     constructor() {
         super(...arguments);
         this.state = {
-            MON: { off: true, startTime: '00:00', endTime: '23:59' },
-            TUE: { off: true, startTime: '00:00', endTime: '23:59' },
-            WED: { off: true, startTime: '00:00', endTime: '23:59' },
-            THU: { off: true, startTime: '00:00', endTime: '23:59' },
-            FRI: { off: true, startTime: '00:00', endTime: '23:59' },
-            SAT: { off: true, startTime: '00:00', endTime: '23:59' },
-            SUN: { off: true, startTime: '00:00', endTime: '23:59' },
+            MON: { off: true, startTime: '00:00', endTime: '00:00' },
+            TUE: { off: true, startTime: '00:00', endTime: '00:00' },
+            WED: { off: true, startTime: '00:00', endTime: '00:00' },
+            THU: { off: true, startTime: '00:00', endTime: '00:00' },
+            FRI: { off: true, startTime: '00:00', endTime: '00:00' },
+            SAT: { off: true, startTime: '00:00', endTime: '00:00' },
+            SUN: { off: true, startTime: '00:00', endTime: '00:00' },
         };
         this._saveOperatingHour = (event) => {
             event.preventDefault();
@@ -67222,9 +67175,9 @@ exports.default = OSLoactionMap;
 
 /***/ }),
 
-/***/ "./resources/js/components/os-rate-display.tsx":
+/***/ "./resources/js/components/os-rank-display.tsx":
 /*!*****************************************************!*\
-  !*** ./resources/js/components/os-rate-display.tsx ***!
+  !*** ./resources/js/components/os-rank-display.tsx ***!
   \*****************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
@@ -67236,17 +67189,36 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-class OSRateDisplay extends react_1.default.Component {
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+class _OSRankDisplay extends react_1.default.Component {
+    constructor() {
+        super(...arguments);
+        this._renderStar = (percentage) => (react_1.default.createElement("div", { className: "star" },
+            react_1.default.createElement("i", { className: "far fa-star" }),
+            react_1.default.createElement("div", { className: "fill", style: { width: `${percentage * 100}%` } },
+                react_1.default.createElement("i", { className: "fas fa-star" }))));
+        this._renderStars = () => {
+            let p, rtn = [];
+            for (let i = 0; i < 5; i++) {
+                p = 0 - i;
+                p = p > 1 ? 1 : p < 0 ? 0 : p;
+                rtn.push(this._renderStar(p));
+            }
+            return rtn;
+        };
+    }
     render() {
-        return (react_1.default.createElement("div", { id: "os-rate-display" },
-            react_1.default.createElement("img", { src: "./assets/star-filled.svg" }),
-            react_1.default.createElement("img", { src: "./assets/star-filled.svg" }),
-            react_1.default.createElement("img", { src: "./assets/star-filled.svg" }),
-            react_1.default.createElement("img", { src: "./assets/star-outline.svg" }),
-            react_1.default.createElement("img", { src: "./assets/star-outline.svg" })));
+        return (react_1.default.createElement("div", { id: "os-rank-display" },
+            react_1.default.createElement("p", { className: "h1" }, this.props.rank),
+            react_1.default.createElement("div", { id: "stars" }, this._renderStars())));
     }
 }
-exports.default = OSRateDisplay;
+const mapStateToProps = (state) => ({
+    rank: state.currentSpace.rank,
+});
+const mapDispatchToProps = {};
+const OSRankDisplay = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_OSRankDisplay);
+exports.default = OSRankDisplay;
 
 
 /***/ }),
@@ -67375,11 +67347,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const os_rate_display_1 = __importDefault(__webpack_require__(/*! ../components/os-rate-display */ "./resources/js/components/os-rate-display.tsx"));
+const os_rank_display_1 = __importDefault(__webpack_require__(/*! ../components/os-rank-display */ "./resources/js/components/os-rank-display.tsx"));
 const os_images_editor_1 = __importDefault(__webpack_require__(/*! ../components/os-images-editor */ "./resources/js/components/os-images-editor/index.tsx"));
 const os_amenity_tags_1 = __importDefault(__webpack_require__(/*! ../components/os-amenity-tags */ "./resources/js/components/os-amenity-tags/index.tsx"));
 const os_loaction_map_1 = __importDefault(__webpack_require__(/*! ../components/os-loaction-map */ "./resources/js/components/os-loaction-map.tsx"));
-const os_busy_level_selector_1 = __importDefault(__webpack_require__(/*! ../components/os-busy-level-selector */ "./resources/js/components/os-busy-level-selector.tsx"));
 const os_general_info_1 = __importDefault(__webpack_require__(/*! ../components/os-general-info */ "./resources/js/components/os-general-info/index.tsx"));
 class HomeMainView extends react_1.default.Component {
     render() {
@@ -67388,8 +67359,7 @@ class HomeMainView extends react_1.default.Component {
                 react_1.default.createElement("div", { id: "left" },
                     react_1.default.createElement(os_general_info_1.default, null)),
                 react_1.default.createElement("div", { id: "right" },
-                    react_1.default.createElement(os_rate_display_1.default, null),
-                    react_1.default.createElement(os_busy_level_selector_1.default, null))),
+                    react_1.default.createElement(os_rank_display_1.default, null))),
             react_1.default.createElement("div", { id: "body" },
                 react_1.default.createElement("div", { id: "left" },
                     react_1.default.createElement(os_amenity_tags_1.default, null),

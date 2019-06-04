@@ -10888,53 +10888,31 @@ button {
   border-left: 0.5px solid #e5e5e5;
 }
 
-#os-busy-level-selector {
-  width: 100%;
+#os-rank-display {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-#os-busy-level-selector > p {
   color: #f3a930;
 }
 
-#os-busy-level-selector > #buttons {
-  width: 100%;
-  display: flex;
-  margin-top: 0.5rem;
-  border: 1px solid #f3a930;
-}
-
-#os-busy-level-selector > #buttons > button {
-  flex: 1;
-  background-color: transparent;
-  border: 0;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
-#os-busy-level-selector > #buttons > button.selected {
-  background-color: #f3a930;
-}
-
-#os-busy-level-selector > #buttons > button.selected > p {
-  color: #ffffff;
-}
-
-#os-rate-display {
+#os-rank-display > #stars {
   display: flex;
 }
 
-#os-rate-display > img {
-  height: 2.5rem;
-  width: 2.5rem;
+#os-rank-display > #stars > .star {
+  position: relative;
+  font-size: 2.5rem;
 }
 
-#os-rate-display > img:not(:first-child) {
+#os-rank-display > #stars > .star:not(:first-child) {
   margin-left: 0.5rem;
+}
+
+#os-rank-display > #stars > .star > .fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
 }
 
 #os-images-editor {

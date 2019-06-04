@@ -1,6 +1,6 @@
 import React from 'react';
 
-import OSRateDisplay from '../components/os-rate-display';
+import OSRankDisplay from '../components/os-rank-display';
 import OSImagesEditor from '../components/os-images-editor';
 import OSAmenityTags from '../components/os-amenity-tags';
 import OSLoactionMap from '../components/os-loaction-map';
@@ -16,8 +16,8 @@ export default class HomeMainView extends React.Component {
                         <OSGeneralInfo />
                     </div>
                     <div id="right">
-                        <OSRateDisplay />
-                        <OSBusyLevelSelector />
+                        <OSRankDisplay />
+                        {/* <OSBusyLevelSelector /> */}
                     </div>
                 </div>
                 <div id="body">
