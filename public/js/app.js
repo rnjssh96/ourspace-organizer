@@ -69904,7 +69904,7 @@ const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/rea
 const react_dropzone_1 = __importDefault(__webpack_require__(/*! react-dropzone */ "./node_modules/react-dropzone/dist/es/index.js"));
 const react_content_loader_1 = __importDefault(__webpack_require__(/*! react-content-loader */ "./node_modules/react-content-loader/dist/react-content-loader.es.js"));
 const filesize_1 = __importDefault(__webpack_require__(/*! filesize */ "./node_modules/filesize/lib/filesize.js"));
-const config_1 = __webpack_require__(/*! ../../config */ "./resources/js/config/index.ts");
+const allowed_file_mime_1 = __webpack_require__(/*! ../../config/allowed-file-mime */ "./resources/js/config/allowed-file-mime/index.ts");
 const upload_images_1 = __webpack_require__(/*! ../../actions/upload-images */ "./resources/js/actions/upload-images.ts");
 exports.ImageUploadModalID = 'image-upload-modal';
 class _ImageUploadModal extends react_1.default.Component {
@@ -69912,7 +69912,7 @@ class _ImageUploadModal extends react_1.default.Component {
         super(...arguments);
         this._onFileDrop = (acceptedFiles) => {
             acceptedFiles.forEach((file) => {
-                if (config_1.AllowedFileMime.MIMES.indexOf(file.type) != -1) {
+                if (allowed_file_mime_1.AllowedFileMime.MIMES.indexOf(file.type) != -1) {
                     const imageKey = Date.now();
                     this.props.addUploadImage(imageKey, {
                         key: imageKey,
@@ -69975,7 +69975,7 @@ class _ImageUploadModal extends react_1.default.Component {
                         react_1.default.createElement("p", { className: "h6" },
                             react_1.default.createElement("i", { className: "material-icons" }, "info"),
                             "\uC5C5\uB85C\uB4DC \uAC00\uB2A5\uD55C \uD30C\uC77C\uD615\uC2DD:",
-                            config_1.AllowedFileMime.FORMATS.map((format) => ` ${format}`))),
+                            allowed_file_mime_1.AllowedFileMime.FORMATS.map((format) => ` ${format}`))),
                     react_1.default.createElement("div", { className: "modal-footer" },
                         react_1.default.createElement("button", { type: "button", className: "btn btn-secondary", "data-dismiss": "modal" }, "\uB2EB\uAE30"),
                         react_1.default.createElement("button", { type: "submit", className: "btn btn-primary", "data-dismiss": "modal" }, "\uC5C5\uB85C\uB4DC"))))));
@@ -70215,10 +70215,10 @@ exports.default = OSSpaceIntroduce;
 
 /***/ }),
 
-/***/ "./resources/js/config/allowed-file-mime.json":
-/*!****************************************************!*\
-  !*** ./resources/js/config/allowed-file-mime.json ***!
-  \****************************************************/
+/***/ "./resources/js/config/allowed-file-mime/config.json":
+/*!***********************************************************!*\
+  !*** ./resources/js/config/allowed-file-mime/config.json ***!
+  \***********************************************************/
 /*! exports provided: image, default */
 /***/ (function(module) {
 
@@ -70226,10 +70226,10 @@ module.exports = {"image":{".jpg/.jpeg":"image/jpeg",".png":"image/png"}};
 
 /***/ }),
 
-/***/ "./resources/js/config/index.ts":
-/*!**************************************!*\
-  !*** ./resources/js/config/index.ts ***!
-  \**************************************/
+/***/ "./resources/js/config/allowed-file-mime/index.ts":
+/*!********************************************************!*\
+  !*** ./resources/js/config/allowed-file-mime/index.ts ***!
+  \********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -70239,13 +70239,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// allowed-file-mime
-const allowed_file_mime_json_1 = __importDefault(__webpack_require__(/*! ./allowed-file-mime.json */ "./resources/js/config/allowed-file-mime.json"));
-var AllowedFileMime;
-(function (AllowedFileMime) {
-    AllowedFileMime.FORMATS = Object.keys(allowed_file_mime_json_1.default.image);
-    AllowedFileMime.MIMES = Object.values(allowed_file_mime_json_1.default.image);
-})(AllowedFileMime = exports.AllowedFileMime || (exports.AllowedFileMime = {}));
+const config_json_1 = __importDefault(__webpack_require__(/*! ./config.json */ "./resources/js/config/allowed-file-mime/config.json"));
+exports.AllowedFileMime = {
+    FORMATS: Object.keys(config_json_1.default.image),
+    MIMES: Object.values(config_json_1.default.image),
+};
 
 
 /***/ }),

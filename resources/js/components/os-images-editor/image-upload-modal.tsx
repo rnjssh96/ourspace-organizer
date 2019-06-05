@@ -4,7 +4,7 @@ import Dropzone from 'react-dropzone';
 import ContentLoader from 'react-content-loader';
 import filesize from 'filesize';
 
-import { AllowedFileMime } from '../../config';
+import { AllowedFileMime } from '../../config/allowed-file-mime';
 
 import RootState from '../../redux-types';
 import {
