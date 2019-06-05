@@ -44,7 +44,7 @@ export interface SetAmenityTagsAction {
  * Action Types
  */
 export type CurrentSpaceActions =
-    |UpdateSpaceIntroduceAction
+    | UpdateSpaceIntroduceAction
     | SetOperatingHoursAction
     | SetBusyLevelAction
     | SetAmenityTagsAction;

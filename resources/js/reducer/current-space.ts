@@ -11,7 +11,7 @@ import {
  * Initial State
  */
 const initialState: CurrentSpaceState = {
-    id: "TESTID01",
+    id: 'TESTID01',
     spaceNames: {
         ko: '스타벅스 자양점',
         en: 'Starbucks Jayang',
@@ -24,7 +24,7 @@ const initialState: CurrentSpaceState = {
     },
     operatingHours: ['00:00 - 23:59 / 월, 수, 금'], // ok
     amenityTags: ['amazon-pay', 'apple-pay', 'toilet', 'visa', 'wifi'], //ok
-    spaceIntroduce: "", //ok
+    spaceIntroduce: '', //ok
     images: [
         './demo-images/about_img_03.jpg',
         './demo-images/item_image_05b.jpg',
@@ -47,7 +47,6 @@ export default function CurrentSpaceReducer(
                 ...state,
                 spaceIntroduce: action.spaceIntroduce,
             };
-
 
         case SET_OPERATING_HOURS:
             return {
