@@ -21,10 +21,7 @@ interface WorkMap {
 
 export const buildArray2Tree = (spaceHeaders: RawSpaceHeader[]): SpaceTrees => {
     let workMap: WorkMap = {};
-    let rtnTrees: SpaceTrees = {
-        id: '__ROOT__',
-        childs: {},
-    };
+    let rtnTrees: SpaceTrees = [];
     // convert into map of nodes with pid as key
     spaceHeaders.forEach((spaceHeader: RawSpaceHeader) => {
         if (workMap[spaceHeader.pid] == null) {
@@ -34,9 +31,8 @@ export const buildArray2Tree = (spaceHeaders: RawSpaceHeader[]): SpaceTrees => {
             };
         }
         workMap[spaceHeader.pid].nodes[spaceHeader.id] = {
-            id: spaceHeader.id,
             childs: {},
-            spaceNames: spaceHeader.names,
+            spaceHeader: spaceHeader,
         };
     });
     // connect childs
@@ -51,10 +47,7 @@ export const buildArray2Tree = (spaceHeaders: RawSpaceHeader[]): SpaceTrees => {
     // find nodes with no parent matched
     Object.keys(workMap).forEach((pid: string) => {
         if (!workMap[pid].parentFound) {
-            rtnTrees.childs = {
-                ...rtnTrees.childs,
-                ...workMap[pid].nodes,
-            };
+            rtnTrees = [...rtnTrees, ...Object.values(workMap[pid].nodes)];
         }
     });
     return rtnTrees;
@@ -63,14 +56,13 @@ export const buildArray2Tree = (spaceHeaders: RawSpaceHeader[]): SpaceTrees => {
 /**
  * Traverse tree with DFS
  */
-const traverseSpaceTree = (
-    tree: Node,
-    callbackfn: (space: SpaceHeader, depth: number) => any,
+export const traverseSpaceTree = (
+    tree: SpaceTree,
+    callbackfn: (spaceHeader: SpaceHeader, depth: number) => any,
     initDepth: number = 0,
 ) => {
-    Object.values(tree.childs).forEach((node: Node) => {
-        if (isSpaceNode(node))
-            callbackfn({ id: node.id, names: node.spaceNames }, initDepth);
+    callbackfn(tree.spaceHeader, initDepth);
+    Object.values(tree.childs).forEach((node: SpaceNode) => {
         traverseSpaceTree(node, (callbackfn = callbackfn), initDepth + 1);
     });
 };
@@ -78,7 +70,7 @@ const traverseSpaceTree = (
 /**
  * Space Header
  */
-interface SpaceHeader {
+export interface SpaceHeader {
     id: string;
     names: SpaceNames;
 }
@@ -86,22 +78,10 @@ interface SpaceHeader {
 /**
  * Space Node
  */
-interface Node {
-    id: string;
+interface SpaceNode {
     childs: SpaceNodeMap;
+    spaceHeader: SpaceHeader;
 }
-
-interface RootNode extends Node {
-    id: '__ROOT__';
-}
-
-interface SpaceNode extends Node {
-    spaceNames: SpaceNames;
-}
-
-const isSpaceNode = (node: Node): node is SpaceNode => {
-    return 'spaceNames' in node;
-};
 
 interface SpaceNodeMap {
     [id: string]: SpaceNode;
@@ -110,6 +90,8 @@ interface SpaceNodeMap {
 /**
  * Space Trees
  */
-type SpaceTrees = RootNode;
+export type SpaceTree = SpaceNode;
+
+type SpaceTrees = SpaceTree[];
 
 export default SpaceTrees;

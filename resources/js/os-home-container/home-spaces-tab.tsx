@@ -3,7 +3,13 @@ import { connect } from 'react-redux';
 
 import RootState from '../redux-types';
 
-import SpaceTrees from '../model/space-tree';
+import SpaceTrees, {
+    traverseSpaceTree,
+    SpaceTree,
+    SpaceHeader,
+} from '../model/space-tree';
+
+const MAX_DEPTH = 4;
 
 interface _ReduxProps {
     /**
@@ -15,11 +21,27 @@ interface _ReduxProps {
 interface HomeSpacesTabProps extends _ReduxProps {}
 
 class _HomeSpacesTab extends React.Component<HomeSpacesTabProps> {
-    private _renderSpace(selcted = false) {
+    private _renderSpace(
+        spaceHeader: SpaceHeader,
+        depth: number,
+        selcted = false,
+    ) {
         return (
-            <a className={`space-item ${selcted ? 'selected' : ''}`}>
-                <img src="./demo-images/about_img_01.jpg" className="rounded" />
-                <div className="space-item-body">
+            <a
+                key={spaceHeader.id}
+                className={`space-item ${selcted ? 'selected' : ''}`}
+            >
+                {depth == 0 && (
+                    <img
+                        src="./demo-images/about_img_01.jpg"
+                        className="rounded"
+                    />
+                )}
+                <div
+                    className={`space-item-body depth-${
+                        depth > MAX_DEPTH ? MAX_DEPTH : depth
+                    }`}
+                >
                     <p className="h5 os-text-ellipsis">스타벅스 자양점</p>
                     <p className="h6 os-grey-1">
                         <i className="material-icons">location_on</i>
@@ -30,9 +52,20 @@ class _HomeSpacesTab extends React.Component<HomeSpacesTabProps> {
         );
     }
 
+    private _renderSpaceGroup = (group: SpaceTree) => {
+        let rtn: JSX.Element[] = [];
+        traverseSpaceTree(group, (spaceHeader: SpaceHeader, depth: number) => {
+            rtn.push(this._renderSpace(spaceHeader, depth));
+        });
+        return rtn;
+    };
+
     private _renderSpaceTrees = () => {
-        console.log(this.props.spaceTrees);
-        return null;
+        return this.props.spaceTrees.map((group: SpaceTree) => (
+            <div key={group.spaceHeader.id} className="space-group">
+                {this._renderSpaceGroup(group)}
+            </div>
+        ));
     };
 
     render() {

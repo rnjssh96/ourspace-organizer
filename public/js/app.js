@@ -67359,10 +67359,7 @@ module.exports = {"busy-level":{"1":{"en":"Normal","ko":"보통"},"2":{"en":"Bus
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.buildArray2Tree = (spaceHeaders) => {
     let workMap = {};
-    let rtnTrees = {
-        id: '__ROOT__',
-        childs: {},
-    };
+    let rtnTrees = [];
     // convert into map of nodes with pid as key
     spaceHeaders.forEach((spaceHeader) => {
         if (workMap[spaceHeader.pid] == null) {
@@ -67372,9 +67369,8 @@ exports.buildArray2Tree = (spaceHeaders) => {
             };
         }
         workMap[spaceHeader.pid].nodes[spaceHeader.id] = {
-            id: spaceHeader.id,
             childs: {},
-            spaceNames: spaceHeader.names,
+            spaceHeader: spaceHeader,
         };
     });
     // connect childs
@@ -67389,10 +67385,7 @@ exports.buildArray2Tree = (spaceHeaders) => {
     // find nodes with no parent matched
     Object.keys(workMap).forEach((pid) => {
         if (!workMap[pid].parentFound) {
-            rtnTrees.childs = {
-                ...rtnTrees.childs,
-                ...workMap[pid].nodes,
-            };
+            rtnTrees = [...rtnTrees, ...Object.values(workMap[pid].nodes)];
         }
     });
     return rtnTrees;
@@ -67400,15 +67393,11 @@ exports.buildArray2Tree = (spaceHeaders) => {
 /**
  * Traverse tree with DFS
  */
-const traverseSpaceTree = (tree, callbackfn, initDepth = 0) => {
+exports.traverseSpaceTree = (tree, callbackfn, initDepth = 0) => {
+    callbackfn(tree.spaceHeader, initDepth);
     Object.values(tree.childs).forEach((node) => {
-        if (isSpaceNode(node))
-            callbackfn({ id: node.id, names: node.spaceNames }, initDepth);
-        traverseSpaceTree(node, (callbackfn = callbackfn), initDepth + 1);
+        exports.traverseSpaceTree(node, (callbackfn = callbackfn), initDepth + 1);
     });
-};
-const isSpaceNode = (node) => {
-    return 'spaceNames' in node;
 };
 
 
@@ -67535,18 +67524,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const space_tree_1 = __webpack_require__(/*! ../model/space-tree */ "./resources/js/model/space-tree.ts");
+const MAX_DEPTH = 4;
 class _HomeSpacesTab extends react_1.default.Component {
     constructor() {
         super(...arguments);
+        this._renderSpaceGroup = (group) => {
+            let rtn = [];
+            space_tree_1.traverseSpaceTree(group, (spaceHeader, depth) => {
+                rtn.push(this._renderSpace(spaceHeader, depth));
+            });
+            return rtn;
+        };
         this._renderSpaceTrees = () => {
-            console.log(this.props.spaceTrees);
-            return null;
+            return this.props.spaceTrees.map((group) => (react_1.default.createElement("div", { key: group.spaceHeader.id, className: "space-group" }, this._renderSpaceGroup(group))));
         };
     }
-    _renderSpace(selcted = false) {
-        return (react_1.default.createElement("a", { className: `space-item ${selcted ? 'selected' : ''}` },
-            react_1.default.createElement("img", { src: "./demo-images/about_img_01.jpg", className: "rounded" }),
-            react_1.default.createElement("div", { className: "space-item-body" },
+    _renderSpace(spaceHeader, depth, selcted = false) {
+        return (react_1.default.createElement("a", { key: spaceHeader.id, className: `space-item ${selcted ? 'selected' : ''}` },
+            depth == 0 && (react_1.default.createElement("img", { src: "./demo-images/about_img_01.jpg", className: "rounded" })),
+            react_1.default.createElement("div", { className: `space-item-body depth-${depth > MAX_DEPTH ? MAX_DEPTH : depth}` },
                 react_1.default.createElement("p", { className: "h5 os-text-ellipsis" }, "\uC2A4\uD0C0\uBC85\uC2A4 \uC790\uC591\uC810"),
                 react_1.default.createElement("p", { className: "h6 os-grey-1" },
                     react_1.default.createElement("i", { className: "material-icons" }, "location_on"),
