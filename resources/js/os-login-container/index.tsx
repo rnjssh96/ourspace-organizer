@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 export default class OSLoginContainer extends React.Component {
     render() {
@@ -12,7 +13,7 @@ export default class OSLoginContainer extends React.Component {
                             <p className="h5">Organizer Page</p>
                         </div>
                     </div>
-                    <form action="/home">
+                    <form>
                         <div className="form-group">
                             <label>이메일</label>
                             <input
@@ -31,13 +32,13 @@ export default class OSLoginContainer extends React.Component {
                                 placeholder="비밀번호"
                             />
                         </div>
-                        <button
+                        <Link
                             id="login-button"
-                            type="submit"
                             className="btn btn-block btn-primary"
+                            to={`/test`}
                         >
                             로그인
-                        </button>
+                        </Link>
                     </form>
                 </div>
             </div>

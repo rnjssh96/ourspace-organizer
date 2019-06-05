@@ -69378,7 +69378,7 @@ class App extends react_1.default.Component {
             react_1.default.createElement(react_router_dom_1.BrowserRouter, null,
                 react_1.default.createElement(react_router_dom_1.Switch, null,
                     react_1.default.createElement(react_router_dom_1.Route, { exact: true, path: "/", component: os_login_container_1.default }),
-                    react_1.default.createElement(react_router_dom_1.Route, { path: "/home", component: os_home_container_1.default })))));
+                    react_1.default.createElement(react_router_dom_1.Route, { path: "/:userid", component: os_home_container_1.default })))));
     }
 }
 if (document.getElementById('app-container')) {
@@ -70364,6 +70364,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 class HomeHeader extends react_1.default.Component {
     render() {
         return (react_1.default.createElement("header", { id: "home-header", className: "row" },
@@ -70373,7 +70374,7 @@ class HomeHeader extends react_1.default.Component {
                     react_1.default.createElement("p", { className: "h4" }, "\uAC15\uB0A8\uAC74\uBB3C\uC8FC"),
                     react_1.default.createElement("p", { className: "h6 os-grey-1" }, "Organizer"))),
             react_1.default.createElement("div", { id: "left-buttons" },
-                react_1.default.createElement("button", { type: "button", className: "btn btn-outline-light" }, "Logout"))));
+                react_1.default.createElement(react_router_dom_1.Link, { to: "/", className: "btn btn-outline-light" }, "Logout"))));
     }
 }
 exports.default = HomeHeader;
@@ -70504,6 +70505,9 @@ const home_header_1 = __importDefault(__webpack_require__(/*! ./home-header */ "
 const home_spaces_tab_1 = __importDefault(__webpack_require__(/*! ./home-spaces-tab */ "./resources/js/os-home-container/home-spaces-tab.tsx"));
 const home_main_view_1 = __importDefault(__webpack_require__(/*! ./home-main-view */ "./resources/js/os-home-container/home-main-view.tsx"));
 class OSHomeContainer extends react_1.default.Component {
+    componentDidMount() {
+        console.log(this.props.match.params.userid);
+    }
     render() {
         return (react_1.default.createElement("div", { id: "os-home-container", className: "container-fluid" },
             react_1.default.createElement(home_header_1.default, null),
@@ -70533,6 +70537,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 class OSLoginContainer extends react_1.default.Component {
     render() {
         return (react_1.default.createElement("div", { id: "os-login-container", className: "container-fluid" },
@@ -70542,14 +70547,14 @@ class OSLoginContainer extends react_1.default.Component {
                     react_1.default.createElement("div", { id: "title-text" },
                         react_1.default.createElement("p", { className: "h3" }, "\uD658\uC601\uD569\uB2C8\uB2E4"),
                         react_1.default.createElement("p", { className: "h5" }, "Organizer Page"))),
-                react_1.default.createElement("form", { action: "/home" },
+                react_1.default.createElement("form", null,
                     react_1.default.createElement("div", { className: "form-group" },
                         react_1.default.createElement("label", null, "\uC774\uBA54\uC77C"),
                         react_1.default.createElement("input", { type: "email", className: "form-control", id: "exampleInputEmail1", placeholder: "\uC774\uBA54\uC77C\uC744 \uC785\uB825\uD558\uC138\uC694." })),
                     react_1.default.createElement("div", { className: "form-group" },
                         react_1.default.createElement("label", null, "\uBE44\uBC00\uBC88\uD638"),
                         react_1.default.createElement("input", { type: "password", className: "form-control", id: "exampleInputPassword1", placeholder: "\uBE44\uBC00\uBC88\uD638" })),
-                    react_1.default.createElement("button", { id: "login-button", type: "submit", className: "btn btn-block btn-primary" }, "\uB85C\uADF8\uC778")))));
+                    react_1.default.createElement(react_router_dom_1.Link, { id: "login-button", className: "btn btn-block btn-primary", to: `/test` }, "\uB85C\uADF8\uC778")))));
     }
 }
 exports.default = OSLoginContainer;

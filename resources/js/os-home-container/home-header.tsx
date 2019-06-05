@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 export default class HomeHeader extends React.Component {
     render() {
@@ -15,9 +16,9 @@ export default class HomeHeader extends React.Component {
                     </div>
                 </div>
                 <div id="left-buttons">
-                    <button type="button" className="btn btn-outline-light">
+                    <Link to="/" className="btn btn-outline-light">
                         Logout
-                    </button>
+                    </Link>
                 </div>
             </header>
         );

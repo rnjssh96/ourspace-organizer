@@ -18,7 +18,7 @@ class App extends React.Component {
                 <BrowserRouter>
                     <Switch>
                         <Route exact path="/" component={OSLoginContainer} />
-                        <Route path="/home" component={OSHomeContainer} />
+                        <Route path="/:userid" component={OSHomeContainer} />
                     </Switch>
                 </BrowserRouter>
             </Provider>
