@@ -18,7 +18,7 @@
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQKkNsepBOaIiSSp4OUIFZGKmCOFTrho4"></script>
     </head>
     <body>
-        <div id="os-home-container"></div>
+        <div id="app"></div>
         <script src="{{ asset('js/app.js') }}"></script>
     </body>
 </html>
