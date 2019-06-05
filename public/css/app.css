@@ -10938,6 +10938,59 @@ button {
   border-left: 0.5px solid #e5e5e5;
 }
 
+#os-login-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f2bf54;
+}
+
+#os-login-container > #login-box {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  background-color: #ffffff;
+  border-radius: 5px;
+}
+
+#os-login-container > #login-box > #title {
+  display: flex;
+  align-items: flex-end;
+}
+
+#os-login-container > #login-box > #title > #logo {
+  width: 5rem;
+  height: 5rem;
+}
+
+#os-login-container > #login-box > #title > #title-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  margin-left: 1rem;
+}
+
+#os-login-container > #login-box > #title > #title-text > p:last-child {
+  color: #707070;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+#os-login-container > #login-box > form {
+  width: 100%;
+  margin-top: 3rem;
+}
+
+#os-login-container > #login-box > form > #login-button {
+  margin-top: 2rem;
+}
+
 #os-rank-display {
   display: flex;
   flex-direction: column;
