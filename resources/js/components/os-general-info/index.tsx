@@ -123,10 +123,10 @@ class _OSGeneralInfo extends React.Component<OSGeneralInfoProps> {
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
-    spaceNames: state.currentSpace.spaceNames,
-    types: state.currentSpace.types,
-    locationText: state.currentSpace.locationText,
-    operatingHours: state.currentSpace.operatingHours,
+    spaceNames: state.currentSpace.data.spaceNames,
+    types: state.currentSpace.data.types,
+    locationText: state.currentSpace.data.locationText,
+    operatingHours: state.currentSpace.data.operatingHours,
 });
 
 const mapDispatchToProps = {

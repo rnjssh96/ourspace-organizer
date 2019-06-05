@@ -171,7 +171,7 @@ class _AmenitiesEditModal extends React.Component<AmenitiesEditModalProps> {
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
-    amenityTags: state.currentSpace.amenityTags,
+    amenityTags: state.currentSpace.data.amenityTags,
     selectedAmenities: state.selectedAmenities.selectedAmenities,
 });
 

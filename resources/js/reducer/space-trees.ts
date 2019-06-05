@@ -74,7 +74,9 @@ const SAMPLE = [
 /**
  * Initial State
  */
-const initialState: SpaceTreesState = buildArray2Tree(SAMPLE);
+const initialState: SpaceTreesState = {
+    data: buildArray2Tree(SAMPLE)
+};
 
 /**
  * SpaceTreesReducer
@@ -85,7 +87,10 @@ export default function SpaceTreesReducer(
 ): SpaceTreesState {
     switch (action.type) {
         case SET_SPACE_TREES:
-            return action.spaceTrees;
+            return {
+                ...state,
+                data: action.spaceTrees
+            };
 
         default:
             return state;

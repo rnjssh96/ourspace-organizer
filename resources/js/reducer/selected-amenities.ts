@@ -8,7 +8,7 @@ import {
  * Initial State
  */
 const initialState: SelectedAmenitiesState = {
-    selectedAmenities: new Set(['shower']),
+    selectedAmenities: new Set([]),
 };
 
 /**

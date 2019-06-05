@@ -4,7 +4,9 @@ import { Action } from 'redux';
 /**
  * Space Trees State
  */
-export type SpaceTreesState = SpaceTrees;
+export type SpaceTreesState = {
+    data: SpaceTrees
+};
 
 /**
  * Action Constants

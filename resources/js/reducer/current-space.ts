@@ -11,27 +11,29 @@ import {
  * Initial State
  */
 const initialState: CurrentSpaceState = {
-    id: 'TESTID01',
-    spaceNames: {
-        ko: '스타벅스 자양점',
-        en: 'Starbucks Jayang',
-    }, //ok
-    types: ['2', '4'], //ok
-    locationText: '원주 the potato factory',
-    location: {
-        lat: -25.344,
-        lng: 131.036,
+    data: {
+        id: 'TESTID01',
+        spaceNames: {
+            ko: '스타벅스 자양점',
+            en: 'Starbucks Jayang',
+        }, //ok
+        types: ['2', '4'], //ok
+        locationText: '원주 the potato factory',
+        location: {
+            lat: -25.344,
+            lng: 131.036,
+        },
+        operatingHours: ['00:00 - 23:59 / 월, 수, 금'], // ok
+        amenityTags: ['amazon-pay', 'apple-pay', 'toilet', 'visa', 'wifi'], //ok
+        spaceIntroduce: '', //ok
+        images: [
+            './demo-images/about_img_03.jpg',
+            './demo-images/item_image_05b.jpg',
+            './demo-images/item_image_06.jpg',
+        ], // ok
+        rank: 3.5, // ok
+        busyLevel: '1', //ok
     },
-    operatingHours: ['00:00 - 23:59 / 월, 수, 금'], // ok
-    amenityTags: ['amazon-pay', 'apple-pay', 'toilet', 'visa', 'wifi'], //ok
-    spaceIntroduce: '', //ok
-    images: [
-        './demo-images/about_img_03.jpg',
-        './demo-images/item_image_05b.jpg',
-        './demo-images/item_image_06.jpg',
-    ], // ok
-    rank: 3.5, // ok
-    busyLevel: '1', //ok
 };
 
 /**
@@ -45,25 +47,37 @@ export default function CurrentSpaceReducer(
         case UPDATE_SPACE_INTRODUCE:
             return {
                 ...state,
-                spaceIntroduce: action.spaceIntroduce,
+                data: {
+                    ...state.data,
+                    spaceIntroduce: action.spaceIntroduce,
+                },
             };
 
         case SET_OPERATING_HOURS:
             return {
                 ...state,
-                operatingHours: action.operatingHours,
+                data: {
+                    ...state.data,
+                    operatingHours: action.operatingHours,
+                },
             };
 
         case SET_BUSY_LEVEL:
             return {
                 ...state,
-                busyLevel: action.busyLevel,
+                data: {
+                    ...state.data,
+                    busyLevel: action.busyLevel,
+                },
             };
 
         case SET_AMENITY_TAGS:
             return {
                 ...state,
-                amenityTags: action.amenityTags,
+                data: {
+                    ...state.data,
+                    amenityTags: action.amenityTags,
+                },
             };
 
         default:

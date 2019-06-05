@@ -64,7 +64,7 @@ class _OSImagesEditor extends React.Component<OSImagesEditorProps> {
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
-    images: state.currentSpace.images,
+    images: state.currentSpace.data.images,
 });
 
 const mapDispatchToProps = {

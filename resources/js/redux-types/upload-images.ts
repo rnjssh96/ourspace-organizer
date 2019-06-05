@@ -11,6 +11,7 @@ export interface UploadImage {
     progress: number;
 }
 export type UploadImagesMap = { [key in number]: UploadImage };
+
 export type UploadImagesState = {
     imagesCount: number;
     uploadImages: UploadImagesMap;

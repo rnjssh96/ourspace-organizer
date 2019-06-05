@@ -5,7 +5,9 @@ import { AmenityTag } from '../model/space';
 /**
  * Selected Amenities State
  */
-export type SelectedAmenitiesState = { selectedAmenities: Set<AmenityTag> };
+export type SelectedAmenitiesState = {
+    selectedAmenities: Set<AmenityTag>;
+};
 
 /**
  * Action Constants
@@ -16,7 +18,8 @@ export const SET_SELECTED_AMENITIES = 'our-space-organizer/selected-amenities/SE
 /**
  * Action Interfaces
  */
-export interface SetSelectedAmenityAction extends Action<typeof SET_SELECTED_AMENITIES> {
+export interface SetSelectedAmenityAction
+    extends Action<typeof SET_SELECTED_AMENITIES> {
     selectedAmenities: Set<AmenityTag>;
 }
 

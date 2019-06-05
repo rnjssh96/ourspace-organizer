@@ -69589,7 +69589,7 @@ class _AmenitiesEditModal extends react_1.default.Component {
     }
 }
 const mapStateToProps = (state) => ({
-    amenityTags: state.currentSpace.amenityTags,
+    amenityTags: state.currentSpace.data.amenityTags,
     selectedAmenities: state.selectedAmenities.selectedAmenities,
 });
 const mapDispatchToProps = {
@@ -69660,7 +69660,7 @@ class _OSAmenityTags extends react_1.default.Component {
     }
 }
 const mapStateToProps = (state) => ({
-    amenityTags: state.currentSpace.amenityTags,
+    amenityTags: state.currentSpace.data.amenityTags,
 });
 const mapDispatchToProps = {
     setSelectedAmenities: selected_amenities_1.setSelectedAmenities,
@@ -69739,10 +69739,10 @@ class _OSGeneralInfo extends react_1.default.Component {
     }
 }
 const mapStateToProps = (state) => ({
-    spaceNames: state.currentSpace.spaceNames,
-    types: state.currentSpace.types,
-    locationText: state.currentSpace.locationText,
-    operatingHours: state.currentSpace.operatingHours,
+    spaceNames: state.currentSpace.data.spaceNames,
+    types: state.currentSpace.data.types,
+    locationText: state.currentSpace.data.locationText,
+    operatingHours: state.currentSpace.data.operatingHours,
 });
 const mapDispatchToProps = {
     setOperatingHours: current_space_1.setOperatingHours,
@@ -70081,7 +70081,7 @@ class _OSImagesEditor extends react_1.default.Component {
     }
 }
 const mapStateToProps = (state) => ({
-    images: state.currentSpace.images,
+    images: state.currentSpace.data.images,
 });
 const mapDispatchToProps = {
     resetUploadImages: upload_images_1.resetUploadImages,
@@ -70117,7 +70117,7 @@ class _OSLoactionMap extends react_1.default.Component {
     }
 }
 const mapStateToProps = (state) => ({
-    location: state.currentSpace.location,
+    location: state.currentSpace.data.location,
 });
 const mapDispatchToProps = {};
 const OSLoactionMap = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_OSLoactionMap);
@@ -70165,7 +70165,7 @@ class _OSRankDisplay extends react_1.default.Component {
     }
 }
 const mapStateToProps = (state) => ({
-    rank: state.currentSpace.rank,
+    rank: state.currentSpace.data.rank,
 });
 const mapDispatchToProps = {};
 const OSRankDisplay = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_OSRankDisplay);
@@ -70237,7 +70237,7 @@ class _OSSpaceIntroduce extends react_1.default.Component {
     }
 }
 const mapStateToProps = (state) => ({
-    spaceIntroduce: state.currentSpace.spaceIntroduce,
+    spaceIntroduce: state.currentSpace.data.spaceIntroduce,
 });
 const mapDispatchToProps = {
     updateSpaceIntroduce: current_space_1.updateSpaceIntroduce,
@@ -70508,8 +70508,8 @@ class _HomeSpacesTab extends react_1.default.Component {
     }
 }
 const mapStateToProps = (state) => ({
-    spaceTrees: state.spaceTrees,
-    currentSpaceID: state.currentSpace.id,
+    spaceTrees: state.spaceTrees.data,
+    currentSpaceID: state.currentSpace.data.id,
 });
 const mapDispatchToProps = {};
 const HomeSpacesTab = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_HomeSpacesTab);
@@ -70608,27 +70608,29 @@ const current_space_1 = __webpack_require__(/*! ../redux-types/current-space */ 
  * Initial State
  */
 const initialState = {
-    id: 'TESTID01',
-    spaceNames: {
-        ko: '스타벅스 자양점',
-        en: 'Starbucks Jayang',
+    data: {
+        id: 'TESTID01',
+        spaceNames: {
+            ko: '스타벅스 자양점',
+            en: 'Starbucks Jayang',
+        },
+        types: ['2', '4'],
+        locationText: '원주 the potato factory',
+        location: {
+            lat: -25.344,
+            lng: 131.036,
+        },
+        operatingHours: ['00:00 - 23:59 / 월, 수, 금'],
+        amenityTags: ['amazon-pay', 'apple-pay', 'toilet', 'visa', 'wifi'],
+        spaceIntroduce: '',
+        images: [
+            './demo-images/about_img_03.jpg',
+            './demo-images/item_image_05b.jpg',
+            './demo-images/item_image_06.jpg',
+        ],
+        rank: 3.5,
+        busyLevel: '1',
     },
-    types: ['2', '4'],
-    locationText: '원주 the potato factory',
-    location: {
-        lat: -25.344,
-        lng: 131.036,
-    },
-    operatingHours: ['00:00 - 23:59 / 월, 수, 금'],
-    amenityTags: ['amazon-pay', 'apple-pay', 'toilet', 'visa', 'wifi'],
-    spaceIntroduce: '',
-    images: [
-        './demo-images/about_img_03.jpg',
-        './demo-images/item_image_05b.jpg',
-        './demo-images/item_image_06.jpg',
-    ],
-    rank: 3.5,
-    busyLevel: '1',
 };
 /**
  * CurrentSpaceReducer
@@ -70638,22 +70640,34 @@ function CurrentSpaceReducer(state = initialState, action) {
         case current_space_1.UPDATE_SPACE_INTRODUCE:
             return {
                 ...state,
-                spaceIntroduce: action.spaceIntroduce,
+                data: {
+                    ...state.data,
+                    spaceIntroduce: action.spaceIntroduce,
+                },
             };
         case current_space_1.SET_OPERATING_HOURS:
             return {
                 ...state,
-                operatingHours: action.operatingHours,
+                data: {
+                    ...state.data,
+                    operatingHours: action.operatingHours,
+                },
             };
         case current_space_1.SET_BUSY_LEVEL:
             return {
                 ...state,
-                busyLevel: action.busyLevel,
+                data: {
+                    ...state.data,
+                    busyLevel: action.busyLevel,
+                },
             };
         case current_space_1.SET_AMENITY_TAGS:
             return {
                 ...state,
-                amenityTags: action.amenityTags,
+                data: {
+                    ...state.data,
+                    amenityTags: action.amenityTags,
+                },
             };
         default:
             return state;
@@ -70711,7 +70725,7 @@ const selected_amenities_1 = __webpack_require__(/*! ../redux-types/selected-ame
  * Initial State
  */
 const initialState = {
-    selectedAmenities: new Set(['shower']),
+    selectedAmenities: new Set([]),
 };
 /**
  * SelectedAmenitiesReducer
@@ -70811,14 +70825,19 @@ const SAMPLE = [
 /**
  * Initial State
  */
-const initialState = space_tree_1.buildArray2Tree(SAMPLE);
+const initialState = {
+    data: space_tree_1.buildArray2Tree(SAMPLE)
+};
 /**
  * SpaceTreesReducer
  */
 function SpaceTreesReducer(state = initialState, action) {
     switch (action.type) {
         case space_trees_1.SET_SPACE_TREES:
-            return action.spaceTrees;
+            return {
+                ...state,
+                data: action.spaceTrees
+            };
         default:
             return state;
     }

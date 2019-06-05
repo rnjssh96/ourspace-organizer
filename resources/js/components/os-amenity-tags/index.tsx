@@ -86,7 +86,7 @@ class _OSAmenityTags extends React.Component<OSAmenityTagsProps> {
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
-    amenityTags: state.currentSpace.amenityTags,
+    amenityTags: state.currentSpace.data.amenityTags,
 });
 
 const mapDispatchToProps = {

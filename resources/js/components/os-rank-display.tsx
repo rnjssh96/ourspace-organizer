@@ -44,7 +44,7 @@ class _OSRankDisplay extends React.Component<OSRankDisplayProps> {
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
-    rank: state.currentSpace.rank,
+    rank: state.currentSpace.data.rank,
 });
 
 const mapDispatchToProps = {};

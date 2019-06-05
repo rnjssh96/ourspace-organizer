@@ -5,7 +5,9 @@ import Space, { BusyLevel, AmenityTag } from '../model/space';
 /**
  * Current Space State
  */
-export type CurrentSpaceState = Space;
+export type CurrentSpaceState = {
+    data: Space;
+};
 
 /**
  * Action Constants
@@ -22,11 +24,13 @@ export const SET_AMENITY_TAGS = 'our-space-organizer/current-space/SET_AMENITY_T
 /**
  * Action Interfaces
  */
-export interface UpdateSpaceIntroduceAction extends Action<typeof UPDATE_SPACE_INTRODUCE> {
+export interface UpdateSpaceIntroduceAction
+    extends Action<typeof UPDATE_SPACE_INTRODUCE> {
     spaceIntroduce: string;
 }
 
-export interface SetOperatingHoursAction extends Action<typeof SET_OPERATING_HOURS> {
+export interface SetOperatingHoursAction
+    extends Action<typeof SET_OPERATING_HOURS> {
     operatingHours: string[];
 }
 

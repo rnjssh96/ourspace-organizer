@@ -32,7 +32,7 @@ class _OSLoactionMap extends React.Component<OSLoactionMapProps> {
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
-    location: state.currentSpace.location,
+    location: state.currentSpace.data.location,
 });
 
 const mapDispatchToProps = {};

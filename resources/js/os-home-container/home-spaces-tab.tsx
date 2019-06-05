@@ -91,8 +91,8 @@ class _HomeSpacesTab extends React.Component<HomeSpacesTabProps> {
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
-    spaceTrees: state.spaceTrees,
-    currentSpaceID: state.currentSpace.id,
+    spaceTrees: state.spaceTrees.data,
+    currentSpaceID: state.currentSpace.data.id,
 });
 
 const mapDispatchToProps = {};
