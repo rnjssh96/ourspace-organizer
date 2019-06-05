@@ -1,3 +1,5 @@
+import { Action } from 'redux';
+
 import { AmenityTag } from '../model/space';
 
 /**
@@ -14,8 +16,7 @@ export const SET_SELECTED_AMENITIES = 'our-space-organizer/selected-amenities/SE
 /**
  * Action Interfaces
  */
-export interface SetSelectedAmenityAction {
-    type: typeof SET_SELECTED_AMENITIES;
+export interface SetSelectedAmenityAction extends Action<typeof SET_SELECTED_AMENITIES> {
     selectedAmenities: Set<AmenityTag>;
 }
 

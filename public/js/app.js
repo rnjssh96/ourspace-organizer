@@ -66844,6 +66844,38 @@ if (false) {} else {
 
 /***/ }),
 
+/***/ "./node_modules/redux-thunk/es/index.js":
+/*!**********************************************!*\
+  !*** ./node_modules/redux-thunk/es/index.js ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function createThunkMiddleware(extraArgument) {
+  return function (_ref) {
+    var dispatch = _ref.dispatch,
+        getState = _ref.getState;
+    return function (next) {
+      return function (action) {
+        if (typeof action === 'function') {
+          return action(dispatch, getState, extraArgument);
+        }
+
+        return next(action);
+      };
+    };
+  };
+}
+
+var thunk = createThunkMiddleware();
+thunk.withExtraArgument = createThunkMiddleware;
+
+/* harmony default export */ __webpack_exports__["default"] = (thunk);
+
+/***/ }),
+
 /***/ "./node_modules/redux/es/redux.js":
 /*!****************************************!*\
   !*** ./node_modules/redux/es/redux.js ***!
@@ -69368,10 +69400,11 @@ const react_dom_1 = __importDefault(__webpack_require__(/*! react-dom */ "./node
 const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 const redux_1 = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const redux_thunk_1 = __importDefault(__webpack_require__(/*! redux-thunk */ "./node_modules/redux-thunk/es/index.js"));
 const reducer_1 = __importDefault(__webpack_require__(/*! ./reducer */ "./resources/js/reducer/index.ts"));
 const os_home_container_1 = __importDefault(__webpack_require__(/*! ./os-home-container */ "./resources/js/os-home-container/index.tsx"));
 const os_login_container_1 = __importDefault(__webpack_require__(/*! ./os-login-container */ "./resources/js/os-login-container/index.tsx"));
-const rootStore = redux_1.createStore(reducer_1.default);
+const rootStore = redux_1.createStore(reducer_1.default, redux_1.applyMiddleware(redux_thunk_1.default));
 class App extends react_1.default.Component {
     render() {
         return (react_1.default.createElement(react_redux_1.Provider, { store: rootStore },

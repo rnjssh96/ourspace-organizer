@@ -1,3 +1,5 @@
+import { Action } from 'redux';
+
 import Space, { BusyLevel, AmenityTag } from '../model/space';
 
 /**
@@ -20,23 +22,19 @@ export const SET_AMENITY_TAGS = 'our-space-organizer/current-space/SET_AMENITY_T
 /**
  * Action Interfaces
  */
-export interface UpdateSpaceIntroduceAction {
-    type: typeof UPDATE_SPACE_INTRODUCE;
+export interface UpdateSpaceIntroduceAction extends Action<typeof UPDATE_SPACE_INTRODUCE> {
     spaceIntroduce: string;
 }
 
-export interface SetOperatingHoursAction {
-    type: typeof SET_OPERATING_HOURS;
+export interface SetOperatingHoursAction extends Action<typeof SET_OPERATING_HOURS> {
     operatingHours: string[];
 }
 
-export interface SetBusyLevelAction {
-    type: typeof SET_BUSY_LEVEL;
+export interface SetBusyLevelAction extends Action<typeof SET_BUSY_LEVEL> {
     busyLevel: BusyLevel;
 }
 
-export interface SetAmenityTagsAction {
-    type: typeof SET_AMENITY_TAGS;
+export interface SetAmenityTagsAction extends Action<typeof SET_AMENITY_TAGS> {
     amenityTags: AmenityTag[];
 }
 
