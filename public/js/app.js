@@ -67541,7 +67541,11 @@ class _HomeSpacesTab extends react_1.default.Component {
         };
     }
     _renderSpace(spaceHeader, depth, selcted = false) {
-        return (react_1.default.createElement("a", { key: spaceHeader.id, className: `space-item depth-${depth > MAX_DEPTH ? MAX_DEPTH : depth} ${selcted ? 'selected' : ''}` },
+        return (react_1.default.createElement("a", { key: spaceHeader.id, className: `space-item
+                    depth-${depth > MAX_DEPTH ? MAX_DEPTH : depth} ${selcted ? 'selected' : ''}
+                ${spaceHeader.id === this.props.currentSpaceID
+                ? 'selected'
+                : ''}` },
             depth == 0 && (react_1.default.createElement("img", { src: "./demo-images/about_img_01.jpg", className: "rounded" })),
             react_1.default.createElement("div", { className: "bullet" }),
             react_1.default.createElement("div", { className: "space-item-body" },
@@ -67559,6 +67563,7 @@ class _HomeSpacesTab extends react_1.default.Component {
 }
 const mapStateToProps = (state) => ({
     spaceTrees: state.spaceTrees,
+    currentSpaceID: state.currentSpace.id,
 });
 const mapDispatchToProps = {};
 const HomeSpacesTab = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_HomeSpacesTab);
@@ -67623,6 +67628,7 @@ const current_space_1 = __webpack_require__(/*! ../redux-types/current-space */ 
  * Initial State
  */
 const initialState = {
+    id: "TESTID01",
     spaceNames: {
         ko: '스타벅스 자양점',
         en: 'Starbucks Jayang',
@@ -67760,8 +67766,8 @@ const space_trees_1 = __webpack_require__(/*! ../redux-types/space-trees */ "./r
 const space_tree_1 = __webpack_require__(/*! ../model/space-tree */ "./resources/js/model/space-tree.ts");
 const SAMPLE = [
     {
-        id: '1',
-        pid: '11',
+        id: 'TESTID01',
+        pid: 'TESTID11',
         names: {
             en: '1st Floor',
             ko: '1층',
@@ -67770,8 +67776,8 @@ const SAMPLE = [
     // { id: '2', pid: '15', names: { en: 'test' } },
     // { id: '3', pid: '2', names: { en: 'test' } },
     {
-        id: '4',
-        pid: '11',
+        id: 'TESTID4',
+        pid: 'TESTID11',
         names: {
             en: '2nd Floor',
             ko: '2층',
@@ -67783,16 +67789,16 @@ const SAMPLE = [
     // { id: '8', pid: '12', names: { en: 'test' } },
     // { id: '9', pid: 'root', names: { en: 'test' } },
     {
-        id: '10',
-        pid: '18',
+        id: 'TESTID10',
+        pid: 'TESTID18',
         names: {
             en: 'Picnic Bench Zone',
             ko: '피크닉벤치존',
         },
     },
     {
-        id: '11',
-        pid: '9',
+        id: 'TESTID11',
+        pid: 'TESTID9',
         names: {
             en: 'Hanyang Univ. Main Library',
             ko: '한양대학교 중앙도서관',
@@ -67805,8 +67811,8 @@ const SAMPLE = [
     // { id: '16', pid: '7', names: { en: 'test' } },
     // { id: '17', pid: '16', names: { en: 'test' } },
     {
-        id: '18',
-        pid: '20',
+        id: 'TESTID18',
+        pid: 'TESTID20',
         names: {
             en: 'Outdoor lounge',
             ko: '아웃도어라운지',
@@ -67814,8 +67820,8 @@ const SAMPLE = [
     },
     // { id: '19', pid: '9', names: { en: 'test' } },
     {
-        id: '20',
-        pid: '9',
+        id: 'TESTID20',
+        pid: 'TESTID9',
         names: {
             en: 'Google Campus',
             ko: '구글캠퍼스',

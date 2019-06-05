@@ -10780,6 +10780,8 @@ button {
 }
 
 #home-spaces-tab > .space-group {
+  display: flex;
+  flex-direction: column;
   border-top: 2px solid #f3a930;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
@@ -10793,6 +10795,9 @@ button {
   display: flex;
   align-items: stretch;
   padding: 0.5rem;
+  margin-top: 0.3rem;
+  margin-bottom: 0.3rem;
+  border-radius: 0.5rem;
 }
 
 #home-spaces-tab > .space-group .space-item:hover {

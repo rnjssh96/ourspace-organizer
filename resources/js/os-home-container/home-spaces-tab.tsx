@@ -16,6 +16,11 @@ interface _ReduxProps {
      * All spaces in tree structure
      */
     spaceTrees: SpaceTrees;
+
+    /**
+     * Current space ID
+     */
+    currentSpaceID: string;
 }
 
 interface HomeSpacesTabProps extends _ReduxProps {}
@@ -29,9 +34,15 @@ class _HomeSpacesTab extends React.Component<HomeSpacesTabProps> {
         return (
             <a
                 key={spaceHeader.id}
-                className={`space-item depth-${
-                    depth > MAX_DEPTH ? MAX_DEPTH : depth
-                } ${selcted ? 'selected' : ''}`}
+                className={`space-item
+                    depth-${depth > MAX_DEPTH ? MAX_DEPTH : depth} ${
+                    selcted ? 'selected' : ''
+                }
+                ${
+                    spaceHeader.id === this.props.currentSpaceID
+                        ? 'selected'
+                        : ''
+                }`}
             >
                 {depth == 0 && (
                     <img
@@ -81,6 +92,7 @@ class _HomeSpacesTab extends React.Component<HomeSpacesTabProps> {
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
     spaceTrees: state.spaceTrees,
+    currentSpaceID: state.currentSpace.id,
 });
 
 const mapDispatchToProps = {};

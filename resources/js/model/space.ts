@@ -70,6 +70,7 @@ export interface GeoCoordinate {
  * Space
  */
 interface Space {
+    id: string;
     spaceNames: SpaceNames;
     types: SpaceType[];
     locationText: string;

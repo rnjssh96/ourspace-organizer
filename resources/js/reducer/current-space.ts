@@ -11,6 +11,7 @@ import {
  * Initial State
  */
 const initialState: CurrentSpaceState = {
+    id: "TESTID01",
     spaceNames: {
         ko: '스타벅스 자양점',
         en: 'Starbucks Jayang',
