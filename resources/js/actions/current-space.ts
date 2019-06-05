@@ -1,40 +1,47 @@
+import { ActionCreator } from 'redux';
+
 import { BusyLevel, AmenityTag } from '../model/space';
 import {
+    UPDATE_SPACE_INTRODUCE,
+    UpdateSpaceIntroduceAction,
+
     SET_OPERATING_HOURS,
     SetOperatingHoursAction,
+
     SET_BUSY_LEVEL,
     SetBusyLevelAction,
-    SetAmenityTagsAction,
+
     SET_AMENITY_TAGS,
-    UpdateSpaceIntroduceAction,
-    UPDATE_SPACE_INTRODUCE,
+    SetAmenityTagsAction,
 } from '../redux-types/current-space';
 
 /**
  * Action Creators
  */
-export const updateSpaceIntroduce = (
+export const updateSpaceIntroduce: ActionCreator<UpdateSpaceIntroduceAction> = (
     spaceIntroduce: string,
-): UpdateSpaceIntroduceAction => ({
+) => ({
     type: UPDATE_SPACE_INTRODUCE,
     spaceIntroduce,
 });
 
-export const setOperatingHours = (
+export const setOperatingHours: ActionCreator<SetOperatingHoursAction> = (
     operatingHours: string[],
-): SetOperatingHoursAction => ({
+) => ({
     type: SET_OPERATING_HOURS,
     operatingHours,
 });
 
-export const setBusyLevel = (busyLevel: BusyLevel): SetBusyLevelAction => ({
+export const setBusyLevel: ActionCreator<SetBusyLevelAction> = (
+    busyLevel: BusyLevel,
+) => ({
     type: SET_BUSY_LEVEL,
     busyLevel,
 });
 
-export const setAmenityTags = (
+export const setAmenityTags: ActionCreator<SetAmenityTagsAction> = (
     amenityTags: AmenityTag[],
-): SetAmenityTagsAction => ({
+) => ({
     type: SET_AMENITY_TAGS,
     amenityTags,
 });

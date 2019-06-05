@@ -1,52 +1,63 @@
+import { ActionCreator } from 'redux';
+
 import {
     UploadImage,
-    AddUploadImageAction,
+
+    RESET_UPLOAD_IMAGES,
+    ResetUploadImagesAction,
+
     ADD_UPLOAD_IMAGE,
-    SET_IMAGE_DATA,
+    AddUploadImageAction,
+
     UPDATE_UPLOAD_PROGRESS,
     UpdateUploadProgressAction,
+
+    SET_IMAGE_DATA,
     SetImageDataAction,
-    ResetUploadImagesAction,
-    RESET_UPLOAD_IMAGES,
-    DeleteUploadImageAction,
+
     DELETE_UPLOAD_IMAGE,
+    DeleteUploadImageAction,
 } from '../redux-types/upload-images';
 
 /**
  * Action Creators
  */
-export const resetUploadImages = (): ResetUploadImagesAction => ({
+export const resetUploadImages: ActionCreator<
+    ResetUploadImagesAction
+> = () => ({
     type: RESET_UPLOAD_IMAGES,
 });
 
-export const addUploadImage = (
+export const addUploadImage: ActionCreator<AddUploadImageAction> = (
     key: number,
     image: UploadImage,
-): AddUploadImageAction => ({
+) => ({
     type: ADD_UPLOAD_IMAGE,
     key,
     image,
 });
 
-export const updateUploadProgress = (
+export const updateUploadProgress: ActionCreator<UpdateUploadProgressAction> = (
     key: number,
     progress: number,
-): UpdateUploadProgressAction => ({
+) => ({
     type: UPDATE_UPLOAD_PROGRESS,
     key,
     progress,
 });
 
-export const setImageData = (
+export const setImageData: ActionCreator<SetImageDataAction> = (
     key: number,
     dataURL: string,
-): SetImageDataAction => ({
+) => ({
     type: SET_IMAGE_DATA,
     key,
     dataURL,
 });
 
-export const deleteUploadImage = (key: number): DeleteUploadImageAction => ({
+export const deleteUploadImage: ActionCreator<DeleteUploadImageAction> = (
+    key: number,
+) => ({
     type: DELETE_UPLOAD_IMAGE,
     key,
 });

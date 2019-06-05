@@ -1,6 +1,8 @@
+import { ActionCreator } from 'redux';
+
 import {
-    SetSelectedAmenityAction,
     SET_SELECTED_AMENITIES,
+    SetSelectedAmenityAction,
 } from '../redux-types/selected-amenities';
 
 import { AmenityTag } from '../model/space';
@@ -8,9 +10,9 @@ import { AmenityTag } from '../model/space';
 /**
  * Action Creators
  */
-export const setSelectedAmenities = (
+export const setSelectedAmenities: ActionCreator<SetSelectedAmenityAction> = (
     selectedAmenities: Set<AmenityTag>,
-): SetSelectedAmenityAction => ({
+) => ({
     type: SET_SELECTED_AMENITIES,
     selectedAmenities,
 });
