@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 
@@ -13,15 +12,13 @@ const rootStore = createStore(RootReducer);
 class App extends React.Component {
     render() {
         return (
-            <BrowserRouter>
-                <Provider store={rootStore}>
-                    <OSHomeContainer />
-                </Provider>
-            </BrowserRouter>
+            <Provider store={rootStore}>
+                <OSHomeContainer />
+            </Provider>
         );
     }
 }
 
-if (document.getElementById('app')) {
-    ReactDOM.render(<App />, document.getElementById('app'));
+if (document.getElementById('app-container')) {
+    ReactDOM.render(<App />, document.getElementById('app-container'));
 }
