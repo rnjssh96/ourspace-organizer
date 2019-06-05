@@ -1,6 +1,20 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
-export default class HomeSpacesTab extends React.Component {
+import RootState from '../redux-types';
+
+import SpaceTrees from '../model/space-tree';
+
+interface _ReduxProps {
+    /**
+     * All spaces in tree structure
+     */
+    spaceTrees: SpaceTrees;
+}
+
+interface HomeSpacesTabProps extends _ReduxProps {}
+
+class _HomeSpacesTab extends React.Component<HomeSpacesTabProps> {
     private _renderSpace(selcted = false) {
         return (
             <a className={`space-item ${selcted ? 'selected' : ''}`}>
@@ -16,12 +30,25 @@ export default class HomeSpacesTab extends React.Component {
         );
     }
 
+    private _renderSpaceTrees = () => {
+        console.log(this.props.spaceTrees);
+        return null;
+    };
+
     render() {
-        return (
-            <div id="home-spaces-tab">
-                {this._renderSpace(true)}
-                {this._renderSpace()}
-            </div>
-        );
+        return <div id="home-spaces-tab">{this._renderSpaceTrees()}</div>;
     }
 }
+
+const mapStateToProps = (state: RootState): _ReduxProps => ({
+    spaceTrees: state.spaceTrees,
+});
+
+const mapDispatchToProps = {};
+
+const HomeSpacesTab = connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(_HomeSpacesTab);
+
+export default HomeSpacesTab;

@@ -59,13 +59,16 @@ export const interpretAmenity = (
 };
 
 /**
- * Space
+ * GeoCoordinate
  */
 export interface GeoCoordinate {
     lat: number;
     lng: number;
 }
 
+/**
+ * Space
+ */
 interface Space {
     spaceNames: SpaceNames;
     types: SpaceType[];

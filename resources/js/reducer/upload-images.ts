@@ -22,7 +22,7 @@ const initialState: UploadImagesState = {
 export default function UploadImagesReducer(
     state = initialState,
     action: UploadImagesActions,
-) {
+): UploadImagesState {
     switch (action.type) {
         case RESET_UPLOAD_IMAGES:
             return {

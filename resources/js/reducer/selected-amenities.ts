@@ -17,7 +17,7 @@ const initialState: SelectedAmenitiesState = {
 export default function SelectedAmenitiesReducer(
     state = initialState,
     action: SelectedAmenitiesActions,
-) {
+): SelectedAmenitiesState {
     switch (action.type) {
         case SET_SELECTED_AMENITIES:
             return {

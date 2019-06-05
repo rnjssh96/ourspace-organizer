@@ -39,7 +39,7 @@ const initialState: CurrentSpaceState = {
 export default function CurrentSpaceReducer(
     state = initialState,
     action: CurrentSpaceActions,
-) {
+): CurrentSpaceState {
     switch (action.type) {
         case UPDATE_SPACE_INTRODUCE:
             return {

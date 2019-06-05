@@ -67347,6 +67347,73 @@ module.exports = {"busy-level":{"1":{"en":"Normal","ko":"보통"},"2":{"en":"Bus
 
 /***/ }),
 
+/***/ "./resources/js/model/space-tree.ts":
+/*!******************************************!*\
+  !*** ./resources/js/model/space-tree.ts ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.buildArray2Tree = (spaceHeaders) => {
+    let workMap = {};
+    let rtnTrees = {
+        id: '__ROOT__',
+        childs: {},
+    };
+    // convert into map of nodes with pid as key
+    spaceHeaders.forEach((spaceHeader) => {
+        if (workMap[spaceHeader.pid] == null) {
+            workMap[spaceHeader.pid] = {
+                nodes: {},
+                parentFound: false,
+            };
+        }
+        workMap[spaceHeader.pid].nodes[spaceHeader.id] = {
+            id: spaceHeader.id,
+            childs: {},
+            spaceNames: spaceHeader.names,
+        };
+    });
+    // connect childs
+    Object.values(workMap).forEach((workUnit) => {
+        Object.keys(workUnit.nodes).forEach((id) => {
+            if (workMap[id]) {
+                workUnit.nodes[id].childs = workMap[id].nodes;
+                workMap[id].parentFound = true;
+            }
+        });
+    });
+    // find nodes with no parent matched
+    Object.keys(workMap).forEach((pid) => {
+        if (!workMap[pid].parentFound) {
+            rtnTrees.childs = {
+                ...rtnTrees.childs,
+                ...workMap[pid].nodes,
+            };
+        }
+    });
+    return rtnTrees;
+};
+/**
+ * Traverse tree with DFS
+ */
+const traverseSpaceTree = (tree, callbackfn, initDepth = 0) => {
+    Object.values(tree.childs).forEach((node) => {
+        if (isSpaceNode(node))
+            callbackfn({ id: node.id, names: node.spaceNames }, initDepth);
+        traverseSpaceTree(node, (callbackfn = callbackfn), initDepth + 1);
+    });
+};
+const isSpaceNode = (node) => {
+    return 'spaceNames' in node;
+};
+
+
+/***/ }),
+
 /***/ "./resources/js/model/space.ts":
 /*!*************************************!*\
   !*** ./resources/js/model/space.ts ***!
@@ -67467,7 +67534,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-class HomeSpacesTab extends react_1.default.Component {
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+class _HomeSpacesTab extends react_1.default.Component {
+    constructor() {
+        super(...arguments);
+        this._renderSpaceTrees = () => {
+            console.log(this.props.spaceTrees);
+            return null;
+        };
+    }
     _renderSpace(selcted = false) {
         return (react_1.default.createElement("a", { className: `space-item ${selcted ? 'selected' : ''}` },
             react_1.default.createElement("img", { src: "./demo-images/about_img_01.jpg", className: "rounded" }),
@@ -67478,11 +67553,14 @@ class HomeSpacesTab extends react_1.default.Component {
                     "\uC11C\uC6B8 \uC1A1\uD30C\uAD6C \uC62C\uB9BC\uD53D\uB85C 35\uAE38 104"))));
     }
     render() {
-        return (react_1.default.createElement("div", { id: "home-spaces-tab" },
-            this._renderSpace(true),
-            this._renderSpace()));
+        return react_1.default.createElement("div", { id: "home-spaces-tab" }, this._renderSpaceTrees());
     }
 }
+const mapStateToProps = (state) => ({
+    spaceTrees: state.spaceTrees,
+});
+const mapDispatchToProps = {};
+const HomeSpacesTab = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_HomeSpacesTab);
 exports.default = HomeSpacesTab;
 
 
@@ -67613,6 +67691,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const redux_1 = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
+const space_trees_1 = __importDefault(__webpack_require__(/*! ./space-trees */ "./resources/js/reducer/space-trees.ts"));
 const current_space_1 = __importDefault(__webpack_require__(/*! ./current-space */ "./resources/js/reducer/current-space.ts"));
 const selected_amenities_1 = __importDefault(__webpack_require__(/*! ./selected-amenities */ "./resources/js/reducer/selected-amenities.ts"));
 const upload_images_1 = __importDefault(__webpack_require__(/*! ./upload-images */ "./resources/js/reducer/upload-images.ts"));
@@ -67620,6 +67699,7 @@ const upload_images_1 = __importDefault(__webpack_require__(/*! ./upload-images 
  * Root Reducer
  */
 const RootReducer = redux_1.combineReducers({
+    spaceTrees: space_trees_1.default,
     currentSpace: current_space_1.default,
     selectedAmenities: selected_amenities_1.default,
     selectedImages: upload_images_1.default,
@@ -67661,6 +67741,102 @@ function SelectedAmenitiesReducer(state = initialState, action) {
     }
 }
 exports.default = SelectedAmenitiesReducer;
+
+
+/***/ }),
+
+/***/ "./resources/js/reducer/space-trees.ts":
+/*!*********************************************!*\
+  !*** ./resources/js/reducer/space-trees.ts ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const space_trees_1 = __webpack_require__(/*! ../redux-types/space-trees */ "./resources/js/redux-types/space-trees.ts");
+const space_tree_1 = __webpack_require__(/*! ../model/space-tree */ "./resources/js/model/space-tree.ts");
+const SAMPLE = [
+    {
+        id: '1',
+        pid: '11',
+        names: {
+            en: '1st Floor',
+            ko: '1층',
+        },
+    },
+    // { id: '2', pid: '15', names: { en: 'test' } },
+    // { id: '3', pid: '2', names: { en: 'test' } },
+    {
+        id: '4',
+        pid: '11',
+        names: {
+            en: '2nd Floor',
+            ko: '2층',
+        },
+    },
+    // { id: '5', pid: '2', names: { en: 'test' } },
+    // { id: '6', pid: '2', names: { en: 'test' } },
+    // { id: '7', pid: '21', names: { en: 'test' } },
+    // { id: '8', pid: '12', names: { en: 'test' } },
+    // { id: '9', pid: 'root', names: { en: 'test' } },
+    {
+        id: '10',
+        pid: '18',
+        names: {
+            en: 'Picnic Bench Zone',
+            ko: '피크닉벤치존',
+        },
+    },
+    {
+        id: '11',
+        pid: '9',
+        names: {
+            en: 'Hanyang Univ. Main Library',
+            ko: '한양대학교 중앙도서관',
+        },
+    },
+    // { id: '12', pid: '16', names: { en: 'test' } },
+    // { id: '13', pid: '7', names: { en: 'test' } },
+    // { id: '14', pid: '7', names: { en: 'test' } },
+    // { id: '15', pid: 'root', names: { en: 'test' } },
+    // { id: '16', pid: '7', names: { en: 'test' } },
+    // { id: '17', pid: '16', names: { en: 'test' } },
+    {
+        id: '18',
+        pid: '20',
+        names: {
+            en: 'Outdoor lounge',
+            ko: '아웃도어라운지',
+        },
+    },
+    // { id: '19', pid: '9', names: { en: 'test' } },
+    {
+        id: '20',
+        pid: '9',
+        names: {
+            en: 'Google Campus',
+            ko: '구글캠퍼스',
+        },
+    },
+];
+/**
+ * Initial State
+ */
+const initialState = space_tree_1.buildArray2Tree(SAMPLE);
+/**
+ * SpaceTreesReducer
+ */
+function SpaceTreesReducer(state = initialState, action) {
+    switch (action.type) {
+        case space_trees_1.SET_SPACE_TREES:
+            return action.spaceTrees;
+        default:
+            return state;
+    }
+}
+exports.default = SpaceTreesReducer;
 
 
 /***/ }),
@@ -67782,6 +67958,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 // prettier-ignore
 exports.SET_SELECTED_AMENITIES = 'our-space-organizer/selected-amenities/SET_SELECTED_AMENITIES';
+
+
+/***/ }),
+
+/***/ "./resources/js/redux-types/space-trees.ts":
+/*!*************************************************!*\
+  !*** ./resources/js/redux-types/space-trees.ts ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Action Constants
+ */
+// prettier-ignore
+exports.SET_SPACE_TREES = 'our-space-organizer/space-tree/SET_SPACE_TREES';
 
 
 /***/ }),
