@@ -12,7 +12,7 @@ export default class OSLoginContainer extends React.Component {
                             <p className="h5">Organizer Page</p>
                         </div>
                     </div>
-                    <form>
+                    <form action="/home">
                         <div className="form-group">
                             <label>이메일</label>
                             <input

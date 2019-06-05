@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 
@@ -14,7 +15,12 @@ class App extends React.Component {
     render() {
         return (
             <Provider store={rootStore}>
-                <OSLoginContainer />
+                <BrowserRouter>
+                    <Switch>
+                        <Route exact path="/" component={OSLoginContainer} />
+                        <Route path="/home" component={OSHomeContainer} />
+                    </Switch>
+                </BrowserRouter>
             </Provider>
         );
     }
