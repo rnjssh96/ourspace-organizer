@@ -67541,16 +67541,20 @@ class _HomeSpacesTab extends react_1.default.Component {
         };
     }
     _renderSpace(spaceHeader, depth, selcted = false) {
-        return (react_1.default.createElement("a", { key: spaceHeader.id, className: `space-item ${selcted ? 'selected' : ''}` },
+        return (react_1.default.createElement("a", { key: spaceHeader.id, className: `space-item depth-${depth > MAX_DEPTH ? MAX_DEPTH : depth} ${selcted ? 'selected' : ''}` },
             depth == 0 && (react_1.default.createElement("img", { src: "./demo-images/about_img_01.jpg", className: "rounded" })),
-            react_1.default.createElement("div", { className: `space-item-body depth-${depth > MAX_DEPTH ? MAX_DEPTH : depth}` },
+            react_1.default.createElement("div", { className: "bullet" }),
+            react_1.default.createElement("div", { className: "space-item-body" },
                 react_1.default.createElement("p", { className: "h5 os-text-ellipsis" }, "\uC2A4\uD0C0\uBC85\uC2A4 \uC790\uC591\uC810"),
                 react_1.default.createElement("p", { className: "h6 os-grey-1" },
                     react_1.default.createElement("i", { className: "material-icons" }, "location_on"),
                     "\uC11C\uC6B8 \uC1A1\uD30C\uAD6C \uC62C\uB9BC\uD53D\uB85C 35\uAE38 104"))));
     }
     render() {
-        return react_1.default.createElement("div", { id: "home-spaces-tab" }, this._renderSpaceTrees());
+        return (react_1.default.createElement("div", { id: "home-spaces-tab" },
+            react_1.default.createElement("p", { className: "h4" },
+                react_1.default.createElement("b", null, "\uC2A4\uD398\uC774\uC2A4")),
+            this._renderSpaceTrees()));
     }
 }
 const mapStateToProps = (state) => ({

@@ -29,7 +29,9 @@ class _HomeSpacesTab extends React.Component<HomeSpacesTabProps> {
         return (
             <a
                 key={spaceHeader.id}
-                className={`space-item ${selcted ? 'selected' : ''}`}
+                className={`space-item depth-${
+                    depth > MAX_DEPTH ? MAX_DEPTH : depth
+                } ${selcted ? 'selected' : ''}`}
             >
                 {depth == 0 && (
                     <img
@@ -37,11 +39,8 @@ class _HomeSpacesTab extends React.Component<HomeSpacesTabProps> {
                         className="rounded"
                     />
                 )}
-                <div
-                    className={`space-item-body depth-${
-                        depth > MAX_DEPTH ? MAX_DEPTH : depth
-                    }`}
-                >
+                <div className="bullet" />
+                <div className="space-item-body">
                     <p className="h5 os-text-ellipsis">스타벅스 자양점</p>
                     <p className="h6 os-grey-1">
                         <i className="material-icons">location_on</i>
@@ -69,7 +68,14 @@ class _HomeSpacesTab extends React.Component<HomeSpacesTabProps> {
     };
 
     render() {
-        return <div id="home-spaces-tab">{this._renderSpaceTrees()}</div>;
+        return (
+            <div id="home-spaces-tab">
+                <p className="h4">
+                    <b>스페이스</b>
+                </p>
+                {this._renderSpaceTrees()}
+            </div>
+        );
     }
 }
 
