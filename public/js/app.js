@@ -67524,6 +67524,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
 const space_tree_1 = __webpack_require__(/*! ../model/space-tree */ "./resources/js/model/space-tree.ts");
 const MAX_DEPTH = 4;
 class _HomeSpacesTab extends react_1.default.Component {
@@ -67539,6 +67540,14 @@ class _HomeSpacesTab extends react_1.default.Component {
         this._renderSpaceTrees = () => {
             return this.props.spaceTrees.map((group) => (react_1.default.createElement("div", { key: group.spaceHeader.id, className: "space-group" }, this._renderSpaceGroup(group))));
         };
+    }
+    componentDidMount() {
+        axios_1.default
+            .get('/api/space/all')
+            .then(response => {
+            console.log(response.data);
+        })
+            .catch(error => { });
     }
     _renderSpace(spaceHeader, depth, selcted = false) {
         return (react_1.default.createElement("a", { key: spaceHeader.id, className: `space-item
@@ -67628,7 +67637,7 @@ const current_space_1 = __webpack_require__(/*! ../redux-types/current-space */ 
  * Initial State
  */
 const initialState = {
-    id: "TESTID01",
+    id: 'TESTID01',
     spaceNames: {
         ko: '스타벅스 자양점',
         en: 'Starbucks Jayang',
@@ -67641,7 +67650,7 @@ const initialState = {
     },
     operatingHours: ['00:00 - 23:59 / 월, 수, 금'],
     amenityTags: ['amazon-pay', 'apple-pay', 'toilet', 'visa', 'wifi'],
-    spaceIntroduce: "",
+    spaceIntroduce: '',
     images: [
         './demo-images/about_img_03.jpg',
         './demo-images/item_image_05b.jpg',
