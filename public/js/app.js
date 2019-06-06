@@ -69286,6 +69286,37 @@ module.exports = function(module) {
 
 /***/ }),
 
+/***/ "./resources/js/actions/api-process.ts":
+/*!*********************************************!*\
+  !*** ./resources/js/actions/api-process.ts ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const api_process_1 = __webpack_require__(/*! ../redux-types/api-process */ "./resources/js/redux-types/api-process.ts");
+exports.setSpaceFetching = (spaceFetching) => ({
+    type: api_process_1.SET_SPACE_FETCHING,
+    spaceFetching,
+});
+exports.fetchSpaceFromServer = () => async (dispatch) => {
+    dispatch(exports.setSpaceFetching(true));
+    async function resolveAfter2Seconds() {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve('resolved');
+            }, 4000);
+        });
+    }
+    await resolveAfter2Seconds();
+    return dispatch(exports.setSpaceFetching(false));
+};
+
+
+/***/ }),
+
 /***/ "./resources/js/actions/current-space.ts":
 /*!***********************************************!*\
   !*** ./resources/js/actions/current-space.ts ***!
@@ -70126,6 +70157,31 @@ exports.default = OSLoactionMap;
 
 /***/ }),
 
+/***/ "./resources/js/components/os-loading-spinner.tsx":
+/*!********************************************************!*\
+  !*** ./resources/js/components/os-loading-spinner.tsx ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+class OSLoadingSpinner extends react_1.default.Component {
+    render() {
+        return (react_1.default.createElement("div", { id: "os-loading-spinner" },
+            react_1.default.createElement("img", { src: "./assets/spinner.gif" })));
+    }
+}
+exports.default = OSLoadingSpinner;
+
+
+/***/ }),
+
 /***/ "./resources/js/components/os-rank-display.tsx":
 /*!*****************************************************!*\
   !*** ./resources/js/components/os-rank-display.tsx ***!
@@ -70427,29 +70483,47 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const api_process_1 = __webpack_require__(/*! ../actions/api-process */ "./resources/js/actions/api-process.ts");
+const os_loading_spinner_1 = __importDefault(__webpack_require__(/*! ../components/os-loading-spinner */ "./resources/js/components/os-loading-spinner.tsx"));
 const os_rank_display_1 = __importDefault(__webpack_require__(/*! ../components/os-rank-display */ "./resources/js/components/os-rank-display.tsx"));
 const os_images_editor_1 = __importDefault(__webpack_require__(/*! ../components/os-images-editor */ "./resources/js/components/os-images-editor/index.tsx"));
 const os_amenity_tags_1 = __importDefault(__webpack_require__(/*! ../components/os-amenity-tags */ "./resources/js/components/os-amenity-tags/index.tsx"));
 const os_loaction_map_1 = __importDefault(__webpack_require__(/*! ../components/os-loaction-map */ "./resources/js/components/os-loaction-map.tsx"));
 const os_general_info_1 = __importDefault(__webpack_require__(/*! ../components/os-general-info */ "./resources/js/components/os-general-info/index.tsx"));
 const os_space_introduce_1 = __importDefault(__webpack_require__(/*! ../components/os-space-introduce */ "./resources/js/components/os-space-introduce.tsx"));
-class HomeMainView extends react_1.default.Component {
+class _HomeMainView extends react_1.default.Component {
+    componentWillMount() {
+        this.props.fetchSpaceFromServer();
+    }
     render() {
-        return (react_1.default.createElement("div", { id: "home-main-view" },
-            react_1.default.createElement("div", { id: "overview" },
-                react_1.default.createElement("div", { id: "left" },
-                    react_1.default.createElement(os_general_info_1.default, null)),
-                react_1.default.createElement("div", { id: "right" },
-                    react_1.default.createElement(os_rank_display_1.default, null))),
-            react_1.default.createElement("div", { id: "body" },
-                react_1.default.createElement("div", { id: "left" },
-                    react_1.default.createElement(os_space_introduce_1.default, null),
-                    react_1.default.createElement(os_amenity_tags_1.default, null),
-                    react_1.default.createElement(os_images_editor_1.default, null)),
-                react_1.default.createElement("div", { id: "right" },
-                    react_1.default.createElement(os_loaction_map_1.default, null)))));
+        if (this.props.spaceFetching) {
+            return react_1.default.createElement(os_loading_spinner_1.default, null);
+        }
+        else {
+            return (react_1.default.createElement("div", { id: "home-main-view" },
+                react_1.default.createElement("div", { id: "overview" },
+                    react_1.default.createElement("div", { id: "left" },
+                        react_1.default.createElement(os_general_info_1.default, null)),
+                    react_1.default.createElement("div", { id: "right" },
+                        react_1.default.createElement(os_rank_display_1.default, null))),
+                react_1.default.createElement("div", { id: "body" },
+                    react_1.default.createElement("div", { id: "left" },
+                        react_1.default.createElement(os_space_introduce_1.default, null),
+                        react_1.default.createElement(os_amenity_tags_1.default, null),
+                        react_1.default.createElement(os_images_editor_1.default, null)),
+                    react_1.default.createElement("div", { id: "right" },
+                        react_1.default.createElement(os_loaction_map_1.default, null)))));
+        }
     }
 }
+const mapStateToProps = (state) => ({
+    spaceFetching: state.apiProcess.currentSpace.spaceFetching,
+});
+const mapDispatchToProps = {
+    fetchSpaceFromServer: api_process_1.fetchSpaceFromServer,
+};
+const HomeMainView = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_HomeMainView);
 exports.default = HomeMainView;
 
 
@@ -70536,9 +70610,6 @@ const home_header_1 = __importDefault(__webpack_require__(/*! ./home-header */ "
 const home_spaces_tab_1 = __importDefault(__webpack_require__(/*! ./home-spaces-tab */ "./resources/js/os-home-container/home-spaces-tab.tsx"));
 const home_main_view_1 = __importDefault(__webpack_require__(/*! ./home-main-view */ "./resources/js/os-home-container/home-main-view.tsx"));
 class OSHomeContainer extends react_1.default.Component {
-    componentDidMount() {
-        console.log(this.props.match.params.userid);
-    }
     render() {
         return (react_1.default.createElement("div", { id: "os-home-container", className: "container-fluid" },
             react_1.default.createElement(home_header_1.default, null),
@@ -70589,6 +70660,47 @@ class OSLoginContainer extends react_1.default.Component {
     }
 }
 exports.default = OSLoginContainer;
+
+
+/***/ }),
+
+/***/ "./resources/js/reducer/api-process.ts":
+/*!*********************************************!*\
+  !*** ./resources/js/reducer/api-process.ts ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const api_process_1 = __webpack_require__(/*! ../redux-types/api-process */ "./resources/js/redux-types/api-process.ts");
+/**
+ * Initial State
+ */
+const initialState = {
+    currentSpace: {
+        spaceFetching: false,
+    }
+};
+/**
+ * APIProcessReducer
+ */
+function APIProcessReducer(state = initialState, action) {
+    switch (action.type) {
+        case api_process_1.SET_SPACE_FETCHING:
+            return {
+                ...state,
+                currentSpace: {
+                    ...state.currentSpace,
+                    spaceFetching: action.spaceFetching,
+                },
+            };
+        default:
+            return state;
+    }
+}
+exports.default = APIProcessReducer;
 
 
 /***/ }),
@@ -70696,6 +70808,7 @@ const space_trees_1 = __importDefault(__webpack_require__(/*! ./space-trees */ "
 const current_space_1 = __importDefault(__webpack_require__(/*! ./current-space */ "./resources/js/reducer/current-space.ts"));
 const selected_amenities_1 = __importDefault(__webpack_require__(/*! ./selected-amenities */ "./resources/js/reducer/selected-amenities.ts"));
 const upload_images_1 = __importDefault(__webpack_require__(/*! ./upload-images */ "./resources/js/reducer/upload-images.ts"));
+const api_process_1 = __importDefault(__webpack_require__(/*! ./api-process */ "./resources/js/reducer/api-process.ts"));
 /**
  * Root Reducer
  */
@@ -70704,6 +70817,7 @@ const RootReducer = redux_1.combineReducers({
     currentSpace: current_space_1.default,
     selectedAmenities: selected_amenities_1.default,
     selectedImages: upload_images_1.default,
+    apiProcess: api_process_1.default,
 });
 exports.default = RootReducer;
 
@@ -70924,6 +71038,27 @@ exports.default = UploadImagesReducer;
 
 /***/ }),
 
+/***/ "./resources/js/redux-types/api-process.ts":
+/*!*************************************************!*\
+  !*** ./resources/js/redux-types/api-process.ts ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Action Constants
+ */
+// prettier-ignore
+exports.SET_SPACE_FETCHING = 'current-space/SET_SPACE_FETCHING';
+// prettier-ignore
+exports.FETCH_SPACE_FROM_SERVER = 'current-space/thunk/FETCH_SPACE_FROM_SERVER';
+
+
+/***/ }),
+
 /***/ "./resources/js/redux-types/current-space.ts":
 /*!***************************************************!*\
   !*** ./resources/js/redux-types/current-space.ts ***!
@@ -70938,13 +71073,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * Action Constants
  */
 // prettier-ignore
-exports.UPDATE_SPACE_INTRODUCE = 'our-space-organizer/current-space/UPDATE_SPACE_INTRODUCE';
+exports.UPDATE_SPACE_INTRODUCE = 'current-space/UPDATE_SPACE_INTRODUCE';
 // prettier-ignore
-exports.SET_OPERATING_HOURS = 'our-space-organizer/current-space/SET_OPERATING_HOURS';
+exports.SET_OPERATING_HOURS = 'current-space/SET_OPERATING_HOURS';
 // prettier-ignore
-exports.SET_BUSY_LEVEL = 'our-space-organizer/current-space/SET_BUSY_LEVEL';
+exports.SET_BUSY_LEVEL = 'current-space/SET_BUSY_LEVEL';
 // prettier-ignore
-exports.SET_AMENITY_TAGS = 'our-space-organizer/current-space/SET_AMENITY_TAGS';
+exports.SET_AMENITY_TAGS = 'current-space/SET_AMENITY_TAGS';
 
 
 /***/ }),
@@ -70963,7 +71098,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * Action Constants
  */
 // prettier-ignore
-exports.SET_SELECTED_AMENITIES = 'our-space-organizer/selected-amenities/SET_SELECTED_AMENITIES';
+exports.SET_SELECTED_AMENITIES = 'selected-amenities/SET_SELECTED_AMENITIES';
 
 
 /***/ }),
@@ -70982,7 +71117,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * Action Constants
  */
 // prettier-ignore
-exports.SET_SPACE_TREES = 'our-space-organizer/space-tree/SET_SPACE_TREES';
+exports.SET_SPACE_TREES = 'space-tree/SET_SPACE_TREES';
 
 
 /***/ }),
@@ -71001,15 +71136,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * Action Constants
  */
 // prettier-ignore
-exports.RESET_UPLOAD_IMAGES = 'our-space-organizer/upload-images/RESET_UPLOAD_IMAGES';
+exports.RESET_UPLOAD_IMAGES = 'upload-images/RESET_UPLOAD_IMAGES';
 // prettier-ignore
-exports.ADD_UPLOAD_IMAGE = 'our-space-organizer/upload-images/ADD_UPLOAD_IMAGE';
+exports.ADD_UPLOAD_IMAGE = 'upload-images/ADD_UPLOAD_IMAGE';
 // prettier-ignore
-exports.UPDATE_UPLOAD_PROGRESS = 'our-space-organizer/upload-images/UPDATE_UPLOAD_PROGRESS';
+exports.UPDATE_UPLOAD_PROGRESS = 'upload-images/UPDATE_UPLOAD_PROGRESS';
 // prettier-ignore
-exports.SET_IMAGE_DATA = 'our-space-organizer/upload-images/SET_IMAGE_DATA';
+exports.SET_IMAGE_DATA = 'upload-images/SET_IMAGE_DATA';
 // prettier-ignore
-exports.DELETE_UPLOAD_IMAGE = 'our-space-organizer/upload-images/DELETE_UPLOAD_IMAGE';
+exports.DELETE_UPLOAD_IMAGE = 'upload-images/DELETE_UPLOAD_IMAGE';
 
 
 /***/ }),

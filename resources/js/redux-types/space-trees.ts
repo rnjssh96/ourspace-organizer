@@ -12,7 +12,7 @@ export type SpaceTreesState = {
  * Action Constants
  */
 // prettier-ignore
-export const SET_SPACE_TREES = 'our-space-organizer/space-tree/SET_SPACE_TREES';
+export const SET_SPACE_TREES = 'space-tree/SET_SPACE_TREES';
 
 /**
  * Action Interfaces

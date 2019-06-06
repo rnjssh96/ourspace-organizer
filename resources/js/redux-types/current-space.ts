@@ -1,4 +1,5 @@
 import { Action } from 'redux';
+import { ThunkAction } from 'redux-thunk';
 
 import Space, { BusyLevel, AmenityTag } from '../model/space';
 
@@ -13,13 +14,13 @@ export type CurrentSpaceState = {
  * Action Constants
  */
 // prettier-ignore
-export const UPDATE_SPACE_INTRODUCE = 'our-space-organizer/current-space/UPDATE_SPACE_INTRODUCE';
+export const UPDATE_SPACE_INTRODUCE = 'current-space/UPDATE_SPACE_INTRODUCE';
 // prettier-ignore
-export const SET_OPERATING_HOURS = 'our-space-organizer/current-space/SET_OPERATING_HOURS';
+export const SET_OPERATING_HOURS = 'current-space/SET_OPERATING_HOURS';
 // prettier-ignore
-export const SET_BUSY_LEVEL = 'our-space-organizer/current-space/SET_BUSY_LEVEL';
+export const SET_BUSY_LEVEL = 'current-space/SET_BUSY_LEVEL';
 // prettier-ignore
-export const SET_AMENITY_TAGS = 'our-space-organizer/current-space/SET_AMENITY_TAGS';
+export const SET_AMENITY_TAGS = 'current-space/SET_AMENITY_TAGS';
 
 /**
  * Action Interfaces

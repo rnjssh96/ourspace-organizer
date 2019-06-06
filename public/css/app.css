@@ -10991,6 +10991,19 @@ button {
   margin-top: 2rem;
 }
 
+#os-loading-spinner {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#os-loading-spinner > img {
+  max-height: 2.5rem;
+  max-width: 2.5rem;
+}
+
 #os-rank-display {
   display: flex;
   flex-direction: column;

@@ -8,10 +8,6 @@ import HomeMainView from './home-main-view';
 export default class OSHomeContainer extends React.Component<
     RouteComponentProps<{ userid: string }>
 > {
-    componentDidMount() {
-        console.log(this.props.match.params.userid);
-    }
-
     render() {
         return (
             <div id="os-home-container" className="container-fluid">

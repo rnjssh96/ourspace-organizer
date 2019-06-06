@@ -21,15 +21,15 @@ export type UploadImagesState = {
  * Action Constants
  */
 // prettier-ignore
-export const RESET_UPLOAD_IMAGES = 'our-space-organizer/upload-images/RESET_UPLOAD_IMAGES';
+export const RESET_UPLOAD_IMAGES = 'upload-images/RESET_UPLOAD_IMAGES';
 // prettier-ignore
-export const ADD_UPLOAD_IMAGE = 'our-space-organizer/upload-images/ADD_UPLOAD_IMAGE';
+export const ADD_UPLOAD_IMAGE = 'upload-images/ADD_UPLOAD_IMAGE';
 // prettier-ignore
-export const UPDATE_UPLOAD_PROGRESS = 'our-space-organizer/upload-images/UPDATE_UPLOAD_PROGRESS';
+export const UPDATE_UPLOAD_PROGRESS = 'upload-images/UPDATE_UPLOAD_PROGRESS';
 // prettier-ignore
-export const SET_IMAGE_DATA = 'our-space-organizer/upload-images/SET_IMAGE_DATA';
+export const SET_IMAGE_DATA = 'upload-images/SET_IMAGE_DATA';
 // prettier-ignore
-export const DELETE_UPLOAD_IMAGE = 'our-space-organizer/upload-images/DELETE_UPLOAD_IMAGE';
+export const DELETE_UPLOAD_IMAGE = 'upload-images/DELETE_UPLOAD_IMAGE';
 
 /**
  * Action Interfaces

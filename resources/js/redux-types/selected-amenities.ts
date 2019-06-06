@@ -13,7 +13,7 @@ export type SelectedAmenitiesState = {
  * Action Constants
  */
 // prettier-ignore
-export const SET_SELECTED_AMENITIES = 'our-space-organizer/selected-amenities/SET_SELECTED_AMENITIES';
+export const SET_SELECTED_AMENITIES = 'selected-amenities/SET_SELECTED_AMENITIES';
 
 /**
  * Action Interfaces

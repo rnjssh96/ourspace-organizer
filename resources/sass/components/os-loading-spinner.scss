@@ -1,0 +1,16 @@
+#os-loading-spinner {
+    // size
+    height: 100%;
+    width: 100%;
+
+    // flex
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    & > img {
+        // size
+        max-height: 2.5rem;
+        max-width: 2.5rem;
+    }
+}
