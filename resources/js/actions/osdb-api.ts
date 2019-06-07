@@ -25,9 +25,17 @@ export const attemptLogIn: ActionCreator<
 ) => {
     dispatch(changeLoggedStatus('processing'));
     osdbAttemptLogIn(userEmail, userPassword).then((result: LoggedStatus) => {
-        console.log(result);
         dispatch(changeLoggedStatus(result));
     });
+};
+
+/**
+ * Log out
+ */
+export const logOut: ActionCreator<
+    ThunkAction<void, LoggedStatus, null, ChangeLoggedStatusAction>
+> = () => async (dispatch: ThunkDispatch<LoggedStatus, null, Action<any>>) => {
+    dispatch(changeLoggedStatus('ready'));
 };
 
 /**

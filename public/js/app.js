@@ -69370,9 +69370,14 @@ const current_space_1 = __webpack_require__(/*! ./current-space */ "./resources/
 exports.attemptLogIn = (userEmail, userPassword) => async (dispatch) => {
     dispatch(auth_2.changeLoggedStatus('processing'));
     auth_1.osdbAttemptLogIn(userEmail, userPassword).then((result) => {
-        console.log(result);
         dispatch(auth_2.changeLoggedStatus(result));
     });
+};
+/**
+ * Log out
+ */
+exports.logOut = () => async (dispatch) => {
+    dispatch(auth_2.changeLoggedStatus('ready'));
 };
 /**
  * Fetch space trees from OSDB
@@ -70529,13 +70534,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const react_router_1 = __webpack_require__(/*! react-router */ "./node_modules/react-router/esm/react-router.js");
-class HomeHeader extends react_1.default.Component {
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const osdb_api_1 = __webpack_require__(/*! ../actions/osdb-api */ "./resources/js/actions/osdb-api.ts");
+class _HomeHeader extends react_1.default.Component {
     constructor() {
         super(...arguments);
         this._onLogout = (ev) => {
             ev.preventDefault();
-            this.props.history.goBack();
+            this.props.logOut();
         };
     }
     render() {
@@ -70549,7 +70555,12 @@ class HomeHeader extends react_1.default.Component {
                 react_1.default.createElement("button", { className: "btn btn-outline-light", onClick: this._onLogout }, "Logout"))));
     }
 }
-exports.default = react_router_1.withRouter(HomeHeader);
+const mapStateToProps = (state) => ({});
+const mapDispatchToProps = {
+    logOut: osdb_api_1.logOut,
+};
+const HomeHeader = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_HomeHeader);
+exports.default = HomeHeader;
 
 
 /***/ }),

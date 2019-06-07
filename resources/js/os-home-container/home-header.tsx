@@ -1,10 +1,27 @@
 import React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { connect } from 'react-redux';
 
-class HomeHeader extends React.Component<RouteComponentProps> {
+import RootState from '../redux-types';
+
+import { LogOutAction } from '../redux-types/osdb-api';
+
+import { logOut } from '../actions/osdb-api';
+
+interface _ReduxProps {}
+
+interface _ReduxActionCreators {
+    /**
+     * Log out
+     */
+    logOut: LogOutAction;
+}
+
+interface HomeHeaderProps extends _ReduxProps, _ReduxActionCreators {}
+
+class _HomeHeader extends React.Component<HomeHeaderProps> {
     private _onLogout = (ev: React.MouseEvent) => {
         ev.preventDefault();
-        this.props.history.goBack();
+        this.props.logOut();
     };
 
     render() {
@@ -33,4 +50,15 @@ class HomeHeader extends React.Component<RouteComponentProps> {
     }
 }
 
-export default withRouter(HomeHeader);
+const mapStateToProps = (state: RootState): _ReduxProps => ({});
+
+const mapDispatchToProps = {
+    logOut,
+};
+
+const HomeHeader = connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(_HomeHeader);
+
+export default HomeHeader;
