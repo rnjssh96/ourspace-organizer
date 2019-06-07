@@ -16,6 +16,11 @@ import OSSpaceIntroduce from '../components/os-space-introduce';
 
 interface _ReduxProps {
     /**
+     * ID of the current space
+     */
+    currentSpaceID?: string;
+
+    /**
      * Space requesting
      */
     requestingSpace: boolean;
@@ -38,6 +43,13 @@ class _HomeMainView extends React.Component<HomeMainViewProps> {
     render() {
         if (this.props.requestingSpace) {
             return <OSPageStatus status="loading" />;
+        } else if (!this.props.currentSpaceID) {
+            return (
+                <OSPageStatus
+                    status="information"
+                    info="스페이스를 선택하여 주십시오."
+                />
+            );
         } else {
             return (
                 <div id="home-main-view">
@@ -68,6 +80,7 @@ class _HomeMainView extends React.Component<HomeMainViewProps> {
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
+    currentSpaceID: state.currentSpace.data.id,
     requestingSpace: state.currentSpace.status.requestingSpace,
 });
 

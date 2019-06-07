@@ -7,11 +7,13 @@ import ImageUploadModal, { ImageUploadModalID } from './image-upload-modal';
 
 import { resetUploadImages } from '../../actions/upload-images';
 
+import OSPageStatus from '../os-page-status';
+
 interface _ReduxProps {
     /**
      * Images of the space
      */
-    images: string[];
+    images?: string[];
 }
 
 interface _ReduxActionCreators {
@@ -29,9 +31,18 @@ class _OSImagesEditor extends React.Component<OSImagesEditorProps> {
     };
 
     private _renderImages() {
-        return this.props.images.map((image: string) => (
-            <img key={image} src={image} className="rounded" />
-        ));
+        if (this.props.images) {
+            return this.props.images.map((image: string) => (
+                <img key={image} src={image} className="rounded" />
+            ));
+        } else {
+            return (
+                <OSPageStatus
+                    status="information"
+                    info="등록된 사진이 존재하지 않습니다."
+                />
+            );
+        }
     }
 
     render() {

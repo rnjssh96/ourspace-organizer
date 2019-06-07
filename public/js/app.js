@@ -69695,7 +69695,6 @@ class _AmenitiesEditModal extends react_1.default.Component {
     }
 }
 const mapStateToProps = (state) => ({
-    amenityTags: state.currentSpace.data.amenityTags,
     selectedAmenities: state.selectedAmenities.selectedAmenities,
 });
 const mapDispatchToProps = {
@@ -69733,6 +69732,7 @@ const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/rea
 const space_1 = __webpack_require__(/*! ../../model/space */ "./resources/js/model/space.ts");
 const selected_amenities_1 = __webpack_require__(/*! ../../actions/selected-amenities */ "./resources/js/actions/selected-amenities.ts");
 const amenities_edit_modal_1 = __importStar(__webpack_require__(/*! ./amenities-edit-modal */ "./resources/js/components/os-amenity-tags/amenities-edit-modal.tsx"));
+const os_page_status_1 = __importDefault(__webpack_require__(/*! ../os-page-status */ "./resources/js/components/os-page-status.tsx"));
 class _OSAmenityTags extends react_1.default.Component {
     constructor() {
         super(...arguments);
@@ -69743,7 +69743,14 @@ class _OSAmenityTags extends react_1.default.Component {
                     react_1.default.createElement("p", { className: "h1", "data-toggle": "tooltip" },
                         react_1.default.createElement("i", { className: amenity.faicon })))));
         };
-        this._renderAmenities = () => this.props.amenityTags.map((tag) => this._renderAmenity(tag));
+        this._renderAmenities = () => {
+            if (this.props.amenityTags) {
+                return this.props.amenityTags.map((tag) => this._renderAmenity(tag));
+            }
+            else {
+                return (react_1.default.createElement(os_page_status_1.default, { status: "information", info: "\uD3B8\uC758\uC2DC\uC124\uC744 \uCD94\uAC00\uD574 \uC8FC\uC138\uC694." }));
+            }
+        };
         this._resetSelectedAmenities = () => {
             this.props.setSelectedAmenities(new Set(this.props.amenityTags));
         };
@@ -69816,17 +69823,19 @@ const operating_hour_edit_modal_1 = __importStar(__webpack_require__(/*! ./opera
 class _OSGeneralInfo extends react_1.default.Component {
     render() {
         let typesText = '';
-        this.props.types.map((type, index) => {
-            if (index > 0) {
-                typesText += ' | ';
-            }
-            typesText += space_1.interpretSpaceType(type, 'ko');
-        });
+        if (this.props.types)
+            this.props.types.map((type, index) => {
+                if (index > 0) {
+                    typesText += ' | ';
+                }
+                typesText += space_1.interpretSpaceType(type, 'ko');
+            });
         return (react_1.default.createElement("div", { id: "os-general-info" },
             react_1.default.createElement("img", { src: "./demo-images/about_img_01.jpg", className: "rounded" }),
             react_1.default.createElement("div", { id: "general-info" },
                 react_1.default.createElement("div", { id: "title-row" },
-                    react_1.default.createElement("p", { className: "h4 os-text-ellipsis" }, this.props.spaceNames['ko']),
+                    react_1.default.createElement("p", { className: "h4 os-text-ellipsis" }, this.props.spaceNames &&
+                        this.props.spaceNames['ko']),
                     react_1.default.createElement("p", { id: "txt-types", className: "h6 os-grey-1 os-text-ellipsis" }, typesText)),
                 react_1.default.createElement("div", { className: "info-row" },
                     react_1.default.createElement("p", { className: "h6 os-grey-1 os-text-ellipsis" },
@@ -69836,7 +69845,8 @@ class _OSGeneralInfo extends react_1.default.Component {
                 react_1.default.createElement("div", { className: "info-row" },
                     react_1.default.createElement("p", { className: "h6 os-grey-1 os-text-ellipsis" },
                         react_1.default.createElement("i", { className: "material-icons" }, "access_time")),
-                    react_1.default.createElement("div", { className: "text" }, this.props.operatingHours.map((workingHour) => (react_1.default.createElement("p", { key: workingHour, className: "h6 os-grey-1 os-text-ellipsis" }, workingHour)))),
+                    react_1.default.createElement("div", { className: "text" }, this.props.operatingHours &&
+                        this.props.operatingHours.map((workingHour) => (react_1.default.createElement("p", { key: workingHour, className: "h6 os-grey-1 os-text-ellipsis" }, workingHour)))),
                     react_1.default.createElement("button", { "data-toggle": "modal", "data-target": `#${operating_hour_edit_modal_1.OperatingHourEditModalID}` },
                         react_1.default.createElement("p", { className: "h6 os-grey-1" },
                             react_1.default.createElement("i", { className: "material-icons" }, "edit"),
@@ -70160,6 +70170,7 @@ const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 const image_upload_modal_1 = __importStar(__webpack_require__(/*! ./image-upload-modal */ "./resources/js/components/os-images-editor/image-upload-modal.tsx"));
 const upload_images_1 = __webpack_require__(/*! ../../actions/upload-images */ "./resources/js/actions/upload-images.ts");
+const os_page_status_1 = __importDefault(__webpack_require__(/*! ../os-page-status */ "./resources/js/components/os-page-status.tsx"));
 class _OSImagesEditor extends react_1.default.Component {
     constructor() {
         super(...arguments);
@@ -70168,7 +70179,12 @@ class _OSImagesEditor extends react_1.default.Component {
         };
     }
     _renderImages() {
-        return this.props.images.map((image) => (react_1.default.createElement("img", { key: image, src: image, className: "rounded" })));
+        if (this.props.images) {
+            return this.props.images.map((image) => (react_1.default.createElement("img", { key: image, src: image, className: "rounded" })));
+        }
+        else {
+            return (react_1.default.createElement(os_page_status_1.default, { status: "information", info: "\uB4F1\uB85D\uB41C \uC0AC\uC9C4\uC774 \uC874\uC7AC\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4." }));
+        }
     }
     render() {
         return (react_1.default.createElement("div", { id: "os-images-editor" },
@@ -70214,12 +70230,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 const os_google_map_1 = __importDefault(__webpack_require__(/*! ./os-google-map */ "./resources/js/components/os-google-map/index.tsx"));
+const os_page_status_1 = __importDefault(__webpack_require__(/*! ./os-page-status */ "./resources/js/components/os-page-status.tsx"));
 class _OSLoactionMap extends react_1.default.Component {
     render() {
-        return (react_1.default.createElement(os_google_map_1.default, { id: "os-location-map", center: {
-                lat: this.props.location.lat,
-                lng: this.props.location.lng,
-            }, zoom: 8 }));
+        if (this.props.location) {
+            return (react_1.default.createElement(os_google_map_1.default, { id: "os-location-map", center: {
+                    lat: this.props.location.lat,
+                    lng: this.props.location.lng,
+                }, zoom: 8 }));
+        }
+        else {
+            return (react_1.default.createElement(os_page_status_1.default, { status: "information", info: "\uC704\uCE58\uC815\uBCF4\uAC00 \uC874\uC7AC\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4." }));
+        }
     }
 }
 const mapStateToProps = (state) => ({
@@ -70304,7 +70326,7 @@ class _OSRankDisplay extends react_1.default.Component {
     }
 }
 const mapStateToProps = (state) => ({
-    rank: state.currentSpace.data.rank,
+    rank: state.currentSpace.data.rank || 0,
 });
 const mapDispatchToProps = {};
 const OSRankDisplay = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_OSRankDisplay);
@@ -70349,7 +70371,7 @@ class _OSSpaceIntroduce extends react_1.default.Component {
             this.props.updateSpaceIntroduce(this.state.textValue);
             this._swtichMode('display');
         };
-        this._renderDisplayMode = () => this.props.spaceIntroduce === '' ? (react_1.default.createElement("p", { id: "no-intro", className: "h6" }, "\uB4F1\uB85D\uB41C \uC18C\uAC1C\uAE00\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.")) : (react_1.default.createElement("p", { className: "h6" }, this.props.spaceIntroduce));
+        this._renderDisplayMode = () => this.props.spaceIntroduce ? (react_1.default.createElement("p", { className: "h6" }, this.props.spaceIntroduce)) : (react_1.default.createElement("p", { id: "no-intro", className: "h6" }, "\uB4F1\uB85D\uB41C \uC18C\uAC1C\uAE00\uC774 \uC5C6\uC2B5\uB2C8\uB2E4."));
         this._renderEditMode = () => (react_1.default.createElement("div", { id: "editor" },
             react_1.default.createElement("textarea", { className: "form-control", rows: 5, value: this.state.textValue, onChange: this._onTextChange }),
             react_1.default.createElement("div", { id: "buttons" },
@@ -70427,7 +70449,7 @@ exports.AllowedFileMime = {
 /*! exports provided: busy-level, type, amenity, default */
 /***/ (function(module) {
 
-module.exports = {"busy-level":{"1":{"en":"Normal","ko":"보통"},"2":{"en":"Busy","ko":"바쁨"},"3":{"en":"Very Busy","ko":"매우 바쁨"}},"type":{"0":{"en":"library","ko":"도서관"},"1":{"en":"startup","ko":"창업공간"},"2":{"en":"museum","ko":"박물관"},"3":{"en":"bookstore","ko":"서점"},"4":{"en":"experience","ko":"체험공간"},"5":{"en":"nature","ko":"공원"},"6":{"en":"youth","ko":"청년공간"},"7":{"en":"lounge","ko":"라운지"},"8":{"en":"starbucks","ko":"스타벅스"},"9":{"en":"cafe","ko":"카페"}},"amenity":{"apple-pay":{"name":{"en":"Apple Pay","ko":"애플페이"},"faicon":"fab fa-cc-apple-pay"},"shower":{"name":{"en":"Shower","ko":"샤워시설"},"faicon":"fas fa-shower"},"sleep-area":{"name":{"en":"Sleep Area","ko":"수면실"},"faicon":"fas fa-bed"},"amazon-pay":{"name":{"en":"Amazon Pay","ko":"아마존페이"},"faicon":"fab fa-cc-amazon-pay"},"paypal":{"name":{"en":"PayPal","ko":"페이팔"},"faicon":"fab fa-cc-paypal"},"mastercard":{"name":{"en":"Mastercard","ko":"마스터카드"},"faicon":"fab fa-cc-mastercard"},"visa":{"name":{"en":"Visa","ko":"비자"},"faicon":"fab fa-cc-visa"},"classroom":{"name":{"en":"Classroom","ko":"강의실"},"faicon":"fas fa-chalkboard"},"coffee":{"name":{"en":"Coffee","ko":"커피"},"faicon":"fas fa-coffee"},"sofa":{"name":{"en":"Sofa","ko":"소파"},"faicon":"fas fa-couch"},"pet":{"name":{"en":"Pet","ko":"동물출입"},"faicon":"fas fa-dog"},"gym":{"name":{"en":"Gym","ko":"헬스장"},"faicon":"fas fa-dumbbell"},"bar":{"name":{"en":"Bar","ko":"바"},"faicon":"fas fa-glass-cheers"},"snack":{"name":{"en":"Snack","ko":"먹거리"},"faicon":"fas fa-hamburger"},"science-lab":{"name":{"en":"Science Lab","ko":"실험실"},"faicon":"fas fa-microscope"},"private-area":{"name":{"en":"Private Area","ko":"개인공간"},"faicon":"fas fa-person-booth"},"plug":{"name":{"en":"Plug","ko":"플러그"},"faicon":"fas fa-plug"},"toilet":{"name":{"en":"Toilet","ko":"화장실"},"faicon":"fas fa-restroom"},"smoking-area":{"name":{"en":"Smoking Area","ko":"흡연실"},"faicon":"fas fa-smoking"},"no-smoking":{"name":{"en":"No Smoking","ko":"금연"},"faicon":"fas fa-smoking-ban"},"dining-area":{"name":{"en":"Dining Area","ko":"식당"},"faicon":"fas fa-utensils"},"quiet-zone":{"name":{"en":"Quiet Zone","ko":"정숙공간"},"faicon":"fas fa-volume-mute"},"disabled-facility":{"name":{"en":"Disabled Facilities","ko":"장애인시설"},"faicon":"fas fa-wheelchair"},"wifi":{"name":{"en":"Wi-Fi","ko":"와이파이"},"faicon":"fas fa-wifi"},"game-zone":{"name":{"en":"Game Zone","ko":"게임존"},"faicon":"fas fa-gamepad"}}};
+module.exports = {"busy-level":{"1":{"en":"Normal","ko":"보통"},"2":{"en":"Busy","ko":"바쁨"},"3":{"en":"Very Busy","ko":"매우 바쁨"}},"type":{"0":{"en":"library","ko":"도서관"},"1":{"en":"startup","ko":"창업공간"},"2":{"en":"museum","ko":"박물관"},"3":{"en":"bookstore","ko":"서점"},"4":{"en":"experience","ko":"체험공간"},"5":{"en":"nature","ko":"공원"},"6":{"en":"youth","ko":"청년공간"},"7":{"en":"lounge","ko":"라운지"},"8":{"en":"starbucks","ko":"스타벅스"},"9":{"en":"cafe","ko":"카페"}},"amenity":{"apple-pay":{"name":{"en":"Apple Pay","ko":"애플페이"},"faicon":"fab fa-cc-apple-pay"},"shower":{"name":{"en":"Shower","ko":"샤워시설"},"faicon":"fas fa-shower"},"sleep-area":{"name":{"en":"Sleep Area","ko":"수면실"},"faicon":"fas fa-bed"},"amazon-pay":{"name":{"en":"Amazon Pay","ko":"아마존페이"},"faicon":"fab fa-cc-amazon-pay"},"paypal":{"name":{"en":"PayPal","ko":"페이팔"},"faicon":"fab fa-cc-paypal"},"mastercard":{"name":{"en":"Mastercard","ko":"마스터카드"},"faicon":"fab fa-cc-mastercard"},"visa":{"name":{"en":"Visa","ko":"비자"},"faicon":"fab fa-cc-visa"},"classroom":{"name":{"en":"Classroom","ko":"강의실"},"faicon":"fas fa-chalkboard"},"coffee":{"name":{"en":"Coffee","ko":"커피"},"faicon":"fas fa-coffee"},"sofa":{"name":{"en":"Sofa","ko":"소파"},"faicon":"fas fa-couch"},"pet":{"name":{"en":"Pet","ko":"동물출입"},"faicon":"fas fa-dog"},"gym":{"name":{"en":"Gym","ko":"헬스장"},"faicon":"fas fa-dumbbell"},"bar":{"name":{"en":"Bar","ko":"바"},"faicon":"fas fa-glass-cheers"},"snack":{"name":{"en":"Snack","ko":"먹거리"},"faicon":"fas fa-hamburger"},"science-lab":{"name":{"en":"Science Lab","ko":"실험실"},"faicon":"fas fa-microscope"},"private-area":{"name":{"en":"Private Area","ko":"개인공간"},"faicon":"fas fa-person-booth"},"plug":{"name":{"en":"Plug","ko":"플러그"},"faicon":"fas fa-plug"},"toilet":{"name":{"en":"Toilet","ko":"화장실"},"faicon":"fas fa-restroom"},"smoking-area":{"name":{"en":"Smoking Area","ko":"흡연실"},"faicon":"fas fa-smoking"},"no-smoking":{"name":{"en":"No Smoking","ko":"금연"},"faicon":"fas fa-smoking-ban"},"dining-area":{"name":{"en":"Dining Area","ko":"식당"},"faicon":"fas fa-utensils"},"quiet-zone":{"name":{"en":"Quiet Zone","ko":"정숙공간"},"faicon":"fas fa-volume-mute"},"disabled-facility":{"name":{"en":"Disabled Facilities","ko":"장애인시설"},"faicon":"fas fa-wheelchair"},"wifi":{"name":{"en":"Wi-Fi","ko":"와이파이"},"faicon":"fas fa-wifi"},"game-zone":{"name":{"en":"Game Zone","ko":"게임존"},"faicon":"fas fa-gamepad"},"parking":{"name":{"en":"Parking","ko":"주차"},"faicon":"fas fa-parking"}}};
 
 /***/ }),
 
@@ -70596,6 +70618,9 @@ class _HomeMainView extends react_1.default.Component {
         if (this.props.requestingSpace) {
             return react_1.default.createElement(os_page_status_1.default, { status: "loading" });
         }
+        else if (!this.props.currentSpaceID) {
+            return (react_1.default.createElement(os_page_status_1.default, { status: "information", info: "\uC2A4\uD398\uC774\uC2A4\uB97C \uC120\uD0DD\uD558\uC5EC \uC8FC\uC2ED\uC2DC\uC624." }));
+        }
         else {
             return (react_1.default.createElement("div", { id: "home-main-view" },
                 react_1.default.createElement("div", { id: "overview" },
@@ -70614,6 +70639,7 @@ class _HomeMainView extends react_1.default.Component {
     }
 }
 const mapStateToProps = (state) => ({
+    currentSpaceID: state.currentSpace.data.id,
     requestingSpace: state.currentSpace.status.requestingSpace,
 });
 const mapDispatchToProps = {
@@ -70654,12 +70680,7 @@ class _HomeSpacesTab extends react_1.default.Component {
             });
             return rtn;
         };
-        this._renderSpaceTrees = () => {
-            if (this.props.spaceTrees.length <= 0) {
-                return (react_1.default.createElement(os_page_status_1.default, { status: "information", info: "\uAD00\uB9AC\uC911\uC778 \uC2A4\uD398\uC774\uC2A4\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4." }));
-            }
-            return this.props.spaceTrees.map((group) => (react_1.default.createElement("div", { key: group.spaceHeader.id, className: "space-group" }, this._renderSpaceGroup(group))));
-        };
+        this._renderSpaceTrees = () => this.props.spaceTrees.map((group) => (react_1.default.createElement("div", { key: group.spaceHeader.id, className: "space-group" }, this._renderSpaceGroup(group))));
     }
     componentWillMount() {
         this.props.fetchSpaceTrees();
@@ -70681,6 +70702,9 @@ class _HomeSpacesTab extends react_1.default.Component {
     render() {
         if (this.props.requestingSpaceTrees) {
             return react_1.default.createElement(os_page_status_1.default, { status: "loading" });
+        }
+        else if (this.props.spaceTrees.length <= 0) {
+            return (react_1.default.createElement(os_page_status_1.default, { status: "information", info: "\uAD00\uB9AC\uC911\uC778 \uC2A4\uD398\uC774\uC2A4\uAC00 \uC874\uC7AC\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4." }));
         }
         else {
             return (react_1.default.createElement("div", { id: "home-spaces-tab" },
@@ -70998,22 +71022,7 @@ exports.osdbGetSpaceTrees = async (organizerUID) => {
  */
 exports.osdbGetSpace = async (spaceID) => {
     await request_1.getFromServer({});
-    return {
-        id: '"RgnQ71NWGxlikEOjbIdr"',
-        spaceNames: {},
-        types: [],
-        locationText: '',
-        location: {
-            lat: 0,
-            lng: 0,
-        },
-        operatingHours: [],
-        amenityTags: [],
-        spaceIntroduce: '',
-        images: [],
-        rank: 0,
-        busyLevel: '1',
-    };
+    return {};
 };
 
 
@@ -71070,19 +71079,7 @@ const current_space_1 = __webpack_require__(/*! ../redux-types/current-space */ 
  * Initial State
  */
 const initialState = {
-    data: {
-        id: '',
-        spaceNames: {},
-        types: [],
-        locationText: '',
-        location: { lat: 0, lng: 0 },
-        operatingHours: [],
-        amenityTags: [],
-        spaceIntroduce: '',
-        images: [],
-        rank: 0,
-        busyLevel: '1',
-    },
+    data: {},
     status: {
         requestingSpace: false,
     },

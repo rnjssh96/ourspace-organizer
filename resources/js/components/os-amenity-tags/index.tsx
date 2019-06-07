@@ -10,12 +10,13 @@ import { setSelectedAmenities } from '../../actions/selected-amenities';
 import AmenitiesEditModal, {
     AmenitiesEditModalID,
 } from './amenities-edit-modal';
+import OSPageStatus from '../os-page-status';
 
 interface _ReduxProps {
     /**
      * Amenity tags of the space
      */
-    amenityTags: AmenityTag[];
+    amenityTags?: AmenityTag[];
 }
 
 interface _ReduxActionCreators {
@@ -45,10 +46,20 @@ class _OSAmenityTags extends React.Component<OSAmenityTagsProps> {
         );
     };
 
-    private _renderAmenities = () =>
-        this.props.amenityTags.map((tag: AmenityTag) =>
-            this._renderAmenity(tag),
-        );
+    private _renderAmenities = () => {
+        if (this.props.amenityTags) {
+            return this.props.amenityTags.map((tag: AmenityTag) =>
+                this._renderAmenity(tag),
+            );
+        } else {
+            return (
+                <OSPageStatus
+                    status="information"
+                    info="편의시설을 추가해 주세요."
+                />
+            );
+        }
+    };
 
     private _resetSelectedAmenities = () => {
         this.props.setSelectedAmenities(new Set(this.props.amenityTags));

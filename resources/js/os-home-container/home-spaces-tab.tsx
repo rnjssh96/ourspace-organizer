@@ -24,7 +24,7 @@ interface _ReduxProps {
     /**
      * Current space ID
      */
-    currentSpaceID: string;
+    currentSpaceID?: string;
 
     /**
      * Space trees requesting
@@ -90,25 +90,23 @@ class _HomeSpacesTab extends React.Component<HomeSpacesTabProps> {
         return rtn;
     };
 
-    private _renderSpaceTrees = () => {
-        if (this.props.spaceTrees.length <= 0) {
-            return (
-                <OSPageStatus
-                    status="information"
-                    info="관리중인 스페이스가 없습니다."
-                />
-            );
-        }
-        return this.props.spaceTrees.map((group: SpaceTree) => (
+    private _renderSpaceTrees = () =>
+        this.props.spaceTrees.map((group: SpaceTree) => (
             <div key={group.spaceHeader.id} className="space-group">
                 {this._renderSpaceGroup(group)}
             </div>
         ));
-    };
 
     render() {
         if (this.props.requestingSpaceTrees) {
             return <OSPageStatus status="loading" />;
+        } else if (this.props.spaceTrees.length <= 0) {
+            return (
+                <OSPageStatus
+                    status="information"
+                    info="관리중인 스페이스가 존재하지 않습니다."
+                />
+            );
         } else {
             return (
                 <div id="home-spaces-tab">

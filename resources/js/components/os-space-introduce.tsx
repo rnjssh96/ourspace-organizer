@@ -11,7 +11,7 @@ interface _ReduxProps {
     /**
      * Introduction of the space
      */
-    spaceIntroduce: string;
+    spaceIntroduce?: string;
 }
 
 interface _ReduxActionCreators {
@@ -46,12 +46,12 @@ class _OSSpaceIntroduce extends React.Component<OSSpaceIntroduceProps> {
     };
 
     private _renderDisplayMode = () =>
-        this.props.spaceIntroduce === '' ? (
+        this.props.spaceIntroduce ? (
+            <p className="h6">{this.props.spaceIntroduce}</p>
+        ) : (
             <p id="no-intro" className="h6">
                 등록된 소개글이 없습니다.
             </p>
-        ) : (
-            <p className="h6">{this.props.spaceIntroduce}</p>
         );
 
     private _renderEditMode = () => (

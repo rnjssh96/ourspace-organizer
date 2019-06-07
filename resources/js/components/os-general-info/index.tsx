@@ -15,22 +15,22 @@ interface _ReduxProps {
     /**
      * Names of the space
      */
-    spaceNames: SpaceNames;
+    spaceNames?: SpaceNames;
 
     /**
      * Types of the space
      */
-    types: SpaceType[];
+    types?: SpaceType[];
 
     /**
      * Location address
      */
-    locationText: string;
+    locationText?: string;
 
     /**
      * Operating hours and days
      */
-    operatingHours: string[];
+    operatingHours?: string[];
 }
 
 interface _ReduxActionCreators {
@@ -45,12 +45,13 @@ interface OSGeneralInfoProps extends _ReduxProps, _ReduxActionCreators {}
 class _OSGeneralInfo extends React.Component<OSGeneralInfoProps> {
     render() {
         let typesText: string = '';
-        this.props.types.map((type: SpaceType, index: number) => {
-            if (index > 0) {
-                typesText += ' | ';
-            }
-            typesText += interpretSpaceType(type, 'ko');
-        });
+        if (this.props.types)
+            this.props.types.map((type: SpaceType, index: number) => {
+                if (index > 0) {
+                    typesText += ' | ';
+                }
+                typesText += interpretSpaceType(type, 'ko');
+            });
 
         return (
             <div id="os-general-info">
@@ -58,7 +59,8 @@ class _OSGeneralInfo extends React.Component<OSGeneralInfoProps> {
                 <div id="general-info">
                     <div id="title-row">
                         <p className="h4 os-text-ellipsis">
-                            {this.props.spaceNames['ko']}
+                            {this.props.spaceNames &&
+                                this.props.spaceNames['ko']}
                         </p>
                         <p
                             id="txt-types"
@@ -92,16 +94,17 @@ class _OSGeneralInfo extends React.Component<OSGeneralInfoProps> {
                             <i className="material-icons">access_time</i>
                         </p>
                         <div className="text">
-                            {this.props.operatingHours.map(
-                                (workingHour: string) => (
-                                    <p
-                                        key={workingHour}
-                                        className="h6 os-grey-1 os-text-ellipsis"
-                                    >
-                                        {workingHour}
-                                    </p>
-                                ),
-                            )}
+                            {this.props.operatingHours &&
+                                this.props.operatingHours.map(
+                                    (workingHour: string) => (
+                                        <p
+                                            key={workingHour}
+                                            className="h6 os-grey-1 os-text-ellipsis"
+                                        >
+                                            {workingHour}
+                                        </p>
+                                    ),
+                                )}
                         </div>
                         <button
                             data-toggle="modal"

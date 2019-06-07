@@ -6,28 +6,38 @@ import RootState from '../redux-types';
 import { GeoCoordinate } from '../model/space';
 
 import OSGoogleMap from './os-google-map';
+import OSPageStatus from './os-page-status';
 
 interface _ReduxProps {
     /**
      * Geographical coordinate of the space location
      */
-    location: GeoCoordinate;
+    location?: GeoCoordinate;
 }
 
 interface OSLoactionMapProps extends _ReduxProps {}
 
 class _OSLoactionMap extends React.Component<OSLoactionMapProps> {
     render() {
-        return (
-            <OSGoogleMap
-                id="os-location-map"
-                center={{
-                    lat: this.props.location.lat,
-                    lng: this.props.location.lng,
-                }}
-                zoom={8}
-            />
-        );
+        if (this.props.location) {
+            return (
+                <OSGoogleMap
+                    id="os-location-map"
+                    center={{
+                        lat: this.props.location.lat,
+                        lng: this.props.location.lng,
+                    }}
+                    zoom={8}
+                />
+            );
+        } else {
+            return (
+                <OSPageStatus
+                    status="information"
+                    info="위치정보가 존재하지 않습니다."
+                />
+            );
+        }
     }
 }
 

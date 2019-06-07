@@ -25,11 +25,6 @@ type amenityTuple = {
 
 interface _ReduxProps {
     /**
-     * Amenity tags of the space
-     */
-    amenityTags: AmenityTag[];
-
-    /**
      * Selected amenities set
      */
     selectedAmenities: Set<AmenityTag>;
@@ -171,7 +166,6 @@ class _AmenitiesEditModal extends React.Component<AmenitiesEditModalProps> {
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
-    amenityTags: state.currentSpace.data.amenityTags,
     selectedAmenities: state.selectedAmenities.selectedAmenities,
 });
 

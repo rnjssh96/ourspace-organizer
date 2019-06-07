@@ -68,20 +68,5 @@ export const osdbGetSpaceTrees = async (
  */
 export const osdbGetSpace = async (spaceID: string): Promise<Space> => {
     await getFromServer({});
-    return {
-        id: '"RgnQ71NWGxlikEOjbIdr"',
-        spaceNames: {},
-        types: [],
-        locationText: '',
-        location: {
-            lat: 0,
-            lng: 0,
-        },
-        operatingHours: [],
-        amenityTags: [],
-        spaceIntroduce: '',
-        images: [],
-        rank: 0,
-        busyLevel: '1',
-    };
+    return {};
 };

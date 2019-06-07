@@ -13,19 +13,7 @@ import {
  * Initial State
  */
 const initialState: CurrentSpaceState = {
-    data: {
-        id: '',
-        spaceNames: {},
-        types: [],
-        locationText: '',
-        location: { lat: 0, lng: 0 },
-        operatingHours: [],
-        amenityTags: [],
-        spaceIntroduce: '',
-        images: [],
-        rank: 0,
-        busyLevel: '1',
-    },
+    data: {},
     status: {
         requestingSpace: false,
     },

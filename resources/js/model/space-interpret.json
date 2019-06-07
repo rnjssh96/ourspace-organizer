@@ -116,6 +116,10 @@
         "game-zone": {
             "name": { "en": "Game Zone", "ko": "게임존" },
             "faicon": "fas fa-gamepad"
+        },
+        "parking": {
+            "name": { "en": "Parking", "ko": "주차" },
+            "faicon": "fas fa-parking"
         }
     }
 }
