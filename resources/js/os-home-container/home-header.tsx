@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 
 import RootState from '../redux-types';
 
-import { LogOutAction } from '../redux-types/osdb-api';
+import { LogOutAction } from '../redux-types/firebase-auth';
 
-import { logOut } from '../actions/osdb-api';
+import { logOut } from '../actions/firebase-auth';
 
 interface _ReduxProps {}
 

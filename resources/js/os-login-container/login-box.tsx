@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 
 import RootState from '../redux-types';
 import { LoggedStatus } from '../redux-types/auth';
-import { AttemptLogInAction } from '../redux-types/osdb-api';
+import { AttemptLogInAction } from '../redux-types/firebase-auth';
 
-import { attemptLogIn } from '../actions/osdb-api';
+import { attemptLogIn } from '../actions/firebase-auth';
 import OSPageStatus from '../components/os-page-status';
 
 interface _ReduxProps {

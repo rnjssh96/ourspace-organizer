@@ -69349,10 +69349,10 @@ exports.receiveSpace = (space) => ({
 
 /***/ }),
 
-/***/ "./resources/js/actions/osdb-api.ts":
-/*!******************************************!*\
-  !*** ./resources/js/actions/osdb-api.ts ***!
-  \******************************************/
+/***/ "./resources/js/actions/firebase-auth.ts":
+/*!***********************************************!*\
+  !*** ./resources/js/actions/firebase-auth.ts ***!
+  \***********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -69360,10 +69360,7 @@ exports.receiveSpace = (space) => ({
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const auth_1 = __webpack_require__(/*! ../osdb-api/auth */ "./resources/js/osdb-api/auth.ts");
-const space_1 = __webpack_require__(/*! ../osdb-api/space */ "./resources/js/osdb-api/space.ts");
 const auth_2 = __webpack_require__(/*! ./auth */ "./resources/js/actions/auth.ts");
-const space_trees_1 = __webpack_require__(/*! ./space-trees */ "./resources/js/actions/space-trees.ts");
-const current_space_1 = __webpack_require__(/*! ./current-space */ "./resources/js/actions/current-space.ts");
 /**
  * Attempt log in
  */
@@ -69379,6 +69376,23 @@ exports.attemptLogIn = (userEmail, userPassword) => async (dispatch) => {
 exports.logOut = () => async (dispatch) => {
     dispatch(auth_2.changeLoggedStatus('ready'));
 };
+
+
+/***/ }),
+
+/***/ "./resources/js/actions/osdb-api.ts":
+/*!******************************************!*\
+  !*** ./resources/js/actions/osdb-api.ts ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const space_1 = __webpack_require__(/*! ../osdb-api/space */ "./resources/js/osdb-api/space.ts");
+const space_trees_1 = __webpack_require__(/*! ./space-trees */ "./resources/js/actions/space-trees.ts");
+const current_space_1 = __webpack_require__(/*! ./current-space */ "./resources/js/actions/current-space.ts");
 /**
  * Fetch space trees from OSDB
  */
@@ -70557,7 +70571,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-const osdb_api_1 = __webpack_require__(/*! ../actions/osdb-api */ "./resources/js/actions/osdb-api.ts");
+const firebase_auth_1 = __webpack_require__(/*! ../actions/firebase-auth */ "./resources/js/actions/firebase-auth.ts");
 class _HomeHeader extends react_1.default.Component {
     constructor() {
         super(...arguments);
@@ -70579,7 +70593,7 @@ class _HomeHeader extends react_1.default.Component {
 }
 const mapStateToProps = (state) => ({});
 const mapDispatchToProps = {
-    logOut: osdb_api_1.logOut,
+    logOut: firebase_auth_1.logOut,
 };
 const HomeHeader = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_HomeHeader);
 exports.default = HomeHeader;
@@ -70819,7 +70833,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-const osdb_api_1 = __webpack_require__(/*! ../actions/osdb-api */ "./resources/js/actions/osdb-api.ts");
+const firebase_auth_1 = __webpack_require__(/*! ../actions/firebase-auth */ "./resources/js/actions/firebase-auth.ts");
 const os_page_status_1 = __importDefault(__webpack_require__(/*! ../components/os-page-status */ "./resources/js/components/os-page-status.tsx"));
 class _LoginBox extends react_1.default.Component {
     constructor() {
@@ -70860,7 +70874,7 @@ const mapStateToProps = (state) => ({
     loggedStatus: state.auth.loggedStatus,
 });
 const mapDispatchToProps = {
-    attemptLogIn: osdb_api_1.attemptLogIn,
+    attemptLogIn: firebase_auth_1.attemptLogIn,
 };
 const LoginBox = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_LoginBox);
 exports.default = LoginBox;
