@@ -69296,22 +69296,20 @@ module.exports = function(module) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const api_process_1 = __webpack_require__(/*! ../redux-types/api-process */ "./resources/js/redux-types/api-process.ts");
-exports.setSpaceFetching = (spaceFetching) => ({
-    type: api_process_1.SET_SPACE_FETCHING,
-    spaceFetching,
-});
-exports.fetchSpaceFromServer = () => async (dispatch) => {
-    dispatch(exports.setSpaceFetching(true));
-    async function resolveAfter2Seconds() {
-        return new Promise(resolve => {
-            setTimeout(() => {
-                resolve('resolved');
-            }, 4000);
-        });
-    }
-    await resolveAfter2Seconds();
-    return dispatch(exports.setSpaceFetching(false));
+const space_1 = __webpack_require__(/*! ../db-api/space */ "./resources/js/db-api/space.ts");
+const space_trees_1 = __webpack_require__(/*! ./space-trees */ "./resources/js/actions/space-trees.ts");
+const current_space_1 = __webpack_require__(/*! ./current-space */ "./resources/js/actions/current-space.ts");
+exports.fetchSpaceTreesFromOSDB = () => async (dispatch) => {
+    dispatch(space_trees_1.requestSpaceTrees());
+    space_1.osdbGetSpaceTrees('organizerUID').then(data => {
+        dispatch(space_trees_1.receiveSpaceTrees(data));
+    });
+};
+exports.fetchSpaceFromOSDB = () => async (dispatch) => {
+    dispatch(current_space_1.requestSpace());
+    space_1.osdbGetSpace('RgnQ71NWGxlikEOjbIdr').then(data => {
+        dispatch(current_space_1.receiveSpace(data));
+    });
 };
 
 
@@ -69347,6 +69345,13 @@ exports.setAmenityTags = (amenityTags) => ({
     type: current_space_1.SET_AMENITY_TAGS,
     amenityTags,
 });
+exports.requestSpace = () => ({
+    type: current_space_1.REQUEST_SPACE,
+});
+exports.receiveSpace = (space) => ({
+    type: current_space_1.RECEIVE_SPACE,
+    space,
+});
 
 
 /***/ }),
@@ -69368,6 +69373,31 @@ const selected_amenities_1 = __webpack_require__(/*! ../redux-types/selected-ame
 exports.setSelectedAmenities = (selectedAmenities) => ({
     type: selected_amenities_1.SET_SELECTED_AMENITIES,
     selectedAmenities,
+});
+
+
+/***/ }),
+
+/***/ "./resources/js/actions/space-trees.ts":
+/*!*********************************************!*\
+  !*** ./resources/js/actions/space-trees.ts ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const space_trees_1 = __webpack_require__(/*! ../redux-types/space-trees */ "./resources/js/redux-types/space-trees.ts");
+/**
+ * Action Creators
+ */
+exports.requestSpaceTrees = () => ({
+    type: space_trees_1.REQUEST_SPACE_TREES,
+});
+exports.receiveSpaceTrees = (spaceTrees) => ({
+    type: space_trees_1.RECEIVE_SPACE_TREES,
+    spaceTrees,
 });
 
 
@@ -70337,6 +70367,159 @@ exports.AllowedFileMime = {
 
 /***/ }),
 
+/***/ "./resources/js/db-api/request.ts":
+/*!****************************************!*\
+  !*** ./resources/js/db-api/request.ts ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Axios default config
+ */
+const axiosDefaultConfig = {
+    // url: `/ospace/${spaceID}`,
+    baseURL: 'https://dbserver.ourspace.dev',
+    headers: { Authorization: '5401aa1394c126b762f691cf0f2d0cf6' },
+};
+/**
+ * GET data from the server
+ */
+exports.getFromServer = async (axiosConfig) => {
+    const axiosCombinedConfig = {
+        ...axiosDefaultConfig,
+        ...axiosConfig,
+        method: 'get',
+    };
+    await new Promise(resolve => {
+        setTimeout(() => {
+            resolve();
+        }, 2000);
+    });
+    // axios(axiosCombinedConfig)
+    //     .then(response => {
+    //         // space = {
+    //         //     id: spaceID,
+    //         //     spaceNames: response.data['space_names'],
+    //         //     types: [response.data['type']],
+    //         //     locationText: response.data['location_text'],
+    //         //     location: {
+    //         //         lat: response.data['latitude'],
+    //         //         lng: response.data['longitude'],
+    //         //     },
+    //         //     operatingHours: response.data['operating_hours'],
+    //         //     amenityTags: response.data['amenity_tags'],
+    //         //     spaceIntroduce: '',
+    //         //     images: response.data['images'],
+    //         //     rank: 0,
+    //         //     busyLevel: '1',
+    //         // };
+    //     })
+    //     .catch(error => {
+    //         //
+    //     });
+};
+
+
+/***/ }),
+
+/***/ "./resources/js/db-api/space.ts":
+/*!**************************************!*\
+  !*** ./resources/js/db-api/space.ts ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const request_1 = __webpack_require__(/*! ./request */ "./resources/js/db-api/request.ts");
+/**
+ * Get space trees by organizerUID
+ */
+exports.osdbGetSpaceTrees = async (organizerUID) => {
+    await request_1.getFromServer({});
+    const SAMPLE = [
+        {
+            id: 'TESTID01',
+            pid: 'TESTID11',
+            names: {
+                en: '1st Floor',
+                ko: '1층',
+            },
+        },
+        {
+            id: 'TESTID4',
+            pid: 'TESTID11',
+            names: {
+                en: '2nd Floor',
+                ko: '2층',
+            },
+        },
+        {
+            id: 'TESTID10',
+            pid: 'TESTID18',
+            names: {
+                en: 'Picnic Bench Zone',
+                ko: '피크닉벤치존',
+            },
+        },
+        {
+            id: 'TESTID11',
+            pid: 'TESTID9',
+            names: {
+                en: 'Hanyang Univ. Main Library',
+                ko: '한양대학교 중앙도서관',
+            },
+        },
+        {
+            id: 'TESTID18',
+            pid: 'TESTID20',
+            names: {
+                en: 'Outdoor lounge',
+                ko: '아웃도어라운지',
+            },
+        },
+        {
+            id: 'TESTID20',
+            pid: 'TESTID9',
+            names: {
+                en: 'Google Campus',
+                ko: '구글캠퍼스',
+            },
+        },
+    ];
+    return [];
+};
+/**
+ * Get space by space
+ */
+exports.osdbGetSpace = async (spaceID) => {
+    await request_1.getFromServer({});
+    return {
+        id: '"RgnQ71NWGxlikEOjbIdr"',
+        spaceNames: {},
+        types: [],
+        locationText: '',
+        location: {
+            lat: 0,
+            lng: 0,
+        },
+        operatingHours: [],
+        amenityTags: [],
+        spaceIntroduce: '',
+        images: [],
+        rank: 0,
+        busyLevel: '1',
+    };
+};
+
+
+/***/ }),
+
 /***/ "./resources/js/model/space-interpret.json":
 /*!*************************************************!*\
   !*** ./resources/js/model/space-interpret.json ***!
@@ -70494,10 +70677,10 @@ const os_general_info_1 = __importDefault(__webpack_require__(/*! ../components/
 const os_space_introduce_1 = __importDefault(__webpack_require__(/*! ../components/os-space-introduce */ "./resources/js/components/os-space-introduce.tsx"));
 class _HomeMainView extends react_1.default.Component {
     componentWillMount() {
-        this.props.fetchSpaceFromServer();
+        this.props.fetchSpaceFromOSDB();
     }
     render() {
-        if (this.props.spaceFetching) {
+        if (this.props.requestingSpace) {
             return react_1.default.createElement(os_loading_spinner_1.default, null);
         }
         else {
@@ -70518,10 +70701,10 @@ class _HomeMainView extends react_1.default.Component {
     }
 }
 const mapStateToProps = (state) => ({
-    spaceFetching: state.apiProcess.currentSpace.spaceFetching,
+    requestingSpace: state.currentSpace.status.requestingSpace,
 });
 const mapDispatchToProps = {
-    fetchSpaceFromServer: api_process_1.fetchSpaceFromServer,
+    fetchSpaceFromOSDB: api_process_1.fetchSpaceFromOSDB,
 };
 const HomeMainView = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_HomeMainView);
 exports.default = HomeMainView;
@@ -70545,6 +70728,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 const space_tree_1 = __webpack_require__(/*! ../model/space-tree */ "./resources/js/model/space-tree.ts");
+const api_process_1 = __webpack_require__(/*! ../actions/api-process */ "./resources/js/actions/api-process.ts");
+const os_loading_spinner_1 = __importDefault(__webpack_require__(/*! ../components/os-loading-spinner */ "./resources/js/components/os-loading-spinner.tsx"));
 const MAX_DEPTH = 4;
 class _HomeSpacesTab extends react_1.default.Component {
     constructor() {
@@ -70557,8 +70742,16 @@ class _HomeSpacesTab extends react_1.default.Component {
             return rtn;
         };
         this._renderSpaceTrees = () => {
-            return this.props.spaceTrees.map((group) => (react_1.default.createElement("div", { key: group.spaceHeader.id, className: "space-group" }, this._renderSpaceGroup(group))));
+            if (this.props.requestingSpaceTrees) {
+                return react_1.default.createElement(os_loading_spinner_1.default, null);
+            }
+            else {
+                return this.props.spaceTrees.map((group) => (react_1.default.createElement("div", { key: group.spaceHeader.id, className: "space-group" }, this._renderSpaceGroup(group))));
+            }
         };
+    }
+    componentWillMount() {
+        this.props.fetchSpaceTreesFromOSDB();
     }
     _renderSpace(spaceHeader, depth, selcted = false) {
         return (react_1.default.createElement("a", { key: spaceHeader.id, className: `space-item
@@ -70584,8 +70777,11 @@ class _HomeSpacesTab extends react_1.default.Component {
 const mapStateToProps = (state) => ({
     spaceTrees: state.spaceTrees.data,
     currentSpaceID: state.currentSpace.data.id,
+    requestingSpaceTrees: state.spaceTrees.status.requestingSpaceTrees,
 });
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+    fetchSpaceTreesFromOSDB: api_process_1.fetchSpaceTreesFromOSDB,
+};
 const HomeSpacesTab = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_HomeSpacesTab);
 exports.default = HomeSpacesTab;
 
@@ -70664,47 +70860,6 @@ exports.default = OSLoginContainer;
 
 /***/ }),
 
-/***/ "./resources/js/reducer/api-process.ts":
-/*!*********************************************!*\
-  !*** ./resources/js/reducer/api-process.ts ***!
-  \*********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-const api_process_1 = __webpack_require__(/*! ../redux-types/api-process */ "./resources/js/redux-types/api-process.ts");
-/**
- * Initial State
- */
-const initialState = {
-    currentSpace: {
-        spaceFetching: false,
-    }
-};
-/**
- * APIProcessReducer
- */
-function APIProcessReducer(state = initialState, action) {
-    switch (action.type) {
-        case api_process_1.SET_SPACE_FETCHING:
-            return {
-                ...state,
-                currentSpace: {
-                    ...state.currentSpace,
-                    spaceFetching: action.spaceFetching,
-                },
-            };
-        default:
-            return state;
-    }
-}
-exports.default = APIProcessReducer;
-
-
-/***/ }),
-
 /***/ "./resources/js/reducer/current-space.ts":
 /*!***********************************************!*\
   !*** ./resources/js/reducer/current-space.ts ***!
@@ -70721,27 +70876,20 @@ const current_space_1 = __webpack_require__(/*! ../redux-types/current-space */ 
  */
 const initialState = {
     data: {
-        id: 'TESTID01',
-        spaceNames: {
-            ko: '스타벅스 자양점',
-            en: 'Starbucks Jayang',
-        },
-        types: ['2', '4'],
-        locationText: '원주 the potato factory',
-        location: {
-            lat: -25.344,
-            lng: 131.036,
-        },
-        operatingHours: ['00:00 - 23:59 / 월, 수, 금'],
-        amenityTags: ['amazon-pay', 'apple-pay', 'toilet', 'visa', 'wifi'],
+        id: '',
+        spaceNames: {},
+        types: [],
+        locationText: '',
+        location: { lat: 0, lng: 0 },
+        operatingHours: [],
+        amenityTags: [],
         spaceIntroduce: '',
-        images: [
-            './demo-images/about_img_03.jpg',
-            './demo-images/item_image_05b.jpg',
-            './demo-images/item_image_06.jpg',
-        ],
-        rank: 3.5,
+        images: [],
+        rank: 0,
         busyLevel: '1',
+    },
+    status: {
+        requestingSpace: false,
     },
 };
 /**
@@ -70781,6 +70929,22 @@ function CurrentSpaceReducer(state = initialState, action) {
                     amenityTags: action.amenityTags,
                 },
             };
+        case current_space_1.REQUEST_SPACE:
+            return {
+                ...state,
+                status: {
+                    ...state.status,
+                    requestingSpace: true,
+                },
+            };
+        case current_space_1.RECEIVE_SPACE:
+            return {
+                data: action.space,
+                status: {
+                    ...state.status,
+                    requestingSpace: false,
+                },
+            };
         default:
             return state;
     }
@@ -70808,7 +70972,6 @@ const space_trees_1 = __importDefault(__webpack_require__(/*! ./space-trees */ "
 const current_space_1 = __importDefault(__webpack_require__(/*! ./current-space */ "./resources/js/reducer/current-space.ts"));
 const selected_amenities_1 = __importDefault(__webpack_require__(/*! ./selected-amenities */ "./resources/js/reducer/selected-amenities.ts"));
 const upload_images_1 = __importDefault(__webpack_require__(/*! ./upload-images */ "./resources/js/reducer/upload-images.ts"));
-const api_process_1 = __importDefault(__webpack_require__(/*! ./api-process */ "./resources/js/reducer/api-process.ts"));
 /**
  * Root Reducer
  */
@@ -70817,7 +70980,6 @@ const RootReducer = redux_1.combineReducers({
     currentSpace: current_space_1.default,
     selectedAmenities: selected_amenities_1.default,
     selectedImages: upload_images_1.default,
-    apiProcess: api_process_1.default,
 });
 exports.default = RootReducer;
 
@@ -70871,86 +71033,36 @@ exports.default = SelectedAmenitiesReducer;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const space_trees_1 = __webpack_require__(/*! ../redux-types/space-trees */ "./resources/js/redux-types/space-trees.ts");
-const space_tree_1 = __webpack_require__(/*! ../model/space-tree */ "./resources/js/model/space-tree.ts");
-const SAMPLE = [
-    {
-        id: 'TESTID01',
-        pid: 'TESTID11',
-        names: {
-            en: '1st Floor',
-            ko: '1층',
-        },
-    },
-    // { id: '2', pid: '15', names: { en: 'test' } },
-    // { id: '3', pid: '2', names: { en: 'test' } },
-    {
-        id: 'TESTID4',
-        pid: 'TESTID11',
-        names: {
-            en: '2nd Floor',
-            ko: '2층',
-        },
-    },
-    // { id: '5', pid: '2', names: { en: 'test' } },
-    // { id: '6', pid: '2', names: { en: 'test' } },
-    // { id: '7', pid: '21', names: { en: 'test' } },
-    // { id: '8', pid: '12', names: { en: 'test' } },
-    // { id: '9', pid: 'root', names: { en: 'test' } },
-    {
-        id: 'TESTID10',
-        pid: 'TESTID18',
-        names: {
-            en: 'Picnic Bench Zone',
-            ko: '피크닉벤치존',
-        },
-    },
-    {
-        id: 'TESTID11',
-        pid: 'TESTID9',
-        names: {
-            en: 'Hanyang Univ. Main Library',
-            ko: '한양대학교 중앙도서관',
-        },
-    },
-    // { id: '12', pid: '16', names: { en: 'test' } },
-    // { id: '13', pid: '7', names: { en: 'test' } },
-    // { id: '14', pid: '7', names: { en: 'test' } },
-    // { id: '15', pid: 'root', names: { en: 'test' } },
-    // { id: '16', pid: '7', names: { en: 'test' } },
-    // { id: '17', pid: '16', names: { en: 'test' } },
-    {
-        id: 'TESTID18',
-        pid: 'TESTID20',
-        names: {
-            en: 'Outdoor lounge',
-            ko: '아웃도어라운지',
-        },
-    },
-    // { id: '19', pid: '9', names: { en: 'test' } },
-    {
-        id: 'TESTID20',
-        pid: 'TESTID9',
-        names: {
-            en: 'Google Campus',
-            ko: '구글캠퍼스',
-        },
-    },
-];
 /**
  * Initial State
  */
 const initialState = {
-    data: space_tree_1.buildArray2Tree(SAMPLE)
+    data: [],
+    status: {
+        requestingSpaceTrees: false,
+    },
 };
 /**
  * SpaceTreesReducer
  */
 function SpaceTreesReducer(state = initialState, action) {
     switch (action.type) {
-        case space_trees_1.SET_SPACE_TREES:
+        case space_trees_1.REQUEST_SPACE_TREES:
             return {
                 ...state,
-                data: action.spaceTrees
+                status: {
+                    ...state.status,
+                    requestingSpaceTrees: true,
+                },
+            };
+        case space_trees_1.RECEIVE_SPACE_TREES:
+            return {
+                ...state,
+                data: action.spaceTrees,
+                status: {
+                    ...state.status,
+                    requestingSpaceTrees: false,
+                },
             };
         default:
             return state;
@@ -71038,27 +71150,6 @@ exports.default = UploadImagesReducer;
 
 /***/ }),
 
-/***/ "./resources/js/redux-types/api-process.ts":
-/*!*************************************************!*\
-  !*** ./resources/js/redux-types/api-process.ts ***!
-  \*************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * Action Constants
- */
-// prettier-ignore
-exports.SET_SPACE_FETCHING = 'current-space/SET_SPACE_FETCHING';
-// prettier-ignore
-exports.FETCH_SPACE_FROM_SERVER = 'current-space/thunk/FETCH_SPACE_FROM_SERVER';
-
-
-/***/ }),
-
 /***/ "./resources/js/redux-types/current-space.ts":
 /*!***************************************************!*\
   !*** ./resources/js/redux-types/current-space.ts ***!
@@ -71080,6 +71171,10 @@ exports.SET_OPERATING_HOURS = 'current-space/SET_OPERATING_HOURS';
 exports.SET_BUSY_LEVEL = 'current-space/SET_BUSY_LEVEL';
 // prettier-ignore
 exports.SET_AMENITY_TAGS = 'current-space/SET_AMENITY_TAGS';
+// prettier-ignore
+exports.REQUEST_SPACE = 'current-space/REQUEST_SPACE';
+// prettier-ignore
+exports.RECEIVE_SPACE = 'current-space/RECEIVE_SPACE';
 
 
 /***/ }),
@@ -71117,7 +71212,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * Action Constants
  */
 // prettier-ignore
-exports.SET_SPACE_TREES = 'space-tree/SET_SPACE_TREES';
+exports.REQUEST_SPACE_TREES = 'space-tree/REQUEST_SPACE_TREES';
+// prettier-ignore
+exports.RECEIVE_SPACE_TREES = 'space-tree/RECEIVE_SPACE_TREES';
 
 
 /***/ }),

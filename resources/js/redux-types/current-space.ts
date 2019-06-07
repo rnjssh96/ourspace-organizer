@@ -1,5 +1,4 @@
 import { Action } from 'redux';
-import { ThunkAction } from 'redux-thunk';
 
 import Space, { BusyLevel, AmenityTag } from '../model/space';
 
@@ -8,6 +7,9 @@ import Space, { BusyLevel, AmenityTag } from '../model/space';
  */
 export type CurrentSpaceState = {
     data: Space;
+    status: {
+        requestingSpace: boolean;
+    }
 };
 
 /**
@@ -21,6 +23,11 @@ export const SET_OPERATING_HOURS = 'current-space/SET_OPERATING_HOURS';
 export const SET_BUSY_LEVEL = 'current-space/SET_BUSY_LEVEL';
 // prettier-ignore
 export const SET_AMENITY_TAGS = 'current-space/SET_AMENITY_TAGS';
+
+// prettier-ignore
+export const REQUEST_SPACE = 'current-space/REQUEST_SPACE';
+// prettier-ignore
+export const RECEIVE_SPACE = 'current-space/RECEIVE_SPACE';
 
 /**
  * Action Interfaces
@@ -43,6 +50,15 @@ export interface SetAmenityTagsAction extends Action<typeof SET_AMENITY_TAGS> {
     amenityTags: AmenityTag[];
 }
 
+export interface RequestSpaceAction
+    extends Action<typeof REQUEST_SPACE> {
+}
+
+export interface ReceiveSpaceAction
+    extends Action<typeof RECEIVE_SPACE> {
+    space: Space;
+}
+
 /**
  * Action Types
  */
@@ -50,4 +66,6 @@ export type CurrentSpaceActions =
     | UpdateSpaceIntroduceAction
     | SetOperatingHoursAction
     | SetBusyLevelAction
-    | SetAmenityTagsAction;
+    | SetAmenityTagsAction
+    | RequestSpaceAction
+    | ReceiveSpaceAction;

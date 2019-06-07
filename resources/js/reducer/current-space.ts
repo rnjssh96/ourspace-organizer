@@ -5,6 +5,8 @@ import {
     SET_BUSY_LEVEL,
     SET_AMENITY_TAGS,
     UPDATE_SPACE_INTRODUCE,
+    REQUEST_SPACE,
+    RECEIVE_SPACE,
 } from '../redux-types/current-space';
 
 /**
@@ -12,27 +14,20 @@ import {
  */
 const initialState: CurrentSpaceState = {
     data: {
-        id: 'TESTID01',
-        spaceNames: {
-            ko: '스타벅스 자양점',
-            en: 'Starbucks Jayang',
-        }, //ok
-        types: ['2', '4'], //ok
-        locationText: '원주 the potato factory',
-        location: {
-            lat: -25.344,
-            lng: 131.036,
-        },
-        operatingHours: ['00:00 - 23:59 / 월, 수, 금'], // ok
-        amenityTags: ['amazon-pay', 'apple-pay', 'toilet', 'visa', 'wifi'], //ok
-        spaceIntroduce: '', //ok
-        images: [
-            './demo-images/about_img_03.jpg',
-            './demo-images/item_image_05b.jpg',
-            './demo-images/item_image_06.jpg',
-        ], // ok
-        rank: 3.5, // ok
-        busyLevel: '1', //ok
+        id: '',
+        spaceNames: {},
+        types: [],
+        locationText: '',
+        location: { lat: 0, lng: 0 },
+        operatingHours: [],
+        amenityTags: [],
+        spaceIntroduce: '',
+        images: [],
+        rank: 0,
+        busyLevel: '1',
+    },
+    status: {
+        requestingSpace: false,
     },
 };
 
@@ -77,6 +72,24 @@ export default function CurrentSpaceReducer(
                 data: {
                     ...state.data,
                     amenityTags: action.amenityTags,
+                },
+            };
+
+        case REQUEST_SPACE:
+            return {
+                ...state,
+                status: {
+                    ...state.status,
+                    requestingSpace: true,
+                },
+            };
+
+        case RECEIVE_SPACE:
+            return {
+                data: action.space,
+                status: {
+                    ...state.status,
+                    requestingSpace: false,
                 },
             };
 

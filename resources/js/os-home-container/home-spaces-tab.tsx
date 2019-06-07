@@ -8,6 +8,10 @@ import SpaceTrees, {
     SpaceTree,
     SpaceHeader,
 } from '../model/space-tree';
+import { FetchSpaceTreesFromOSDBAction } from '../redux-types/api-process';
+import { fetchSpaceTreesFromOSDB } from '../actions/api-process';
+
+import OSLoadingSpinner from '../components/os-loading-spinner';
 
 const MAX_DEPTH = 4;
 
@@ -21,11 +25,27 @@ interface _ReduxProps {
      * Current space ID
      */
     currentSpaceID: string;
+
+    /**
+     * Space trees requesting
+     */
+    requestingSpaceTrees: boolean;
 }
 
-interface HomeSpacesTabProps extends _ReduxProps {}
+interface _ReduxActionCreators {
+    /**
+     * Fetch space trees data from OSDB
+     */
+    fetchSpaceTreesFromOSDB: FetchSpaceTreesFromOSDBAction;
+}
+
+interface HomeSpacesTabProps extends _ReduxProps, _ReduxActionCreators {}
 
 class _HomeSpacesTab extends React.Component<HomeSpacesTabProps> {
+    componentWillMount() {
+        this.props.fetchSpaceTreesFromOSDB();
+    }
+
     private _renderSpace(
         spaceHeader: SpaceHeader,
         depth: number,
@@ -71,11 +91,15 @@ class _HomeSpacesTab extends React.Component<HomeSpacesTabProps> {
     };
 
     private _renderSpaceTrees = () => {
-        return this.props.spaceTrees.map((group: SpaceTree) => (
-            <div key={group.spaceHeader.id} className="space-group">
-                {this._renderSpaceGroup(group)}
-            </div>
-        ));
+        if (this.props.requestingSpaceTrees) {
+            return <OSLoadingSpinner />;
+        } else {
+            return this.props.spaceTrees.map((group: SpaceTree) => (
+                <div key={group.spaceHeader.id} className="space-group">
+                    {this._renderSpaceGroup(group)}
+                </div>
+            ));
+        }
     };
 
     render() {
@@ -93,9 +117,12 @@ class _HomeSpacesTab extends React.Component<HomeSpacesTabProps> {
 const mapStateToProps = (state: RootState): _ReduxProps => ({
     spaceTrees: state.spaceTrees.data,
     currentSpaceID: state.currentSpace.data.id,
+    requestingSpaceTrees: state.spaceTrees.status.requestingSpaceTrees,
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+    fetchSpaceTreesFromOSDB,
+};
 
 const HomeSpacesTab = connect(
     mapStateToProps,

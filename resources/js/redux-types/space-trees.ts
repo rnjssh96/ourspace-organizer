@@ -5,23 +5,34 @@ import { Action } from 'redux';
  * Space Trees State
  */
 export type SpaceTreesState = {
-    data: SpaceTrees
+    data: SpaceTrees;
+    status: {
+        requestingSpaceTrees: boolean;
+    };
 };
 
 /**
  * Action Constants
  */
 // prettier-ignore
-export const SET_SPACE_TREES = 'space-tree/SET_SPACE_TREES';
+export const REQUEST_SPACE_TREES = 'space-tree/REQUEST_SPACE_TREES';
+// prettier-ignore
+export const RECEIVE_SPACE_TREES = 'space-tree/RECEIVE_SPACE_TREES';
 
 /**
- * Action Interfaces
+ * Action Interfacess
  */
-export interface SetSpaceTreesAction extends Action<typeof SET_SPACE_TREES> {
+export interface RequestSpaceTreesAction
+    extends Action<typeof REQUEST_SPACE_TREES> {}
+
+export interface ReceiveSpaceTreesAction
+    extends Action<typeof RECEIVE_SPACE_TREES> {
     spaceTrees: SpaceTrees;
 }
 
 /**
  * Action Types
  */
-export type SpaceTreesActions = SetSpaceTreesAction;
+export type SpaceTreesActions =
+    | RequestSpaceTreesAction
+    | ReceiveSpaceTreesAction;

@@ -1,36 +1,30 @@
-import { ActionCreator } from 'redux';
+import { ActionCreator, Action } from 'redux';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 
-import {
-    SET_SPACE_FETCHING,
-    SetSpaceFetchingAction,
-} from '../redux-types/api-process';
+import { osdbGetSpace, osdbGetSpaceTrees } from '../db-api/space';
 
-export const setSpaceFetching: ActionCreator<SetSpaceFetchingAction> = (
-    spaceFetching: boolean,
-) => ({
-    type: SET_SPACE_FETCHING,
-    spaceFetching,
-});
+import SpaceTrees from '../model/space-tree';
 
-export const fetchSpaceFromServer: ActionCreator<
-    ThunkAction<
-        Promise<SetSpaceFetchingAction>,
-        boolean,
-        null,
-        SetSpaceFetchingAction
-    >
-> = () => async (
-    dispatch: ThunkDispatch<boolean, null, SetSpaceFetchingAction>,
-) => {
-    dispatch(setSpaceFetching(true));
-    async function resolveAfter2Seconds() {
-        return new Promise(resolve => {
-            setTimeout(() => {
-                resolve('resolved');
-            }, 4000);
-        });
-    }
-    await resolveAfter2Seconds();
-    return dispatch(setSpaceFetching(false));
+import { ReceiveSpaceTreesAction } from '../redux-types/space-trees';
+import { ReceiveSpaceAction } from '../redux-types/current-space';
+
+import { requestSpaceTrees, receiveSpaceTrees } from './space-trees';
+import { requestSpace, receiveSpace } from './current-space';
+
+export const fetchSpaceTreesFromOSDB: ActionCreator<
+    ThunkAction<void, SpaceTrees, null, ReceiveSpaceTreesAction>
+> = () => async (dispatch: ThunkDispatch<SpaceTrees, null, Action<any>>) => {
+    dispatch(requestSpaceTrees());
+    osdbGetSpaceTrees('organizerUID').then(data => {
+        dispatch(receiveSpaceTrees(data));
+    });
+};
+
+export const fetchSpaceFromOSDB: ActionCreator<
+    ThunkAction<void, SpaceTrees, null, ReceiveSpaceAction>
+> = () => async (dispatch: ThunkDispatch<SpaceTrees, null, Action<any>>) => {
+    dispatch(requestSpace());
+    osdbGetSpace('RgnQ71NWGxlikEOjbIdr').then(data => {
+        dispatch(receiveSpace(data));
+    });
 };

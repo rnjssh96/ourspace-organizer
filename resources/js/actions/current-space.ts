@@ -1,6 +1,6 @@
 import { ActionCreator } from 'redux';
 
-import { BusyLevel, AmenityTag } from '../model/space';
+import Space, { BusyLevel, AmenityTag } from '../model/space';
 import {
     UPDATE_SPACE_INTRODUCE,
     UpdateSpaceIntroduceAction,
@@ -10,6 +10,10 @@ import {
     SetBusyLevelAction,
     SET_AMENITY_TAGS,
     SetAmenityTagsAction,
+    RequestSpaceAction,
+    ReceiveSpaceAction,
+    REQUEST_SPACE,
+    RECEIVE_SPACE,
 } from '../redux-types/current-space';
 
 /**
@@ -41,4 +45,16 @@ export const setAmenityTags: ActionCreator<SetAmenityTagsAction> = (
 ) => ({
     type: SET_AMENITY_TAGS,
     amenityTags,
+});
+
+export const requestSpace: ActionCreator<RequestSpaceAction> = (
+) => ({
+    type: REQUEST_SPACE,
+});
+
+export const receiveSpace: ActionCreator<ReceiveSpaceAction> = (
+    space: Space,
+) => ({
+    type: RECEIVE_SPACE,
+    space,
 });
