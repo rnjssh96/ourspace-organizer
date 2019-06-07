@@ -17,7 +17,7 @@
         <!-- Google Maps API -->
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQKkNsepBOaIiSSp4OUIFZGKmCOFTrho4"></script>
     </head>
-    <body>
+    <body style="overflow: hidden;">
         <div id="app-container"></div>
         <script src="{{ asset('js/app.js') }}"></script>
     </body>
