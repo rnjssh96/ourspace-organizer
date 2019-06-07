@@ -69286,35 +69286,6 @@ module.exports = function(module) {
 
 /***/ }),
 
-/***/ "./resources/js/actions/api-process.ts":
-/*!*********************************************!*\
-  !*** ./resources/js/actions/api-process.ts ***!
-  \*********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-const space_1 = __webpack_require__(/*! ../db-api/space */ "./resources/js/db-api/space.ts");
-const space_trees_1 = __webpack_require__(/*! ./space-trees */ "./resources/js/actions/space-trees.ts");
-const current_space_1 = __webpack_require__(/*! ./current-space */ "./resources/js/actions/current-space.ts");
-exports.fetchSpaceTreesFromOSDB = () => async (dispatch) => {
-    dispatch(space_trees_1.requestSpaceTrees());
-    space_1.osdbGetSpaceTrees('organizerUID').then(data => {
-        dispatch(space_trees_1.receiveSpaceTrees(data));
-    });
-};
-exports.fetchSpaceFromOSDB = () => async (dispatch) => {
-    dispatch(current_space_1.requestSpace());
-    space_1.osdbGetSpace('RgnQ71NWGxlikEOjbIdr').then(data => {
-        dispatch(current_space_1.receiveSpace(data));
-    });
-};
-
-
-/***/ }),
-
 /***/ "./resources/js/actions/current-space.ts":
 /*!***********************************************!*\
   !*** ./resources/js/actions/current-space.ts ***!
@@ -69352,6 +69323,35 @@ exports.receiveSpace = (space) => ({
     type: current_space_1.RECEIVE_SPACE,
     space,
 });
+
+
+/***/ }),
+
+/***/ "./resources/js/actions/osdb-api.ts":
+/*!******************************************!*\
+  !*** ./resources/js/actions/osdb-api.ts ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const space_1 = __webpack_require__(/*! ../db-api/space */ "./resources/js/db-api/space.ts");
+const space_trees_1 = __webpack_require__(/*! ./space-trees */ "./resources/js/actions/space-trees.ts");
+const current_space_1 = __webpack_require__(/*! ./current-space */ "./resources/js/actions/current-space.ts");
+exports.fetchSpaceTreesFromOSDB = () => async (dispatch) => {
+    dispatch(space_trees_1.requestSpaceTrees());
+    space_1.osdbGetSpaceTrees('organizerUID').then(data => {
+        dispatch(space_trees_1.receiveSpaceTrees(data));
+    });
+};
+exports.fetchSpaceFromOSDB = () => async (dispatch) => {
+    dispatch(current_space_1.requestSpace());
+    space_1.osdbGetSpace('RgnQ71NWGxlikEOjbIdr').then(data => {
+        dispatch(current_space_1.receiveSpace(data));
+    });
+};
 
 
 /***/ }),
@@ -69472,7 +69472,7 @@ class App extends react_1.default.Component {
             react_1.default.createElement(react_router_dom_1.BrowserRouter, null,
                 react_1.default.createElement(react_router_dom_1.Switch, null,
                     react_1.default.createElement(react_router_dom_1.Route, { exact: true, path: "/", component: os_login_container_1.default }),
-                    react_1.default.createElement(react_router_dom_1.Route, { path: "/:userid", component: os_home_container_1.default })))));
+                    react_1.default.createElement(react_router_dom_1.Route, { path: "/:userid", component: react_router_dom_1.withRouter(os_home_container_1.default) })))));
     }
 }
 if (document.getElementById('app-container')) {
@@ -70642,8 +70642,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+const react_router_1 = __webpack_require__(/*! react-router */ "./node_modules/react-router/esm/react-router.js");
 class HomeHeader extends react_1.default.Component {
+    constructor() {
+        super(...arguments);
+        this._onLogout = (ev) => {
+            ev.preventDefault();
+            this.props.history.goBack();
+        };
+    }
     render() {
         return (react_1.default.createElement("header", { id: "home-header", className: "row" },
             react_1.default.createElement("div", { id: "main" },
@@ -70652,10 +70659,10 @@ class HomeHeader extends react_1.default.Component {
                     react_1.default.createElement("p", { className: "h4" }, "\uAC15\uB0A8\uAC74\uBB3C\uC8FC"),
                     react_1.default.createElement("p", { className: "h6 os-grey-1" }, "Organizer"))),
             react_1.default.createElement("div", { id: "left-buttons" },
-                react_1.default.createElement(react_router_dom_1.Link, { to: "/", className: "btn btn-outline-light" }, "Logout"))));
+                react_1.default.createElement("button", { className: "btn btn-outline-light", onClick: this._onLogout }, "Logout"))));
     }
 }
-exports.default = HomeHeader;
+exports.default = react_router_1.withRouter(HomeHeader);
 
 
 /***/ }),
@@ -70675,7 +70682,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-const api_process_1 = __webpack_require__(/*! ../actions/api-process */ "./resources/js/actions/api-process.ts");
+const osdb_api_1 = __webpack_require__(/*! ../actions/osdb-api */ "./resources/js/actions/osdb-api.ts");
 const os_page_status_1 = __importDefault(__webpack_require__(/*! ../components/os-page-status */ "./resources/js/components/os-page-status.tsx"));
 const os_rank_display_1 = __importDefault(__webpack_require__(/*! ../components/os-rank-display */ "./resources/js/components/os-rank-display.tsx"));
 const os_images_editor_1 = __importDefault(__webpack_require__(/*! ../components/os-images-editor */ "./resources/js/components/os-images-editor/index.tsx"));
@@ -70712,7 +70719,7 @@ const mapStateToProps = (state) => ({
     requestingSpace: state.currentSpace.status.requestingSpace,
 });
 const mapDispatchToProps = {
-    fetchSpaceFromOSDB: api_process_1.fetchSpaceFromOSDB,
+    fetchSpaceFromOSDB: osdb_api_1.fetchSpaceFromOSDB,
 };
 const HomeMainView = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_HomeMainView);
 exports.default = HomeMainView;
@@ -70736,7 +70743,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 const space_tree_1 = __webpack_require__(/*! ../model/space-tree */ "./resources/js/model/space-tree.ts");
-const api_process_1 = __webpack_require__(/*! ../actions/api-process */ "./resources/js/actions/api-process.ts");
+const osdb_api_1 = __webpack_require__(/*! ../actions/osdb-api */ "./resources/js/actions/osdb-api.ts");
 const os_page_status_1 = __importDefault(__webpack_require__(/*! ../components/os-page-status */ "./resources/js/components/os-page-status.tsx"));
 const MAX_DEPTH = 4;
 class _HomeSpacesTab extends react_1.default.Component {
@@ -70790,7 +70797,7 @@ const mapStateToProps = (state) => ({
     requestingSpaceTrees: state.spaceTrees.status.requestingSpaceTrees,
 });
 const mapDispatchToProps = {
-    fetchSpaceTreesFromOSDB: api_process_1.fetchSpaceTreesFromOSDB,
+    fetchSpaceTreesFromOSDB: osdb_api_1.fetchSpaceTreesFromOSDB,
 };
 const HomeSpacesTab = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_HomeSpacesTab);
 exports.default = HomeSpacesTab;
@@ -70845,8 +70852,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 class OSLoginContainer extends react_1.default.Component {
+    constructor() {
+        super(...arguments);
+        this._onLogin = (ev) => {
+            ev.preventDefault();
+            this.props.history.push('/test');
+        };
+    }
     render() {
         return (react_1.default.createElement("div", { id: "os-login-container", className: "container-fluid" },
             react_1.default.createElement("div", { id: "login-box" },
@@ -70862,7 +70875,7 @@ class OSLoginContainer extends react_1.default.Component {
                     react_1.default.createElement("div", { className: "form-group" },
                         react_1.default.createElement("label", null, "\uBE44\uBC00\uBC88\uD638"),
                         react_1.default.createElement("input", { type: "password", className: "form-control", id: "exampleInputPassword1", placeholder: "\uBE44\uBC00\uBC88\uD638" })),
-                    react_1.default.createElement(react_router_dom_1.Link, { id: "login-button", className: "btn btn-block btn-primary", to: `/test` }, "\uB85C\uADF8\uC778")))));
+                    react_1.default.createElement("button", { id: "login-button", className: "btn btn-block btn-primary", onClick: this._onLogin }, "\uB85C\uADF8\uC778")))));
     }
 }
 exports.default = OSLoginContainer;

@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 
 import RootState from '../redux-types';
 
-import { fetchSpaceFromOSDB } from '../actions/api-process';
-import { FetchSpaceFromOSDBAction } from '../redux-types/api-process';
+import { fetchSpaceFromOSDB } from '../actions/osdb-api';
+import { FetchSpaceFromOSDBAction } from '../redux-types/osdb-api';
 
 import OSPageStatus from '../components/os-page-status';
 import OSRankDisplay from '../components/os-rank-display';

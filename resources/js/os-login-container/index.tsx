@@ -1,7 +1,14 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router';
 
-export default class OSLoginContainer extends React.Component {
+export default class OSLoginContainer extends React.Component<
+    RouteComponentProps
+> {
+    private _onLogin = (ev: React.MouseEvent) => {
+        ev.preventDefault();
+        this.props.history.push('/test');
+    };
+
     render() {
         return (
             <div id="os-login-container" className="container-fluid">
@@ -32,13 +39,13 @@ export default class OSLoginContainer extends React.Component {
                                 placeholder="비밀번호"
                             />
                         </div>
-                        <Link
+                        <button
                             id="login-button"
                             className="btn btn-block btn-primary"
-                            to={`/test`}
+                            onClick={this._onLogin}
                         >
                             로그인
-                        </Link>
+                        </button>
                     </form>
                 </div>
             </div>

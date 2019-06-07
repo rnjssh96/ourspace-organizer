@@ -2,14 +2,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import RootState from '../redux-types';
-import { FetchSpaceTreesFromOSDBAction } from '../redux-types/api-process';
+import { FetchSpaceTreesFromOSDBAction } from '../redux-types/osdb-api';
 
 import SpaceTrees, {
     traverseSpaceTree,
     SpaceTree,
     SpaceHeader,
 } from '../model/space-tree';
-import { fetchSpaceTreesFromOSDB } from '../actions/api-process';
+import { fetchSpaceTreesFromOSDB } from '../actions/osdb-api';
 
 import OSPageStatus from '../components/os-page-status';
 

@@ -1,7 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { RouteComponentProps, withRouter } from 'react-router';
 
-export default class HomeHeader extends React.Component {
+class HomeHeader extends React.Component<RouteComponentProps> {
+    private _onLogout = (ev: React.MouseEvent) => {
+        ev.preventDefault();
+        this.props.history.goBack();
+    };
+
     render() {
         return (
             <header id="home-header" className="row">
@@ -16,11 +21,16 @@ export default class HomeHeader extends React.Component {
                     </div>
                 </div>
                 <div id="left-buttons">
-                    <Link to="/" className="btn btn-outline-light">
+                    <button
+                        className="btn btn-outline-light"
+                        onClick={this._onLogout}
+                    >
                         Logout
-                    </Link>
+                    </button>
                 </div>
             </header>
         );
     }
 }
+
+export default withRouter(HomeHeader);

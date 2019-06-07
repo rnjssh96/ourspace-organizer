@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, withRouter } from 'react-router-dom';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
@@ -19,7 +19,10 @@ class App extends React.Component {
                 <BrowserRouter>
                     <Switch>
                         <Route exact path="/" component={OSLoginContainer} />
-                        <Route path="/:userid" component={OSHomeContainer} />
+                        <Route
+                            path="/:userid"
+                            component={withRouter(OSHomeContainer)}
+                        />
                     </Switch>
                 </BrowserRouter>
             </Provider>
