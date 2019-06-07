@@ -11000,6 +11000,16 @@ button {
   margin-top: 3rem;
 }
 
+#login-box > #login-form > form > button {
+  margin-top: 1rem;
+}
+
+#login-box > #login-form > form > #failed-message {
+  margin-top: 1rem;
+  color: #dc3545;
+  text-align: center;
+}
+
 #os-page-status {
   height: 100%;
   width: 100%;

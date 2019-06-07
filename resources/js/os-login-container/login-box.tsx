@@ -25,13 +25,20 @@ interface _ReduxActionCreators {
 interface LoginBoxProps extends _ReduxProps, _ReduxActionCreators {}
 
 class _LoginBox extends React.Component<LoginBoxProps> {
+    state = {
+        userEmail: '',
+        userPassword: '',
+    };
+
     private _onLogin = (ev: React.MouseEvent) => {
         ev.preventDefault();
-        this.props.attemptLogIn('email', 'password');
+        this.props.attemptLogIn(this.state.userEmail, this.state.userPassword);
     };
 
     private _renderForm = () => {
-        if (this.props.loggedStatus === 'ready') {
+        if (this.props.loggedStatus === 'processing') {
+            return <OSPageStatus status="loading" />;
+        } else {
             return (
                 <form>
                     <div className="form-group">
@@ -39,8 +46,14 @@ class _LoginBox extends React.Component<LoginBoxProps> {
                         <input
                             type="email"
                             className="form-control"
-                            id="exampleInputEmail1"
                             placeholder="이메일을 입력하세요."
+                            value={this.state.userEmail}
+                            onChange={ev => {
+                                this.setState({
+                                    ...this.state,
+                                    userEmail: ev.target.value,
+                                });
+                            }}
                         />
                     </div>
                     <div className="form-group">
@@ -48,8 +61,14 @@ class _LoginBox extends React.Component<LoginBoxProps> {
                         <input
                             type="password"
                             className="form-control"
-                            id="exampleInputPassword1"
                             placeholder="비밀번호"
+                            value={this.state.userPassword}
+                            onChange={ev => {
+                                this.setState({
+                                    ...this.state,
+                                    userPassword: ev.target.value,
+                                });
+                            }}
                         />
                     </div>
                     <button
@@ -59,11 +78,13 @@ class _LoginBox extends React.Component<LoginBoxProps> {
                     >
                         로그인
                     </button>
+                    {this.props.loggedStatus === 'failed' && (
+                        <p id="failed-message" className="h6">
+                            존재하지 않는 사용자입니다.
+                        </p>
+                    )}
                 </form>
             );
-        } else if (this.props.loggedStatus === 'processing') {
-            return <OSPageStatus status="loading" />;
-        } else if (this.props.loggedStatus === 'failed') {
         }
     };
 

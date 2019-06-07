@@ -62,5 +62,23 @@
 
         // margin
         margin-top: 3rem;
+
+        & > form {
+            & > button {
+                // margin
+                margin-top: 1rem;
+            }
+
+            & > #failed-message {
+                // margin
+                margin-top: 1rem;
+
+                // text color
+                color: $danger;
+
+                // text align
+                text-align: center;
+            }
+        }
     }
 }

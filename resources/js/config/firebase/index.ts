@@ -1,6 +1,17 @@
-import firebase from 'firebase';
+import * as firebase from 'firebase/app';
+import 'firebase/auth';
 
-// Your web app's Firebase configuration
+
+let testFirebaseConfig = {
+    apiKey: "AIzaSyAufMgaMF83jMWGeOOOCwM8BOviFGxrTDo",
+    authDomain: "test-31133.firebaseapp.com",
+    databaseURL: "https://test-31133.firebaseio.com",
+    projectId: "test-31133",
+    storageBucket: "",
+    messagingSenderId: "682939863005",
+    appId: "1:682939863005:web:48335bc74877619b"
+};
+
 var firebaseConfig = {
     apiKey: "AIzaSyBacBqv4BhrL2gN-lKeNHDcqE3fkeEMJ38",
     authDomain: "ourspace-1540547695765.firebaseapp.com",
@@ -10,5 +21,8 @@ var firebaseConfig = {
     messagingSenderId: "382752142578",
     appId: "1:382752142578:web:60c7fca3a806ca1c"
 };
+
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(testFirebaseConfig);
+
+export default firebase;
