@@ -70187,10 +70187,10 @@ exports.default = OSLoactionMap;
 
 /***/ }),
 
-/***/ "./resources/js/components/os-loading-spinner.tsx":
-/*!********************************************************!*\
-  !*** ./resources/js/components/os-loading-spinner.tsx ***!
-  \********************************************************/
+/***/ "./resources/js/components/os-page-status.tsx":
+/*!****************************************************!*\
+  !*** ./resources/js/components/os-page-status.tsx ***!
+  \****************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -70201,13 +70201,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-class OSLoadingSpinner extends react_1.default.Component {
-    render() {
-        return (react_1.default.createElement("div", { id: "os-loading-spinner" },
-            react_1.default.createElement("img", { src: "./assets/spinner.gif" })));
-    }
-}
-exports.default = OSLoadingSpinner;
+const OSPageStatus = (props) => {
+    const statusDisplay = (status) => {
+        if (status == 'loading') {
+            return react_1.default.createElement("img", { src: "./assets/spinner.gif" });
+        }
+    };
+    return react_1.default.createElement("div", { id: "os-page-status" }, statusDisplay(props.status));
+};
+exports.default = OSPageStatus;
 
 
 /***/ }),
@@ -70668,7 +70670,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 const api_process_1 = __webpack_require__(/*! ../actions/api-process */ "./resources/js/actions/api-process.ts");
-const os_loading_spinner_1 = __importDefault(__webpack_require__(/*! ../components/os-loading-spinner */ "./resources/js/components/os-loading-spinner.tsx"));
+const os_page_status_1 = __importDefault(__webpack_require__(/*! ../components/os-page-status */ "./resources/js/components/os-page-status.tsx"));
 const os_rank_display_1 = __importDefault(__webpack_require__(/*! ../components/os-rank-display */ "./resources/js/components/os-rank-display.tsx"));
 const os_images_editor_1 = __importDefault(__webpack_require__(/*! ../components/os-images-editor */ "./resources/js/components/os-images-editor/index.tsx"));
 const os_amenity_tags_1 = __importDefault(__webpack_require__(/*! ../components/os-amenity-tags */ "./resources/js/components/os-amenity-tags/index.tsx"));
@@ -70681,7 +70683,7 @@ class _HomeMainView extends react_1.default.Component {
     }
     render() {
         if (this.props.requestingSpace) {
-            return react_1.default.createElement(os_loading_spinner_1.default, null);
+            return react_1.default.createElement(os_page_status_1.default, { status: "loading" });
         }
         else {
             return (react_1.default.createElement("div", { id: "home-main-view" },
@@ -70729,7 +70731,7 @@ const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 const space_tree_1 = __webpack_require__(/*! ../model/space-tree */ "./resources/js/model/space-tree.ts");
 const api_process_1 = __webpack_require__(/*! ../actions/api-process */ "./resources/js/actions/api-process.ts");
-const os_loading_spinner_1 = __importDefault(__webpack_require__(/*! ../components/os-loading-spinner */ "./resources/js/components/os-loading-spinner.tsx"));
+const os_page_status_1 = __importDefault(__webpack_require__(/*! ../components/os-page-status */ "./resources/js/components/os-page-status.tsx"));
 const MAX_DEPTH = 4;
 class _HomeSpacesTab extends react_1.default.Component {
     constructor() {
@@ -70743,7 +70745,7 @@ class _HomeSpacesTab extends react_1.default.Component {
         };
         this._renderSpaceTrees = () => {
             if (this.props.requestingSpaceTrees) {
-                return react_1.default.createElement(os_loading_spinner_1.default, null);
+                return react_1.default.createElement(os_page_status_1.default, { status: "loading" });
             }
             else {
                 return this.props.spaceTrees.map((group) => (react_1.default.createElement("div", { key: group.spaceHeader.id, className: "space-group" }, this._renderSpaceGroup(group))));

@@ -10991,7 +10991,7 @@ button {
   margin-top: 2rem;
 }
 
-#os-loading-spinner {
+#os-page-status {
   height: 100%;
   width: 100%;
   display: flex;
@@ -10999,7 +10999,7 @@ button {
   align-items: center;
 }
 
-#os-loading-spinner > img {
+#os-page-status > img {
   max-height: 2.5rem;
   max-width: 2.5rem;
 }

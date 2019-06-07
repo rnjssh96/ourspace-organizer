@@ -6,7 +6,7 @@ import RootState from '../redux-types';
 import { fetchSpaceFromOSDB } from '../actions/api-process';
 import { FetchSpaceFromOSDBAction } from '../redux-types/api-process';
 
-import OSLoadingSpinner from '../components/os-loading-spinner';
+import OSPageStatus from '../components/os-page-status';
 import OSRankDisplay from '../components/os-rank-display';
 import OSImagesEditor from '../components/os-images-editor';
 import OSAmenityTags from '../components/os-amenity-tags';
@@ -37,7 +37,7 @@ class _HomeMainView extends React.Component<HomeMainViewProps> {
 
     render() {
         if (this.props.requestingSpace) {
-            return <OSLoadingSpinner />;
+            return <OSPageStatus status="loading" />;
         } else {
             return (
                 <div id="home-main-view">

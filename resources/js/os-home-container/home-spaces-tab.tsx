@@ -11,7 +11,7 @@ import SpaceTrees, {
 import { FetchSpaceTreesFromOSDBAction } from '../redux-types/api-process';
 import { fetchSpaceTreesFromOSDB } from '../actions/api-process';
 
-import OSLoadingSpinner from '../components/os-loading-spinner';
+import OSPageStatus from '../components/os-page-status';
 
 const MAX_DEPTH = 4;
 
@@ -92,7 +92,7 @@ class _HomeSpacesTab extends React.Component<HomeSpacesTabProps> {
 
     private _renderSpaceTrees = () => {
         if (this.props.requestingSpaceTrees) {
-            return <OSLoadingSpinner />;
+            return <OSPageStatus status="loading" />;
         } else {
             return this.props.spaceTrees.map((group: SpaceTree) => (
                 <div key={group.spaceHeader.id} className="space-group">
