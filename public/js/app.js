@@ -69286,6 +69286,28 @@ module.exports = function(module) {
 
 /***/ }),
 
+/***/ "./resources/js/actions/auth.ts":
+/*!**************************************!*\
+  !*** ./resources/js/actions/auth.ts ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const auth_1 = __webpack_require__(/*! ../redux-types/auth */ "./resources/js/redux-types/auth.ts");
+/**
+ * Action Creators
+ */
+exports.changeLoggedStatus = (loggedStatus) => ({
+    type: auth_1.CHANGE_LOGGED_STATUS,
+    loggedStatus,
+});
+
+
+/***/ }),
+
 /***/ "./resources/js/actions/current-space.ts":
 /*!***********************************************!*\
   !*** ./resources/js/actions/current-space.ts ***!
@@ -69337,19 +69359,37 @@ exports.receiveSpace = (space) => ({
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const space_1 = __webpack_require__(/*! ../db-api/space */ "./resources/js/db-api/space.ts");
+const auth_1 = __webpack_require__(/*! ../osdb-api/auth */ "./resources/js/osdb-api/auth.ts");
+const space_1 = __webpack_require__(/*! ../osdb-api/space */ "./resources/js/osdb-api/space.ts");
+const auth_2 = __webpack_require__(/*! ./auth */ "./resources/js/actions/auth.ts");
 const space_trees_1 = __webpack_require__(/*! ./space-trees */ "./resources/js/actions/space-trees.ts");
 const current_space_1 = __webpack_require__(/*! ./current-space */ "./resources/js/actions/current-space.ts");
-exports.fetchSpaceTreesFromOSDB = () => async (dispatch) => {
-    dispatch(space_trees_1.requestSpaceTrees());
-    space_1.osdbGetSpaceTrees('organizerUID').then(data => {
-        dispatch(space_trees_1.receiveSpaceTrees(data));
+/**
+ * Attempt log in
+ */
+exports.attemptLogIn = (userEmail, userPassword) => async (dispatch) => {
+    dispatch(auth_2.changeLoggedStatus('processing'));
+    auth_1.osdbAttemptLogIn(userEmail, userPassword).then((result) => {
+        console.log(result);
+        dispatch(auth_2.changeLoggedStatus(result));
     });
 };
-exports.fetchSpaceFromOSDB = () => async (dispatch) => {
+/**
+ * Fetch space trees from OSDB
+ */
+exports.fetchSpaceTrees = () => async (dispatch) => {
+    dispatch(space_trees_1.requestSpaceTrees());
+    space_1.osdbGetSpaceTrees('organizerUID').then((spaceTrees) => {
+        dispatch(space_trees_1.receiveSpaceTrees(spaceTrees));
+    });
+};
+/**
+ * Fetch space from OSDB
+ */
+exports.fetchSpace = () => async (dispatch) => {
     dispatch(current_space_1.requestSpace());
-    space_1.osdbGetSpace('RgnQ71NWGxlikEOjbIdr').then(data => {
-        dispatch(current_space_1.receiveSpace(data));
+    space_1.osdbGetSpace('RgnQ71NWGxlikEOjbIdr').then((space) => {
+        dispatch(current_space_1.receiveSpace(space));
     });
 };
 
@@ -70375,159 +70415,6 @@ exports.AllowedFileMime = {
 
 /***/ }),
 
-/***/ "./resources/js/db-api/request.ts":
-/*!****************************************!*\
-  !*** ./resources/js/db-api/request.ts ***!
-  \****************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * Axios default config
- */
-const axiosDefaultConfig = {
-    // url: `/ospace/${spaceID}`,
-    baseURL: 'https://dbserver.ourspace.dev',
-    headers: { Authorization: '5401aa1394c126b762f691cf0f2d0cf6' },
-};
-/**
- * GET data from the server
- */
-exports.getFromServer = async (axiosConfig) => {
-    const axiosCombinedConfig = {
-        ...axiosDefaultConfig,
-        ...axiosConfig,
-        method: 'get',
-    };
-    await new Promise(resolve => {
-        setTimeout(() => {
-            resolve();
-        }, 2000);
-    });
-    // axios(axiosCombinedConfig)
-    //     .then(response => {
-    //         // space = {
-    //         //     id: spaceID,
-    //         //     spaceNames: response.data['space_names'],
-    //         //     types: [response.data['type']],
-    //         //     locationText: response.data['location_text'],
-    //         //     location: {
-    //         //         lat: response.data['latitude'],
-    //         //         lng: response.data['longitude'],
-    //         //     },
-    //         //     operatingHours: response.data['operating_hours'],
-    //         //     amenityTags: response.data['amenity_tags'],
-    //         //     spaceIntroduce: '',
-    //         //     images: response.data['images'],
-    //         //     rank: 0,
-    //         //     busyLevel: '1',
-    //         // };
-    //     })
-    //     .catch(error => {
-    //         //
-    //     });
-};
-
-
-/***/ }),
-
-/***/ "./resources/js/db-api/space.ts":
-/*!**************************************!*\
-  !*** ./resources/js/db-api/space.ts ***!
-  \**************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-const request_1 = __webpack_require__(/*! ./request */ "./resources/js/db-api/request.ts");
-/**
- * Get space trees by organizerUID
- */
-exports.osdbGetSpaceTrees = async (organizerUID) => {
-    await request_1.getFromServer({});
-    const SAMPLE = [
-        {
-            id: 'TESTID01',
-            pid: 'TESTID11',
-            names: {
-                en: '1st Floor',
-                ko: '1층',
-            },
-        },
-        {
-            id: 'TESTID4',
-            pid: 'TESTID11',
-            names: {
-                en: '2nd Floor',
-                ko: '2층',
-            },
-        },
-        {
-            id: 'TESTID10',
-            pid: 'TESTID18',
-            names: {
-                en: 'Picnic Bench Zone',
-                ko: '피크닉벤치존',
-            },
-        },
-        {
-            id: 'TESTID11',
-            pid: 'TESTID9',
-            names: {
-                en: 'Hanyang Univ. Main Library',
-                ko: '한양대학교 중앙도서관',
-            },
-        },
-        {
-            id: 'TESTID18',
-            pid: 'TESTID20',
-            names: {
-                en: 'Outdoor lounge',
-                ko: '아웃도어라운지',
-            },
-        },
-        {
-            id: 'TESTID20',
-            pid: 'TESTID9',
-            names: {
-                en: 'Google Campus',
-                ko: '구글캠퍼스',
-            },
-        },
-    ];
-    return [];
-};
-/**
- * Get space by space
- */
-exports.osdbGetSpace = async (spaceID) => {
-    await request_1.getFromServer({});
-    return {
-        id: '"RgnQ71NWGxlikEOjbIdr"',
-        spaceNames: {},
-        types: [],
-        locationText: '',
-        location: {
-            lat: 0,
-            lng: 0,
-        },
-        operatingHours: [],
-        amenityTags: [],
-        spaceIntroduce: '',
-        images: [],
-        rank: 0,
-        busyLevel: '1',
-    };
-};
-
-
-/***/ }),
-
 /***/ "./resources/js/model/space-interpret.json":
 /*!*************************************************!*\
   !*** ./resources/js/model/space-interpret.json ***!
@@ -70692,7 +70579,7 @@ const os_general_info_1 = __importDefault(__webpack_require__(/*! ../components/
 const os_space_introduce_1 = __importDefault(__webpack_require__(/*! ../components/os-space-introduce */ "./resources/js/components/os-space-introduce.tsx"));
 class _HomeMainView extends react_1.default.Component {
     componentWillMount() {
-        this.props.fetchSpaceFromOSDB();
+        this.props.fetchSpace();
     }
     render() {
         if (this.props.requestingSpace) {
@@ -70719,7 +70606,7 @@ const mapStateToProps = (state) => ({
     requestingSpace: state.currentSpace.status.requestingSpace,
 });
 const mapDispatchToProps = {
-    fetchSpaceFromOSDB: osdb_api_1.fetchSpaceFromOSDB,
+    fetchSpace: osdb_api_1.fetchSpace,
 };
 const HomeMainView = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_HomeMainView);
 exports.default = HomeMainView;
@@ -70764,7 +70651,7 @@ class _HomeSpacesTab extends react_1.default.Component {
         };
     }
     componentWillMount() {
-        this.props.fetchSpaceTreesFromOSDB();
+        this.props.fetchSpaceTrees();
     }
     _renderSpace(spaceHeader, depth, selcted = false) {
         return (react_1.default.createElement("a", { key: spaceHeader.id, className: `space-item
@@ -70797,7 +70684,7 @@ const mapStateToProps = (state) => ({
     requestingSpaceTrees: state.spaceTrees.status.requestingSpaceTrees,
 });
 const mapDispatchToProps = {
-    fetchSpaceTreesFromOSDB: osdb_api_1.fetchSpaceTreesFromOSDB,
+    fetchSpaceTrees: osdb_api_1.fetchSpaceTrees,
 };
 const HomeSpacesTab = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_HomeSpacesTab);
 exports.default = HomeSpacesTab;
@@ -70819,20 +70706,29 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const react_router_1 = __webpack_require__(/*! react-router */ "./node_modules/react-router/esm/react-router.js");
 const home_header_1 = __importDefault(__webpack_require__(/*! ./home-header */ "./resources/js/os-home-container/home-header.tsx"));
 const home_spaces_tab_1 = __importDefault(__webpack_require__(/*! ./home-spaces-tab */ "./resources/js/os-home-container/home-spaces-tab.tsx"));
 const home_main_view_1 = __importDefault(__webpack_require__(/*! ./home-main-view */ "./resources/js/os-home-container/home-main-view.tsx"));
-class OSHomeContainer extends react_1.default.Component {
+class _OSHomeContainer extends react_1.default.Component {
     render() {
-        return (react_1.default.createElement("div", { id: "os-home-container", className: "container-fluid" },
-            react_1.default.createElement(home_header_1.default, null),
-            react_1.default.createElement("div", { id: "body", className: "row" },
-                react_1.default.createElement("div", { id: "spaces-tab" },
-                    react_1.default.createElement(home_spaces_tab_1.default, null)),
-                react_1.default.createElement("div", { id: "main-view" },
-                    react_1.default.createElement(home_main_view_1.default, null)))));
+        if (this.props.loggedStatus === 'success')
+            return (react_1.default.createElement("div", { id: "os-home-container", className: "container-fluid" },
+                react_1.default.createElement(home_header_1.default, null),
+                react_1.default.createElement("div", { id: "body", className: "row" },
+                    react_1.default.createElement("div", { id: "spaces-tab" },
+                        react_1.default.createElement(home_spaces_tab_1.default, null)),
+                    react_1.default.createElement("div", { id: "main-view" },
+                        react_1.default.createElement(home_main_view_1.default, null)))));
+        else
+            return react_1.default.createElement(react_router_1.Redirect, { to: "/" });
     }
 }
+const mapStateToProps = (state) => ({
+    loggedStatus: state.auth.loggedStatus,
+});
+const OSHomeContainer = react_redux_1.connect(mapStateToProps)(_OSHomeContainer);
 exports.default = OSHomeContainer;
 
 
@@ -70852,33 +70748,298 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-class OSLoginContainer extends react_1.default.Component {
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const react_router_1 = __webpack_require__(/*! react-router */ "./node_modules/react-router/esm/react-router.js");
+const login_box_1 = __importDefault(__webpack_require__(/*! ./login-box */ "./resources/js/os-login-container/login-box.tsx"));
+class _OSLoginContainer extends react_1.default.Component {
+    render() {
+        if (this.props.loggedStatus === 'success')
+            return react_1.default.createElement(react_router_1.Redirect, { to: "/test" });
+        else
+            return (react_1.default.createElement("div", { id: "os-login-container", className: "container-fluid" },
+                react_1.default.createElement(login_box_1.default, null)));
+    }
+}
+const mapStateToProps = (state) => ({
+    loggedStatus: state.auth.loggedStatus,
+});
+const OSLoginContainer = react_redux_1.connect(mapStateToProps)(_OSLoginContainer);
+exports.default = OSLoginContainer;
+
+
+/***/ }),
+
+/***/ "./resources/js/os-login-container/login-box.tsx":
+/*!*******************************************************!*\
+  !*** ./resources/js/os-login-container/login-box.tsx ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const osdb_api_1 = __webpack_require__(/*! ../actions/osdb-api */ "./resources/js/actions/osdb-api.ts");
+const os_page_status_1 = __importDefault(__webpack_require__(/*! ../components/os-page-status */ "./resources/js/components/os-page-status.tsx"));
+class _LoginBox extends react_1.default.Component {
     constructor() {
         super(...arguments);
         this._onLogin = (ev) => {
             ev.preventDefault();
-            this.props.history.push('/test');
+            this.props.attemptLogIn('email', 'password');
         };
-    }
-    render() {
-        return (react_1.default.createElement("div", { id: "os-login-container", className: "container-fluid" },
-            react_1.default.createElement("div", { id: "login-box" },
-                react_1.default.createElement("div", { id: "title" },
-                    react_1.default.createElement("img", { id: "logo", src: "./assets/os_logo.png" }),
-                    react_1.default.createElement("div", { id: "title-text" },
-                        react_1.default.createElement("p", { className: "h3" }, "\uD658\uC601\uD569\uB2C8\uB2E4"),
-                        react_1.default.createElement("p", { className: "h5" }, "Organizer Page"))),
-                react_1.default.createElement("form", null,
+        this._renderForm = () => {
+            if (this.props.loggedStatus === 'ready') {
+                return (react_1.default.createElement("form", null,
                     react_1.default.createElement("div", { className: "form-group" },
                         react_1.default.createElement("label", null, "\uC774\uBA54\uC77C"),
                         react_1.default.createElement("input", { type: "email", className: "form-control", id: "exampleInputEmail1", placeholder: "\uC774\uBA54\uC77C\uC744 \uC785\uB825\uD558\uC138\uC694." })),
                     react_1.default.createElement("div", { className: "form-group" },
                         react_1.default.createElement("label", null, "\uBE44\uBC00\uBC88\uD638"),
                         react_1.default.createElement("input", { type: "password", className: "form-control", id: "exampleInputPassword1", placeholder: "\uBE44\uBC00\uBC88\uD638" })),
-                    react_1.default.createElement("button", { id: "login-button", className: "btn btn-block btn-primary", onClick: this._onLogin }, "\uB85C\uADF8\uC778")))));
+                    react_1.default.createElement("button", { id: "login-button", className: "btn btn-block btn-primary", onClick: this._onLogin }, "\uB85C\uADF8\uC778")));
+            }
+            else if (this.props.loggedStatus === 'processing') {
+                return react_1.default.createElement(os_page_status_1.default, { status: "loading" });
+            }
+            else if (this.props.loggedStatus === 'failed') {
+            }
+        };
+    }
+    render() {
+        return (react_1.default.createElement("div", { id: "login-box" },
+            react_1.default.createElement("div", { id: "title" },
+                react_1.default.createElement("img", { id: "logo", src: "./assets/os_logo.png" }),
+                react_1.default.createElement("div", { id: "title-text" },
+                    react_1.default.createElement("p", { className: "h3" }, "\uD658\uC601\uD569\uB2C8\uB2E4"),
+                    react_1.default.createElement("p", { className: "h5" }, "Organizer Page"))),
+            react_1.default.createElement("div", { id: "login-form" }, this._renderForm())));
     }
 }
-exports.default = OSLoginContainer;
+const mapStateToProps = (state) => ({
+    loggedStatus: state.auth.loggedStatus,
+});
+const mapDispatchToProps = {
+    attemptLogIn: osdb_api_1.attemptLogIn,
+};
+const LoginBox = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_LoginBox);
+exports.default = LoginBox;
+
+
+/***/ }),
+
+/***/ "./resources/js/osdb-api/auth.ts":
+/*!***************************************!*\
+  !*** ./resources/js/osdb-api/auth.ts ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const request_1 = __webpack_require__(/*! ./request */ "./resources/js/osdb-api/request.ts");
+/**
+ * Get space trees by organizerUID
+ */
+exports.osdbAttemptLogIn = async (userEmail, password) => {
+    await request_1.getFromServer({});
+    return 'success';
+};
+
+
+/***/ }),
+
+/***/ "./resources/js/osdb-api/request.ts":
+/*!******************************************!*\
+  !*** ./resources/js/osdb-api/request.ts ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Axios default config
+ */
+const axiosDefaultConfig = {
+    // url: `/ospace/${spaceID}`,
+    baseURL: 'https://dbserver.ourspace.dev',
+    headers: { Authorization: '5401aa1394c126b762f691cf0f2d0cf6' },
+};
+/**
+ * GET data from the server
+ */
+exports.getFromServer = async (axiosConfig) => {
+    const axiosCombinedConfig = {
+        ...axiosDefaultConfig,
+        ...axiosConfig,
+        method: 'get',
+    };
+    await new Promise(resolve => {
+        setTimeout(() => {
+            resolve();
+        }, 2000);
+    });
+    // axios(axiosCombinedConfig)
+    //     .then(response => {
+    //         // space = {
+    //         //     id: spaceID,
+    //         //     spaceNames: response.data['space_names'],
+    //         //     types: [response.data['type']],
+    //         //     locationText: response.data['location_text'],
+    //         //     location: {
+    //         //         lat: response.data['latitude'],
+    //         //         lng: response.data['longitude'],
+    //         //     },
+    //         //     operatingHours: response.data['operating_hours'],
+    //         //     amenityTags: response.data['amenity_tags'],
+    //         //     spaceIntroduce: '',
+    //         //     images: response.data['images'],
+    //         //     rank: 0,
+    //         //     busyLevel: '1',
+    //         // };
+    //     })
+    //     .catch(error => {
+    //         //
+    //     });
+};
+
+
+/***/ }),
+
+/***/ "./resources/js/osdb-api/space.ts":
+/*!****************************************!*\
+  !*** ./resources/js/osdb-api/space.ts ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const request_1 = __webpack_require__(/*! ./request */ "./resources/js/osdb-api/request.ts");
+/**
+ * Get space trees by organizerUID
+ */
+exports.osdbGetSpaceTrees = async (organizerUID) => {
+    await request_1.getFromServer({});
+    const SAMPLE = [
+        {
+            id: 'TESTID01',
+            pid: 'TESTID11',
+            names: {
+                en: '1st Floor',
+                ko: '1층',
+            },
+        },
+        {
+            id: 'TESTID4',
+            pid: 'TESTID11',
+            names: {
+                en: '2nd Floor',
+                ko: '2층',
+            },
+        },
+        {
+            id: 'TESTID10',
+            pid: 'TESTID18',
+            names: {
+                en: 'Picnic Bench Zone',
+                ko: '피크닉벤치존',
+            },
+        },
+        {
+            id: 'TESTID11',
+            pid: 'TESTID9',
+            names: {
+                en: 'Hanyang Univ. Main Library',
+                ko: '한양대학교 중앙도서관',
+            },
+        },
+        {
+            id: 'TESTID18',
+            pid: 'TESTID20',
+            names: {
+                en: 'Outdoor lounge',
+                ko: '아웃도어라운지',
+            },
+        },
+        {
+            id: 'TESTID20',
+            pid: 'TESTID9',
+            names: {
+                en: 'Google Campus',
+                ko: '구글캠퍼스',
+            },
+        },
+    ];
+    return [];
+};
+/**
+ * Get space by space
+ */
+exports.osdbGetSpace = async (spaceID) => {
+    await request_1.getFromServer({});
+    return {
+        id: '"RgnQ71NWGxlikEOjbIdr"',
+        spaceNames: {},
+        types: [],
+        locationText: '',
+        location: {
+            lat: 0,
+            lng: 0,
+        },
+        operatingHours: [],
+        amenityTags: [],
+        spaceIntroduce: '',
+        images: [],
+        rank: 0,
+        busyLevel: '1',
+    };
+};
+
+
+/***/ }),
+
+/***/ "./resources/js/reducer/auth.ts":
+/*!**************************************!*\
+  !*** ./resources/js/reducer/auth.ts ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const auth_1 = __webpack_require__(/*! ../redux-types/auth */ "./resources/js/redux-types/auth.ts");
+/**
+ * Initial State
+ */
+const initialState = {
+    loggedStatus: 'ready',
+};
+/**
+ * AuthReducer
+ */
+function AuthReducer(state = initialState, action) {
+    switch (action.type) {
+        case auth_1.CHANGE_LOGGED_STATUS:
+            return {
+                ...state,
+                loggedStatus: action.loggedStatus,
+            };
+        default:
+            return state;
+    }
+}
+exports.default = AuthReducer;
 
 
 /***/ }),
@@ -70991,6 +71152,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const redux_1 = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
+const auth_1 = __importDefault(__webpack_require__(/*! ./auth */ "./resources/js/reducer/auth.ts"));
 const space_trees_1 = __importDefault(__webpack_require__(/*! ./space-trees */ "./resources/js/reducer/space-trees.ts"));
 const current_space_1 = __importDefault(__webpack_require__(/*! ./current-space */ "./resources/js/reducer/current-space.ts"));
 const selected_amenities_1 = __importDefault(__webpack_require__(/*! ./selected-amenities */ "./resources/js/reducer/selected-amenities.ts"));
@@ -70999,6 +71161,7 @@ const upload_images_1 = __importDefault(__webpack_require__(/*! ./upload-images 
  * Root Reducer
  */
 const RootReducer = redux_1.combineReducers({
+    auth: auth_1.default,
     spaceTrees: space_trees_1.default,
     currentSpace: current_space_1.default,
     selectedAmenities: selected_amenities_1.default,
@@ -71169,6 +71332,25 @@ function UploadImagesReducer(state = initialState, action) {
     }
 }
 exports.default = UploadImagesReducer;
+
+
+/***/ }),
+
+/***/ "./resources/js/redux-types/auth.ts":
+/*!******************************************!*\
+  !*** ./resources/js/redux-types/auth.ts ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Action Constants
+ */
+// prettier-ignore
+exports.CHANGE_LOGGED_STATUS = 'current-space/CHANGE_LOGGED_STATUS';
 
 
 /***/ }),

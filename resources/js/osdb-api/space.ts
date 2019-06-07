@@ -3,8 +3,6 @@ import { getFromServer } from './request';
 import Space from '../model/space';
 import SpaceTrees from '../model/space-tree';
 
-import { buildArray2Tree } from '../model/space-tree';
-
 /**
  * Get space trees by organizerUID
  */

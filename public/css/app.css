@@ -10702,8 +10702,17 @@ button {
   border: 0;
 }
 
-#os-home-container > #body {
+#app-container {
   height: 100vh;
+  overflow: hidden;
+}
+
+#os-home-container {
+  height: 100%;
+}
+
+#os-home-container > #body {
+  height: 100%;
   padding-top: 4rem;
 }
 
@@ -10939,14 +10948,14 @@ button {
 }
 
 #os-login-container {
-  height: 100vh;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: #f2bf54;
 }
 
-#os-login-container > #login-box {
+#login-box {
   width: 30%;
   display: flex;
   flex-direction: column;
@@ -10959,36 +10968,36 @@ button {
   border-radius: 5px;
 }
 
-#os-login-container > #login-box > #title {
+#login-box > #title {
   display: flex;
   align-items: flex-end;
 }
 
-#os-login-container > #login-box > #title > #logo {
+#login-box > #title > #logo {
   width: 5rem;
   height: 5rem;
 }
 
-#os-login-container > #login-box > #title > #title-text {
+#login-box > #title > #title-text {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   margin-left: 1rem;
 }
 
-#os-login-container > #login-box > #title > #title-text > p:last-child {
+#login-box > #title > #title-text > p:last-child {
   color: #707070;
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
 }
 
-#os-login-container > #login-box > form {
+#login-box > #login-form {
   width: 100%;
+  height: 15rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   margin-top: 3rem;
-}
-
-#os-login-container > #login-box > form > #login-button {
-  margin-top: 2rem;
 }
 
 #os-page-status {

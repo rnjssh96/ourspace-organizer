@@ -1,6 +1,8 @@
 /**
  * Action Interfaces
  */
-export type FetchSpaceTreesFromOSDBAction = () => void;
+export type AttemptLogInAction = (userEmail: string, userPassword: string) => void;
 
-export type FetchSpaceFromOSDBAction = () => void;
+export type FetchSpaceTreesAction = () => void;
+
+export type FetchSpaceAction = () => void;

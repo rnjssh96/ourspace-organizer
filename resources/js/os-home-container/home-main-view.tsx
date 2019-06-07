@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 
 import RootState from '../redux-types';
 
-import { fetchSpaceFromOSDB } from '../actions/osdb-api';
-import { FetchSpaceFromOSDBAction } from '../redux-types/osdb-api';
+import { fetchSpace } from '../actions/osdb-api';
+import { FetchSpaceAction } from '../redux-types/osdb-api';
 
 import OSPageStatus from '../components/os-page-status';
 import OSRankDisplay from '../components/os-rank-display';
@@ -23,16 +23,16 @@ interface _ReduxProps {
 
 interface _ReduxActionCreators {
     /**
-     * Fetch space data from OSDB
+     * Fetch space from OSDB
      */
-    fetchSpaceFromOSDB: FetchSpaceFromOSDBAction;
+    fetchSpace: FetchSpaceAction;
 }
 
 interface HomeMainViewProps extends _ReduxProps, _ReduxActionCreators {}
 
 class _HomeMainView extends React.Component<HomeMainViewProps> {
     componentWillMount() {
-        this.props.fetchSpaceFromOSDB();
+        this.props.fetchSpace();
     }
 
     render() {
@@ -72,7 +72,7 @@ const mapStateToProps = (state: RootState): _ReduxProps => ({
 });
 
 const mapDispatchToProps = {
-    fetchSpaceFromOSDB,
+    fetchSpace,
 };
 
 const HomeMainView = connect(

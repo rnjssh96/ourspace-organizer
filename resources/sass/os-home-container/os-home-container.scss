@@ -1,7 +1,10 @@
 #os-home-container {
+    // size
+    height: 100%;
+
     & > #body {
         // size
-        height: 100vh;
+        height: 100%;
 
         // padding
         padding-top: $os-header-height;

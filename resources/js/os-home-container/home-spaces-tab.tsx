@@ -2,14 +2,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import RootState from '../redux-types';
-import { FetchSpaceTreesFromOSDBAction } from '../redux-types/osdb-api';
+import { FetchSpaceTreesAction } from '../redux-types/osdb-api';
 
 import SpaceTrees, {
     traverseSpaceTree,
     SpaceTree,
     SpaceHeader,
 } from '../model/space-tree';
-import { fetchSpaceTreesFromOSDB } from '../actions/osdb-api';
+import { fetchSpaceTrees } from '../actions/osdb-api';
 
 import OSPageStatus from '../components/os-page-status';
 
@@ -34,16 +34,16 @@ interface _ReduxProps {
 
 interface _ReduxActionCreators {
     /**
-     * Fetch space trees data from OSDB
+     * Fetch space trees from OSDB
      */
-    fetchSpaceTreesFromOSDB: FetchSpaceTreesFromOSDBAction;
+    fetchSpaceTrees: FetchSpaceTreesAction;
 }
 
 interface HomeSpacesTabProps extends _ReduxProps, _ReduxActionCreators {}
 
 class _HomeSpacesTab extends React.Component<HomeSpacesTabProps> {
     componentWillMount() {
-        this.props.fetchSpaceTreesFromOSDB();
+        this.props.fetchSpaceTrees();
     }
 
     private _renderSpace(
@@ -127,7 +127,7 @@ const mapStateToProps = (state: RootState): _ReduxProps => ({
 });
 
 const mapDispatchToProps = {
-    fetchSpaceTreesFromOSDB,
+    fetchSpaceTrees,
 };
 
 const HomeSpacesTab = connect(
