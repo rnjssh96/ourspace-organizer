@@ -1,27 +1,37 @@
 import { ActionCreator, Action } from 'redux';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 
-import { ChangeLoggedStatusAction, LoggedStatus } from '../redux-types/auth';
-import { changeLoggedStatus } from './auth';
-
 import OSFirebase from '../config/firebase';
+
+import {
+    LoginSuccessAction,
+    LoggedStatus,
+    LogoutAction,
+} from '../redux-types/auth';
+import { onProcess, loginSuccess, loginFail, logout } from './auth';
 
 /**
  * Attempt log in
  */
 export const attemptLogIn: ActionCreator<
-    ThunkAction<void, LoggedStatus, null, ChangeLoggedStatusAction>
+    ThunkAction<void, LoggedStatus, null, LoginSuccessAction>
 > = (userEmail: string, userPassword: string) => async (
     dispatch: ThunkDispatch<LoggedStatus, null, Action<any>>,
 ) => {
-    dispatch(changeLoggedStatus('processing'));
+    dispatch(onProcess());
     OSFirebase.auth()
         .signInWithEmailAndPassword(userEmail, userPassword)
         .then(() => {
-            dispatch(changeLoggedStatus('success'));
+            let currentUser = OSFirebase.auth().currentUser;
+            if (currentUser !== null) {
+                dispatch(loginSuccess(currentUser));
+            } else {
+                dispatch(loginFail());
+            }
         })
         .catch(err => {
-            dispatch(changeLoggedStatus('failed'));
+            console.log(err);
+            dispatch(loginFail());
         });
 };
 
@@ -29,11 +39,11 @@ export const attemptLogIn: ActionCreator<
  * Log out
  */
 export const logOut: ActionCreator<
-    ThunkAction<void, LoggedStatus, null, ChangeLoggedStatusAction>
+    ThunkAction<void, LoggedStatus, null, LogoutAction>
 > = () => async (dispatch: ThunkDispatch<LoggedStatus, null, Action<any>>) => {
     OSFirebase.auth()
         .signOut()
         .then(() => {
-            dispatch(changeLoggedStatus('ready'));
+            dispatch(logout());
         });
 };

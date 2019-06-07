@@ -1,7 +1,10 @@
 import {
     AuthActions,
     AuthState,
-    CHANGE_LOGGED_STATUS,
+    LOGIN_SUCCESS,
+    ON_PROCESS,
+    LOGIN_FAIL,
+    LOGOUT,
 } from '../redux-types/auth';
 
 /**
@@ -19,10 +22,30 @@ export default function AuthReducer(
     action: AuthActions,
 ): AuthState {
     switch (action.type) {
-        case CHANGE_LOGGED_STATUS:
+        case ON_PROCESS:
             return {
                 ...state,
                 loggedStatus: action.loggedStatus,
+            };
+
+        case LOGIN_SUCCESS:
+            return {
+                ...state,
+                loggedStatus: action.loggedStatus,
+                currentUser: action.currentUser,
+            };
+
+        case LOGIN_FAIL:
+            return {
+                ...state,
+                loggedStatus: action.loggedStatus,
+            };
+
+        case LOGOUT:
+            return {
+                ...state,
+                loggedStatus: action.loggedStatus,
+                currentUser: undefined,
             };
 
         default:

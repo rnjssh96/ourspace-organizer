@@ -72213,9 +72213,22 @@ const auth_1 = __webpack_require__(/*! ../redux-types/auth */ "./resources/js/re
 /**
  * Action Creators
  */
-exports.changeLoggedStatus = (loggedStatus) => ({
-    type: auth_1.CHANGE_LOGGED_STATUS,
-    loggedStatus,
+exports.onProcess = () => ({
+    type: auth_1.ON_PROCESS,
+    loggedStatus: 'processing',
+});
+exports.loginSuccess = (currentUser) => ({
+    type: auth_1.LOGIN_SUCCESS,
+    loggedStatus: 'success',
+    currentUser,
+});
+exports.loginFail = () => ({
+    type: auth_1.LOGIN_FAIL,
+    loggedStatus: 'failed',
+});
+exports.logout = () => ({
+    type: auth_1.LOGOUT,
+    loggedStatus: 'ready',
 });
 
 
@@ -72275,20 +72288,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const auth_1 = __webpack_require__(/*! ./auth */ "./resources/js/actions/auth.ts");
 const firebase_1 = __importDefault(__webpack_require__(/*! ../config/firebase */ "./resources/js/config/firebase/index.ts"));
+const auth_1 = __webpack_require__(/*! ./auth */ "./resources/js/actions/auth.ts");
 /**
  * Attempt log in
  */
 exports.attemptLogIn = (userEmail, userPassword) => async (dispatch) => {
-    dispatch(auth_1.changeLoggedStatus('processing'));
+    dispatch(auth_1.onProcess());
     firebase_1.default.auth()
         .signInWithEmailAndPassword(userEmail, userPassword)
         .then(() => {
-        dispatch(auth_1.changeLoggedStatus('success'));
+        let currentUser = firebase_1.default.auth().currentUser;
+        if (currentUser !== null) {
+            dispatch(auth_1.loginSuccess(currentUser));
+        }
+        else {
+            dispatch(auth_1.loginFail());
+        }
     })
         .catch(err => {
-        dispatch(auth_1.changeLoggedStatus('failed'));
+        console.log(err);
+        dispatch(auth_1.loginFail());
     });
 };
 /**
@@ -72298,7 +72318,7 @@ exports.logOut = () => async (dispatch) => {
     firebase_1.default.auth()
         .signOut()
         .then(() => {
-        dispatch(auth_1.changeLoggedStatus('ready'));
+        dispatch(auth_1.logout());
     });
 };
 
@@ -73771,8 +73791,8 @@ const react_router_1 = __webpack_require__(/*! react-router */ "./node_modules/r
 const login_box_1 = __importDefault(__webpack_require__(/*! ./login-box */ "./resources/js/os-login-container/login-box.tsx"));
 class _OSLoginContainer extends react_1.default.Component {
     render() {
-        if (this.props.loggedStatus === 'success')
-            return react_1.default.createElement(react_router_1.Redirect, { to: "/test" });
+        if (this.props.loggedStatus === 'success' && this.props.currentUser)
+            return react_1.default.createElement(react_router_1.Redirect, { to: `/${this.props.currentUser.uid}` });
         else
             return (react_1.default.createElement("div", { id: "os-login-container", className: "container-fluid" },
                 react_1.default.createElement(login_box_1.default, null)));
@@ -73780,6 +73800,7 @@ class _OSLoginContainer extends react_1.default.Component {
 }
 const mapStateToProps = (state) => ({
     loggedStatus: state.auth.loggedStatus,
+    currentUser: state.auth.currentUser,
 });
 const OSLoginContainer = react_redux_1.connect(mapStateToProps)(_OSLoginContainer);
 exports.default = OSLoginContainer;
@@ -74024,10 +74045,27 @@ const initialState = {
  */
 function AuthReducer(state = initialState, action) {
     switch (action.type) {
-        case auth_1.CHANGE_LOGGED_STATUS:
+        case auth_1.ON_PROCESS:
             return {
                 ...state,
                 loggedStatus: action.loggedStatus,
+            };
+        case auth_1.LOGIN_SUCCESS:
+            return {
+                ...state,
+                loggedStatus: action.loggedStatus,
+                currentUser: action.currentUser,
+            };
+        case auth_1.LOGIN_FAIL:
+            return {
+                ...state,
+                loggedStatus: action.loggedStatus,
+            };
+        case auth_1.LOGOUT:
+            return {
+                ...state,
+                loggedStatus: action.loggedStatus,
+                currentUser: undefined,
             };
         default:
             return state;
@@ -74332,7 +74370,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * Action Constants
  */
 // prettier-ignore
-exports.CHANGE_LOGGED_STATUS = 'current-space/CHANGE_LOGGED_STATUS';
+exports.ON_PROCESS = 'current-space/ON_PROCESS';
+// prettier-ignore
+exports.LOGIN_SUCCESS = 'current-space/LOGIN_SUCCESS';
+// prettier-ignore
+exports.LOGIN_FAIL = 'current-space/LOGIN_FAIL';
+// prettier-ignore
+exports.LOGOUT = 'current-space/LOGOUT';
 
 
 /***/ }),
