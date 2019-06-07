@@ -2,13 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import RootState from '../redux-types';
+import { FetchSpaceTreesFromOSDBAction } from '../redux-types/api-process';
 
 import SpaceTrees, {
     traverseSpaceTree,
     SpaceTree,
     SpaceHeader,
 } from '../model/space-tree';
-import { FetchSpaceTreesFromOSDBAction } from '../redux-types/api-process';
 import { fetchSpaceTreesFromOSDB } from '../actions/api-process';
 
 import OSPageStatus from '../components/os-page-status';
@@ -91,26 +91,32 @@ class _HomeSpacesTab extends React.Component<HomeSpacesTabProps> {
     };
 
     private _renderSpaceTrees = () => {
-        if (this.props.requestingSpaceTrees) {
-            return <OSPageStatus status="loading" />;
-        } else {
-            return this.props.spaceTrees.map((group: SpaceTree) => (
-                <div key={group.spaceHeader.id} className="space-group">
-                    {this._renderSpaceGroup(group)}
-                </div>
-            ));
+        if (this.props.spaceTrees.length <= 0) {
+            return (
+                <OSPageStatus
+                    status="information"
+                    info="관리중인 스페이스가 없습니다."
+                />
+            );
         }
+        return this.props.spaceTrees.map((group: SpaceTree) => (
+            <div key={group.spaceHeader.id} className="space-group">
+                {this._renderSpaceGroup(group)}
+            </div>
+        ));
     };
 
     render() {
-        return (
-            <div id="home-spaces-tab">
-                <p className="h4">
-                    <b>스페이스</b>
-                </p>
-                {this._renderSpaceTrees()}
-            </div>
-        );
+        if (this.props.requestingSpaceTrees) {
+            return <OSPageStatus status="loading" />;
+        } else {
+            return (
+                <div id="home-spaces-tab">
+                    <p className="h5">스페이스</p>
+                    {this._renderSpaceTrees()}
+                </div>
+            );
+        }
     }
 }
 

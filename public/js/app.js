@@ -70202,12 +70202,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 const OSPageStatus = (props) => {
-    const statusDisplay = (status) => {
-        if (status == 'loading') {
-            return react_1.default.createElement("img", { src: "./assets/spinner.gif" });
+    const statusDisplay = () => {
+        switch (props.status) {
+            case 'loading':
+                return react_1.default.createElement("img", { src: "./assets/spinner.gif" });
+            case 'information':
+                return (react_1.default.createElement("div", { id: "info-box" },
+                    react_1.default.createElement("p", { className: "h1" },
+                        react_1.default.createElement("i", { className: "material-icons" }, "info")),
+                    react_1.default.createElement("p", { className: "h6" }, props.info)));
         }
     };
-    return react_1.default.createElement("div", { id: "os-page-status" }, statusDisplay(props.status));
+    return react_1.default.createElement("div", { id: "os-page-status" }, statusDisplay());
 };
 exports.default = OSPageStatus;
 
@@ -70744,12 +70750,10 @@ class _HomeSpacesTab extends react_1.default.Component {
             return rtn;
         };
         this._renderSpaceTrees = () => {
-            if (this.props.requestingSpaceTrees) {
-                return react_1.default.createElement(os_page_status_1.default, { status: "loading" });
+            if (this.props.spaceTrees.length <= 0) {
+                return (react_1.default.createElement(os_page_status_1.default, { status: "information", info: "\uAD00\uB9AC\uC911\uC778 \uC2A4\uD398\uC774\uC2A4\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4." }));
             }
-            else {
-                return this.props.spaceTrees.map((group) => (react_1.default.createElement("div", { key: group.spaceHeader.id, className: "space-group" }, this._renderSpaceGroup(group))));
-            }
+            return this.props.spaceTrees.map((group) => (react_1.default.createElement("div", { key: group.spaceHeader.id, className: "space-group" }, this._renderSpaceGroup(group))));
         };
     }
     componentWillMount() {
@@ -70770,10 +70774,14 @@ class _HomeSpacesTab extends react_1.default.Component {
                     "\uC11C\uC6B8 \uC1A1\uD30C\uAD6C \uC62C\uB9BC\uD53D\uB85C 35\uAE38 104"))));
     }
     render() {
-        return (react_1.default.createElement("div", { id: "home-spaces-tab" },
-            react_1.default.createElement("p", { className: "h4" },
-                react_1.default.createElement("b", null, "\uC2A4\uD398\uC774\uC2A4")),
-            this._renderSpaceTrees()));
+        if (this.props.requestingSpaceTrees) {
+            return react_1.default.createElement(os_page_status_1.default, { status: "loading" });
+        }
+        else {
+            return (react_1.default.createElement("div", { id: "home-spaces-tab" },
+                react_1.default.createElement("p", { className: "h5" }, "\uC2A4\uD398\uC774\uC2A4"),
+                this._renderSpaceTrees()));
+        }
     }
 }
 const mapStateToProps = (state) => ({
