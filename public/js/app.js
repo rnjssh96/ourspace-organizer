@@ -72302,6 +72302,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const firebase_1 = __importDefault(__webpack_require__(/*! ../config/firebase */ "./resources/js/config/firebase/index.ts"));
 const auth_1 = __webpack_require__(/*! ./auth */ "./resources/js/actions/auth.ts");
+const user_1 = __webpack_require__(/*! ../osdb-api/user */ "./resources/js/osdb-api/user.ts");
 /**
  * Attempt log in
  */
@@ -72340,17 +72341,15 @@ exports.signup = (userEmail, userName, userPassword) => async (dispatch) => {
     firebase_1.default.auth()
         .createUserWithEmailAndPassword(userEmail, userPassword)
         .then((user) => {
-        if (user.user)
-            user.user
-                .updateProfile({
-                displayName: userName,
-            })
+        if (user.user && user.user.uid) {
+            user_1.osdbCreatUserInfo(user.user.uid, userName, userEmail)
                 .then(() => {
                 dispatch(auth_1.signupSuccess());
             })
-                .catch((err) => {
+                .catch(() => {
                 dispatch(auth_1.signupFail());
             });
+        }
     })
         .catch((err) => {
         dispatch(auth_1.signupFail());
@@ -74052,7 +74051,11 @@ exports.default = OSHomeContainer;
 
 "use strict";
 
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
 /**
  * Axios default config
  */
@@ -74097,6 +74100,28 @@ exports.getFromServer = async (axiosConfig) => {
     //     .catch(error => {
     //         //
     //     });
+};
+/**
+ * POST data to the server
+ */
+exports.postToServer = async (axiosConfig, data) => {
+    const axiosCombinedConfig = {
+        ...axiosDefaultConfig,
+        ...axiosConfig,
+        method: 'post',
+        data: data,
+    };
+    return new Promise((resolve, reject) => {
+        axios_1.default(axiosCombinedConfig)
+            .then(result => {
+            if (result.status === 200) {
+                resolve(result.data);
+            }
+        })
+            .catch(error => {
+            reject(error);
+        });
+    });
 };
 
 
@@ -74176,6 +74201,40 @@ exports.osdbGetSpaceTrees = async (organizerUID) => {
 exports.osdbGetSpace = async (spaceID) => {
     await request_1.getFromServer({});
     return {};
+};
+
+
+/***/ }),
+
+/***/ "./resources/js/osdb-api/user.ts":
+/*!***************************************!*\
+  !*** ./resources/js/osdb-api/user.ts ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const request_1 = __webpack_require__(/*! ./request */ "./resources/js/osdb-api/request.ts");
+/**
+ * Create user info
+ */
+exports.osdbCreatUserInfo = async (UID, name, email) => {
+    return new Promise(resolve => {
+        request_1.postToServer({ url: '/users' }, {
+            uid: UID,
+            user_data: {
+                name: name,
+                authority: 'space organizer',
+                email: email,
+            },
+        }).then(response => {
+            if (response.success) {
+                resolve();
+            }
+        });
+    });
 };
 
 

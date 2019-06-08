@@ -13,6 +13,7 @@ import {
     signupFail,
     signupOnProcess,
 } from './auth';
+import { osdbCreatUserInfo } from '../osdb-api/user';
 
 /**
  * Attempt log in
@@ -63,17 +64,15 @@ export const signup: ActionCreator<
     OSFirebase.auth()
         .createUserWithEmailAndPassword(userEmail, userPassword)
         .then((user: OSFirebase.auth.UserCredential) => {
-            if (user.user)
-                user.user
-                    .updateProfile({
-                        displayName: userName,
-                    })
+            if (user.user && user.user.uid) {
+                osdbCreatUserInfo(user.user.uid, userName, userEmail)
                     .then(() => {
                         dispatch(signupSuccess());
                     })
-                    .catch((err: any) => {
+                    .catch(() => {
                         dispatch(signupFail());
                     });
+            }
         })
         .catch((err: any) => {
             dispatch(signupFail());

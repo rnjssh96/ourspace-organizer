@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios';
+import { resolve } from 'path';
 
 /**
  * Axios default config
@@ -47,4 +48,31 @@ export const getFromServer = async (axiosConfig: AxiosRequestConfig) => {
     //     .catch(error => {
     //         //
     //     });
+};
+
+/**
+ * POST data to the server
+ */
+export const postToServer = async (
+    axiosConfig: AxiosRequestConfig,
+    data: any,
+): Promise<any> => {
+    const axiosCombinedConfig = {
+        ...axiosDefaultConfig,
+        ...axiosConfig,
+        method: 'post',
+        data: data,
+    };
+
+    return new Promise((resolve, reject) => {
+        axios(axiosCombinedConfig)
+            .then(result => {
+                if (result.status === 200) {
+                    resolve(result.data);
+                }
+            })
+            .catch(error => {
+                reject(error);
+            });
+    });
 };
