@@ -11072,6 +11072,7 @@ button {
 
 #os-page-status > #info-box > p.big-icon {
   font-size: 3rem;
+  margin-bottom: 0;
 }
 
 #os-page-status > img {

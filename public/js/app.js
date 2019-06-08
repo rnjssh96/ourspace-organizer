@@ -73479,7 +73479,7 @@ var firebaseConfig = {
     appId: "1:382752142578:web:60c7fca3a806ca1c"
 };
 // Initialize Firebase
-firebase.initializeApp(testFirebaseConfig);
+firebase.initializeApp(firebaseConfig);
 exports.default = firebase;
 
 

@@ -23,6 +23,6 @@ var firebaseConfig = {
 };
 
 // Initialize Firebase
-firebase.initializeApp(testFirebaseConfig);
+firebase.initializeApp(firebaseConfig);
 
 export default firebase;
