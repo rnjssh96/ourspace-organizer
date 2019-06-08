@@ -7,7 +7,8 @@ import { LoggedStatus } from '../redux-types/auth';
 
 import LoginForm from './login-form';
 import SignupForm from './signup-form';
-import OSUser from '../model/user';
+
+import OSOrganizer from '../model/organizer';
 
 interface _ReduxProps {
     /**
@@ -18,7 +19,7 @@ interface _ReduxProps {
     /**
      * Current user
      */
-    currentUser?: OSUser;
+    currentUser?: OSOrganizer;
 }
 
 interface OSBeginContainerProps extends _ReduxProps {}

@@ -72301,8 +72301,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const firebase_1 = __importDefault(__webpack_require__(/*! ../config/firebase */ "./resources/js/config/firebase/index.ts"));
+const organizer_1 = __webpack_require__(/*! ../osdb-api/organizer */ "./resources/js/osdb-api/organizer.ts");
 const auth_1 = __webpack_require__(/*! ./auth */ "./resources/js/actions/auth.ts");
-const user_1 = __webpack_require__(/*! ../osdb-api/user */ "./resources/js/osdb-api/user.ts");
 /**
  * Attempt log in
  */
@@ -72313,8 +72313,12 @@ exports.attemptLogIn = (userEmail, userPassword) => async (dispatch) => {
         .then(() => {
         let currentUser = firebase_1.default.auth().currentUser;
         if (currentUser !== null) {
-            user_1.osdbFetchUserInfo(currentUser.uid).then((user) => {
+            organizer_1.osdbFetchOrganizerInfo(currentUser.uid)
+                .then((user) => {
                 dispatch(auth_1.loginSuccess(user));
+            })
+                .catch(() => {
+                dispatch(auth_1.loginFail());
             });
         }
         else {
@@ -72344,7 +72348,7 @@ exports.signup = (userEmail, userName, userPassword) => async (dispatch) => {
         .createUserWithEmailAndPassword(userEmail, userPassword)
         .then((user) => {
         if (user.user && user.user.uid) {
-            user_1.osdbCreatUserInfo(user.user.uid, userName, userEmail)
+            organizer_1.osdbCreatOrganizerInfo(user.user.uid, userName, userEmail)
                 .then(() => {
                 dispatch(auth_1.signupSuccess());
             })
@@ -73703,7 +73707,7 @@ class _LoginForm extends react_1.default.Component {
                                 });
                             } })),
                     react_1.default.createElement("button", { id: "login-button", className: "btn btn-block btn-primary", onClick: this._onLogin }, "\uB85C\uADF8\uC778"),
-                    this.props.loggedStatus === 'failed' && (react_1.default.createElement("p", { id: "failed-message", className: "h6" }, "\uC874\uC7AC\uD558\uC9C0 \uC54A\uB294 \uC0AC\uC6A9\uC790\uC785\uB2C8\uB2E4."))));
+                    this.props.loggedStatus === 'failed' && (react_1.default.createElement("p", { id: "failed-message", className: "h6" }, "\uB85C\uADF8\uC778\uC5D0 \uC2E4\uD328\uD558\uC600\uC2B5\uB2C8\uB2E4."))));
             }
         };
     }
@@ -74044,6 +74048,58 @@ exports.default = OSHomeContainer;
 
 /***/ }),
 
+/***/ "./resources/js/osdb-api/organizer.ts":
+/*!********************************************!*\
+  !*** ./resources/js/osdb-api/organizer.ts ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const request_1 = __webpack_require__(/*! ./request */ "./resources/js/osdb-api/request.ts");
+/**
+ * Create user info
+ */
+exports.osdbCreatOrganizerInfo = async (uid, name, email) => {
+    return new Promise(resolve => {
+        request_1.postToServer({ url: '/organizers' }, {
+            uid: uid,
+            name: name,
+            authority: 'organizer',
+            email: email,
+        }).then(response => {
+            if (response.success) {
+                resolve();
+            }
+        });
+    });
+};
+/**
+ * Get user info
+ */
+exports.osdbFetchOrganizerInfo = async (uid) => {
+    return new Promise((resolve, reject) => {
+        request_1.getFromServer({ url: `/organizers/${uid}` }).then(response => {
+            if (response.name && /*response.authority && */ response.email) {
+                resolve({
+                    uid: uid,
+                    name: response.name,
+                    email: response.email,
+                    authority: 'Admin',
+                });
+            }
+            else {
+                reject();
+            }
+        });
+    });
+};
+
+
+/***/ }),
+
 /***/ "./resources/js/osdb-api/request.ts":
 /*!******************************************!*\
   !*** ./resources/js/osdb-api/request.ts ***!
@@ -74187,58 +74243,6 @@ exports.osdbGetSpaceTrees = async (organizerUID) => {
 exports.osdbGetSpace = async (spaceID) => {
     request_1.getFromServer({});
     return {};
-};
-
-
-/***/ }),
-
-/***/ "./resources/js/osdb-api/user.ts":
-/*!***************************************!*\
-  !*** ./resources/js/osdb-api/user.ts ***!
-  \***************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-const request_1 = __webpack_require__(/*! ./request */ "./resources/js/osdb-api/request.ts");
-/**
- * Create user info
- */
-exports.osdbCreatUserInfo = async (UID, name, email) => {
-    return new Promise(resolve => {
-        request_1.postToServer({ url: '/users' }, {
-            uid: UID,
-            user_data: {
-                name: name,
-                authority: 'space organizer',
-                email: email,
-            },
-        }).then(response => {
-            if (response.success) {
-                resolve();
-            }
-        });
-    });
-};
-/**
- * Get user info
- */
-exports.osdbFetchUserInfo = async (UID) => {
-    return new Promise(resolve => {
-        request_1.getFromServer({ url: `/users/${UID}` }).then(response => {
-            if (response.name && response.authority && response.email) {
-                console.log(response.authority);
-                resolve({
-                    uid: UID,
-                    name: response.name,
-                    email: response.email,
-                    authority: response.authority === 'admin' ? 'Admin' : 'Organizer',
-                });
-            }
-        });
-    });
 };
 
 

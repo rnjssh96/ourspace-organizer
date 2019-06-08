@@ -1,5 +1,4 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import { resolve } from 'path';
 
 /**
  * Axios default config

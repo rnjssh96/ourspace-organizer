@@ -6,13 +6,14 @@ import RootState from '../redux-types';
 import { LogOutAction } from '../redux-types/firebase-auth';
 
 import { logOut } from '../actions/firebase-auth';
-import OSUser from '../model/user';
+
+import OSOrganizer from '../model/organizer';
 
 interface _ReduxProps {
     /**
      * Current user
      */
-    currentUser?: OSUser;
+    currentUser?: OSOrganizer;
 }
 
 interface _ReduxActionCreators {

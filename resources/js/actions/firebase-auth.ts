@@ -2,9 +2,15 @@ import { ActionCreator, Action } from 'redux';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 
 import OSFirebase from '../config/firebase';
-import OSUser from '../model/user';
+import OSOrganizer from '../model/organizer';
 
 import { LoggedStatus, SignupStatus } from '../redux-types/auth';
+
+import {
+    osdbCreatOrganizerInfo,
+    osdbFetchOrganizerInfo,
+} from '../osdb-api/organizer';
+
 import {
     onProcess,
     loginSuccess,
@@ -14,7 +20,6 @@ import {
     signupFail,
     signupOnProcess,
 } from './auth';
-import { osdbCreatUserInfo, osdbFetchUserInfo } from '../osdb-api/user';
 
 /**
  * Attempt log in
@@ -30,9 +35,13 @@ export const attemptLogIn: ActionCreator<
         .then(() => {
             let currentUser = OSFirebase.auth().currentUser;
             if (currentUser !== null) {
-                osdbFetchUserInfo(currentUser.uid).then((user: OSUser) => {
-                    dispatch(loginSuccess(user));
-                });
+                osdbFetchOrganizerInfo(currentUser.uid)
+                    .then((user: OSOrganizer) => {
+                        dispatch(loginSuccess(user));
+                    })
+                    .catch(() => {
+                        dispatch(loginFail());
+                    });
             } else {
                 dispatch(loginFail());
             }
@@ -68,7 +77,7 @@ export const signup: ActionCreator<
         .createUserWithEmailAndPassword(userEmail, userPassword)
         .then((user: OSFirebase.auth.UserCredential) => {
             if (user.user && user.user.uid) {
-                osdbCreatUserInfo(user.user.uid, userName, userEmail)
+                osdbCreatOrganizerInfo(user.user.uid, userName, userEmail)
                     .then(() => {
                         dispatch(signupSuccess());
                     })

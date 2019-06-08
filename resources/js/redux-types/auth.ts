@@ -1,6 +1,6 @@
 import { Action } from 'redux';
 
-import OSUser from '../model/user';
+import OSOrganizer from '../model/organizer';
 
 /**
  * Auth State
@@ -12,7 +12,7 @@ export type SignupStatus = 'ready' | 'processing' | 'success' | 'failed';
 export type AuthState = {
     loggedStatus: LoggedStatus;
     signupStatus: SignupStatus;
-    currentUser?: OSUser;
+    currentUser?: OSOrganizer;
     responseMessage?: string;
 };
 
@@ -44,7 +44,7 @@ export interface OnProcessAction extends Action<typeof ON_PROCESS> {
 
 export interface LoginSuccessAction extends Action<typeof LOGIN_SUCCESS> {
     loggedStatus: 'success';
-    currentUser: OSUser;
+    currentUser: OSOrganizer;
 }
 
 export interface LoginFailAction extends Action<typeof LOGIN_FAIL> {

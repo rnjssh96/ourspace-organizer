@@ -16,7 +16,8 @@ import {
     SIGNUP_SUCCESS,
     SIGNUP_FAIL,
 } from '../redux-types/auth';
-import OSUser from '../model/user';
+
+import OSOrganizer from '../model/organizer';
 
 /**
  * Action Creators
@@ -28,7 +29,7 @@ export const onProcess: ActionCreator<OnProcessAction> = (
 });
 
 export const loginSuccess: ActionCreator<LoginSuccessAction> = (
-    currentUser: OSUser,
+    currentUser: OSOrganizer,
 ) => ({
     type: LOGIN_SUCCESS,
     loggedStatus: 'success',

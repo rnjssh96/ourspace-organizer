@@ -80,7 +80,7 @@ class _LoginForm extends React.Component<LoginFormProps> {
                     </button>
                     {this.props.loggedStatus === 'failed' && (
                         <p id="failed-message" className="h6">
-                            존재하지 않는 사용자입니다.
+                            로그인에 실패하였습니다.
                         </p>
                     )}
                 </form>
