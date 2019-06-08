@@ -9,7 +9,6 @@ import {
     LOGIN_FAIL,
     LogoutAction,
     LOGOUT,
-    OSUser,
     SignupOnProcessAction,
     SignupSuccessAction,
     SignupFailAction,
@@ -17,6 +16,7 @@ import {
     SIGNUP_SUCCESS,
     SIGNUP_FAIL,
 } from '../redux-types/auth';
+import OSUser from '../model/user';
 
 /**
  * Action Creators

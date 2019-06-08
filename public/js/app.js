@@ -72313,7 +72313,9 @@ exports.attemptLogIn = (userEmail, userPassword) => async (dispatch) => {
         .then(() => {
         let currentUser = firebase_1.default.auth().currentUser;
         if (currentUser !== null) {
-            dispatch(auth_1.loginSuccess(currentUser));
+            user_1.osdbFetchUserInfo(currentUser.uid).then((user) => {
+                dispatch(auth_1.loginSuccess(user));
+            });
         }
         else {
             dispatch(auth_1.loginFail());
@@ -73624,7 +73626,6 @@ class _OSBeginContainer extends react_1.default.Component {
     }
     render() {
         if (this.props.loggedStatus === 'success' && this.props.currentUser) {
-            console.log(this.props.currentUser);
             return react_1.default.createElement(react_router_1.Redirect, { to: `/${this.props.currentUser.uid}` });
         }
         else
@@ -73842,8 +73843,9 @@ class _HomeHeader extends react_1.default.Component {
                 react_1.default.createElement("img", { src: "./demo-images/item_image_02.jpg", className: "rounded-circle" }),
                 react_1.default.createElement("div", { id: "profile-text" },
                     react_1.default.createElement("p", { className: "h4" }, this.props.currentUser &&
-                        this.props.currentUser.displayName),
-                    react_1.default.createElement("p", { className: "h6 os-grey-1" }, "Organizer"))),
+                        this.props.currentUser.name),
+                    react_1.default.createElement("p", { className: "h6 os-grey-1" }, this.props.currentUser &&
+                        this.props.currentUser.authority))),
             react_1.default.createElement("div", { id: "left-buttons" },
                 react_1.default.createElement("button", { className: "btn btn-outline-light", onClick: this._onLogout }, "Logout"))));
     }
@@ -74073,33 +74075,17 @@ exports.getFromServer = async (axiosConfig) => {
         ...axiosConfig,
         method: 'get',
     };
-    await new Promise(resolve => {
-        setTimeout(() => {
-            resolve();
-        }, 2000);
+    return new Promise((resolve, reject) => {
+        axios_1.default(axiosCombinedConfig)
+            .then(result => {
+            if (result.status === 200) {
+                resolve(result.data);
+            }
+        })
+            .catch(error => {
+            reject(error);
+        });
     });
-    // axios(axiosCombinedConfig)
-    //     .then(response => {
-    //         // space = {
-    //         //     id: spaceID,
-    //         //     spaceNames: response.data['space_names'],
-    //         //     types: [response.data['type']],
-    //         //     locationText: response.data['location_text'],
-    //         //     location: {
-    //         //         lat: response.data['latitude'],
-    //         //         lng: response.data['longitude'],
-    //         //     },
-    //         //     operatingHours: response.data['operating_hours'],
-    //         //     amenityTags: response.data['amenity_tags'],
-    //         //     spaceIntroduce: '',
-    //         //     images: response.data['images'],
-    //         //     rank: 0,
-    //         //     busyLevel: '1',
-    //         // };
-    //     })
-    //     .catch(error => {
-    //         //
-    //     });
 };
 /**
  * POST data to the server
@@ -74142,7 +74128,7 @@ const request_1 = __webpack_require__(/*! ./request */ "./resources/js/osdb-api/
  * Get space trees by organizerUID
  */
 exports.osdbGetSpaceTrees = async (organizerUID) => {
-    await request_1.getFromServer({});
+    request_1.getFromServer({});
     const SAMPLE = [
         {
             id: 'TESTID01',
@@ -74199,7 +74185,7 @@ exports.osdbGetSpaceTrees = async (organizerUID) => {
  * Get space by space
  */
 exports.osdbGetSpace = async (spaceID) => {
-    await request_1.getFromServer({});
+    request_1.getFromServer({});
     return {};
 };
 
@@ -74232,6 +74218,24 @@ exports.osdbCreatUserInfo = async (UID, name, email) => {
         }).then(response => {
             if (response.success) {
                 resolve();
+            }
+        });
+    });
+};
+/**
+ * Get user info
+ */
+exports.osdbFetchUserInfo = async (UID) => {
+    return new Promise(resolve => {
+        request_1.getFromServer({ url: `/users/${UID}` }).then(response => {
+            if (response.name && response.authority && response.email) {
+                console.log(response.authority);
+                resolve({
+                    uid: UID,
+                    name: response.name,
+                    email: response.email,
+                    authority: response.authority === 'admin' ? 'Admin' : 'Organizer',
+                });
             }
         });
     });

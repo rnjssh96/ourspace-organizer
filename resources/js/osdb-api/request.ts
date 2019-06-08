@@ -13,41 +13,26 @@ const axiosDefaultConfig: AxiosRequestConfig = {
 /**
  * GET data from the server
  */
-export const getFromServer = async (axiosConfig: AxiosRequestConfig) => {
+export const getFromServer = async (
+    axiosConfig: AxiosRequestConfig,
+): Promise<any> => {
     const axiosCombinedConfig = {
         ...axiosDefaultConfig,
         ...axiosConfig,
         method: 'get',
     };
 
-    await new Promise(resolve => {
-        setTimeout(() => {
-            resolve();
-        }, 2000);
+    return new Promise((resolve, reject) => {
+        axios(axiosCombinedConfig)
+            .then(result => {
+                if (result.status === 200) {
+                    resolve(result.data);
+                }
+            })
+            .catch(error => {
+                reject(error);
+            });
     });
-
-    // axios(axiosCombinedConfig)
-    //     .then(response => {
-    //         // space = {
-    //         //     id: spaceID,
-    //         //     spaceNames: response.data['space_names'],
-    //         //     types: [response.data['type']],
-    //         //     locationText: response.data['location_text'],
-    //         //     location: {
-    //         //         lat: response.data['latitude'],
-    //         //         lng: response.data['longitude'],
-    //         //     },
-    //         //     operatingHours: response.data['operating_hours'],
-    //         //     amenityTags: response.data['amenity_tags'],
-    //         //     spaceIntroduce: '',
-    //         //     images: response.data['images'],
-    //         //     rank: 0,
-    //         //     busyLevel: '1',
-    //         // };
-    //     })
-    //     .catch(error => {
-    //         //
-    //     });
 };
 
 /**

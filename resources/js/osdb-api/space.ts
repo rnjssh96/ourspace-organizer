@@ -9,7 +9,7 @@ import SpaceTrees from '../model/space-tree';
 export const osdbGetSpaceTrees = async (
     organizerUID: string,
 ): Promise<SpaceTrees> => {
-    await getFromServer({});
+    getFromServer({});
     const SAMPLE = [
         {
             id: 'TESTID01',
@@ -67,6 +67,6 @@ export const osdbGetSpaceTrees = async (
  * Get space by space
  */
 export const osdbGetSpace = async (spaceID: string): Promise<Space> => {
-    await getFromServer({});
+    getFromServer({});
     return {};
 };

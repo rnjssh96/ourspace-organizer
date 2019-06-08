@@ -6,7 +6,7 @@ import RootState from '../redux-types';
 import { LogOutAction } from '../redux-types/firebase-auth';
 
 import { logOut } from '../actions/firebase-auth';
-import { OSUser } from '../redux-types/auth';
+import OSUser from '../model/user';
 
 interface _ReduxProps {
     /**
@@ -41,9 +41,12 @@ class _HomeHeader extends React.Component<HomeHeaderProps> {
                     <div id="profile-text">
                         <p className="h4">
                             {this.props.currentUser &&
-                                this.props.currentUser.displayName}
+                                this.props.currentUser.name}
                         </p>
-                        <p className="h6 os-grey-1">Organizer</p>
+                        <p className="h6 os-grey-1">
+                            {this.props.currentUser &&
+                                this.props.currentUser.authority}
+                        </p>
                     </div>
                 </div>
                 <div id="left-buttons">

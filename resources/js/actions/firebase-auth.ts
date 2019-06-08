@@ -2,6 +2,7 @@ import { ActionCreator, Action } from 'redux';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 
 import OSFirebase from '../config/firebase';
+import OSUser from '../model/user';
 
 import { LoggedStatus, SignupStatus } from '../redux-types/auth';
 import {
@@ -13,7 +14,7 @@ import {
     signupFail,
     signupOnProcess,
 } from './auth';
-import { osdbCreatUserInfo } from '../osdb-api/user';
+import { osdbCreatUserInfo, osdbFetchUserInfo } from '../osdb-api/user';
 
 /**
  * Attempt log in
@@ -29,7 +30,9 @@ export const attemptLogIn: ActionCreator<
         .then(() => {
             let currentUser = OSFirebase.auth().currentUser;
             if (currentUser !== null) {
-                dispatch(loginSuccess(currentUser));
+                osdbFetchUserInfo(currentUser.uid).then((user: OSUser) => {
+                    dispatch(loginSuccess(user));
+                });
             } else {
                 dispatch(loginFail());
             }

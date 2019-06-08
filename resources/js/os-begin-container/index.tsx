@@ -3,10 +3,11 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 
 import RootState from '../redux-types';
-import { LoggedStatus, OSUser } from '../redux-types/auth';
+import { LoggedStatus } from '../redux-types/auth';
 
 import LoginForm from './login-form';
 import SignupForm from './signup-form';
+import OSUser from '../model/user';
 
 interface _ReduxProps {
     /**
@@ -58,7 +59,6 @@ class _OSBeginContainer extends React.Component<OSBeginContainerProps> {
 
     render() {
         if (this.props.loggedStatus === 'success' && this.props.currentUser) {
-            console.log(this.props.currentUser);
             return <Redirect to={`/${this.props.currentUser.uid}`} />;
         } else
             return (

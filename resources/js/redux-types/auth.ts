@@ -1,6 +1,6 @@
 import { Action } from 'redux';
 
-import OSFirebase from '../config/firebase';
+import OSUser from '../model/user';
 
 /**
  * Auth State
@@ -8,8 +8,6 @@ import OSFirebase from '../config/firebase';
 export type LoggedStatus = 'ready' | 'processing' | 'success' | 'failed';
 
 export type SignupStatus = 'ready' | 'processing' | 'success' | 'failed';
-
-export type OSUser = OSFirebase.User;
 
 export type AuthState = {
     loggedStatus: LoggedStatus;
