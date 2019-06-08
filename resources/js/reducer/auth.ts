@@ -5,6 +5,9 @@ import {
     ON_PROCESS,
     LOGIN_FAIL,
     LOGOUT,
+    SIGNUP_ON_PROCESS,
+    SIGNUP_SUCCESS,
+    SIGNUP_FAIL,
 } from '../redux-types/auth';
 
 /**
@@ -12,6 +15,7 @@ import {
  */
 const initialState: AuthState = {
     loggedStatus: 'ready',
+    signupStatus: 'ready',
 };
 
 /**
@@ -46,6 +50,24 @@ export default function AuthReducer(
                 ...state,
                 loggedStatus: action.loggedStatus,
                 currentUser: undefined,
+            };
+
+        case SIGNUP_ON_PROCESS:
+            return {
+                ...state,
+                signupStatus: action.signupStatus,
+            };
+
+        case SIGNUP_SUCCESS:
+            return {
+                ...state,
+                signupStatus: action.signupStatus,
+            };
+
+        case SIGNUP_FAIL:
+            return {
+                ...state,
+                signupStatus: action.signupStatus,
             };
 
         default:

@@ -22,9 +22,9 @@ interface _ReduxActionCreators {
     attemptLogIn: AttemptLogInAction;
 }
 
-interface LoginBoxProps extends _ReduxProps, _ReduxActionCreators {}
+interface LoginFormProps extends _ReduxProps, _ReduxActionCreators {}
 
-class _LoginBox extends React.Component<LoginBoxProps> {
+class _LoginForm extends React.Component<LoginFormProps> {
     state = {
         userEmail: '',
         userPassword: '',
@@ -89,18 +89,7 @@ class _LoginBox extends React.Component<LoginBoxProps> {
     };
 
     render() {
-        return (
-            <div id="login-box">
-                <div id="title">
-                    <img id="logo" src="./assets/os_logo.png" />
-                    <div id="title-text">
-                        <p className="h3">환영합니다</p>
-                        <p className="h5">Organizer Page</p>
-                    </div>
-                </div>
-                <div id="login-form">{this._renderForm()}</div>
-            </div>
-        );
+        return <div id="login-form">{this._renderForm()}</div>;
     }
 }
 
@@ -112,9 +101,9 @@ const mapDispatchToProps = {
     attemptLogIn,
 };
 
-const LoginBox = connect(
+const LoginForm = connect(
     mapStateToProps,
     mapDispatchToProps,
-)(_LoginBox);
+)(_LoginForm);
 
-export default LoginBox;
+export default LoginForm;

@@ -7,8 +7,8 @@ import thunk from 'redux-thunk';
 
 import RootReducer from './reducer';
 
+import OSBeginContainer from './os-begin-container';
 import OSHomeContainer from './os-home-container';
-import OSLoginContainer from './os-login-container';
 
 const rootStore = createStore(RootReducer, applyMiddleware(thunk));
 
@@ -18,7 +18,7 @@ class App extends React.Component {
             <Provider store={rootStore}>
                 <BrowserRouter>
                     <Switch>
-                        <Route exact path="/" component={OSLoginContainer} />
+                        <Route exact path="/" component={OSBeginContainer} />
                         <Route
                             path="/:userid"
                             component={withRouter(OSHomeContainer)}

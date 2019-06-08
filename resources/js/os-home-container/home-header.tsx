@@ -6,8 +6,14 @@ import RootState from '../redux-types';
 import { LogOutAction } from '../redux-types/firebase-auth';
 
 import { logOut } from '../actions/firebase-auth';
+import { OSUser } from '../redux-types/auth';
 
-interface _ReduxProps {}
+interface _ReduxProps {
+    /**
+     * Current user
+     */
+    currentUser?: OSUser;
+}
 
 interface _ReduxActionCreators {
     /**
@@ -33,7 +39,10 @@ class _HomeHeader extends React.Component<HomeHeaderProps> {
                         className="rounded-circle"
                     />
                     <div id="profile-text">
-                        <p className="h4">강남건물주</p>
+                        <p className="h4">
+                            {this.props.currentUser &&
+                                this.props.currentUser.displayName}
+                        </p>
                         <p className="h6 os-grey-1">Organizer</p>
                     </div>
                 </div>
@@ -50,7 +59,9 @@ class _HomeHeader extends React.Component<HomeHeaderProps> {
     }
 }
 
-const mapStateToProps = (state: RootState): _ReduxProps => ({});
+const mapStateToProps = (state: RootState): _ReduxProps => ({
+    currentUser: state.auth.currentUser,
+});
 
 const mapDispatchToProps = {
     logOut,

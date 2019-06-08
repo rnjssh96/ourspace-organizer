@@ -1,0 +1,34 @@
+#login-form {
+    // size
+    width: 100%;
+    height: 16rem;
+
+    // flex
+    display: flex;
+    flex-direction: column;
+
+    // margin
+    margin-top: 2rem;
+
+    & > form {
+        // flex
+        display: flex;
+        flex-direction: column;
+
+        & > button {
+            // margin
+            margin-top: 1rem;
+        }
+
+        & > #failed-message {
+            // margin
+            margin-top: 1rem;
+
+            // text color
+            color: $danger;
+
+            // text align
+            text-align: center;
+        }
+    }
+}

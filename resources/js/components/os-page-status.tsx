@@ -1,6 +1,6 @@
 import React from 'react';
 
-type PageStatus = 'loading' | 'information';
+type PageStatus = 'loading' | 'information' | 'success';
 
 interface OSPageStatusProps {
     status: PageStatus;
@@ -18,6 +18,16 @@ const OSPageStatus = (props: OSPageStatusProps) => {
                     <div id="info-box">
                         <p className="h1">
                             <i className="material-icons">info</i>
+                        </p>
+                        <p className="h6">{props.info}</p>
+                    </div>
+                );
+
+            case 'success':
+                return (
+                    <div id="info-box">
+                        <p className="big-icon text-success">
+                            <i className="material-icons">check_circle</i>
                         </p>
                         <p className="h6">{props.info}</p>
                     </div>

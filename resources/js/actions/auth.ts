@@ -10,6 +10,12 @@ import {
     LogoutAction,
     LOGOUT,
     OSUser,
+    SignupOnProcessAction,
+    SignupSuccessAction,
+    SignupFailAction,
+    SIGNUP_ON_PROCESS,
+    SIGNUP_SUCCESS,
+    SIGNUP_FAIL,
 } from '../redux-types/auth';
 
 /**
@@ -39,4 +45,22 @@ export const logout: ActionCreator<LogoutAction> = (
 ) => ({
     type: LOGOUT,
     loggedStatus: 'ready',
+});
+
+export const signupOnProcess: ActionCreator<SignupOnProcessAction> = (
+) => ({
+    type: SIGNUP_ON_PROCESS,
+    signupStatus: 'processing',
+});
+
+export const signupSuccess: ActionCreator<SignupSuccessAction> = (
+) => ({
+    type: SIGNUP_SUCCESS,
+    signupStatus: 'success',
+});
+
+export const signupFail: ActionCreator<SignupFailAction> = (
+) => ({
+    type: SIGNUP_FAIL,
+    signupStatus: 'failed',
 });

@@ -1,0 +1,22 @@
+#signup-form {
+    // size
+    width: 100%;
+
+    // flex
+    display: flex;
+    flex-direction: column;
+
+    // margin
+    margin-top: 2rem;
+
+    & > form {
+        // flex
+        display: flex;
+        flex-direction: column;
+
+        & > button {
+            // margin
+            margin-top: 1rem;
+        }
+    }
+}

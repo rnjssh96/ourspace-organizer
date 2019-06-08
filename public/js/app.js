@@ -72230,6 +72230,18 @@ exports.logout = () => ({
     type: auth_1.LOGOUT,
     loggedStatus: 'ready',
 });
+exports.signupOnProcess = () => ({
+    type: auth_1.SIGNUP_ON_PROCESS,
+    signupStatus: 'processing',
+});
+exports.signupSuccess = () => ({
+    type: auth_1.SIGNUP_SUCCESS,
+    signupStatus: 'success',
+});
+exports.signupFail = () => ({
+    type: auth_1.SIGNUP_FAIL,
+    signupStatus: 'failed',
+});
 
 
 /***/ }),
@@ -72306,8 +72318,7 @@ exports.attemptLogIn = (userEmail, userPassword) => async (dispatch) => {
             dispatch(auth_1.loginFail());
         }
     })
-        .catch(err => {
-        console.log(err);
+        .catch((err) => {
         dispatch(auth_1.loginFail());
     });
 };
@@ -72319,6 +72330,30 @@ exports.logOut = () => async (dispatch) => {
         .signOut()
         .then(() => {
         dispatch(auth_1.logout());
+    });
+};
+/**
+ * Signup
+ */
+exports.signup = (userEmail, userName, userPassword) => async (dispatch) => {
+    dispatch(auth_1.signupOnProcess());
+    firebase_1.default.auth()
+        .createUserWithEmailAndPassword(userEmail, userPassword)
+        .then((user) => {
+        if (user.user)
+            user.user
+                .updateProfile({
+                displayName: userName,
+            })
+                .then(() => {
+                dispatch(auth_1.signupSuccess());
+            })
+                .catch((err) => {
+                dispatch(auth_1.signupFail());
+            });
+    })
+        .catch((err) => {
+        dispatch(auth_1.signupFail());
     });
 };
 
@@ -72467,15 +72502,15 @@ const redux_1 = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 const redux_thunk_1 = __importDefault(__webpack_require__(/*! redux-thunk */ "./node_modules/redux-thunk/es/index.js"));
 const reducer_1 = __importDefault(__webpack_require__(/*! ./reducer */ "./resources/js/reducer/index.ts"));
+const os_begin_container_1 = __importDefault(__webpack_require__(/*! ./os-begin-container */ "./resources/js/os-begin-container/index.tsx"));
 const os_home_container_1 = __importDefault(__webpack_require__(/*! ./os-home-container */ "./resources/js/os-home-container/index.tsx"));
-const os_login_container_1 = __importDefault(__webpack_require__(/*! ./os-login-container */ "./resources/js/os-login-container/index.tsx"));
 const rootStore = redux_1.createStore(reducer_1.default, redux_1.applyMiddleware(redux_thunk_1.default));
 class App extends react_1.default.Component {
     render() {
         return (react_1.default.createElement(react_redux_1.Provider, { store: rootStore },
             react_1.default.createElement(react_router_dom_1.BrowserRouter, null,
                 react_1.default.createElement(react_router_dom_1.Switch, null,
-                    react_1.default.createElement(react_router_dom_1.Route, { exact: true, path: "/", component: os_login_container_1.default }),
+                    react_1.default.createElement(react_router_dom_1.Route, { exact: true, path: "/", component: os_begin_container_1.default }),
                     react_1.default.createElement(react_router_dom_1.Route, { path: "/:userid", component: react_router_dom_1.withRouter(os_home_container_1.default) })))));
     }
 }
@@ -73237,6 +73272,11 @@ const OSPageStatus = (props) => {
                     react_1.default.createElement("p", { className: "h1" },
                         react_1.default.createElement("i", { className: "material-icons" }, "info")),
                     react_1.default.createElement("p", { className: "h6" }, props.info)));
+            case 'success':
+                return (react_1.default.createElement("div", { id: "info-box" },
+                    react_1.default.createElement("p", { className: "big-icon text-success" },
+                        react_1.default.createElement("i", { className: "material-icons" }, "check_circle")),
+                    react_1.default.createElement("p", { className: "h6" }, props.info)));
         }
     };
     return react_1.default.createElement("div", { id: "os-page-status" }, statusDisplay());
@@ -73545,6 +73585,234 @@ exports.interpretAmenity = (tag, locale = 'en') => {
 
 /***/ }),
 
+/***/ "./resources/js/os-begin-container/index.tsx":
+/*!***************************************************!*\
+  !*** ./resources/js/os-begin-container/index.tsx ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const react_router_1 = __webpack_require__(/*! react-router */ "./node_modules/react-router/esm/react-router.js");
+const login_form_1 = __importDefault(__webpack_require__(/*! ./login-form */ "./resources/js/os-begin-container/login-form.tsx"));
+const signup_form_1 = __importDefault(__webpack_require__(/*! ./signup-form */ "./resources/js/os-begin-container/signup-form.tsx"));
+class _OSBeginContainer extends react_1.default.Component {
+    constructor() {
+        super(...arguments);
+        this.state = {
+            currentView: 'login',
+        };
+        this._renderButtonGroup = () => {
+            return (react_1.default.createElement("div", { id: "button-group" },
+                react_1.default.createElement("a", { className: `${this.state.currentView === 'login' ? 'active' : ''}`, onClick: () => {
+                        this.setState({ currentView: 'login' });
+                    } },
+                    react_1.default.createElement("p", { className: "h6" }, "\uB85C\uADF8\uC778")),
+                react_1.default.createElement("a", { className: `${this.state.currentView === 'signup' ? 'active' : ''}`, onClick: () => {
+                        this.setState({
+                            currentView: 'signup',
+                        });
+                    } },
+                    react_1.default.createElement("p", { className: "h6" }, "\uD68C\uC6D0\uAC00\uC785"))));
+        };
+    }
+    render() {
+        if (this.props.loggedStatus === 'success' && this.props.currentUser) {
+            console.log(this.props.currentUser);
+            return react_1.default.createElement(react_router_1.Redirect, { to: `/${this.props.currentUser.uid}` });
+        }
+        else
+            return (react_1.default.createElement("div", { id: "os-begin-container", className: "container-fluid" },
+                react_1.default.createElement("div", { id: "center-box" },
+                    react_1.default.createElement("div", { id: "header" },
+                        react_1.default.createElement("img", { id: "logo", src: "./assets/os_logo.png" }),
+                        react_1.default.createElement("div", { id: "title-text" },
+                            react_1.default.createElement("p", { className: "h3" }, "\uD658\uC601\uD569\uB2C8\uB2E4"),
+                            react_1.default.createElement("p", { className: "h5" }, "Organizer Page"))),
+                    react_1.default.createElement("div", { id: "body" },
+                        this._renderButtonGroup(),
+                        this.state.currentView === 'login' && (react_1.default.createElement(login_form_1.default, null)),
+                        this.state.currentView === 'signup' && (react_1.default.createElement(signup_form_1.default, null))))));
+    }
+}
+const mapStateToProps = (state) => ({
+    loggedStatus: state.auth.loggedStatus,
+    currentUser: state.auth.currentUser,
+});
+const OSBeginContainer = react_redux_1.connect(mapStateToProps)(_OSBeginContainer);
+exports.default = OSBeginContainer;
+
+
+/***/ }),
+
+/***/ "./resources/js/os-begin-container/login-form.tsx":
+/*!********************************************************!*\
+  !*** ./resources/js/os-begin-container/login-form.tsx ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const firebase_auth_1 = __webpack_require__(/*! ../actions/firebase-auth */ "./resources/js/actions/firebase-auth.ts");
+const os_page_status_1 = __importDefault(__webpack_require__(/*! ../components/os-page-status */ "./resources/js/components/os-page-status.tsx"));
+class _LoginForm extends react_1.default.Component {
+    constructor() {
+        super(...arguments);
+        this.state = {
+            userEmail: '',
+            userPassword: '',
+        };
+        this._onLogin = (ev) => {
+            ev.preventDefault();
+            this.props.attemptLogIn(this.state.userEmail, this.state.userPassword);
+        };
+        this._renderForm = () => {
+            if (this.props.loggedStatus === 'processing') {
+                return react_1.default.createElement(os_page_status_1.default, { status: "loading" });
+            }
+            else {
+                return (react_1.default.createElement("form", null,
+                    react_1.default.createElement("div", { className: "form-group" },
+                        react_1.default.createElement("label", null, "\uC774\uBA54\uC77C"),
+                        react_1.default.createElement("input", { type: "email", className: "form-control", placeholder: "\uC774\uBA54\uC77C\uC744 \uC785\uB825\uD558\uC138\uC694.", value: this.state.userEmail, onChange: ev => {
+                                this.setState({
+                                    ...this.state,
+                                    userEmail: ev.target.value,
+                                });
+                            } })),
+                    react_1.default.createElement("div", { className: "form-group" },
+                        react_1.default.createElement("label", null, "\uBE44\uBC00\uBC88\uD638"),
+                        react_1.default.createElement("input", { type: "password", className: "form-control", placeholder: "\uBE44\uBC00\uBC88\uD638", value: this.state.userPassword, onChange: ev => {
+                                this.setState({
+                                    ...this.state,
+                                    userPassword: ev.target.value,
+                                });
+                            } })),
+                    react_1.default.createElement("button", { id: "login-button", className: "btn btn-block btn-primary", onClick: this._onLogin }, "\uB85C\uADF8\uC778"),
+                    this.props.loggedStatus === 'failed' && (react_1.default.createElement("p", { id: "failed-message", className: "h6" }, "\uC874\uC7AC\uD558\uC9C0 \uC54A\uB294 \uC0AC\uC6A9\uC790\uC785\uB2C8\uB2E4."))));
+            }
+        };
+    }
+    render() {
+        return react_1.default.createElement("div", { id: "login-form" }, this._renderForm());
+    }
+}
+const mapStateToProps = (state) => ({
+    loggedStatus: state.auth.loggedStatus,
+});
+const mapDispatchToProps = {
+    attemptLogIn: firebase_auth_1.attemptLogIn,
+};
+const LoginForm = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_LoginForm);
+exports.default = LoginForm;
+
+
+/***/ }),
+
+/***/ "./resources/js/os-begin-container/signup-form.tsx":
+/*!*********************************************************!*\
+  !*** ./resources/js/os-begin-container/signup-form.tsx ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const firebase_auth_1 = __webpack_require__(/*! ../actions/firebase-auth */ "./resources/js/actions/firebase-auth.ts");
+const os_page_status_1 = __importDefault(__webpack_require__(/*! ../components/os-page-status */ "./resources/js/components/os-page-status.tsx"));
+class _SignupForm extends react_1.default.Component {
+    constructor() {
+        super(...arguments);
+        this.state = {
+            userEmail: '',
+            userName: '',
+            userPassword: '',
+            userPasswordConfirm: '',
+        };
+        this._onSubmit = (ev) => {
+            ev.preventDefault();
+            this.props.signup(this.state.userEmail, this.state.userName, this.state.userPassword);
+        };
+        this._renderForm = () => {
+            if (this.props.signupStatus === 'processing') {
+                return react_1.default.createElement(os_page_status_1.default, { status: "loading" });
+            }
+            else if (this.props.signupStatus === 'success') {
+                return (react_1.default.createElement(os_page_status_1.default, { status: "success", info: "\uD68C\uC6D0\uAC00\uC785\uC774 \uC131\uACF5\uC801\uC73C\uB85C \uC644\uB8CC\uB418\uC5C8\uC2B5\uB2C8\uB2E4." }));
+            }
+            else {
+                return (react_1.default.createElement("form", null,
+                    react_1.default.createElement("div", { className: "form-group" },
+                        react_1.default.createElement("label", null, "\uC774\uBA54\uC77C"),
+                        react_1.default.createElement("input", { type: "email", className: "form-control", placeholder: "\uC774\uBA54\uC77C\uC744 \uC785\uB825\uD558\uC138\uC694.", value: this.state.userEmail, onChange: ev => {
+                                this.setState({
+                                    ...this.state,
+                                    userEmail: ev.target.value,
+                                });
+                            } })),
+                    react_1.default.createElement("div", { className: "form-group" },
+                        react_1.default.createElement("label", null, "\uAC1C\uC778/\uB2E8\uCCB4 \uC774\uB984"),
+                        react_1.default.createElement("input", { className: "form-control", placeholder: "\uC0AC\uC6A9\uC790 \uC774\uB984\uC744 \uC785\uB825\uD558\uC138\uC694.", value: this.state.userName, onChange: ev => {
+                                this.setState({
+                                    ...this.state,
+                                    userName: ev.target.value,
+                                });
+                            } })),
+                    react_1.default.createElement("div", { className: "form-group" },
+                        react_1.default.createElement("label", null, "\uBE44\uBC00\uBC88\uD638"),
+                        react_1.default.createElement("input", { type: "password", className: "form-control", placeholder: "\uBE44\uBC00\uBC88\uD638", value: this.state.userPassword, onChange: ev => {
+                                this.setState({
+                                    ...this.state,
+                                    userPassword: ev.target.value,
+                                });
+                            } })),
+                    react_1.default.createElement("div", { className: "form-group" },
+                        react_1.default.createElement("input", { type: "password", className: "form-control", placeholder: "\uBE44\uBC00\uBC88\uD638 \uD655\uC778", value: this.state.userPasswordConfirm, onChange: ev => {
+                                this.setState({
+                                    ...this.state,
+                                    userPasswordConfirm: ev.target.value,
+                                });
+                            } })),
+                    react_1.default.createElement("button", { id: "login-button", className: "btn btn-block btn-primary", onClick: this._onSubmit }, "\uD68C\uC6D0\uAC00\uC785")));
+            }
+        };
+    }
+    render() {
+        return react_1.default.createElement("div", { id: "signup-form" }, this._renderForm());
+    }
+}
+const mapStateToProps = (state) => ({
+    signupStatus: state.auth.signupStatus,
+});
+const mapDispatchToProps = {
+    signup: firebase_auth_1.signup,
+};
+const SignupForm = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_SignupForm);
+exports.default = SignupForm;
+
+
+/***/ }),
+
 /***/ "./resources/js/os-home-container/home-header.tsx":
 /*!********************************************************!*\
   !*** ./resources/js/os-home-container/home-header.tsx ***!
@@ -73574,13 +73842,16 @@ class _HomeHeader extends react_1.default.Component {
             react_1.default.createElement("div", { id: "main" },
                 react_1.default.createElement("img", { src: "./demo-images/item_image_02.jpg", className: "rounded-circle" }),
                 react_1.default.createElement("div", { id: "profile-text" },
-                    react_1.default.createElement("p", { className: "h4" }, "\uAC15\uB0A8\uAC74\uBB3C\uC8FC"),
+                    react_1.default.createElement("p", { className: "h4" }, this.props.currentUser &&
+                        this.props.currentUser.displayName),
                     react_1.default.createElement("p", { className: "h6 os-grey-1" }, "Organizer"))),
             react_1.default.createElement("div", { id: "left-buttons" },
                 react_1.default.createElement("button", { className: "btn btn-outline-light", onClick: this._onLogout }, "Logout"))));
     }
 }
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+    currentUser: state.auth.currentUser,
+});
 const mapDispatchToProps = {
     logOut: firebase_auth_1.logOut,
 };
@@ -73772,119 +74043,6 @@ exports.default = OSHomeContainer;
 
 /***/ }),
 
-/***/ "./resources/js/os-login-container/index.tsx":
-/*!***************************************************!*\
-  !*** ./resources/js/os-login-container/index.tsx ***!
-  \***************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-const react_router_1 = __webpack_require__(/*! react-router */ "./node_modules/react-router/esm/react-router.js");
-const login_box_1 = __importDefault(__webpack_require__(/*! ./login-box */ "./resources/js/os-login-container/login-box.tsx"));
-class _OSLoginContainer extends react_1.default.Component {
-    render() {
-        if (this.props.loggedStatus === 'success' && this.props.currentUser)
-            return react_1.default.createElement(react_router_1.Redirect, { to: `/${this.props.currentUser.uid}` });
-        else
-            return (react_1.default.createElement("div", { id: "os-login-container", className: "container-fluid" },
-                react_1.default.createElement(login_box_1.default, null)));
-    }
-}
-const mapStateToProps = (state) => ({
-    loggedStatus: state.auth.loggedStatus,
-    currentUser: state.auth.currentUser,
-});
-const OSLoginContainer = react_redux_1.connect(mapStateToProps)(_OSLoginContainer);
-exports.default = OSLoginContainer;
-
-
-/***/ }),
-
-/***/ "./resources/js/os-login-container/login-box.tsx":
-/*!*******************************************************!*\
-  !*** ./resources/js/os-login-container/login-box.tsx ***!
-  \*******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-const firebase_auth_1 = __webpack_require__(/*! ../actions/firebase-auth */ "./resources/js/actions/firebase-auth.ts");
-const os_page_status_1 = __importDefault(__webpack_require__(/*! ../components/os-page-status */ "./resources/js/components/os-page-status.tsx"));
-class _LoginBox extends react_1.default.Component {
-    constructor() {
-        super(...arguments);
-        this.state = {
-            userEmail: '',
-            userPassword: '',
-        };
-        this._onLogin = (ev) => {
-            ev.preventDefault();
-            this.props.attemptLogIn(this.state.userEmail, this.state.userPassword);
-        };
-        this._renderForm = () => {
-            if (this.props.loggedStatus === 'processing') {
-                return react_1.default.createElement(os_page_status_1.default, { status: "loading" });
-            }
-            else {
-                return (react_1.default.createElement("form", null,
-                    react_1.default.createElement("div", { className: "form-group" },
-                        react_1.default.createElement("label", null, "\uC774\uBA54\uC77C"),
-                        react_1.default.createElement("input", { type: "email", className: "form-control", placeholder: "\uC774\uBA54\uC77C\uC744 \uC785\uB825\uD558\uC138\uC694.", value: this.state.userEmail, onChange: ev => {
-                                this.setState({
-                                    ...this.state,
-                                    userEmail: ev.target.value,
-                                });
-                            } })),
-                    react_1.default.createElement("div", { className: "form-group" },
-                        react_1.default.createElement("label", null, "\uBE44\uBC00\uBC88\uD638"),
-                        react_1.default.createElement("input", { type: "password", className: "form-control", placeholder: "\uBE44\uBC00\uBC88\uD638", value: this.state.userPassword, onChange: ev => {
-                                this.setState({
-                                    ...this.state,
-                                    userPassword: ev.target.value,
-                                });
-                            } })),
-                    react_1.default.createElement("button", { id: "login-button", className: "btn btn-block btn-primary", onClick: this._onLogin }, "\uB85C\uADF8\uC778"),
-                    this.props.loggedStatus === 'failed' && (react_1.default.createElement("p", { id: "failed-message", className: "h6" }, "\uC874\uC7AC\uD558\uC9C0 \uC54A\uB294 \uC0AC\uC6A9\uC790\uC785\uB2C8\uB2E4."))));
-            }
-        };
-    }
-    render() {
-        return (react_1.default.createElement("div", { id: "login-box" },
-            react_1.default.createElement("div", { id: "title" },
-                react_1.default.createElement("img", { id: "logo", src: "./assets/os_logo.png" }),
-                react_1.default.createElement("div", { id: "title-text" },
-                    react_1.default.createElement("p", { className: "h3" }, "\uD658\uC601\uD569\uB2C8\uB2E4"),
-                    react_1.default.createElement("p", { className: "h5" }, "Organizer Page"))),
-            react_1.default.createElement("div", { id: "login-form" }, this._renderForm())));
-    }
-}
-const mapStateToProps = (state) => ({
-    loggedStatus: state.auth.loggedStatus,
-});
-const mapDispatchToProps = {
-    attemptLogIn: firebase_auth_1.attemptLogIn,
-};
-const LoginBox = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_LoginBox);
-exports.default = LoginBox;
-
-
-/***/ }),
-
 /***/ "./resources/js/osdb-api/request.ts":
 /*!******************************************!*\
   !*** ./resources/js/osdb-api/request.ts ***!
@@ -74039,6 +74197,7 @@ const auth_1 = __webpack_require__(/*! ../redux-types/auth */ "./resources/js/re
  */
 const initialState = {
     loggedStatus: 'ready',
+    signupStatus: 'ready',
 };
 /**
  * AuthReducer
@@ -74066,6 +74225,21 @@ function AuthReducer(state = initialState, action) {
                 ...state,
                 loggedStatus: action.loggedStatus,
                 currentUser: undefined,
+            };
+        case auth_1.SIGNUP_ON_PROCESS:
+            return {
+                ...state,
+                signupStatus: action.signupStatus,
+            };
+        case auth_1.SIGNUP_SUCCESS:
+            return {
+                ...state,
+                signupStatus: action.signupStatus,
+            };
+        case auth_1.SIGNUP_FAIL:
+            return {
+                ...state,
+                signupStatus: action.signupStatus,
             };
         default:
             return state;
@@ -74377,6 +74551,12 @@ exports.LOGIN_SUCCESS = 'current-space/LOGIN_SUCCESS';
 exports.LOGIN_FAIL = 'current-space/LOGIN_FAIL';
 // prettier-ignore
 exports.LOGOUT = 'current-space/LOGOUT';
+// prettier-ignore
+exports.SIGNUP_ON_PROCESS = 'current-space/SIGNUP_ON_PROCESS';
+// prettier-ignore
+exports.SIGNUP_SUCCESS = 'current-space/SIGNUP_SUCCESS';
+// prettier-ignore
+exports.SIGNUP_FAIL = 'current-space/SIGNUP_FAIL';
 
 
 /***/ }),
