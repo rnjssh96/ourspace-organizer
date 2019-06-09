@@ -15,16 +15,22 @@ const axiosDefaultConfig: AxiosRequestConfig = {
 export const getFromServer = async (
     axiosConfig: AxiosRequestConfig,
 ): Promise<any> => {
-    const axiosCombinedConfig = {
-        ...axiosDefaultConfig,
-        ...axiosConfig,
-        method: 'get',
-    };
-
-    let result = await axios(axiosCombinedConfig);
-    if (result.status === 200) {
-        return result.data;
-    }
+    return new Promise((resolve, reject) => {
+        const axiosCombinedConfig = {
+            ...axiosDefaultConfig,
+            ...axiosConfig,
+            method: 'get',
+        };
+        axios(axiosCombinedConfig)
+            .then(response => {
+                if (response.status === 200) {
+                    resolve(response.data);
+                } else {
+                    reject('OS DEBUG :: DB server response is not 200');
+                }
+            })
+            .catch(error => reject(error));
+    });
 };
 
 /**
@@ -34,15 +40,21 @@ export const postToServer = async (
     axiosConfig: AxiosRequestConfig,
     data: any,
 ): Promise<any> => {
-    const axiosCombinedConfig = {
-        ...axiosDefaultConfig,
-        ...axiosConfig,
-        method: 'post',
-        data: data,
-    };
-
-    let result = await axios(axiosCombinedConfig);
-    if (result.status === 200) {
-        return result.data;
-    }
+    return new Promise((resolve, reject) => {
+        const axiosCombinedConfig = {
+            ...axiosDefaultConfig,
+            ...axiosConfig,
+            method: 'post',
+            data: data,
+        };
+        axios(axiosCombinedConfig)
+            .then(response => {
+                if (response.status === 200) {
+                    resolve(response.data);
+                } else {
+                    reject('OS DEBUG :: DB server response is not 200');
+                }
+            })
+            .catch(error => reject(error));
+    });
 };

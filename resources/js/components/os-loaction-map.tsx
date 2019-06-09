@@ -27,7 +27,7 @@ class _OSLoactionMap extends React.Component<OSLoactionMapProps> {
                         lat: this.props.location.lat,
                         lng: this.props.location.lng,
                     }}
-                    zoom={15}
+                    zoom={17}
                 />
             );
         } else {

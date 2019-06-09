@@ -39,7 +39,8 @@ export const attemptLogIn: ActionCreator<
                     .then((user: OSOrganizer) => {
                         dispatch(loginSuccess(user));
                     })
-                    .catch(() => {
+                    .catch((error) => {
+                        console.log(error);
                         dispatch(
                             loginFail('사용자 정보를 가져오는데 실패했습니다.'),
                         );
@@ -48,7 +49,7 @@ export const attemptLogIn: ActionCreator<
                 dispatch(loginFail('로그인에 실패하였습니다.'));
             }
         })
-        .catch((err: any) => {
+        .catch(() => {
             dispatch(loginFail('로그인에 실패하였습니다.'));
         });
 };
@@ -88,7 +89,7 @@ export const signup: ActionCreator<
                     });
             }
         })
-        .catch((err: any) => {
+        .catch(() => {
             dispatch(signupFail());
         });
 };

@@ -66,7 +66,7 @@ class _OSImagesEditor extends React.Component<OSImagesEditorProps> {
                 <div className="footer">
                     <p className="h6 os-grey-1">
                         <i className="material-icons">info</i>
-                        사진 삭제는 Super-organizer 사용자만 가능합니다.
+                        사진 삭제 기능은 추후에 업데이트될 예정입니다.
                     </p>
                 </div>
             </div>

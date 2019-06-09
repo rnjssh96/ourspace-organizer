@@ -17,7 +17,7 @@
     max-height: 100%;
     overflow: scroll;
 
-    & > p {
+    & > #header-text {
         // margin
         margin-top: 0.5rem;
         margin-bottom: 0.5rem;
@@ -26,13 +26,18 @@
         padding-left: 0.5rem;
     }
 
+    & > #search-bar {
+        // margin
+        margin-bottom: 0.5rem;
+    }
+
     & > .space-group {
         // flex
         display: flex;
         flex-direction: column;
 
         // border
-        border-top: 2px solid $main-theme;
+        border-top: 1px solid $main-theme;
 
         // padding
         padding-top: 0.5rem;
@@ -40,7 +45,7 @@
 
         &:last-child {
             // border
-            border-bottom: 2px solid $main-theme;
+            border-bottom: 1px solid $main-theme;
         }
 
         .space-item {

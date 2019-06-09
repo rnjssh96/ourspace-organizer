@@ -1,6 +1,6 @@
 import { getFromServer } from './request';
 
-import Space from '../model/space';
+import Space, { AmenityTag } from '../model/space';
 import SpaceTrees, {
     RawSpaceHeader,
     buildArray2Tree,
@@ -12,35 +12,31 @@ import SpaceTrees, {
 export const osdbGetSpaceTrees = async (
     organizerUID: string,
 ): Promise<SpaceTrees> => {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve, reject) => {
         let spaceIDs: string[] = [];
-        // getFromServer({ url: `/organizers/${organizerUID}` }).then(response => {
-        //     if (response.owning_spaces) {
-        //         spaceIDs = response.owning_spaces;
-        //     } else {
-        //         reject();
-        //     }
-        // });
-        spaceIDs = [
-            '-LeMgOwWhwgCA3zlo_dI',
-            '-LeMgOwXUaqHHah8pbOS',
-            '-LeMgOwWhwgCA3zlo_c_',
-            '-LeMgOwRYl5K7ooz8sQt',
-        ];
-
         let spaceHeaders: RawSpaceHeader[] = [];
+        await getFromServer({ url: `/organizers/${organizerUID}` })
+            .then(response => {
+                if (response.owning_spaces) {
+                    spaceIDs = response.owning_spaces;
+                } else {
+                    reject('OS DEBUG :: Could not fetch owning spaces list');
+                }
+            })
+            .catch(error => reject(error));
         await Promise.all(
             spaceIDs.map(async (sid: string) => {
-                let response = await getFromServer({
+                await getFromServer({
                     url: `/ospace/${sid}`,
+                }).then(response => {
+                    if (response.space_names) {
+                        spaceHeaders.push({
+                            id: sid,
+                            pid: response.parent_space_id,
+                            names: response.space_names,
+                        });
+                    }
                 });
-                if (response && response.space_names) {
-                    spaceHeaders.push({
-                        id: sid,
-                        pid: response.parent_space_id,
-                        names: response.space_names,
-                    });
-                }
             }),
         );
         resolve(buildArray2Tree(spaceHeaders));
@@ -51,9 +47,9 @@ export const osdbGetSpaceTrees = async (
  * Get space by space
  */
 export const osdbGetSpace = async (spaceID: string): Promise<Space> => {
-    return new Promise(resolve => {
-        getFromServer({ url: `/ospace/${spaceID}` }).then(response => {
-            if (response) {
+    return new Promise((resolve, reject) => {
+        getFromServer({ url: `/ospace/${spaceID}` })
+            .then(response => {
                 resolve({
                     id: spaceID,
                     spaceNames: response.space_names,
@@ -64,13 +60,15 @@ export const osdbGetSpace = async (spaceID: string): Promise<Space> => {
                         lng: response.longitude,
                     },
                     operatingHours: response.operating_hours,
-                    amenityTags: [], //response.amenity_tags,
+                    amenityTags: Object.keys(
+                        response.amenity_tags,
+                    ) as AmenityTag[],
                     spaceIntroduce: '',
                     images: response.images,
                     rank: response.rank,
                     busyLevel: '1',
                 });
-            }
-        });
+            })
+            .catch(error => reject(error));
     });
 };

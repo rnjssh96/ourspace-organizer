@@ -19,31 +19,49 @@ export const osdbCreatOrganizerInfo = async (
                 authority: 'organizer',
                 email: email,
             },
-        ).then(response => {
-            if (response && response.success) {
-                resolve();
-            }
-        });
+        )
+            .then(responseBody => {
+                if (responseBody.success) {
+                    resolve();
+                } else {
+                    reject(
+                        'OS DEBUG :: Creating organizer info replied FAILED',
+                    );
+                }
+            })
+            .catch(error => reject(error));
     });
 };
 
 /**
  * Get user info
  */
-export const osdbFetchOrganizerInfo = async (uid: string): Promise<OSOrganizer> => {
+export const osdbFetchOrganizerInfo = async (
+    uid: string,
+): Promise<OSOrganizer> => {
     return new Promise((resolve, reject) => {
-        getFromServer({ url: `/organizers/${uid}` }).then(response => {
-            if (response && response.name && response.authority && response.email) {
-                resolve({
-                    uid: uid,
-                    name: response.name,
-                    email: response.email,
-                    authority:
-                        response.authority === 'admin' ? 'Admin' : 'Organizer',
-                });
-            } else {
-                reject();
-            }
-        });
+        getFromServer({ url: `/organizers/${uid}` })
+            .then(responseBody => {
+                if (
+                    responseBody.name &&
+                    responseBody.authority &&
+                    responseBody.email
+                ) {
+                    resolve({
+                        uid: uid,
+                        name: responseBody.name,
+                        email: responseBody.email,
+                        authority:
+                            responseBody.authority === 'admin'
+                                ? 'Admin'
+                                : 'Organizer',
+                    });
+                } else {
+                    reject(
+                        'OS DEBUG :: Fetched organizer info is improperly formatted',
+                    );
+                }
+            })
+            .catch(error => reject(error));
     });
 };

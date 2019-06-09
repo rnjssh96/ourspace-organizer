@@ -7,6 +7,7 @@ import {
     UPDATE_SPACE_INTRODUCE,
     REQUEST_SPACE,
     RECEIVE_SPACE,
+    END_REQUEST_SPACE,
 } from '../redux-types/current-space';
 
 /**
@@ -86,6 +87,14 @@ export default function CurrentSpaceReducer(
         case RECEIVE_SPACE:
             return {
                 data: action.space,
+                status: {
+                    ...state.status,
+                    requestingSpace: false,
+                },
+            };
+
+        case END_REQUEST_SPACE:
+            return {
                 status: {
                     ...state.status,
                     requestingSpace: false,

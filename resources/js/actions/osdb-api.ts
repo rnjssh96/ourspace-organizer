@@ -9,8 +9,8 @@ import { osdbGetSpace, osdbGetSpaceTrees } from '../osdb-api/space';
 import { ReceiveSpaceTreesAction } from '../redux-types/space-trees';
 import { ReceiveSpaceAction } from '../redux-types/current-space';
 
-import { requestSpaceTrees, receiveSpaceTrees } from './space-trees';
-import { requestSpace, receiveSpace } from './current-space';
+import { requestSpaceTrees, receiveSpaceTrees, endRequestSpaceTrees } from './space-trees';
+import { requestSpace, receiveSpace, endRequestSpace } from './current-space';
 
 /**
  * Fetch space trees from OSDB
@@ -23,7 +23,7 @@ export const fetchSpaceTrees: ActionCreator<
     dispatch(requestSpaceTrees());
     osdbGetSpaceTrees(organizerUID).then((spaceTrees: SpaceTrees) => {
         dispatch(receiveSpaceTrees(spaceTrees));
-    });
+    }).catch(() => dispatch(endRequestSpaceTrees()));
 };
 
 /**
@@ -37,5 +37,5 @@ export const fetchSpace: ActionCreator<
     dispatch(requestSpace());
     osdbGetSpace(spaceID).then((space: Space) => {
         dispatch(receiveSpace(space));
-    });
+    }).catch(() => dispatch(endRequestSpace()));
 };

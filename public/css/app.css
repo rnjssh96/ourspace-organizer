@@ -10970,22 +10970,26 @@ button {
   overflow: scroll;
 }
 
-#os-space-tree > p {
+#os-space-tree > #header-text {
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
   padding-left: 0.5rem;
 }
 
+#os-space-tree > #search-bar {
+  margin-bottom: 0.5rem;
+}
+
 #os-space-tree > .space-group {
   display: flex;
   flex-direction: column;
-  border-top: 2px solid #f3a930;
+  border-top: 1px solid #f3a930;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
 }
 
 #os-space-tree > .space-group:last-child {
-  border-bottom: 2px solid #f3a930;
+  border-bottom: 1px solid #f3a930;
 }
 
 #os-space-tree > .space-group .space-item {

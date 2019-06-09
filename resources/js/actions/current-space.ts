@@ -14,6 +14,8 @@ import {
     ReceiveSpaceAction,
     REQUEST_SPACE,
     RECEIVE_SPACE,
+    EndRequestSpaceAction,
+    END_REQUEST_SPACE,
 } from '../redux-types/current-space';
 
 /**
@@ -57,4 +59,9 @@ export const receiveSpace: ActionCreator<ReceiveSpaceAction> = (
 ) => ({
     type: RECEIVE_SPACE,
     space,
+});
+
+export const endRequestSpace: ActionCreator<EndRequestSpaceAction> = (
+) => ({
+    type: END_REQUEST_SPACE,
 });

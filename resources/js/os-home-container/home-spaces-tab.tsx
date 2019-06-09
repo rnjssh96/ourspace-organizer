@@ -46,7 +46,11 @@ class _HomeSpacesTab extends React.Component<HomeSpacesTabProps> {
     render() {
         if (this.props.requestingSpaceTrees) {
             return <OSPageStatus status="loading" />;
-        } else if (this.props.spaceTrees.length <= 0) {
+        } else if (
+            this.props.spaceTrees.length <= 0 &&
+            (this.props.currentUser &&
+                this.props.currentUser.authority === 'Organizer')
+        ) {
             return (
                 <OSPageStatus
                     status="information"

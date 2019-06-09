@@ -18,6 +18,8 @@ export type SpaceTreesState = {
 export const REQUEST_SPACE_TREES = 'space-tree/REQUEST_SPACE_TREES';
 // prettier-ignore
 export const RECEIVE_SPACE_TREES = 'space-tree/RECEIVE_SPACE_TREES';
+// prettier-ignore
+export const END_REQUEST_SPACE_TREES = 'current-space/END_REQUEST_SPACE_TREES';
 
 /**
  * Action Interfacess
@@ -30,9 +32,13 @@ export interface ReceiveSpaceTreesAction
     spaceTrees: SpaceTrees;
 }
 
+export interface EndRequestSpaceTreesAction
+    extends Action<typeof END_REQUEST_SPACE_TREES> {}
+
 /**
  * Action Types
  */
 export type SpaceTreesActions =
     | RequestSpaceTreesAction
-    | ReceiveSpaceTreesAction;
+    | ReceiveSpaceTreesAction
+    | EndRequestSpaceTreesAction;

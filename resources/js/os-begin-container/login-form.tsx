@@ -13,6 +13,11 @@ interface _ReduxProps {
      * Logged status
      */
     loggedStatus: LoggedStatus;
+
+    /**
+     * Login message
+     */
+    loginMessage?: string;
 }
 
 interface _ReduxActionCreators {
@@ -78,11 +83,12 @@ class _LoginForm extends React.Component<LoginFormProps> {
                     >
                         로그인
                     </button>
-                    {this.props.loggedStatus === 'failed' && (
-                        <p id="failed-message" className="h6">
-                            로그인에 실패하였습니다.
-                        </p>
-                    )}
+                    {this.props.loggedStatus === 'failed' &&
+                        this.props.loginMessage && (
+                            <p id="failed-message" className="h6">
+                                {this.props.loginMessage}
+                            </p>
+                        )}
                 </form>
             );
         }
@@ -95,6 +101,7 @@ class _LoginForm extends React.Component<LoginFormProps> {
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
     loggedStatus: state.auth.loggedStatus,
+    loginMessage: state.auth.errorMessage,
 });
 
 const mapDispatchToProps = {

@@ -9,7 +9,7 @@ export type CurrentSpaceState = {
     data?: Space;
     status: {
         requestingSpace: boolean;
-    }
+    };
 };
 
 /**
@@ -28,6 +28,8 @@ export const SET_AMENITY_TAGS = 'current-space/SET_AMENITY_TAGS';
 export const REQUEST_SPACE = 'current-space/REQUEST_SPACE';
 // prettier-ignore
 export const RECEIVE_SPACE = 'current-space/RECEIVE_SPACE';
+// prettier-ignore
+export const END_REQUEST_SPACE = 'current-space/END_REQUEST_SPACE';
 
 /**
  * Action Interfaces
@@ -50,14 +52,14 @@ export interface SetAmenityTagsAction extends Action<typeof SET_AMENITY_TAGS> {
     amenityTags: AmenityTag[];
 }
 
-export interface RequestSpaceAction
-    extends Action<typeof REQUEST_SPACE> {
-}
+export interface RequestSpaceAction extends Action<typeof REQUEST_SPACE> {}
 
-export interface ReceiveSpaceAction
-    extends Action<typeof RECEIVE_SPACE> {
+export interface ReceiveSpaceAction extends Action<typeof RECEIVE_SPACE> {
     space: Space;
 }
+
+export interface EndRequestSpaceAction
+    extends Action<typeof END_REQUEST_SPACE> {}
 
 /**
  * Action Types
@@ -68,4 +70,5 @@ export type CurrentSpaceActions =
     | SetBusyLevelAction
     | SetAmenityTagsAction
     | RequestSpaceAction
-    | ReceiveSpaceAction;
+    | ReceiveSpaceAction
+    | EndRequestSpaceAction;
