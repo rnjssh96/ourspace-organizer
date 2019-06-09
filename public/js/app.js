@@ -74591,22 +74591,6 @@ const current_space_1 = __webpack_require__(/*! ../redux-types/current-space */ 
 /**
  * Action Creators
  */
-exports.updateSpaceIntroduce = (spaceIntroduce) => ({
-    type: current_space_1.UPDATE_SPACE_INTRODUCE,
-    spaceIntroduce,
-});
-exports.setOperatingHours = (operatingHours) => ({
-    type: current_space_1.SET_OPERATING_HOURS,
-    operatingHours,
-});
-exports.setBusyLevel = (busyLevel) => ({
-    type: current_space_1.SET_BUSY_LEVEL,
-    busyLevel,
-});
-exports.setAmenityTags = (amenityTags) => ({
-    type: current_space_1.SET_AMENITY_TAGS,
-    amenityTags,
-});
 exports.requestSpace = () => ({
     type: current_space_1.REQUEST_SPACE,
 });
@@ -74616,6 +74600,28 @@ exports.receiveSpace = (space) => ({
 });
 exports.endRequestSpace = () => ({
     type: current_space_1.END_REQUEST_SPACE,
+});
+exports.updateSpaceIntroduce = (spaceIntroduce) => ({
+    type: current_space_1.UPDATE_SPACE_INTRODUCE,
+    spaceIntroduce,
+});
+exports.startUpdateOH = () => ({
+    type: current_space_1.START_UPDATE_OH,
+});
+exports.finishUpdateOH = (operatingHours) => ({
+    type: current_space_1.FINISH_UPDATE_OH,
+    operatingHours,
+});
+exports.endUpdateOH = () => ({
+    type: current_space_1.END_UPDATE_OH,
+});
+exports.setBusyLevel = (busyLevel) => ({
+    type: current_space_1.SET_BUSY_LEVEL,
+    busyLevel,
+});
+exports.setAmenityTags = (amenityTags) => ({
+    type: current_space_1.SET_AMENITY_TAGS,
+    amenityTags,
 });
 
 
@@ -74718,18 +74724,33 @@ const current_space_1 = __webpack_require__(/*! ./current-space */ "./resources/
  */
 exports.fetchSpaceTrees = (organizerUID) => async (dispatch) => {
     dispatch(space_trees_1.requestSpaceTrees());
-    space_1.osdbGetSpaceTrees(organizerUID).then((spaceTrees) => {
+    space_1.osdbGetSpaceTrees(organizerUID)
+        .then((spaceTrees) => {
         dispatch(space_trees_1.receiveSpaceTrees(spaceTrees));
-    }).catch(() => dispatch(space_trees_1.endRequestSpaceTrees()));
+    })
+        .catch(() => dispatch(space_trees_1.endRequestSpaceTrees()));
 };
 /**
  * Fetch space from OSDB
  */
 exports.fetchSpace = (spaceID) => async (dispatch) => {
     dispatch(current_space_1.requestSpace());
-    space_1.osdbGetSpace(spaceID).then((space) => {
+    space_1.osdbGetSpace(spaceID)
+        .then((space) => {
         dispatch(current_space_1.receiveSpace(space));
-    }).catch(() => dispatch(current_space_1.endRequestSpace()));
+    })
+        .catch(() => dispatch(current_space_1.endRequestSpace()));
+};
+/**
+ * Fetch space from OSDB
+ */
+exports.updateOperatingHour = (spaceID, operatingHours) => async (dispatch) => {
+    dispatch(current_space_1.startUpdateOH());
+    space_1.osdbUpdateOperatingHour(spaceID, operatingHours)
+        .then(() => {
+        dispatch(current_space_1.finishUpdateOH(operatingHours));
+    })
+        .catch(() => dispatch(current_space_1.endUpdateOH()));
 };
 
 
@@ -75158,9 +75179,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 const space_1 = __webpack_require__(/*! ../../model/space */ "./resources/js/model/space.ts");
-const current_space_1 = __webpack_require__(/*! ../../actions/current-space */ "./resources/js/actions/current-space.ts");
 const operating_hour_edit_modal_1 = __importStar(__webpack_require__(/*! ./operating-hour-edit-modal */ "./resources/js/components/os-general-info/operating-hour-edit-modal.tsx"));
+const osdb_api_1 = __webpack_require__(/*! ../../actions/osdb-api */ "./resources/js/actions/osdb-api.ts");
 class _OSGeneralInfo extends react_1.default.Component {
+    constructor() {
+        super(...arguments);
+        this._renderOperatingHours = () => {
+            if (this.props.updatingOperatingHour) {
+                return (react_1.default.createElement("p", { className: "h6 os-grey-1 os-text-ellipsis" }, "(\uC5C5\uB370\uC774\uD2B8 \uC911...)"));
+            }
+            else if (!this.props.operatingHours ||
+                this.props.operatingHours.length <= 0) {
+                return (react_1.default.createElement("p", { className: "h6 os-grey-1 os-text-ellipsis" }, "(\uC6B4\uC601\uC2DC\uAC04 \uC815\uBCF4\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.)"));
+            }
+            else {
+                return this.props.operatingHours.map((workingHour) => (react_1.default.createElement("p", { key: workingHour, className: "h6 os-grey-1 os-text-ellipsis" }, workingHour)));
+            }
+        };
+    }
     render() {
         let typesText = '';
         if (this.props.types)
@@ -75185,25 +75221,26 @@ class _OSGeneralInfo extends react_1.default.Component {
                 react_1.default.createElement("div", { className: "info-row" },
                     react_1.default.createElement("p", { className: "h6 os-grey-1 os-text-ellipsis" },
                         react_1.default.createElement("i", { className: "material-icons" }, "access_time")),
-                    react_1.default.createElement("div", { className: "text" },
-                        !this.props.operatingHours && (react_1.default.createElement("p", { className: "h6 os-grey-1 os-text-ellipsis" }, "\uC6B4\uC601\uC2DC\uAC04 \uC815\uBCF4\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.")),
-                        this.props.operatingHours &&
-                            this.props.operatingHours.map((workingHour) => (react_1.default.createElement("p", { key: workingHour, className: "h6 os-grey-1 os-text-ellipsis" }, workingHour)))),
+                    react_1.default.createElement("div", { className: "text" }, this._renderOperatingHours()),
                     react_1.default.createElement("button", { "data-toggle": "modal", "data-target": `#${operating_hour_edit_modal_1.OperatingHourEditModalID}` },
                         react_1.default.createElement("p", { className: "h6 os-grey-1" },
                             react_1.default.createElement("i", { className: "material-icons" }, "edit"),
                             "\uC218\uC815")),
-                    react_1.default.createElement(operating_hour_edit_modal_1.default, { setOperatingHours: this.props.setOperatingHours })))));
+                    this.props.spaceID && (react_1.default.createElement(operating_hour_edit_modal_1.default, { updateOperatingHour: (operatingHours) => {
+                            this.props.updateOperatingHour(this.props.spaceID, operatingHours);
+                        } }))))));
     }
 }
 const mapStateToProps = (state) => ({
+    spaceID: state.currentSpace.data && state.currentSpace.data.id,
     spaceNames: state.currentSpace.data && state.currentSpace.data.spaceNames,
     types: state.currentSpace.data && state.currentSpace.data.types,
     locationText: state.currentSpace.data && state.currentSpace.data.locationText,
     operatingHours: state.currentSpace.data && state.currentSpace.data.operatingHours,
+    updatingOperatingHour: state.currentSpace.status.updatingOperatingHour,
 });
 const mapDispatchToProps = {
-    setOperatingHours: current_space_1.setOperatingHours,
+    updateOperatingHour: osdb_api_1.updateOperatingHour,
 };
 const OSGeneralInfo = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_OSGeneralInfo);
 exports.default = OSGeneralInfo;
@@ -75274,7 +75311,7 @@ class OperatingHourEditModal extends react_1.default.Component {
                 });
                 return temp;
             });
-            this.props.setOperatingHours(result);
+            this.props.updateOperatingHour(result);
         };
         this._renderRow = (day) => {
             const operatingTime = this.state[day];
@@ -76617,12 +76654,12 @@ exports.osdbGetSpaceTrees = async (organizerUID) => {
         await Promise.all(spaceIDs.map(async (sid) => {
             await request_1.getFromServer({
                 url: `/ospace/${sid}`,
-            }).then(response => {
-                if (response.space_names) {
+            }).then(responseBody => {
+                if (responseBody.space_names) {
                     spaceHeaders.push({
                         id: sid,
-                        pid: response.parent_space_id,
-                        names: response.space_names,
+                        pid: responseBody.parent_space_id,
+                        names: responseBody.space_names,
                     });
                 }
             });
@@ -76636,23 +76673,39 @@ exports.osdbGetSpaceTrees = async (organizerUID) => {
 exports.osdbGetSpace = async (spaceID) => {
     return new Promise((resolve, reject) => {
         request_1.getFromServer({ url: `/ospace/${spaceID}` })
-            .then(response => {
+            .then(responseBody => {
             resolve({
                 id: spaceID,
-                spaceNames: response.space_names,
-                types: [response.type],
-                locationText: response.location_text,
+                spaceNames: responseBody.space_names,
+                types: [responseBody.type],
+                locationText: responseBody.location_text,
                 location: {
-                    lat: response.latitude,
-                    lng: response.longitude,
+                    lat: responseBody.latitude,
+                    lng: responseBody.longitude,
                 },
-                operatingHours: response.operating_hours,
-                amenityTags: Object.keys(response.amenity_tags),
+                operatingHours: responseBody.operating_hours === ''
+                    ? []
+                    : responseBody.operating_hours.split('\n'),
+                amenityTags: Object.keys(responseBody.amenity_tags),
                 spaceIntroduce: '',
-                images: response.images,
-                rank: response.rank,
+                images: responseBody.images,
+                rank: responseBody.rank,
                 busyLevel: '1',
             });
+        })
+            .catch(error => reject(error));
+    });
+};
+/**
+ * Update space operating hour
+ */
+exports.osdbUpdateOperatingHour = async (spaceID, operatingHours) => {
+    return new Promise((resolve, reject) => {
+        request_1.postToServer({ url: `/ospace/${spaceID}` }, {
+            operating_hours: operatingHours.join('\n'),
+        })
+            .then(() => {
+            resolve();
         })
             .catch(error => reject(error));
     });
@@ -76748,6 +76801,7 @@ const current_space_1 = __webpack_require__(/*! ../redux-types/current-space */ 
 const initialState = {
     status: {
         requestingSpace: false,
+        updatingOperatingHour: false,
     },
 };
 /**
@@ -76755,50 +76809,6 @@ const initialState = {
  */
 function CurrentSpaceReducer(state = initialState, action) {
     switch (action.type) {
-        case current_space_1.UPDATE_SPACE_INTRODUCE:
-            if (state.data)
-                return {
-                    ...state,
-                    data: {
-                        ...state.data,
-                        spaceIntroduce: action.spaceIntroduce,
-                    },
-                };
-            else
-                return state;
-        case current_space_1.SET_OPERATING_HOURS:
-            if (state.data)
-                return {
-                    ...state,
-                    data: {
-                        ...state.data,
-                        operatingHours: action.operatingHours,
-                    },
-                };
-            else
-                return state;
-        case current_space_1.SET_BUSY_LEVEL:
-            if (state.data)
-                return {
-                    ...state,
-                    data: {
-                        ...state.data,
-                        busyLevel: action.busyLevel,
-                    },
-                };
-            else
-                return state;
-        case current_space_1.SET_AMENITY_TAGS:
-            if (state.data)
-                return {
-                    ...state,
-                    data: {
-                        ...state.data,
-                        amenityTags: action.amenityTags,
-                    },
-                };
-            else
-                return state;
         case current_space_1.REQUEST_SPACE:
             return {
                 ...state,
@@ -76822,6 +76832,70 @@ function CurrentSpaceReducer(state = initialState, action) {
                     requestingSpace: false,
                 },
             };
+        case current_space_1.UPDATE_SPACE_INTRODUCE:
+            if (state.data)
+                return {
+                    ...state,
+                    data: {
+                        ...state.data,
+                        spaceIntroduce: action.spaceIntroduce,
+                    },
+                };
+            else
+                return state;
+        case current_space_1.START_UPDATE_OH:
+            return {
+                ...state,
+                status: {
+                    ...state.status,
+                    updatingOperatingHour: true,
+                },
+            };
+        case current_space_1.FINISH_UPDATE_OH:
+            if (state.data)
+                return {
+                    ...state,
+                    data: {
+                        ...state.data,
+                        operatingHours: action.operatingHours,
+                    },
+                    status: {
+                        ...state.status,
+                        updatingOperatingHour: false,
+                    },
+                };
+            else
+                return state;
+        case current_space_1.END_UPDATE_OH:
+            return {
+                ...state,
+                status: {
+                    ...state.status,
+                    updatingOperatingHour: false,
+                },
+            };
+        case current_space_1.SET_BUSY_LEVEL:
+            if (state.data)
+                return {
+                    ...state,
+                    data: {
+                        ...state.data,
+                        busyLevel: action.busyLevel,
+                    },
+                };
+            else
+                return state;
+        case current_space_1.SET_AMENITY_TAGS:
+            if (state.data)
+                return {
+                    ...state,
+                    data: {
+                        ...state.data,
+                        amenityTags: action.amenityTags,
+                    },
+                };
+            else
+                return state;
         default:
             return state;
     }
@@ -77082,19 +77156,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * Action Constants
  */
 // prettier-ignore
-exports.UPDATE_SPACE_INTRODUCE = 'current-space/UPDATE_SPACE_INTRODUCE';
-// prettier-ignore
-exports.SET_OPERATING_HOURS = 'current-space/SET_OPERATING_HOURS';
-// prettier-ignore
-exports.SET_BUSY_LEVEL = 'current-space/SET_BUSY_LEVEL';
-// prettier-ignore
-exports.SET_AMENITY_TAGS = 'current-space/SET_AMENITY_TAGS';
-// prettier-ignore
 exports.REQUEST_SPACE = 'current-space/REQUEST_SPACE';
 // prettier-ignore
 exports.RECEIVE_SPACE = 'current-space/RECEIVE_SPACE';
 // prettier-ignore
 exports.END_REQUEST_SPACE = 'current-space/END_REQUEST_SPACE';
+// prettier-ignore
+exports.UPDATE_SPACE_INTRODUCE = 'current-space/UPDATE_SPACE_INTRODUCE';
+// prettier-ignore
+exports.START_UPDATE_OH = 'current-space/START_UPDATE_OH';
+// prettier-ignore
+exports.FINISH_UPDATE_OH = 'current-space/FINISH_UPDATE_OH';
+// prettier-ignore
+exports.END_UPDATE_OH = 'current-space/END_UPDATE_OH';
+// prettier-ignore
+exports.SET_BUSY_LEVEL = 'current-space/SET_BUSY_LEVEL';
+// prettier-ignore
+exports.SET_AMENITY_TAGS = 'current-space/SET_AMENITY_TAGS';
 
 
 /***/ }),

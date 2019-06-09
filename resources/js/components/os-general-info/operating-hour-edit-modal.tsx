@@ -2,8 +2,6 @@ import React, { ChangeEvent, MouseEvent } from 'react';
 
 import * as DayInterpret from './day-interpret.json';
 
-import { setOperatingHours } from '../../actions/current-space.js';
-
 export const OperatingHourEditModalID = 'operating-hour-edit-modal';
 
 type Day = keyof typeof DayInterpret;
@@ -16,9 +14,9 @@ interface DayOperatingTime {
 
 interface OperatingHourEditModalProps {
     /**
-     * Set operating hours of the space
+     * Update operating hours of the space
      */
-    setOperatingHours: typeof setOperatingHours;
+    updateOperatingHour: (operatingHours: string[]) => void;
 }
 
 export default class OperatingHourEditModal extends React.Component<
@@ -66,7 +64,7 @@ export default class OperatingHourEditModal extends React.Component<
             });
             return temp;
         });
-        this.props.setOperatingHours(result);
+        this.props.updateOperatingHour(result);
     };
 
     private _renderRow = (day: Day) => {

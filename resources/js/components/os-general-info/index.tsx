@@ -5,13 +5,20 @@ import RootState from '../../redux-types';
 
 import { SpaceNames, SpaceType, interpretSpaceType } from '../../model/space';
 
-import { setOperatingHours } from '../../actions/current-space';
-
 import OperatingHourEditModal, {
     OperatingHourEditModalID,
 } from './operating-hour-edit-modal';
 
+import { UpdateOperatingHourAction } from '../../redux-types/osdb-api';
+
+import { updateOperatingHour } from '../../actions/osdb-api';
+
 interface _ReduxProps {
+    /**
+     * ID of the space
+     */
+    spaceID?: string;
+
     /**
      * Names of the space
      */
@@ -31,18 +38,48 @@ interface _ReduxProps {
      * Operating hours and days
      */
     operatingHours?: string[];
+
+    /**
+     * Updating operating hour
+     */
+    updatingOperatingHour: boolean;
 }
 
 interface _ReduxActionCreators {
     /**
-     * Set operating hours of the space
+     * Update operating hours of the space
      */
-    setOperatingHours: typeof setOperatingHours;
+    updateOperatingHour: UpdateOperatingHourAction;
 }
 
 interface OSGeneralInfoProps extends _ReduxProps, _ReduxActionCreators {}
 
 class _OSGeneralInfo extends React.Component<OSGeneralInfoProps> {
+    private _renderOperatingHours = () => {
+        if (this.props.updatingOperatingHour) {
+            return (
+                <p className="h6 os-grey-1 os-text-ellipsis">
+                    (업데이트 중...)
+                </p>
+            );
+        } else if (
+            !this.props.operatingHours ||
+            this.props.operatingHours.length <= 0
+        ) {
+            return (
+                <p className="h6 os-grey-1 os-text-ellipsis">
+                    (운영시간 정보가 없습니다.)
+                </p>
+            );
+        } else {
+            return this.props.operatingHours.map((workingHour: string) => (
+                <p key={workingHour} className="h6 os-grey-1 os-text-ellipsis">
+                    {workingHour}
+                </p>
+            ));
+        }
+    };
+
     render() {
         let typesText: string = '';
         if (this.props.types)
@@ -94,22 +131,7 @@ class _OSGeneralInfo extends React.Component<OSGeneralInfoProps> {
                             <i className="material-icons">access_time</i>
                         </p>
                         <div className="text">
-                            {!this.props.operatingHours && (
-                                <p className="h6 os-grey-1 os-text-ellipsis">
-                                    운영시간 정보가 없습니다.
-                                </p>
-                            )}
-                            {this.props.operatingHours &&
-                                this.props.operatingHours.map(
-                                    (workingHour: string) => (
-                                        <p
-                                            key={workingHour}
-                                            className="h6 os-grey-1 os-text-ellipsis"
-                                        >
-                                            {workingHour}
-                                        </p>
-                                    ),
-                                )}
+                            {this._renderOperatingHours()}
                         </div>
                         <button
                             data-toggle="modal"
@@ -120,9 +142,18 @@ class _OSGeneralInfo extends React.Component<OSGeneralInfoProps> {
                                 수정
                             </p>
                         </button>
-                        <OperatingHourEditModal
-                            setOperatingHours={this.props.setOperatingHours}
-                        />
+                        {this.props.spaceID && (
+                            <OperatingHourEditModal
+                                updateOperatingHour={(
+                                    operatingHours: string[],
+                                ) => {
+                                    this.props.updateOperatingHour(
+                                        this.props.spaceID!,
+                                        operatingHours,
+                                    );
+                                }}
+                            />
+                        )}
                     </div>
                 </div>
             </div>
@@ -131,16 +162,18 @@ class _OSGeneralInfo extends React.Component<OSGeneralInfoProps> {
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
+    spaceID: state.currentSpace.data && state.currentSpace.data.id,
     spaceNames: state.currentSpace.data && state.currentSpace.data.spaceNames,
     types: state.currentSpace.data && state.currentSpace.data.types,
     locationText:
         state.currentSpace.data && state.currentSpace.data.locationText,
     operatingHours:
         state.currentSpace.data && state.currentSpace.data.operatingHours,
+    updatingOperatingHour: state.currentSpace.status.updatingOperatingHour,
 });
 
 const mapDispatchToProps = {
-    setOperatingHours,
+    updateOperatingHour,
 };
 
 const OSGeneralInfo = connect(

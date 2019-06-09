@@ -1,4 +1,4 @@
-import { getFromServer } from './request';
+import { getFromServer, postToServer } from './request';
 
 import Space, { AmenityTag } from '../model/space';
 import SpaceTrees, {
@@ -28,12 +28,12 @@ export const osdbGetSpaceTrees = async (
             spaceIDs.map(async (sid: string) => {
                 await getFromServer({
                     url: `/ospace/${sid}`,
-                }).then(response => {
-                    if (response.space_names) {
+                }).then(responseBody => {
+                    if (responseBody.space_names) {
                         spaceHeaders.push({
                             id: sid,
-                            pid: response.parent_space_id,
-                            names: response.space_names,
+                            pid: responseBody.parent_space_id,
+                            names: responseBody.space_names,
                         });
                     }
                 });
@@ -49,25 +49,49 @@ export const osdbGetSpaceTrees = async (
 export const osdbGetSpace = async (spaceID: string): Promise<Space> => {
     return new Promise((resolve, reject) => {
         getFromServer({ url: `/ospace/${spaceID}` })
-            .then(response => {
+            .then(responseBody => {
                 resolve({
                     id: spaceID,
-                    spaceNames: response.space_names,
-                    types: [response.type],
-                    locationText: response.location_text,
+                    spaceNames: responseBody.space_names,
+                    types: [responseBody.type],
+                    locationText: responseBody.location_text,
                     location: {
-                        lat: response.latitude,
-                        lng: response.longitude,
+                        lat: responseBody.latitude,
+                        lng: responseBody.longitude,
                     },
-                    operatingHours: response.operating_hours,
+                    operatingHours:
+                        responseBody.operating_hours === ''
+                            ? []
+                            : responseBody.operating_hours.split('\n'),
                     amenityTags: Object.keys(
-                        response.amenity_tags,
+                        responseBody.amenity_tags,
                     ) as AmenityTag[],
                     spaceIntroduce: '',
-                    images: response.images,
-                    rank: response.rank,
+                    images: responseBody.images,
+                    rank: responseBody.rank,
                     busyLevel: '1',
                 });
+            })
+            .catch(error => reject(error));
+    });
+};
+
+/**
+ * Update space operating hour
+ */
+export const osdbUpdateOperatingHour = async (
+    spaceID: string,
+    operatingHours: string[],
+): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        postToServer(
+            { url: `/ospace/${spaceID}` },
+            {
+                operating_hours: operatingHours.join('\n'),
+            },
+        )
+            .then(() => {
+                resolve();
             })
             .catch(error => reject(error));
     });
