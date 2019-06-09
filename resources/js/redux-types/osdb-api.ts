@@ -3,4 +3,4 @@
  */
 export type FetchSpaceTreesAction = (organizerUID: string) => void;
 
-export type FetchSpaceAction = () => void;
+export type FetchSpaceAction = (spaceID: string) => void;

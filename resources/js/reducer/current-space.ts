@@ -13,7 +13,6 @@ import {
  * Initial State
  */
 const initialState: CurrentSpaceState = {
-    data: {},
     status: {
         requestingSpace: false,
     },
@@ -28,40 +27,52 @@ export default function CurrentSpaceReducer(
 ): CurrentSpaceState {
     switch (action.type) {
         case UPDATE_SPACE_INTRODUCE:
-            return {
-                ...state,
-                data: {
-                    ...state.data,
-                    spaceIntroduce: action.spaceIntroduce,
-                },
-            };
+            if (state.data)
+                return {
+                    ...state,
+                    data: {
+                        ...state.data,
+                        spaceIntroduce: action.spaceIntroduce,
+                    },
+                };
+            else
+                return state;
 
         case SET_OPERATING_HOURS:
-            return {
-                ...state,
-                data: {
-                    ...state.data,
-                    operatingHours: action.operatingHours,
-                },
-            };
+            if (state.data)
+                return {
+                    ...state,
+                    data: {
+                        ...state.data,
+                        operatingHours: action.operatingHours,
+                    },
+                };
+            else
+                return state;
 
         case SET_BUSY_LEVEL:
-            return {
-                ...state,
-                data: {
-                    ...state.data,
-                    busyLevel: action.busyLevel,
-                },
-            };
+            if (state.data)
+                return {
+                    ...state,
+                    data: {
+                        ...state.data,
+                        busyLevel: action.busyLevel,
+                    },
+                };
+            else
+                return state;
 
         case SET_AMENITY_TAGS:
-            return {
-                ...state,
-                data: {
-                    ...state.data,
-                    amenityTags: action.amenityTags,
-                },
-            };
+            if (state.data)
+                return {
+                    ...state,
+                    data: {
+                        ...state.data,
+                        amenityTags: action.amenityTags,
+                    },
+                };
+            else
+                return state;
 
         case REQUEST_SPACE:
             return {

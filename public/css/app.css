@@ -10874,101 +10874,6 @@ button {
   align-items: center;
 }
 
-#home-spaces-tab {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  max-height: 100%;
-  overflow: scroll;
-}
-
-#home-spaces-tab > p {
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
-  padding-left: 0.5rem;
-}
-
-#home-spaces-tab > .space-group {
-  display: flex;
-  flex-direction: column;
-  border-top: 2px solid #f3a930;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-}
-
-#home-spaces-tab > .space-group:last-child {
-  border-bottom: 2px solid #f3a930;
-}
-
-#home-spaces-tab > .space-group .space-item {
-  display: flex;
-  align-items: stretch;
-  padding: 0.5rem;
-  margin-top: 0.3rem;
-  margin-bottom: 0.3rem;
-  border-radius: 0.5rem;
-}
-
-#home-spaces-tab > .space-group .space-item:hover {
-  background-color: #f5f5f5;
-}
-
-#home-spaces-tab > .space-group .space-item.depth-0 > .bullet {
-  width: 0rem;
-}
-
-#home-spaces-tab > .space-group .space-item.depth-0 > .space-item-body {
-  justify-content: flex-end;
-  margin-bottom: 0.5rem;
-}
-
-#home-spaces-tab > .space-group .space-item.depth-1 > .bullet {
-  width: 1.5rem;
-}
-
-#home-spaces-tab > .space-group .space-item.depth-2 > .bullet {
-  width: 3rem;
-}
-
-#home-spaces-tab > .space-group .space-item.depth-3 > .bullet {
-  width: 4.5rem;
-}
-
-#home-spaces-tab > .space-group .space-item.depth-4 > .bullet {
-  width: 6rem;
-}
-
-#home-spaces-tab > .space-group .space-item.selected {
-  background-color: #f2bf54;
-}
-
-#home-spaces-tab > .space-group .space-item.selected > .space-item-body > p {
-  color: #ffffff;
-}
-
-#home-spaces-tab > .space-group .space-item > img {
-  height: 5rem;
-  width: 5rem;
-}
-
-#home-spaces-tab > .space-group .space-item > .space-item-body {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  overflow: hidden;
-  margin-left: 0.7rem;
-}
-
-#home-spaces-tab > .space-group .space-item > .space-item-body > p:last-child {
-  margin-top: 0.5rem;
-}
-
 #home-main-view {
   height: 100%;
   width: 100%;
@@ -11050,6 +10955,102 @@ button {
 
 #home-main-view > #body > #right {
   border-left: 0.5px solid #e5e5e5;
+}
+
+#os-space-tree {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  max-height: 100%;
+  overflow: scroll;
+}
+
+#os-space-tree > p {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  padding-left: 0.5rem;
+}
+
+#os-space-tree > .space-group {
+  display: flex;
+  flex-direction: column;
+  border-top: 2px solid #f3a930;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+#os-space-tree > .space-group:last-child {
+  border-bottom: 2px solid #f3a930;
+}
+
+#os-space-tree > .space-group .space-item {
+  display: flex;
+  align-items: stretch;
+  padding: 0.5rem;
+  margin-top: 0.3rem;
+  margin-bottom: 0.3rem;
+  border-radius: 0.5rem;
+  cursor: default;
+}
+
+#os-space-tree > .space-group .space-item:hover {
+  background-color: #f5f5f5;
+}
+
+#os-space-tree > .space-group .space-item.depth-0 > .bullet {
+  width: 0rem;
+}
+
+#os-space-tree > .space-group .space-item.depth-0 > .space-item-body {
+  justify-content: flex-end;
+  margin-bottom: 0.5rem;
+}
+
+#os-space-tree > .space-group .space-item.depth-1 > .bullet {
+  width: 1.5rem;
+}
+
+#os-space-tree > .space-group .space-item.depth-2 > .bullet {
+  width: 3rem;
+}
+
+#os-space-tree > .space-group .space-item.depth-3 > .bullet {
+  width: 4.5rem;
+}
+
+#os-space-tree > .space-group .space-item.depth-4 > .bullet {
+  width: 6rem;
+}
+
+#os-space-tree > .space-group .space-item.selected {
+  background-color: #f2bf54;
+}
+
+#os-space-tree > .space-group .space-item.selected > .space-item-body > p {
+  color: #ffffff;
+}
+
+#os-space-tree > .space-group .space-item > img {
+  height: 5rem;
+  width: 5rem;
+}
+
+#os-space-tree > .space-group .space-item > .space-item-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  overflow: hidden;
+  margin-left: 0.7rem;
+}
+
+#os-space-tree > .space-group .space-item > .space-item-body > p:last-child {
+  margin-top: 0.5rem;
 }
 
 #os-page-status {

@@ -114,7 +114,8 @@ class _OSSpaceIntroduce extends React.Component<OSSpaceIntroduceProps> {
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
-    spaceIntroduce: state.currentSpace.data.spaceIntroduce,
+    spaceIntroduce:
+        state.currentSpace.data && state.currentSpace.data.spaceIntroduce,
 });
 
 const mapDispatchToProps = {

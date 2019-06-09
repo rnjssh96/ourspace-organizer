@@ -1,4 +1,4 @@
-#home-spaces-tab {
+#os-space-tree {
     // size
     flex: 1;
 
@@ -57,6 +57,9 @@
 
             // border
             border-radius: 0.5rem;
+
+            // make button
+            cursor: default;
 
             &:hover {
                 // background

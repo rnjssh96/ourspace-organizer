@@ -27,7 +27,7 @@ class _OSLoactionMap extends React.Component<OSLoactionMapProps> {
                         lat: this.props.location.lat,
                         lng: this.props.location.lng,
                     }}
-                    zoom={8}
+                    zoom={15}
                 />
             );
         } else {
@@ -42,7 +42,7 @@ class _OSLoactionMap extends React.Component<OSLoactionMapProps> {
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
-    location: state.currentSpace.data.location,
+    location: state.currentSpace.data && state.currentSpace.data.location,
 });
 
 const mapDispatchToProps = {};

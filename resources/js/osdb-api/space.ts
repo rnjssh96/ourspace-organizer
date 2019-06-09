@@ -51,6 +51,26 @@ export const osdbGetSpaceTrees = async (
  * Get space by space
  */
 export const osdbGetSpace = async (spaceID: string): Promise<Space> => {
-    getFromServer({});
-    return {};
+    return new Promise(resolve => {
+        getFromServer({ url: `/ospace/${spaceID}` }).then(response => {
+            if (response) {
+                resolve({
+                    id: spaceID,
+                    spaceNames: response.space_names,
+                    types: [response.type],
+                    locationText: response.location_text,
+                    location: {
+                        lat: response.latitude,
+                        lng: response.longitude,
+                    },
+                    operatingHours: response.operating_hours,
+                    amenityTags: [], //response.amenity_tags,
+                    spaceIntroduce: '',
+                    images: response.images,
+                    rank: response.rank,
+                    busyLevel: '1',
+                });
+            }
+        });
+    });
 };

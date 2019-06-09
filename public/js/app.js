@@ -72391,9 +72391,9 @@ exports.fetchSpaceTrees = (organizerUID) => async (dispatch) => {
 /**
  * Fetch space from OSDB
  */
-exports.fetchSpace = () => async (dispatch) => {
+exports.fetchSpace = (spaceID) => async (dispatch) => {
     dispatch(current_space_1.requestSpace());
-    space_1.osdbGetSpace('RgnQ71NWGxlikEOjbIdr').then((space) => {
+    space_1.osdbGetSpace(spaceID).then((space) => {
         dispatch(current_space_1.receiveSpace(space));
     });
 };
@@ -72773,7 +72773,7 @@ class _OSAmenityTags extends react_1.default.Component {
     }
 }
 const mapStateToProps = (state) => ({
-    amenityTags: state.currentSpace.data.amenityTags,
+    amenityTags: state.currentSpace.data && state.currentSpace.data.amenityTags,
 });
 const mapDispatchToProps = {
     setSelectedAmenities: selected_amenities_1.setSelectedAmenities,
@@ -72855,10 +72855,10 @@ class _OSGeneralInfo extends react_1.default.Component {
     }
 }
 const mapStateToProps = (state) => ({
-    spaceNames: state.currentSpace.data.spaceNames,
-    types: state.currentSpace.data.types,
-    locationText: state.currentSpace.data.locationText,
-    operatingHours: state.currentSpace.data.operatingHours,
+    spaceNames: state.currentSpace.data && state.currentSpace.data.spaceNames,
+    types: state.currentSpace.data && state.currentSpace.data.types,
+    locationText: state.currentSpace.data && state.currentSpace.data.locationText,
+    operatingHours: state.currentSpace.data && state.currentSpace.data.operatingHours,
 });
 const mapDispatchToProps = {
     setOperatingHours: current_space_1.setOperatingHours,
@@ -73203,7 +73203,7 @@ class _OSImagesEditor extends react_1.default.Component {
     }
 }
 const mapStateToProps = (state) => ({
-    images: state.currentSpace.data.images,
+    images: state.currentSpace.data && state.currentSpace.data.images,
 });
 const mapDispatchToProps = {
     resetUploadImages: upload_images_1.resetUploadImages,
@@ -73237,7 +73237,7 @@ class _OSLoactionMap extends react_1.default.Component {
             return (react_1.default.createElement(os_google_map_1.default, { id: "os-location-map", center: {
                     lat: this.props.location.lat,
                     lng: this.props.location.lng,
-                }, zoom: 8 }));
+                }, zoom: 15 }));
         }
         else {
             return (react_1.default.createElement(os_page_status_1.default, { status: "information", info: "\uC704\uCE58\uC815\uBCF4\uAC00 \uC874\uC7AC\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4." }));
@@ -73245,7 +73245,7 @@ class _OSLoactionMap extends react_1.default.Component {
     }
 }
 const mapStateToProps = (state) => ({
-    location: state.currentSpace.data.location,
+    location: state.currentSpace.data && state.currentSpace.data.location,
 });
 const mapDispatchToProps = {};
 const OSLoactionMap = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_OSLoactionMap);
@@ -73331,7 +73331,7 @@ class _OSRankDisplay extends react_1.default.Component {
     }
 }
 const mapStateToProps = (state) => ({
-    rank: state.currentSpace.data.rank || 0,
+    rank: (state.currentSpace.data && state.currentSpace.data.rank) || 0,
 });
 const mapDispatchToProps = {};
 const OSRankDisplay = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_OSRankDisplay);
@@ -73403,13 +73403,77 @@ class _OSSpaceIntroduce extends react_1.default.Component {
     }
 }
 const mapStateToProps = (state) => ({
-    spaceIntroduce: state.currentSpace.data.spaceIntroduce,
+    spaceIntroduce: state.currentSpace.data && state.currentSpace.data.spaceIntroduce,
 });
 const mapDispatchToProps = {
     updateSpaceIntroduce: current_space_1.updateSpaceIntroduce,
 };
 const OSSpaceIntroduce = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_OSSpaceIntroduce);
 exports.default = OSSpaceIntroduce;
+
+
+/***/ }),
+
+/***/ "./resources/js/components/os-space-tree.tsx":
+/*!***************************************************!*\
+  !*** ./resources/js/components/os-space-tree.tsx ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const space_tree_1 = __webpack_require__(/*! ../model/space-tree */ "./resources/js/model/space-tree.ts");
+const osdb_api_1 = __webpack_require__(/*! ../actions/osdb-api */ "./resources/js/actions/osdb-api.ts");
+const MAX_DEPTH = 4;
+class _OSSpaceTree extends react_1.default.Component {
+    constructor() {
+        super(...arguments);
+        this._onSpaceClick = (spaceID) => this.props.fetchSpace(spaceID);
+        this._renderSpaceGroup = (group) => {
+            let rtn = [];
+            space_tree_1.traverseSpaceTree(group, (spaceHeader, depth) => {
+                rtn.push(this._renderSpace(spaceHeader, depth));
+            });
+            return rtn;
+        };
+        this._renderSpaceTrees = () => this.props.spaceTrees.map((group) => (react_1.default.createElement("div", { key: group.spaceHeader.id, className: "space-group" }, this._renderSpaceGroup(group))));
+    }
+    _renderSpace(spaceHeader, depth, selcted = false) {
+        return (react_1.default.createElement("a", { key: spaceHeader.id, className: `space-item
+                    depth-${depth > MAX_DEPTH ? MAX_DEPTH : depth} ${selcted ? 'selected' : ''}
+                ${spaceHeader.id === this.props.currentSpaceID
+                ? 'selected'
+                : ''}`, onClick: () => this._onSpaceClick(spaceHeader.id) },
+            depth == 0 && (react_1.default.createElement("img", { src: "./demo-images/about_img_01.jpg", className: "rounded" })),
+            react_1.default.createElement("div", { className: "bullet" }),
+            react_1.default.createElement("div", { className: "space-item-body" },
+                react_1.default.createElement("p", { className: "h5 os-text-ellipsis" }, spaceHeader.names['ko']),
+                react_1.default.createElement("p", { className: "h6 os-grey-1" },
+                    react_1.default.createElement("i", { className: "material-icons" }, "location_on"),
+                    "\uC11C\uC6B8 \uC1A1\uD30C\uAD6C \uC62C\uB9BC\uD53D\uB85C 35\uAE38 104"))));
+    }
+    render() {
+        return (react_1.default.createElement("div", { id: "os-space-tree" },
+            react_1.default.createElement("p", { className: "h5" }, "\uC2A4\uD398\uC774\uC2A4"),
+            this._renderSpaceTrees()));
+    }
+}
+const mapStateToProps = (state) => ({
+    spaceTrees: state.spaceTrees.data,
+    currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
+});
+const mapDispatchToProps = {
+    fetchSpace: osdb_api_1.fetchSpace,
+};
+const OSSpaceTree = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_OSSpaceTree);
+exports.default = OSSpaceTree;
 
 
 /***/ }),
@@ -73891,9 +73955,6 @@ const os_loaction_map_1 = __importDefault(__webpack_require__(/*! ../components/
 const os_general_info_1 = __importDefault(__webpack_require__(/*! ../components/os-general-info */ "./resources/js/components/os-general-info/index.tsx"));
 const os_space_introduce_1 = __importDefault(__webpack_require__(/*! ../components/os-space-introduce */ "./resources/js/components/os-space-introduce.tsx"));
 class _HomeMainView extends react_1.default.Component {
-    componentWillMount() {
-        this.props.fetchSpace();
-    }
     render() {
         if (this.props.requestingSpace) {
             return react_1.default.createElement(os_page_status_1.default, { status: "loading" });
@@ -73919,7 +73980,7 @@ class _HomeMainView extends react_1.default.Component {
     }
 }
 const mapStateToProps = (state) => ({
-    currentSpaceID: state.currentSpace.data.id,
+    currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
     requestingSpace: state.currentSpace.status.requestingSpace,
 });
 const mapDispatchToProps = {
@@ -73946,39 +74007,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-const space_tree_1 = __webpack_require__(/*! ../model/space-tree */ "./resources/js/model/space-tree.ts");
 const osdb_api_1 = __webpack_require__(/*! ../actions/osdb-api */ "./resources/js/actions/osdb-api.ts");
 const os_page_status_1 = __importDefault(__webpack_require__(/*! ../components/os-page-status */ "./resources/js/components/os-page-status.tsx"));
-const MAX_DEPTH = 4;
+const os_space_tree_1 = __importDefault(__webpack_require__(/*! ../components/os-space-tree */ "./resources/js/components/os-space-tree.tsx"));
 class _HomeSpacesTab extends react_1.default.Component {
-    constructor() {
-        super(...arguments);
-        this._renderSpaceGroup = (group) => {
-            let rtn = [];
-            space_tree_1.traverseSpaceTree(group, (spaceHeader, depth) => {
-                rtn.push(this._renderSpace(spaceHeader, depth));
-            });
-            return rtn;
-        };
-        this._renderSpaceTrees = () => this.props.spaceTrees.map((group) => (react_1.default.createElement("div", { key: group.spaceHeader.id, className: "space-group" }, this._renderSpaceGroup(group))));
-    }
     componentWillMount() {
         this.props.currentUser &&
             this.props.fetchSpaceTrees(this.props.currentUser.uid);
-    }
-    _renderSpace(spaceHeader, depth, selcted = false) {
-        return (react_1.default.createElement("a", { key: spaceHeader.id, className: `space-item
-                    depth-${depth > MAX_DEPTH ? MAX_DEPTH : depth} ${selcted ? 'selected' : ''}
-                ${spaceHeader.id === this.props.currentSpaceID
-                ? 'selected'
-                : ''}` },
-            depth == 0 && (react_1.default.createElement("img", { src: "./demo-images/about_img_01.jpg", className: "rounded" })),
-            react_1.default.createElement("div", { className: "bullet" }),
-            react_1.default.createElement("div", { className: "space-item-body" },
-                react_1.default.createElement("p", { className: "h5 os-text-ellipsis" }, spaceHeader.names['ko']),
-                react_1.default.createElement("p", { className: "h6 os-grey-1" },
-                    react_1.default.createElement("i", { className: "material-icons" }, "location_on"),
-                    "\uC11C\uC6B8 \uC1A1\uD30C\uAD6C \uC62C\uB9BC\uD53D\uB85C 35\uAE38 104"))));
     }
     render() {
         if (this.props.requestingSpaceTrees) {
@@ -73988,16 +74023,13 @@ class _HomeSpacesTab extends react_1.default.Component {
             return (react_1.default.createElement(os_page_status_1.default, { status: "information", info: "\uAD00\uB9AC\uC911\uC778 \uC2A4\uD398\uC774\uC2A4\uAC00 \uC874\uC7AC\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4." }));
         }
         else {
-            return (react_1.default.createElement("div", { id: "home-spaces-tab" },
-                react_1.default.createElement("p", { className: "h5" }, "\uC2A4\uD398\uC774\uC2A4"),
-                this._renderSpaceTrees()));
+            return react_1.default.createElement(os_space_tree_1.default, null);
         }
     }
 }
 const mapStateToProps = (state) => ({
     currentUser: state.auth.currentUser,
     spaceTrees: state.spaceTrees.data,
-    currentSpaceID: state.currentSpace.data.id,
     requestingSpaceTrees: state.spaceTrees.status.requestingSpaceTrees,
 });
 const mapDispatchToProps = {
@@ -74209,8 +74241,28 @@ exports.osdbGetSpaceTrees = async (organizerUID) => {
  * Get space by space
  */
 exports.osdbGetSpace = async (spaceID) => {
-    request_1.getFromServer({});
-    return {};
+    return new Promise(resolve => {
+        request_1.getFromServer({ url: `/ospace/${spaceID}` }).then(response => {
+            if (response) {
+                resolve({
+                    id: spaceID,
+                    spaceNames: response.space_names,
+                    types: [response.type],
+                    locationText: response.location_text,
+                    location: {
+                        lat: response.latitude,
+                        lng: response.longitude,
+                    },
+                    operatingHours: response.operating_hours,
+                    amenityTags: [],
+                    spaceIntroduce: '',
+                    images: response.images,
+                    rank: response.rank,
+                    busyLevel: '1',
+                });
+            }
+        });
+    });
 };
 
 
@@ -74301,7 +74353,6 @@ const current_space_1 = __webpack_require__(/*! ../redux-types/current-space */ 
  * Initial State
  */
 const initialState = {
-    data: {},
     status: {
         requestingSpace: false,
     },
@@ -74312,37 +74363,49 @@ const initialState = {
 function CurrentSpaceReducer(state = initialState, action) {
     switch (action.type) {
         case current_space_1.UPDATE_SPACE_INTRODUCE:
-            return {
-                ...state,
-                data: {
-                    ...state.data,
-                    spaceIntroduce: action.spaceIntroduce,
-                },
-            };
+            if (state.data)
+                return {
+                    ...state,
+                    data: {
+                        ...state.data,
+                        spaceIntroduce: action.spaceIntroduce,
+                    },
+                };
+            else
+                return state;
         case current_space_1.SET_OPERATING_HOURS:
-            return {
-                ...state,
-                data: {
-                    ...state.data,
-                    operatingHours: action.operatingHours,
-                },
-            };
+            if (state.data)
+                return {
+                    ...state,
+                    data: {
+                        ...state.data,
+                        operatingHours: action.operatingHours,
+                    },
+                };
+            else
+                return state;
         case current_space_1.SET_BUSY_LEVEL:
-            return {
-                ...state,
-                data: {
-                    ...state.data,
-                    busyLevel: action.busyLevel,
-                },
-            };
+            if (state.data)
+                return {
+                    ...state,
+                    data: {
+                        ...state.data,
+                        busyLevel: action.busyLevel,
+                    },
+                };
+            else
+                return state;
         case current_space_1.SET_AMENITY_TAGS:
-            return {
-                ...state,
-                data: {
-                    ...state.data,
-                    amenityTags: action.amenityTags,
-                },
-            };
+            if (state.data)
+                return {
+                    ...state,
+                    data: {
+                        ...state.data,
+                        amenityTags: action.amenityTags,
+                    },
+                };
+            else
+                return state;
         case current_space_1.REQUEST_SPACE:
             return {
                 ...state,

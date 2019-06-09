@@ -36,10 +36,6 @@ interface _ReduxActionCreators {
 interface HomeMainViewProps extends _ReduxProps, _ReduxActionCreators {}
 
 class _HomeMainView extends React.Component<HomeMainViewProps> {
-    componentWillMount() {
-        this.props.fetchSpace();
-    }
-
     render() {
         if (this.props.requestingSpace) {
             return <OSPageStatus status="loading" />;
@@ -80,7 +76,7 @@ class _HomeMainView extends React.Component<HomeMainViewProps> {
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
-    currentSpaceID: state.currentSpace.data.id,
+    currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
     requestingSpace: state.currentSpace.status.requestingSpace,
 });
 

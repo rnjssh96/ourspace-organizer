@@ -52,7 +52,8 @@ class _OSBusyLevelSelector extends React.Component<OSBusyLevelSelectorProps> {
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
-    busyLevel: state.currentSpace.data.busyLevel || '1',
+    busyLevel:
+        (state.currentSpace.data && state.currentSpace.data.busyLevel) || '1',
 });
 
 const mapDispatchToProps = {

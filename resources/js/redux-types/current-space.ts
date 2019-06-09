@@ -6,7 +6,7 @@ import Space, { BusyLevel, AmenityTag } from '../model/space';
  * Current Space State
  */
 export type CurrentSpaceState = {
-    data: Space;
+    data?: Space;
     status: {
         requestingSpace: boolean;
     }

@@ -4,17 +4,12 @@ import { connect } from 'react-redux';
 import RootState from '../redux-types';
 import { FetchSpaceTreesAction } from '../redux-types/osdb-api';
 
-import SpaceTrees, {
-    traverseSpaceTree,
-    SpaceTree,
-    SpaceHeader,
-} from '../model/space-tree';
+import SpaceTrees from '../model/space-tree';
 import { fetchSpaceTrees } from '../actions/osdb-api';
 
 import OSPageStatus from '../components/os-page-status';
 import OSOrganizer from '../model/organizer';
-
-const MAX_DEPTH = 4;
+import OSSpaceTree from '../components/os-space-tree';
 
 interface _ReduxProps {
     /**
@@ -26,11 +21,6 @@ interface _ReduxProps {
      * All spaces in tree structure
      */
     spaceTrees: SpaceTrees;
-
-    /**
-     * Current space ID
-     */
-    currentSpaceID?: string;
 
     /**
      * Space trees requesting
@@ -53,59 +43,6 @@ class _HomeSpacesTab extends React.Component<HomeSpacesTabProps> {
             this.props.fetchSpaceTrees(this.props.currentUser.uid);
     }
 
-    private _renderSpace(
-        spaceHeader: SpaceHeader,
-        depth: number,
-        selcted = false,
-    ) {
-        return (
-            <a
-                key={spaceHeader.id}
-                className={`space-item
-                    depth-${depth > MAX_DEPTH ? MAX_DEPTH : depth} ${
-                    selcted ? 'selected' : ''
-                }
-                ${
-                    spaceHeader.id === this.props.currentSpaceID
-                        ? 'selected'
-                        : ''
-                }`}
-            >
-                {depth == 0 && (
-                    <img
-                        src="./demo-images/about_img_01.jpg"
-                        className="rounded"
-                    />
-                )}
-                <div className="bullet" />
-                <div className="space-item-body">
-                    <p className="h5 os-text-ellipsis">
-                        {spaceHeader.names['ko']}
-                    </p>
-                    <p className="h6 os-grey-1">
-                        <i className="material-icons">location_on</i>
-                        서울 송파구 올림픽로 35길 104
-                    </p>
-                </div>
-            </a>
-        );
-    }
-
-    private _renderSpaceGroup = (group: SpaceTree) => {
-        let rtn: JSX.Element[] = [];
-        traverseSpaceTree(group, (spaceHeader: SpaceHeader, depth: number) => {
-            rtn.push(this._renderSpace(spaceHeader, depth));
-        });
-        return rtn;
-    };
-
-    private _renderSpaceTrees = () =>
-        this.props.spaceTrees.map((group: SpaceTree) => (
-            <div key={group.spaceHeader.id} className="space-group">
-                {this._renderSpaceGroup(group)}
-            </div>
-        ));
-
     render() {
         if (this.props.requestingSpaceTrees) {
             return <OSPageStatus status="loading" />;
@@ -117,12 +54,7 @@ class _HomeSpacesTab extends React.Component<HomeSpacesTabProps> {
                 />
             );
         } else {
-            return (
-                <div id="home-spaces-tab">
-                    <p className="h5">스페이스</p>
-                    {this._renderSpaceTrees()}
-                </div>
-            );
+            return <OSSpaceTree />;
         }
     }
 }
@@ -130,7 +62,6 @@ class _HomeSpacesTab extends React.Component<HomeSpacesTabProps> {
 const mapStateToProps = (state: RootState): _ReduxProps => ({
     currentUser: state.auth.currentUser,
     spaceTrees: state.spaceTrees.data,
-    currentSpaceID: state.currentSpace.data.id,
     requestingSpaceTrees: state.spaceTrees.status.requestingSpaceTrees,
 });
 
