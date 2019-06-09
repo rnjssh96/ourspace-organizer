@@ -7,8 +7,6 @@ import ImageUploadModal, { ImageUploadModalID } from './image-upload-modal';
 
 import { resetUploadImages } from '../../actions/upload-images';
 
-import OSPageStatus from '../os-page-status';
-
 interface _ReduxProps {
     /**
      * Images of the space
@@ -30,18 +28,21 @@ class _OSImagesEditor extends React.Component<OSImagesEditorProps> {
         this.props.resetUploadImages();
     };
 
+    private _renderEmpty = () => {
+        return (
+            <div id="empty">
+                <p className="h6">등록된 사진이 없습니다.</p>
+            </div>
+        );
+    };
+
     private _renderImages() {
-        if (this.props.images) {
+        if (this.props.images && this.props.images.length > 0) {
             return this.props.images.map((image: string) => (
                 <img key={image} src={image} className="rounded" />
             ));
         } else {
-            return (
-                <OSPageStatus
-                    status="information"
-                    info="등록된 사진이 존재하지 않습니다."
-                />
-            );
+            return this._renderEmpty();
         }
     }
 
@@ -49,7 +50,7 @@ class _OSImagesEditor extends React.Component<OSImagesEditorProps> {
         return (
             <div id="os-images-editor">
                 <div className="header">
-                    <p className="h5">매장사진</p>
+                    <p className="h5">사진</p>
                     <button
                         data-toggle="modal"
                         data-target={`#${ImageUploadModalID}`}

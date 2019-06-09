@@ -94,6 +94,11 @@ class _OSGeneralInfo extends React.Component<OSGeneralInfoProps> {
                             <i className="material-icons">access_time</i>
                         </p>
                         <div className="text">
+                            {!this.props.operatingHours && (
+                                <p className="h6 os-grey-1 os-text-ellipsis">
+                                    운영시간 정보가 없습니다.
+                                </p>
+                            )}
                             {this.props.operatingHours &&
                                 this.props.operatingHours.map(
                                     (workingHour: string) => (

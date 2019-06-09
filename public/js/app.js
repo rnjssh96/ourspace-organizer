@@ -75069,10 +75069,13 @@ const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/rea
 const space_1 = __webpack_require__(/*! ../../model/space */ "./resources/js/model/space.ts");
 const selected_amenities_1 = __webpack_require__(/*! ../../actions/selected-amenities */ "./resources/js/actions/selected-amenities.ts");
 const amenities_edit_modal_1 = __importStar(__webpack_require__(/*! ./amenities-edit-modal */ "./resources/js/components/os-amenity-tags/amenities-edit-modal.tsx"));
-const os_page_status_1 = __importDefault(__webpack_require__(/*! ../os-page-status */ "./resources/js/components/os-page-status.tsx"));
 class _OSAmenityTags extends react_1.default.Component {
     constructor() {
         super(...arguments);
+        this._renderEmpty = () => {
+            return (react_1.default.createElement("div", { id: "empty" },
+                react_1.default.createElement("p", { className: "h6" }, "\uB4F1\uB85D\uB41C \uD3B8\uC758\uC2DC\uC124\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.")));
+        };
         this._renderAmenity = (tag) => {
             let amenity = space_1.interpretAmenity(tag, 'ko');
             return (react_1.default.createElement("div", { key: tag, className: "amenity" },
@@ -75081,11 +75084,11 @@ class _OSAmenityTags extends react_1.default.Component {
                         react_1.default.createElement("i", { className: amenity.faicon })))));
         };
         this._renderAmenities = () => {
-            if (this.props.amenityTags) {
+            if (this.props.amenityTags && this.props.amenityTags.length > 0) {
                 return this.props.amenityTags.map((tag) => this._renderAmenity(tag));
             }
             else {
-                return (react_1.default.createElement(os_page_status_1.default, { status: "information", info: "\uD3B8\uC758\uC2DC\uC124\uC744 \uCD94\uAC00\uD574 \uC8FC\uC138\uC694." }));
+                return this._renderEmpty();
             }
         };
         this._resetSelectedAmenities = () => {
@@ -75182,8 +75185,10 @@ class _OSGeneralInfo extends react_1.default.Component {
                 react_1.default.createElement("div", { className: "info-row" },
                     react_1.default.createElement("p", { className: "h6 os-grey-1 os-text-ellipsis" },
                         react_1.default.createElement("i", { className: "material-icons" }, "access_time")),
-                    react_1.default.createElement("div", { className: "text" }, this.props.operatingHours &&
-                        this.props.operatingHours.map((workingHour) => (react_1.default.createElement("p", { key: workingHour, className: "h6 os-grey-1 os-text-ellipsis" }, workingHour)))),
+                    react_1.default.createElement("div", { className: "text" },
+                        !this.props.operatingHours && (react_1.default.createElement("p", { className: "h6 os-grey-1 os-text-ellipsis" }, "\uC6B4\uC601\uC2DC\uAC04 \uC815\uBCF4\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.")),
+                        this.props.operatingHours &&
+                            this.props.operatingHours.map((workingHour) => (react_1.default.createElement("p", { key: workingHour, className: "h6 os-grey-1 os-text-ellipsis" }, workingHour)))),
                     react_1.default.createElement("button", { "data-toggle": "modal", "data-target": `#${operating_hour_edit_modal_1.OperatingHourEditModalID}` },
                         react_1.default.createElement("p", { className: "h6 os-grey-1" },
                             react_1.default.createElement("i", { className: "material-icons" }, "edit"),
@@ -75507,26 +75512,29 @@ const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 const image_upload_modal_1 = __importStar(__webpack_require__(/*! ./image-upload-modal */ "./resources/js/components/os-images-editor/image-upload-modal.tsx"));
 const upload_images_1 = __webpack_require__(/*! ../../actions/upload-images */ "./resources/js/actions/upload-images.ts");
-const os_page_status_1 = __importDefault(__webpack_require__(/*! ../os-page-status */ "./resources/js/components/os-page-status.tsx"));
 class _OSImagesEditor extends react_1.default.Component {
     constructor() {
         super(...arguments);
         this._resetUploadImages = () => {
             this.props.resetUploadImages();
         };
+        this._renderEmpty = () => {
+            return (react_1.default.createElement("div", { id: "empty" },
+                react_1.default.createElement("p", { className: "h6" }, "\uB4F1\uB85D\uB41C \uC0AC\uC9C4\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.")));
+        };
     }
     _renderImages() {
-        if (this.props.images) {
+        if (this.props.images && this.props.images.length > 0) {
             return this.props.images.map((image) => (react_1.default.createElement("img", { key: image, src: image, className: "rounded" })));
         }
         else {
-            return (react_1.default.createElement(os_page_status_1.default, { status: "information", info: "\uB4F1\uB85D\uB41C \uC0AC\uC9C4\uC774 \uC874\uC7AC\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4." }));
+            return this._renderEmpty();
         }
     }
     render() {
         return (react_1.default.createElement("div", { id: "os-images-editor" },
             react_1.default.createElement("div", { className: "header" },
-                react_1.default.createElement("p", { className: "h5" }, "\uB9E4\uC7A5\uC0AC\uC9C4"),
+                react_1.default.createElement("p", { className: "h5" }, "\uC0AC\uC9C4"),
                 react_1.default.createElement("button", { "data-toggle": "modal", "data-target": `#${image_upload_modal_1.ImageUploadModalID}`, onClick: this._resetUploadImages },
                     react_1.default.createElement("p", { className: "h6 os-grey-1" },
                         react_1.default.createElement("i", { className: "material-icons" }, "add"),

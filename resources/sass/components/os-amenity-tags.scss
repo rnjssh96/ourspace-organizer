@@ -20,6 +20,22 @@
         border: 0.5px solid $grey-2;
         border-radius: 0.5rem;
 
+        & > #empty {
+            // size
+            width: 100%;
+
+            // flex
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            // padding
+            padding: 1rem;
+
+            // text color
+            color: $grey-1;
+        }
+
         & > .amenity {
             // flex
             display: flex;

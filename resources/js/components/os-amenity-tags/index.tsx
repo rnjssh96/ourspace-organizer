@@ -10,7 +10,6 @@ import { setSelectedAmenities } from '../../actions/selected-amenities';
 import AmenitiesEditModal, {
     AmenitiesEditModalID,
 } from './amenities-edit-modal';
-import OSPageStatus from '../os-page-status';
 
 interface _ReduxProps {
     /**
@@ -29,6 +28,14 @@ interface _ReduxActionCreators {
 interface OSAmenityTagsProps extends _ReduxProps, _ReduxActionCreators {}
 
 class _OSAmenityTags extends React.Component<OSAmenityTagsProps> {
+    private _renderEmpty = () => {
+        return (
+            <div id="empty">
+                <p className="h6">등록된 편의시설이 없습니다.</p>
+            </div>
+        );
+    };
+
     private _renderAmenity = (tag: AmenityTag) => {
         let amenity = interpretAmenity(tag, 'ko');
         return (
@@ -47,17 +54,12 @@ class _OSAmenityTags extends React.Component<OSAmenityTagsProps> {
     };
 
     private _renderAmenities = () => {
-        if (this.props.amenityTags) {
+        if (this.props.amenityTags && this.props.amenityTags.length > 0) {
             return this.props.amenityTags.map((tag: AmenityTag) =>
                 this._renderAmenity(tag),
             );
         } else {
-            return (
-                <OSPageStatus
-                    status="information"
-                    info="편의시설을 추가해 주세요."
-                />
-            );
+            return this._renderEmpty();
         }
     };
 
