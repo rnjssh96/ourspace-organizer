@@ -40,14 +40,16 @@ export const attemptLogIn: ActionCreator<
                         dispatch(loginSuccess(user));
                     })
                     .catch(() => {
-                        dispatch(loginFail());
+                        dispatch(
+                            loginFail('사용자 정보를 가져오는데 실패했습니다.'),
+                        );
                     });
             } else {
-                dispatch(loginFail());
+                dispatch(loginFail('로그인에 실패하였습니다.'));
             }
         })
         .catch((err: any) => {
-            dispatch(loginFail());
+            dispatch(loginFail('로그인에 실패하였습니다.'));
         });
 };
 

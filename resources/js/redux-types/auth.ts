@@ -13,7 +13,7 @@ export type AuthState = {
     loggedStatus: LoggedStatus;
     signupStatus: SignupStatus;
     currentUser?: OSOrganizer;
-    responseMessage?: string;
+    errorMessage?: string;
 };
 
 /**
@@ -49,6 +49,7 @@ export interface LoginSuccessAction extends Action<typeof LOGIN_SUCCESS> {
 
 export interface LoginFailAction extends Action<typeof LOGIN_FAIL> {
     loggedStatus: 'failed';
+    errorMessage: string;
 }
 
 export interface LogoutAction extends Action<typeof LOGOUT> {

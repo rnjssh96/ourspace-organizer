@@ -21,17 +21,10 @@ export const getFromServer = async (
         method: 'get',
     };
 
-    return new Promise((resolve, reject) => {
-        axios(axiosCombinedConfig)
-            .then(result => {
-                if (result.status === 200) {
-                    resolve(result.data);
-                }
-            })
-            .catch(error => {
-                reject(error);
-            });
-    });
+    let result = await axios(axiosCombinedConfig);
+    if (result.status === 200) {
+        return result.data;
+    }
 };
 
 /**
@@ -48,15 +41,8 @@ export const postToServer = async (
         data: data,
     };
 
-    return new Promise((resolve, reject) => {
-        axios(axiosCombinedConfig)
-            .then(result => {
-                if (result.status === 200) {
-                    resolve(result.data);
-                }
-            })
-            .catch(error => {
-                reject(error);
-            });
-    });
+    let result = await axios(axiosCombinedConfig);
+    if (result.status === 200) {
+        return result.data;
+    }
 };

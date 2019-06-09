@@ -1,7 +1,10 @@
 import { getFromServer } from './request';
 
 import Space from '../model/space';
-import SpaceTrees from '../model/space-tree';
+import SpaceTrees, {
+    RawSpaceHeader,
+    buildArray2Tree,
+} from '../model/space-tree';
 
 /**
  * Get space trees by organizerUID
@@ -9,58 +12,39 @@ import SpaceTrees from '../model/space-tree';
 export const osdbGetSpaceTrees = async (
     organizerUID: string,
 ): Promise<SpaceTrees> => {
-    getFromServer({});
-    const SAMPLE = [
-        {
-            id: 'TESTID01',
-            pid: 'TESTID11',
-            names: {
-                en: '1st Floor',
-                ko: '1층',
-            },
-        },
-        {
-            id: 'TESTID4',
-            pid: 'TESTID11',
-            names: {
-                en: '2nd Floor',
-                ko: '2층',
-            },
-        },
-        {
-            id: 'TESTID10',
-            pid: 'TESTID18',
-            names: {
-                en: 'Picnic Bench Zone',
-                ko: '피크닉벤치존',
-            },
-        },
-        {
-            id: 'TESTID11',
-            pid: 'TESTID9',
-            names: {
-                en: 'Hanyang Univ. Main Library',
-                ko: '한양대학교 중앙도서관',
-            },
-        },
-        {
-            id: 'TESTID18',
-            pid: 'TESTID20',
-            names: {
-                en: 'Outdoor lounge',
-                ko: '아웃도어라운지',
-            },
-        },
-        {
-            id: 'TESTID20',
-            pid: 'TESTID9',
-            names: {
-                en: 'Google Campus',
-                ko: '구글캠퍼스',
-            },
-        },
-    ];
-    return [];
+    return new Promise(async resolve => {
+        let spaceIDs: string[] = [];
+        // getFromServer({ url: `/organizers/${organizerUID}` }).then(response => {
+        //     if (response.owning_spaces) {
+        //         spaceIDs = response.owning_spaces;
+        //     } else {
+        //         reject();
+        //     }
+        // });
+        spaceIDs = [
+            '-LeMgOwWhwgCA3zlo_dI',
+            '-LeMgOwXUaqHHah8pbOS',
+            '-LeMgOwWhwgCA3zlo_c_',
+            '-LeMgOwRYl5K7ooz8sQt',
+        ];
+
+        let spaceHeaders: RawSpaceHeader[] = [];
+        await Promise.all(
+            spaceIDs.map(async (sid: string) => {
+                let response = await getFromServer({
+                    url: `/ospace/${sid}`,
+                });
+                if (response && response.space_names) {
+                    spaceHeaders.push({
+                        id: sid,
+                        pid: response.parent_space_id,
+                        names: response.space_names,
+                    });
+                }
+            }),
+        );
+        resolve(buildArray2Tree(spaceHeaders));
+    });
 };
 
 /**

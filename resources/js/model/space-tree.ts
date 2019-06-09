@@ -4,7 +4,7 @@ import { SpaceNames } from './space';
  * buildArray2Tree
  * - Build tree from an array
  */
-interface RawSpaceHeader {
+export interface RawSpaceHeader {
     id: string;
     pid: string;
     names: SpaceNames;

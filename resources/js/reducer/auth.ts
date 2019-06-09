@@ -43,6 +43,7 @@ export default function AuthReducer(
             return {
                 ...state,
                 loggedStatus: action.loggedStatus,
+                errorMessage: action.errorMessage,
             };
 
         case LOGOUT:

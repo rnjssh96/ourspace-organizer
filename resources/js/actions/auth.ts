@@ -37,9 +37,11 @@ export const loginSuccess: ActionCreator<LoginSuccessAction> = (
 });
 
 export const loginFail: ActionCreator<LoginFailAction> = (
+    errorMessage,
 ) => ({
     type: LOGIN_FAIL,
     loggedStatus: 'failed',
+    errorMessage,
 });
 
 export const logout: ActionCreator<LogoutAction> = (

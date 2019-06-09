@@ -72222,9 +72222,10 @@ exports.loginSuccess = (currentUser) => ({
     loggedStatus: 'success',
     currentUser,
 });
-exports.loginFail = () => ({
+exports.loginFail = (errorMessage) => ({
     type: auth_1.LOGIN_FAIL,
     loggedStatus: 'failed',
+    errorMessage,
 });
 exports.logout = () => ({
     type: auth_1.LOGOUT,
@@ -72318,15 +72319,15 @@ exports.attemptLogIn = (userEmail, userPassword) => async (dispatch) => {
                 dispatch(auth_1.loginSuccess(user));
             })
                 .catch(() => {
-                dispatch(auth_1.loginFail());
+                dispatch(auth_1.loginFail('사용자 정보를 가져오는데 실패했습니다.'));
             });
         }
         else {
-            dispatch(auth_1.loginFail());
+            dispatch(auth_1.loginFail('로그인에 실패하였습니다.'));
         }
     })
         .catch((err) => {
-        dispatch(auth_1.loginFail());
+        dispatch(auth_1.loginFail('로그인에 실패하였습니다.'));
     });
 };
 /**
@@ -72381,9 +72382,9 @@ const current_space_1 = __webpack_require__(/*! ./current-space */ "./resources/
 /**
  * Fetch space trees from OSDB
  */
-exports.fetchSpaceTrees = () => async (dispatch) => {
+exports.fetchSpaceTrees = (organizerUID) => async (dispatch) => {
     dispatch(space_trees_1.requestSpaceTrees());
-    space_1.osdbGetSpaceTrees('organizerUID').then((spaceTrees) => {
+    space_1.osdbGetSpaceTrees(organizerUID).then((spaceTrees) => {
         dispatch(space_trees_1.receiveSpaceTrees(spaceTrees));
     });
 };
@@ -73962,7 +73963,8 @@ class _HomeSpacesTab extends react_1.default.Component {
         this._renderSpaceTrees = () => this.props.spaceTrees.map((group) => (react_1.default.createElement("div", { key: group.spaceHeader.id, className: "space-group" }, this._renderSpaceGroup(group))));
     }
     componentWillMount() {
-        this.props.fetchSpaceTrees();
+        this.props.currentUser &&
+            this.props.fetchSpaceTrees(this.props.currentUser.uid);
     }
     _renderSpace(spaceHeader, depth, selcted = false) {
         return (react_1.default.createElement("a", { key: spaceHeader.id, className: `space-item
@@ -73973,7 +73975,7 @@ class _HomeSpacesTab extends react_1.default.Component {
             depth == 0 && (react_1.default.createElement("img", { src: "./demo-images/about_img_01.jpg", className: "rounded" })),
             react_1.default.createElement("div", { className: "bullet" }),
             react_1.default.createElement("div", { className: "space-item-body" },
-                react_1.default.createElement("p", { className: "h5 os-text-ellipsis" }, "\uC2A4\uD0C0\uBC85\uC2A4 \uC790\uC591\uC810"),
+                react_1.default.createElement("p", { className: "h5 os-text-ellipsis" }, spaceHeader.names['ko']),
                 react_1.default.createElement("p", { className: "h6 os-grey-1" },
                     react_1.default.createElement("i", { className: "material-icons" }, "location_on"),
                     "\uC11C\uC6B8 \uC1A1\uD30C\uAD6C \uC62C\uB9BC\uD53D\uB85C 35\uAE38 104"))));
@@ -73993,6 +73995,7 @@ class _HomeSpacesTab extends react_1.default.Component {
     }
 }
 const mapStateToProps = (state) => ({
+    currentUser: state.auth.currentUser,
     spaceTrees: state.spaceTrees.data,
     currentSpaceID: state.currentSpace.data.id,
     requestingSpaceTrees: state.spaceTrees.status.requestingSpaceTrees,
@@ -74070,7 +74073,7 @@ exports.osdbCreatOrganizerInfo = async (uid, name, email) => {
             authority: 'organizer',
             email: email,
         }).then(response => {
-            if (response.success) {
+            if (response && response.success) {
                 resolve();
             }
         });
@@ -74082,12 +74085,12 @@ exports.osdbCreatOrganizerInfo = async (uid, name, email) => {
 exports.osdbFetchOrganizerInfo = async (uid) => {
     return new Promise((resolve, reject) => {
         request_1.getFromServer({ url: `/organizers/${uid}` }).then(response => {
-            if (response.name && /*response.authority && */ response.email) {
+            if (response && response.name && response.authority && response.email) {
                 resolve({
                     uid: uid,
                     name: response.name,
                     email: response.email,
-                    authority: 'Admin',
+                    authority: response.authority === 'admin' ? 'Admin' : 'Organizer',
                 });
             }
             else {
@@ -74131,17 +74134,10 @@ exports.getFromServer = async (axiosConfig) => {
         ...axiosConfig,
         method: 'get',
     };
-    return new Promise((resolve, reject) => {
-        axios_1.default(axiosCombinedConfig)
-            .then(result => {
-            if (result.status === 200) {
-                resolve(result.data);
-            }
-        })
-            .catch(error => {
-            reject(error);
-        });
-    });
+    let result = await axios_1.default(axiosCombinedConfig);
+    if (result.status === 200) {
+        return result.data;
+    }
 };
 /**
  * POST data to the server
@@ -74153,17 +74149,10 @@ exports.postToServer = async (axiosConfig, data) => {
         method: 'post',
         data: data,
     };
-    return new Promise((resolve, reject) => {
-        axios_1.default(axiosCombinedConfig)
-            .then(result => {
-            if (result.status === 200) {
-                resolve(result.data);
-            }
-        })
-            .catch(error => {
-            reject(error);
-        });
-    });
+    let result = await axios_1.default(axiosCombinedConfig);
+    if (result.status === 200) {
+        return result.data;
+    }
 };
 
 
@@ -74180,62 +74169,41 @@ exports.postToServer = async (axiosConfig, data) => {
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const request_1 = __webpack_require__(/*! ./request */ "./resources/js/osdb-api/request.ts");
+const space_tree_1 = __webpack_require__(/*! ../model/space-tree */ "./resources/js/model/space-tree.ts");
 /**
  * Get space trees by organizerUID
  */
 exports.osdbGetSpaceTrees = async (organizerUID) => {
-    request_1.getFromServer({});
-    const SAMPLE = [
-        {
-            id: 'TESTID01',
-            pid: 'TESTID11',
-            names: {
-                en: '1st Floor',
-                ko: '1층',
-            },
-        },
-        {
-            id: 'TESTID4',
-            pid: 'TESTID11',
-            names: {
-                en: '2nd Floor',
-                ko: '2층',
-            },
-        },
-        {
-            id: 'TESTID10',
-            pid: 'TESTID18',
-            names: {
-                en: 'Picnic Bench Zone',
-                ko: '피크닉벤치존',
-            },
-        },
-        {
-            id: 'TESTID11',
-            pid: 'TESTID9',
-            names: {
-                en: 'Hanyang Univ. Main Library',
-                ko: '한양대학교 중앙도서관',
-            },
-        },
-        {
-            id: 'TESTID18',
-            pid: 'TESTID20',
-            names: {
-                en: 'Outdoor lounge',
-                ko: '아웃도어라운지',
-            },
-        },
-        {
-            id: 'TESTID20',
-            pid: 'TESTID9',
-            names: {
-                en: 'Google Campus',
-                ko: '구글캠퍼스',
-            },
-        },
-    ];
-    return [];
+    return new Promise(async (resolve) => {
+        let spaceIDs = [];
+        // getFromServer({ url: `/organizers/${organizerUID}` }).then(response => {
+        //     if (response.owning_spaces) {
+        //         spaceIDs = response.owning_spaces;
+        //     } else {
+        //         reject();
+        //     }
+        // });
+        spaceIDs = [
+            '-LeMgOwWhwgCA3zlo_dI',
+            '-LeMgOwXUaqHHah8pbOS',
+            '-LeMgOwWhwgCA3zlo_c_',
+            '-LeMgOwRYl5K7ooz8sQt',
+        ];
+        let spaceHeaders = [];
+        await Promise.all(spaceIDs.map(async (sid) => {
+            let response = await request_1.getFromServer({
+                url: `/ospace/${sid}`,
+            });
+            if (response && response.space_names) {
+                spaceHeaders.push({
+                    id: sid,
+                    pid: response.parent_space_id,
+                    names: response.space_names,
+                });
+            }
+        }));
+        resolve(space_tree_1.buildArray2Tree(spaceHeaders));
+    });
 };
 /**
  * Get space by space
@@ -74286,6 +74254,7 @@ function AuthReducer(state = initialState, action) {
             return {
                 ...state,
                 loggedStatus: action.loggedStatus,
+                errorMessage: action.errorMessage,
             };
         case auth_1.LOGOUT:
             return {

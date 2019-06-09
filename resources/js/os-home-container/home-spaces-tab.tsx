@@ -12,10 +12,16 @@ import SpaceTrees, {
 import { fetchSpaceTrees } from '../actions/osdb-api';
 
 import OSPageStatus from '../components/os-page-status';
+import OSOrganizer from '../model/organizer';
 
 const MAX_DEPTH = 4;
 
 interface _ReduxProps {
+    /**
+     * Current user
+     */
+    currentUser?: OSOrganizer;
+
     /**
      * All spaces in tree structure
      */
@@ -43,7 +49,8 @@ interface HomeSpacesTabProps extends _ReduxProps, _ReduxActionCreators {}
 
 class _HomeSpacesTab extends React.Component<HomeSpacesTabProps> {
     componentWillMount() {
-        this.props.fetchSpaceTrees();
+        this.props.currentUser &&
+            this.props.fetchSpaceTrees(this.props.currentUser.uid);
     }
 
     private _renderSpace(
@@ -72,7 +79,9 @@ class _HomeSpacesTab extends React.Component<HomeSpacesTabProps> {
                 )}
                 <div className="bullet" />
                 <div className="space-item-body">
-                    <p className="h5 os-text-ellipsis">스타벅스 자양점</p>
+                    <p className="h5 os-text-ellipsis">
+                        {spaceHeader.names['ko']}
+                    </p>
                     <p className="h6 os-grey-1">
                         <i className="material-icons">location_on</i>
                         서울 송파구 올림픽로 35길 104
@@ -119,6 +128,7 @@ class _HomeSpacesTab extends React.Component<HomeSpacesTabProps> {
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
+    currentUser: state.auth.currentUser,
     spaceTrees: state.spaceTrees.data,
     currentSpaceID: state.currentSpace.data.id,
     requestingSpaceTrees: state.spaceTrees.status.requestingSpaceTrees,

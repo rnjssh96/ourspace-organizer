@@ -17,9 +17,9 @@ import { requestSpace, receiveSpace } from './current-space';
  */
 export const fetchSpaceTrees: ActionCreator<
     ThunkAction<void, SpaceTrees, null, ReceiveSpaceTreesAction>
-> = () => async (dispatch: ThunkDispatch<SpaceTrees, null, Action<any>>) => {
+> = (organizerUID: string) => async (dispatch: ThunkDispatch<SpaceTrees, null, Action<any>>) => {
     dispatch(requestSpaceTrees());
-    osdbGetSpaceTrees('organizerUID').then((spaceTrees: SpaceTrees) => {
+    osdbGetSpaceTrees(organizerUID).then((spaceTrees: SpaceTrees) => {
         dispatch(receiveSpaceTrees(spaceTrees));
     });
 };

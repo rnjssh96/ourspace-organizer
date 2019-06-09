@@ -9,7 +9,7 @@ export const osdbCreatOrganizerInfo = async (
     uid: string,
     name: string,
     email: string,
-): Promise<void> => {
+): Promise<boolean> => {
     return new Promise(resolve => {
         postToServer(
             { url: '/organizers' },
@@ -20,7 +20,7 @@ export const osdbCreatOrganizerInfo = async (
                 email: email,
             },
         ).then(response => {
-            if (response.success) {
+            if (response && response.success) {
                 resolve();
             }
         });
@@ -33,13 +33,13 @@ export const osdbCreatOrganizerInfo = async (
 export const osdbFetchOrganizerInfo = async (uid: string): Promise<OSOrganizer> => {
     return new Promise((resolve, reject) => {
         getFromServer({ url: `/organizers/${uid}` }).then(response => {
-            if (response.name && /*response.authority && */response.email) {
+            if (response && response.name && response.authority && response.email) {
                 resolve({
                     uid: uid,
                     name: response.name,
                     email: response.email,
-                    authority: 'Admin',
-                    // response.authority === 'admin' ? 'Admin' : 'Organizer',
+                    authority:
+                        response.authority === 'admin' ? 'Admin' : 'Organizer',
                 });
             } else {
                 reject();
