@@ -6,8 +6,6 @@ import {
     UpdateSpaceIntroduceAction,
     SET_BUSY_LEVEL,
     SetBusyLevelAction,
-    SET_AMENITY_TAGS,
-    SetAmenityTagsAction,
     RequestSpaceAction,
     ReceiveSpaceAction,
     REQUEST_SPACE,
@@ -22,6 +20,12 @@ import {
     END_UPDATE_OH,
     ResetSpaceAction,
     RESET_SPACE,
+    StartUpdateATAction,
+    FinishUpdateATAction,
+    EndUpdateATAction,
+    START_UPDATE_AT,
+    END_UPDATE_AT,
+    FINISH_UPDATE_AT,
 } from '../redux-types/current-space';
 
 /**
@@ -75,9 +79,17 @@ export const setBusyLevel: ActionCreator<SetBusyLevelAction> = (
     busyLevel,
 });
 
-export const setAmenityTags: ActionCreator<SetAmenityTagsAction> = (
+export const startUpdateAT: ActionCreator<StartUpdateATAction> = () => ({
+    type: START_UPDATE_AT,
+});
+
+export const finishUpdateAT: ActionCreator<FinishUpdateATAction> = (
     amenityTags: AmenityTag[],
 ) => ({
-    type: SET_AMENITY_TAGS,
+    type: FINISH_UPDATE_AT,
     amenityTags,
+});
+
+export const endUpdateAT: ActionCreator<EndUpdateATAction> = () => ({
+    type: END_UPDATE_AT,
 });

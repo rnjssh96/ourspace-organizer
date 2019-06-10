@@ -74622,9 +74622,15 @@ exports.setBusyLevel = (busyLevel) => ({
     type: current_space_1.SET_BUSY_LEVEL,
     busyLevel,
 });
-exports.setAmenityTags = (amenityTags) => ({
-    type: current_space_1.SET_AMENITY_TAGS,
+exports.startUpdateAT = () => ({
+    type: current_space_1.START_UPDATE_AT,
+});
+exports.finishUpdateAT = (amenityTags) => ({
+    type: current_space_1.FINISH_UPDATE_AT,
     amenityTags,
+});
+exports.endUpdateAT = () => ({
+    type: current_space_1.END_UPDATE_AT,
 });
 
 
@@ -74758,7 +74764,7 @@ exports.fetchSpace = (spaceID, saveHistory = false) => async (dispatch) => {
         .catch(() => dispatch(current_space_1.endRequestSpace()));
 };
 /**
- * Fetch space from OSDB
+ * Update operating hours of the space space from OSDB
  */
 exports.updateOperatingHour = (spaceID, operatingHours) => async (dispatch) => {
     dispatch(current_space_1.startUpdateOH());
@@ -74767,6 +74773,17 @@ exports.updateOperatingHour = (spaceID, operatingHours) => async (dispatch) => {
         dispatch(current_space_1.finishUpdateOH(operatingHours));
     })
         .catch(() => dispatch(current_space_1.endUpdateOH()));
+};
+/**
+ * Update amenity tags of the space space from OSDB
+ */
+exports.updateAmenityTags = (spaceID, amenityTags) => async (dispatch) => {
+    dispatch(current_space_1.startUpdateAT());
+    space_1.osdbUpdateAmenityTags(spaceID, amenityTags)
+        .then(() => {
+        dispatch(current_space_1.finishUpdateAT(amenityTags));
+    })
+        .catch(() => dispatch(current_space_1.endUpdateAT()));
 };
 
 
@@ -75028,7 +75045,7 @@ const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 const space_1 = __webpack_require__(/*! ../../model/space */ "./resources/js/model/space.ts");
 const selected_amenities_1 = __webpack_require__(/*! ../../actions/selected-amenities */ "./resources/js/actions/selected-amenities.ts");
-const current_space_1 = __webpack_require__(/*! ../../actions/current-space */ "./resources/js/actions/current-space.ts");
+const osdb_api_1 = __webpack_require__(/*! ../../actions/osdb-api */ "./resources/js/actions/osdb-api.ts");
 exports.AmenitiesEditModalID = 'amenities-edit-modal';
 const COL_PER_ROW = 4;
 const tags = Object.keys(space_1.amenities);
@@ -75038,11 +75055,13 @@ class _AmenitiesEditModal extends react_1.default.Component {
         this._amenityTableStructure = [];
         this._saveAmenityTags = (event) => {
             event.preventDefault();
-            let result = [];
-            this.props.selectedAmenities.forEach((tag) => {
-                result.push(tag);
-            });
-            this.props.setAmenityTags(result);
+            if (this.props.currentSpaceID) {
+                let tags = [];
+                this.props.selectedAmenities.forEach((tag) => {
+                    tags.push(tag);
+                });
+                this.props.updateAmenityTags(this.props.currentSpaceID, tags);
+            }
         };
         this._toggleSelected = (tag) => {
             if (this.props.selectedAmenities.has(tag)) {
@@ -75097,11 +75116,12 @@ class _AmenitiesEditModal extends react_1.default.Component {
     }
 }
 const mapStateToProps = (state) => ({
+    currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
     selectedAmenities: state.selectedAmenities.selectedAmenities,
 });
 const mapDispatchToProps = {
     setSelectedAmenities: selected_amenities_1.setSelectedAmenities,
-    setAmenityTags: current_space_1.setAmenityTags,
+    updateAmenityTags: osdb_api_1.updateAmenityTags,
 };
 const AmenitiesEditModal = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_AmenitiesEditModal);
 exports.default = AmenitiesEditModal;
@@ -75134,6 +75154,7 @@ const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/rea
 const space_1 = __webpack_require__(/*! ../../model/space */ "./resources/js/model/space.ts");
 const selected_amenities_1 = __webpack_require__(/*! ../../actions/selected-amenities */ "./resources/js/actions/selected-amenities.ts");
 const amenities_edit_modal_1 = __importStar(__webpack_require__(/*! ./amenities-edit-modal */ "./resources/js/components/os-amenity-tags/amenities-edit-modal.tsx"));
+const os_page_status_1 = __importDefault(__webpack_require__(/*! ../os-page-status */ "./resources/js/components/os-page-status.tsx"));
 class _OSAmenityTags extends react_1.default.Component {
     constructor() {
         super(...arguments);
@@ -75149,7 +75170,11 @@ class _OSAmenityTags extends react_1.default.Component {
                         react_1.default.createElement("i", { className: amenity.faicon })))));
         };
         this._renderAmenities = () => {
-            if (this.props.amenityTags && this.props.amenityTags.length > 0) {
+            if (this.props.updatingAmentiyTags) {
+                return react_1.default.createElement(os_page_status_1.default, { status: "loading" });
+            }
+            else if (this.props.amenityTags &&
+                this.props.amenityTags.length > 0) {
                 return this.props.amenityTags.map((tag) => this._renderAmenity(tag));
             }
             else {
@@ -75179,6 +75204,7 @@ class _OSAmenityTags extends react_1.default.Component {
 }
 const mapStateToProps = (state) => ({
     amenityTags: state.currentSpace.data && state.currentSpace.data.amenityTags,
+    updatingAmentiyTags: state.currentSpace.status.updatingAmentiyTags,
 });
 const mapDispatchToProps = {
     setSelectedAmenities: selected_amenities_1.setSelectedAmenities,
@@ -75751,7 +75777,7 @@ class _OSRankDisplay extends react_1.default.Component {
         };
         this._renderRank = () => {
             if (this.props.rank === 0) {
-                return react_1.default.createElement("p", { className: "h1" }, "-.--");
+                return react_1.default.createElement("p", { className: "h1" }, "- . - -");
             }
             else {
                 return react_1.default.createElement("p", { className: "h1" }, this.props.rank.toFixed(2));
@@ -76683,18 +76709,15 @@ const axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules
 /**
  * Axios default config
  */
-const axiosDefaultConfig = {
-    // url: `/ospace/${spaceID}`,
-    baseURL: 'https://dbserver.ourspace.dev',
-    headers: { Authorization: '5401aa1394c126b762f691cf0f2d0cf6' },
-};
+axios_1.default.defaults.baseURL = 'https://dbserver.ourspace.dev';
+axios_1.default.defaults.headers.common['Authorization'] =
+    '5401aa1394c126b762f691cf0f2d0cf6';
 /**
  * GET data from the server
  */
 exports.getFromServer = async (axiosConfig) => {
     return new Promise((resolve, reject) => {
         const axiosCombinedConfig = {
-            ...axiosDefaultConfig,
             ...axiosConfig,
             method: 'get',
         };
@@ -76707,7 +76730,11 @@ exports.getFromServer = async (axiosConfig) => {
                 reject('OS DEBUG :: DB server response is not 200');
             }
         })
-            .catch(error => reject(error));
+            .catch(error => {
+            if (error.request) {
+                reject('OS DEBUG :: DB gave no response back');
+            }
+        });
     });
 };
 /**
@@ -76716,7 +76743,6 @@ exports.getFromServer = async (axiosConfig) => {
 exports.postToServer = async (axiosConfig, data) => {
     return new Promise((resolve, reject) => {
         const axiosCombinedConfig = {
-            ...axiosDefaultConfig,
             ...axiosConfig,
             method: 'post',
             data: data,
@@ -76730,7 +76756,11 @@ exports.postToServer = async (axiosConfig, data) => {
                 reject('OS DEBUG :: DB server response is not 200');
             }
         })
-            .catch(error => reject(error));
+            .catch(error => {
+            if (error.request) {
+                reject('OS DEBUG :: DB gave no response back');
+            }
+        });
     });
 };
 
@@ -76808,7 +76838,9 @@ exports.osdbGetSpace = async (spaceID) => {
                 busyLevel: '1',
             });
         })
-            .catch(error => reject(error));
+            .catch(error => {
+            reject(error);
+        });
     });
 };
 /**
@@ -76818,6 +76850,24 @@ exports.osdbUpdateOperatingHour = async (spaceID, operatingHours) => {
     return new Promise((resolve, reject) => {
         request_1.postToServer({ url: `/ospace/${spaceID}` }, {
             operating_hours: operatingHours.join('\n'),
+        })
+            .then(() => {
+            resolve();
+        })
+            .catch(error => reject(error));
+    });
+};
+/**
+ * Update space amenity tags
+ */
+exports.osdbUpdateAmenityTags = async (spaceID, amenityTags) => {
+    return new Promise((resolve, reject) => {
+        let amenities = {};
+        amenityTags.forEach((tag) => {
+            amenities[tag] = {};
+        });
+        request_1.postToServer({ url: `/ospace/${spaceID}` }, {
+            amenity_tags: amenities,
         })
             .then(() => {
             resolve();
@@ -76917,6 +76967,7 @@ const initialState = {
     status: {
         requestingSpace: false,
         updatingOperatingHour: false,
+        updatingAmentiyTags: false,
     },
 };
 /**
@@ -76952,6 +77003,7 @@ function CurrentSpaceReducer(state = initialState, action) {
                 status: {
                     requestingSpace: false,
                     updatingOperatingHour: false,
+                    updatingAmentiyTags: false,
                 },
             };
         case current_space_1.UPDATE_SPACE_INTRODUCE:
@@ -77007,7 +77059,15 @@ function CurrentSpaceReducer(state = initialState, action) {
                 };
             else
                 return state;
-        case current_space_1.SET_AMENITY_TAGS:
+        case current_space_1.START_UPDATE_AT:
+            return {
+                ...state,
+                status: {
+                    ...state.status,
+                    updatingAmentiyTags: true,
+                },
+            };
+        case current_space_1.FINISH_UPDATE_AT:
             if (state.data)
                 return {
                     ...state,
@@ -77015,9 +77075,21 @@ function CurrentSpaceReducer(state = initialState, action) {
                         ...state.data,
                         amenityTags: action.amenityTags,
                     },
+                    status: {
+                        ...state.status,
+                        updatingAmentiyTags: false,
+                    },
                 };
             else
                 return state;
+        case current_space_1.END_UPDATE_AT:
+            return {
+                ...state,
+                status: {
+                    ...state.status,
+                    updatingAmentiyTags: false,
+                },
+            };
         default:
             return state;
     }
@@ -77362,7 +77434,11 @@ exports.END_UPDATE_OH = 'current-space/END_UPDATE_OH';
 // prettier-ignore
 exports.SET_BUSY_LEVEL = 'current-space/SET_BUSY_LEVEL';
 // prettier-ignore
-exports.SET_AMENITY_TAGS = 'current-space/SET_AMENITY_TAGS';
+exports.START_UPDATE_AT = 'current-space/START_UPDATE_AT';
+// prettier-ignore
+exports.FINISH_UPDATE_AT = 'current-space/FINISH_UPDATE_AT';
+// prettier-ignore
+exports.END_UPDATE_AT = 'current-space/END_UPDATE_AT';
 
 
 /***/ }),

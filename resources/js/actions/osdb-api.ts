@@ -1,13 +1,14 @@
 import { ActionCreator, Action } from 'redux';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 
-import Space from '../model/space';
+import Space, { AmenityTag } from '../model/space';
 import SpaceTrees from '../model/space-tree';
 
 import {
     osdbGetSpace,
     osdbGetSpaceTrees,
     osdbUpdateOperatingHour,
+    osdbUpdateAmenityTags,
 } from '../osdb-api/space';
 
 import {
@@ -22,6 +23,9 @@ import {
     startUpdateOH,
     finishUpdateOH,
     endUpdateOH,
+    startUpdateAT,
+    finishUpdateAT,
+    endUpdateAT,
 } from './current-space';
 import { pushIntoSpaceHistory } from './space-history';
 
@@ -66,7 +70,7 @@ export const fetchSpace: ActionCreator<
 };
 
 /**
- * Fetch space from OSDB
+ * Update operating hours of the space space from OSDB
  */
 export const updateOperatingHour: ActionCreator<
     ThunkAction<void, string[], null, Action<any>>
@@ -79,4 +83,20 @@ export const updateOperatingHour: ActionCreator<
             dispatch(finishUpdateOH(operatingHours));
         })
         .catch(() => dispatch(endUpdateOH()));
+};
+
+/**
+ * Update amenity tags of the space space from OSDB
+ */
+export const updateAmenityTags: ActionCreator<
+    ThunkAction<void, AmenityTag[], null, Action<any>>
+> = (spaceID: string, amenityTags: AmenityTag[]) => async (
+    dispatch: ThunkDispatch<AmenityTag[], null, Action<any>>,
+) => {
+    dispatch(startUpdateAT());
+    osdbUpdateAmenityTags(spaceID, amenityTags)
+        .then(() => {
+            dispatch(finishUpdateAT(amenityTags));
+        })
+        .catch(() => dispatch(endUpdateAT()));
 };

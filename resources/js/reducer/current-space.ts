@@ -4,13 +4,15 @@ import {
     START_UPDATE_OH,
     FINISH_UPDATE_OH,
     SET_BUSY_LEVEL,
-    SET_AMENITY_TAGS,
     UPDATE_SPACE_INTRODUCE,
     REQUEST_SPACE,
     RECEIVE_SPACE,
     END_REQUEST_SPACE,
     END_UPDATE_OH,
     RESET_SPACE,
+    START_UPDATE_AT,
+    FINISH_UPDATE_AT,
+    END_UPDATE_AT,
 } from '../redux-types/current-space';
 
 /**
@@ -20,6 +22,7 @@ const initialState: CurrentSpaceState = {
     status: {
         requestingSpace: false,
         updatingOperatingHour: false,
+        updatingAmentiyTags: false,
     },
 };
 
@@ -62,6 +65,7 @@ export default function CurrentSpaceReducer(
                 status: {
                     requestingSpace: false,
                     updatingOperatingHour: false,
+                    updatingAmentiyTags: false,
                 },
             };
 
@@ -120,7 +124,16 @@ export default function CurrentSpaceReducer(
                 };
             else return state;
 
-        case SET_AMENITY_TAGS:
+        case START_UPDATE_AT:
+            return {
+                ...state,
+                status: {
+                    ...state.status,
+                    updatingAmentiyTags: true,
+                },
+            };
+
+        case FINISH_UPDATE_AT:
             if (state.data)
                 return {
                     ...state,
@@ -128,8 +141,21 @@ export default function CurrentSpaceReducer(
                         ...state.data,
                         amenityTags: action.amenityTags,
                     },
+                    status: {
+                        ...state.status,
+                        updatingAmentiyTags: false,
+                    },
                 };
             else return state;
+
+        case END_UPDATE_AT:
+            return {
+                ...state,
+                status: {
+                    ...state.status,
+                    updatingAmentiyTags: false,
+                },
+            };
 
         default:
             return state;

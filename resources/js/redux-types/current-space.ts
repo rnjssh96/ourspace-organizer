@@ -10,6 +10,7 @@ export interface CurrentSpaceState {
     status: {
         requestingSpace: boolean;
         updatingOperatingHour: boolean;
+        updatingAmentiyTags: boolean;
     };
 }
 
@@ -37,8 +38,13 @@ export const END_UPDATE_OH = 'current-space/END_UPDATE_OH';
 
 // prettier-ignore
 export const SET_BUSY_LEVEL = 'current-space/SET_BUSY_LEVEL';
+
 // prettier-ignore
-export const SET_AMENITY_TAGS = 'current-space/SET_AMENITY_TAGS';
+export const START_UPDATE_AT = 'current-space/START_UPDATE_AT';
+// prettier-ignore
+export const FINISH_UPDATE_AT = 'current-space/FINISH_UPDATE_AT';
+// prettier-ignore
+export const END_UPDATE_AT = 'current-space/END_UPDATE_AT';
 
 /**
  * Action Interfaces
@@ -71,9 +77,13 @@ export interface SetBusyLevelAction extends Action<typeof SET_BUSY_LEVEL> {
     busyLevel: BusyLevel;
 }
 
-export interface SetAmenityTagsAction extends Action<typeof SET_AMENITY_TAGS> {
+export interface StartUpdateATAction extends Action<typeof START_UPDATE_AT> {}
+
+export interface FinishUpdateATAction extends Action<typeof FINISH_UPDATE_AT> {
     amenityTags: AmenityTag[];
 }
+
+export interface EndUpdateATAction extends Action<typeof END_UPDATE_AT> {}
 
 /**
  * Action Types
@@ -88,4 +98,6 @@ export type CurrentSpaceActions =
     | FinishUpdateOHAction
     | EndUpdateOHAction
     | SetBusyLevelAction
-    | SetAmenityTagsAction;
+    | StartUpdateATAction
+    | FinishUpdateATAction
+    | EndUpdateATAction;

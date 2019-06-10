@@ -11,11 +11,18 @@ import AmenitiesEditModal, {
     AmenitiesEditModalID,
 } from './amenities-edit-modal';
 
+import OSPageStatus from '../os-page-status';
+
 interface _ReduxProps {
     /**
      * Amenity tags of the space
      */
     amenityTags?: AmenityTag[];
+
+    /**
+     * Updating amenity tags
+     */
+    updatingAmentiyTags: boolean;
 }
 
 interface _ReduxActionCreators {
@@ -54,7 +61,12 @@ class _OSAmenityTags extends React.Component<OSAmenityTagsProps> {
     };
 
     private _renderAmenities = () => {
-        if (this.props.amenityTags && this.props.amenityTags.length > 0) {
+        if (this.props.updatingAmentiyTags) {
+            return <OSPageStatus status="loading" />;
+        } else if (
+            this.props.amenityTags &&
+            this.props.amenityTags.length > 0
+        ) {
             return this.props.amenityTags.map((tag: AmenityTag) =>
                 this._renderAmenity(tag),
             );
@@ -100,6 +112,7 @@ class _OSAmenityTags extends React.Component<OSAmenityTagsProps> {
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
     amenityTags: state.currentSpace.data && state.currentSpace.data.amenityTags,
+    updatingAmentiyTags: state.currentSpace.status.updatingAmentiyTags,
 });
 
 const mapDispatchToProps = {

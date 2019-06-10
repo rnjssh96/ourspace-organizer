@@ -70,7 +70,9 @@ export const osdbGetSpace = async (spaceID: string): Promise<Space> => {
                     busyLevel: '1',
                 });
             })
-            .catch(error => reject(error));
+            .catch(error => {
+                reject(error);
+            });
     });
 };
 
@@ -86,6 +88,31 @@ export const osdbUpdateOperatingHour = async (
             { url: `/ospace/${spaceID}` },
             {
                 operating_hours: operatingHours.join('\n'),
+            },
+        )
+            .then(() => {
+                resolve();
+            })
+            .catch(error => reject(error));
+    });
+};
+
+/**
+ * Update space amenity tags
+ */
+export const osdbUpdateAmenityTags = async (
+    spaceID: string,
+    amenityTags: AmenityTag[],
+): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        let amenities: { [tag in AmenityTag]?: any } = {};
+        amenityTags.forEach((tag: AmenityTag) => {
+            amenities[tag] = {};
+        });
+        postToServer(
+            { url: `/ospace/${spaceID}` },
+            {
+                amenity_tags: amenities,
             },
         )
             .then(() => {

@@ -3,11 +3,9 @@ import axios, { AxiosRequestConfig } from 'axios';
 /**
  * Axios default config
  */
-const axiosDefaultConfig: AxiosRequestConfig = {
-    // url: `/ospace/${spaceID}`,
-    baseURL: 'https://dbserver.ourspace.dev',
-    headers: { Authorization: '5401aa1394c126b762f691cf0f2d0cf6' },
-};
+axios.defaults.baseURL = 'https://dbserver.ourspace.dev';
+axios.defaults.headers.common['Authorization'] =
+    '5401aa1394c126b762f691cf0f2d0cf6';
 
 /**
  * GET data from the server
@@ -17,7 +15,6 @@ export const getFromServer = async (
 ): Promise<any> => {
     return new Promise((resolve, reject) => {
         const axiosCombinedConfig = {
-            ...axiosDefaultConfig,
             ...axiosConfig,
             method: 'get',
         };
@@ -29,7 +26,11 @@ export const getFromServer = async (
                     reject('OS DEBUG :: DB server response is not 200');
                 }
             })
-            .catch(error => reject(error));
+            .catch(error => {
+                if (error.request) {
+                    reject('OS DEBUG :: DB gave no response back');
+                }
+            });
     });
 };
 
@@ -42,7 +43,6 @@ export const postToServer = async (
 ): Promise<any> => {
     return new Promise((resolve, reject) => {
         const axiosCombinedConfig = {
-            ...axiosDefaultConfig,
             ...axiosConfig,
             method: 'post',
             data: data,
@@ -55,6 +55,10 @@ export const postToServer = async (
                     reject('OS DEBUG :: DB server response is not 200');
                 }
             })
-            .catch(error => reject(error));
+            .catch(error => {
+                if (error.request) {
+                    reject('OS DEBUG :: DB gave no response back');
+                }
+            });
     });
 };

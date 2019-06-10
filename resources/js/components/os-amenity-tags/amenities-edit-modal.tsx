@@ -11,7 +11,8 @@ import {
 } from '../../model/space';
 
 import { setSelectedAmenities } from '../../actions/selected-amenities';
-import { setAmenityTags } from '../../actions/current-space';
+import { UpdateAmenityTagsAction } from '../../redux-types/osdb-api';
+import { updateAmenityTags } from '../../actions/osdb-api';
 
 export const AmenitiesEditModalID = 'amenities-edit-modal';
 
@@ -25,6 +26,11 @@ type amenityTuple = {
 
 interface _ReduxProps {
     /**
+     * Current space ID
+     */
+    currentSpaceID?: string;
+
+    /**
      * Selected amenities set
      */
     selectedAmenities: Set<AmenityTag>;
@@ -37,25 +43,15 @@ interface _ReduxActionCreators {
     setSelectedAmenities: typeof setSelectedAmenities;
 
     /**
-     * Set amenity tags
+     * Update amenity tags
      */
-    setAmenityTags: typeof setAmenityTags;
+    updateAmenityTags: UpdateAmenityTagsAction;
 }
 
 interface AmenitiesEditModalProps extends _ReduxProps, _ReduxActionCreators {}
 
 class _AmenitiesEditModal extends React.Component<AmenitiesEditModalProps> {
     private _amenityTableStructure: amenityTuple[][] = [];
-
-    private _saveAmenityTags = (event: MouseEvent) => {
-        event.preventDefault();
-
-        let result: AmenityTag[] = [];
-        this.props.selectedAmenities.forEach((tag: AmenityTag) => {
-            result.push(tag);
-        });
-        this.props.setAmenityTags(result);
-    };
 
     componentWillMount() {
         let row: amenityTuple[];
@@ -74,6 +70,18 @@ class _AmenitiesEditModal extends React.Component<AmenitiesEditModalProps> {
             }
         });
     }
+
+    private _saveAmenityTags = (event: MouseEvent) => {
+        event.preventDefault();
+
+        if (this.props.currentSpaceID) {
+            let tags: AmenityTag[] = [];
+            this.props.selectedAmenities.forEach((tag: AmenityTag) => {
+                tags.push(tag);
+            });
+            this.props.updateAmenityTags(this.props.currentSpaceID, tags);
+        }
+    };
 
     private _toggleSelected = (tag: AmenityTag) => {
         if (this.props.selectedAmenities.has(tag)) {
@@ -166,12 +174,13 @@ class _AmenitiesEditModal extends React.Component<AmenitiesEditModalProps> {
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
+    currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
     selectedAmenities: state.selectedAmenities.selectedAmenities,
 });
 
 const mapDispatchToProps = {
     setSelectedAmenities,
-    setAmenityTags,
+    updateAmenityTags,
 };
 
 const AmenitiesEditModal = connect(
