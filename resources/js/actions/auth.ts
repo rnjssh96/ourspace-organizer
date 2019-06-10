@@ -22,8 +22,7 @@ import OSOrganizer from '../model/organizer';
 /**
  * Action Creators
  */
-export const onProcess: ActionCreator<OnProcessAction> = (
-) => ({
+export const onProcess: ActionCreator<OnProcessAction> = () => ({
     type: ON_PROCESS,
     loggedStatus: 'processing',
 });
@@ -36,34 +35,28 @@ export const loginSuccess: ActionCreator<LoginSuccessAction> = (
     currentUser,
 });
 
-export const loginFail: ActionCreator<LoginFailAction> = (
-    errorMessage,
-) => ({
+export const loginFail: ActionCreator<LoginFailAction> = errorMessage => ({
     type: LOGIN_FAIL,
     loggedStatus: 'failed',
     errorMessage,
 });
 
-export const logout: ActionCreator<LogoutAction> = (
-) => ({
+export const logout: ActionCreator<LogoutAction> = () => ({
     type: LOGOUT,
     loggedStatus: 'ready',
 });
 
-export const signupOnProcess: ActionCreator<SignupOnProcessAction> = (
-) => ({
+export const signupOnProcess: ActionCreator<SignupOnProcessAction> = () => ({
     type: SIGNUP_ON_PROCESS,
     signupStatus: 'processing',
 });
 
-export const signupSuccess: ActionCreator<SignupSuccessAction> = (
-) => ({
+export const signupSuccess: ActionCreator<SignupSuccessAction> = () => ({
     type: SIGNUP_SUCCESS,
     signupStatus: 'success',
 });
 
-export const signupFail: ActionCreator<SignupFailAction> = (
-) => ({
+export const signupFail: ActionCreator<SignupFailAction> = () => ({
     type: SIGNUP_FAIL,
     signupStatus: 'failed',
 });

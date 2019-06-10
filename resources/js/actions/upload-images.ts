@@ -2,19 +2,14 @@ import { ActionCreator } from 'redux';
 
 import {
     UploadImage,
-
     RESET_UPLOAD_IMAGES,
     ResetUploadImagesAction,
-
     ADD_UPLOAD_IMAGE,
     AddUploadImageAction,
-
     UPDATE_UPLOAD_PROGRESS,
     UpdateUploadProgressAction,
-
     SET_IMAGE_DATA,
     SetImageDataAction,
-
     DELETE_UPLOAD_IMAGE,
     DeleteUploadImageAction,
 } from '../redux-types/upload-images';

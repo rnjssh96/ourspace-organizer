@@ -10,6 +10,7 @@ import {
     RECEIVE_SPACE,
     END_REQUEST_SPACE,
     END_UPDATE_OH,
+    RESET_SPACE,
 } from '../redux-types/current-space';
 
 /**
@@ -56,6 +57,14 @@ export default function CurrentSpaceReducer(
                 },
             };
 
+        case RESET_SPACE:
+            return {
+                status: {
+                    requestingSpace: false,
+                    updatingOperatingHour: false,
+                },
+            };
+
         case UPDATE_SPACE_INTRODUCE:
             if (state.data)
                 return {
@@ -65,8 +74,7 @@ export default function CurrentSpaceReducer(
                         spaceIntroduce: action.spaceIntroduce,
                     },
                 };
-            else
-                return state;
+            else return state;
 
         case START_UPDATE_OH:
             return {
@@ -90,8 +98,7 @@ export default function CurrentSpaceReducer(
                         updatingOperatingHour: false,
                     },
                 };
-            else
-                return state;
+            else return state;
 
         case END_UPDATE_OH:
             return {
@@ -111,8 +118,7 @@ export default function CurrentSpaceReducer(
                         busyLevel: action.busyLevel,
                     },
                 };
-            else
-                return state;
+            else return state;
 
         case SET_AMENITY_TAGS:
             if (state.data)
@@ -123,8 +129,7 @@ export default function CurrentSpaceReducer(
                         amenityTags: action.amenityTags,
                     },
                 };
-            else
-                return state;
+            else return state;
 
         default:
             return state;

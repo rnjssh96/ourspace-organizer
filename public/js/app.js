@@ -74552,7 +74552,7 @@ exports.loginSuccess = (currentUser) => ({
     loggedStatus: 'success',
     currentUser,
 });
-exports.loginFail = (errorMessage) => ({
+exports.loginFail = errorMessage => ({
     type: auth_1.LOGIN_FAIL,
     loggedStatus: 'failed',
     errorMessage,
@@ -74601,6 +74601,9 @@ exports.receiveSpace = (space) => ({
 exports.endRequestSpace = () => ({
     type: current_space_1.END_REQUEST_SPACE,
 });
+exports.resetSpace = () => ({
+    type: current_space_1.RESET_SPACE,
+});
 exports.updateSpaceIntroduce = (spaceIntroduce) => ({
     type: current_space_1.UPDATE_SPACE_INTRODUCE,
     spaceIntroduce,
@@ -74643,6 +74646,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const firebase_1 = __importDefault(__webpack_require__(/*! ../config/firebase */ "./resources/js/config/firebase/index.ts"));
 const organizer_1 = __webpack_require__(/*! ../osdb-api/organizer */ "./resources/js/osdb-api/organizer.ts");
 const auth_1 = __webpack_require__(/*! ./auth */ "./resources/js/actions/auth.ts");
+const current_space_1 = __webpack_require__(/*! ./current-space */ "./resources/js/actions/current-space.ts");
+const space_trees_1 = __webpack_require__(/*! ./space-trees */ "./resources/js/actions/space-trees.ts");
 /**
  * Attempt log in
  */
@@ -74657,7 +74662,7 @@ exports.attemptLogIn = (userEmail, userPassword) => async (dispatch) => {
                 .then((user) => {
                 dispatch(auth_1.loginSuccess(user));
             })
-                .catch((error) => {
+                .catch(error => {
                 console.log(error);
                 dispatch(auth_1.loginFail('사용자 정보를 가져오는데 실패했습니다.'));
             });
@@ -74677,6 +74682,8 @@ exports.logOut = () => async (dispatch) => {
     firebase_1.default.auth()
         .signOut()
         .then(() => {
+        dispatch(current_space_1.resetSpace());
+        dispatch(space_trees_1.resetSpaceTrees());
         dispatch(auth_1.logout());
     });
 };
@@ -74801,6 +74808,9 @@ exports.receiveSpaceTrees = (spaceTrees) => ({
 });
 exports.endRequestSpaceTrees = () => ({
     type: space_trees_1.END_REQUEST_SPACE_TREES,
+});
+exports.resetSpaceTrees = () => ({
+    type: space_trees_1.RESET_SPACE_TREES,
 });
 
 
@@ -75931,22 +75941,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const firebase = __importStar(__webpack_require__(/*! firebase/app */ "./node_modules/firebase/app/dist/index.cjs.js"));
 __webpack_require__(/*! firebase/auth */ "./node_modules/firebase/auth/dist/index.esm.js");
 let testFirebaseConfig = {
-    apiKey: "AIzaSyAufMgaMF83jMWGeOOOCwM8BOviFGxrTDo",
-    authDomain: "test-31133.firebaseapp.com",
-    databaseURL: "https://test-31133.firebaseio.com",
-    projectId: "test-31133",
-    storageBucket: "",
-    messagingSenderId: "682939863005",
-    appId: "1:682939863005:web:48335bc74877619b"
+    apiKey: 'AIzaSyAufMgaMF83jMWGeOOOCwM8BOviFGxrTDo',
+    authDomain: 'test-31133.firebaseapp.com',
+    databaseURL: 'https://test-31133.firebaseio.com',
+    projectId: 'test-31133',
+    storageBucket: '',
+    messagingSenderId: '682939863005',
+    appId: '1:682939863005:web:48335bc74877619b',
 };
 var firebaseConfig = {
-    apiKey: "AIzaSyBacBqv4BhrL2gN-lKeNHDcqE3fkeEMJ38",
-    authDomain: "ourspace-1540547695765.firebaseapp.com",
-    databaseURL: "https://ourspace-1540547695765.firebaseio.com",
-    projectId: "ourspace-1540547695765",
-    storageBucket: "ourspace-1540547695765.appspot.com",
-    messagingSenderId: "382752142578",
-    appId: "1:382752142578:web:60c7fca3a806ca1c"
+    apiKey: 'AIzaSyBacBqv4BhrL2gN-lKeNHDcqE3fkeEMJ38',
+    authDomain: 'ourspace-1540547695765.firebaseapp.com',
+    databaseURL: 'https://ourspace-1540547695765.firebaseio.com',
+    projectId: 'ourspace-1540547695765',
+    storageBucket: 'ourspace-1540547695765.appspot.com',
+    messagingSenderId: '382752142578',
+    appId: '1:382752142578:web:60c7fca3a806ca1c',
 };
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
@@ -76832,6 +76842,13 @@ function CurrentSpaceReducer(state = initialState, action) {
                     requestingSpace: false,
                 },
             };
+        case current_space_1.RESET_SPACE:
+            return {
+                status: {
+                    requestingSpace: false,
+                    updatingOperatingHour: false,
+                },
+            };
         case current_space_1.UPDATE_SPACE_INTRODUCE:
             if (state.data)
                 return {
@@ -77025,6 +77042,13 @@ function SpaceTreesReducer(state = initialState, action) {
                     requestingSpaceTrees: false,
                 },
             };
+        case space_trees_1.RESET_SPACE_TREES:
+            return {
+                data: [],
+                status: {
+                    requestingSpaceTrees: false,
+                },
+            };
         default:
             return state;
     }
@@ -77162,6 +77186,8 @@ exports.RECEIVE_SPACE = 'current-space/RECEIVE_SPACE';
 // prettier-ignore
 exports.END_REQUEST_SPACE = 'current-space/END_REQUEST_SPACE';
 // prettier-ignore
+exports.RESET_SPACE = 'current-space/RESET_SPACE';
+// prettier-ignore
 exports.UPDATE_SPACE_INTRODUCE = 'current-space/UPDATE_SPACE_INTRODUCE';
 // prettier-ignore
 exports.START_UPDATE_OH = 'current-space/START_UPDATE_OH';
@@ -77215,6 +77241,8 @@ exports.REQUEST_SPACE_TREES = 'space-tree/REQUEST_SPACE_TREES';
 exports.RECEIVE_SPACE_TREES = 'space-tree/RECEIVE_SPACE_TREES';
 // prettier-ignore
 exports.END_REQUEST_SPACE_TREES = 'current-space/END_REQUEST_SPACE_TREES';
+// prettier-ignore
+exports.RESET_SPACE_TREES = 'current-space/RESET_SPACE_TREES';
 
 
 /***/ }),

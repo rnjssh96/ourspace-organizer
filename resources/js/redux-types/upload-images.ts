@@ -1,4 +1,4 @@
-import { Action } from "redux";
+import { Action } from 'redux';
 
 /**
  * Upload Images State
@@ -34,15 +34,16 @@ export const DELETE_UPLOAD_IMAGE = 'upload-images/DELETE_UPLOAD_IMAGE';
 /**
  * Action Interfaces
  */
-export interface ResetUploadImagesAction extends Action<typeof RESET_UPLOAD_IMAGES> {
-}
+export interface ResetUploadImagesAction
+    extends Action<typeof RESET_UPLOAD_IMAGES> {}
 
 export interface AddUploadImageAction extends Action<typeof ADD_UPLOAD_IMAGE> {
     key: number;
     image: UploadImage;
 }
 
-export interface UpdateUploadProgressAction extends Action<typeof UPDATE_UPLOAD_PROGRESS> {
+export interface UpdateUploadProgressAction
+    extends Action<typeof UPDATE_UPLOAD_PROGRESS> {
     key: number;
     progress: number;
 }
@@ -52,7 +53,8 @@ export interface SetImageDataAction extends Action<typeof SET_IMAGE_DATA> {
     dataURL: string;
 }
 
-export interface DeleteUploadImageAction extends Action<typeof DELETE_UPLOAD_IMAGE> {
+export interface DeleteUploadImageAction
+    extends Action<typeof DELETE_UPLOAD_IMAGE> {
     key: number;
 }
 

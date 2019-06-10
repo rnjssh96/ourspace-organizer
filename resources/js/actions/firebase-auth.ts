@@ -21,6 +21,9 @@ import {
     signupOnProcess,
 } from './auth';
 
+import { resetSpace } from './current-space';
+import { resetSpaceTrees } from './space-trees';
+
 /**
  * Attempt log in
  */
@@ -39,7 +42,7 @@ export const attemptLogIn: ActionCreator<
                     .then((user: OSOrganizer) => {
                         dispatch(loginSuccess(user));
                     })
-                    .catch((error) => {
+                    .catch(error => {
                         console.log(error);
                         dispatch(
                             loginFail('사용자 정보를 가져오는데 실패했습니다.'),
@@ -63,6 +66,8 @@ export const logOut: ActionCreator<
     OSFirebase.auth()
         .signOut()
         .then(() => {
+            dispatch(resetSpace());
+            dispatch(resetSpaceTrees());
             dispatch(logout());
         });
 };

@@ -2,13 +2,23 @@ import { ActionCreator } from 'redux';
 
 import SpaceTrees from '../model/space-tree';
 
-import { RequestSpaceTreesAction, ReceiveSpaceTreesAction, REQUEST_SPACE_TREES, RECEIVE_SPACE_TREES, EndRequestSpaceTreesAction, END_REQUEST_SPACE_TREES } from '../redux-types/space-trees';
+import {
+    RequestSpaceTreesAction,
+    ReceiveSpaceTreesAction,
+    REQUEST_SPACE_TREES,
+    RECEIVE_SPACE_TREES,
+    EndRequestSpaceTreesAction,
+    END_REQUEST_SPACE_TREES,
+    ResetSpaceTreesAction,
+    RESET_SPACE_TREES,
+} from '../redux-types/space-trees';
 
 /**
  * Action Creators
  */
-export const requestSpaceTrees: ActionCreator<RequestSpaceTreesAction> = (
-) => ({
+export const requestSpaceTrees: ActionCreator<
+    RequestSpaceTreesAction
+> = () => ({
     type: REQUEST_SPACE_TREES,
 });
 
@@ -19,7 +29,12 @@ export const receiveSpaceTrees: ActionCreator<ReceiveSpaceTreesAction> = (
     spaceTrees,
 });
 
-export const endRequestSpaceTrees: ActionCreator<EndRequestSpaceTreesAction> = (
-) => ({
+export const endRequestSpaceTrees: ActionCreator<
+    EndRequestSpaceTreesAction
+> = () => ({
     type: END_REQUEST_SPACE_TREES,
+});
+
+export const resetSpaceTrees: ActionCreator<ResetSpaceTreesAction> = () => ({
+    type: RESET_SPACE_TREES,
 });

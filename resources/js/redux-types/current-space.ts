@@ -22,6 +22,8 @@ export const REQUEST_SPACE = 'current-space/REQUEST_SPACE';
 export const RECEIVE_SPACE = 'current-space/RECEIVE_SPACE';
 // prettier-ignore
 export const END_REQUEST_SPACE = 'current-space/END_REQUEST_SPACE';
+// prettier-ignore
+export const RESET_SPACE = 'current-space/RESET_SPACE';
 
 // prettier-ignore
 export const UPDATE_SPACE_INTRODUCE = 'current-space/UPDATE_SPACE_INTRODUCE';
@@ -49,6 +51,8 @@ export interface ReceiveSpaceAction extends Action<typeof RECEIVE_SPACE> {
 
 export interface EndRequestSpaceAction
     extends Action<typeof END_REQUEST_SPACE> {}
+
+export interface ResetSpaceAction extends Action<typeof RESET_SPACE> {}
 
 export interface UpdateSpaceIntroduceAction
     extends Action<typeof UPDATE_SPACE_INTRODUCE> {
@@ -78,6 +82,7 @@ export type CurrentSpaceActions =
     | RequestSpaceAction
     | ReceiveSpaceAction
     | EndRequestSpaceAction
+    | ResetSpaceAction
     | UpdateSpaceIntroduceAction
     | StartUpdateOHAction
     | FinishUpdateOHAction

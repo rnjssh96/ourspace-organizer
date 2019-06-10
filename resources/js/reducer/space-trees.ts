@@ -4,6 +4,7 @@ import {
     REQUEST_SPACE_TREES,
     RECEIVE_SPACE_TREES,
     END_REQUEST_SPACE_TREES,
+    RESET_SPACE_TREES,
 } from '../redux-types/space-trees';
 
 /**
@@ -48,6 +49,14 @@ export default function SpaceTreesReducer(
                 ...state,
                 status: {
                     ...state.status,
+                    requestingSpaceTrees: false,
+                },
+            };
+
+        case RESET_SPACE_TREES:
+            return {
+                data: [],
+                status: {
                     requestingSpaceTrees: false,
                 },
             };

@@ -20,13 +20,14 @@ import {
     FINISH_UPDATE_OH,
     EndUpdateOHAction,
     END_UPDATE_OH,
+    ResetSpaceAction,
+    RESET_SPACE,
 } from '../redux-types/current-space';
 
 /**
  * Action Creators
  */
-export const requestSpace: ActionCreator<RequestSpaceAction> = (
-) => ({
+export const requestSpace: ActionCreator<RequestSpaceAction> = () => ({
     type: REQUEST_SPACE,
 });
 
@@ -37,9 +38,12 @@ export const receiveSpace: ActionCreator<ReceiveSpaceAction> = (
     space,
 });
 
-export const endRequestSpace: ActionCreator<EndRequestSpaceAction> = (
-) => ({
+export const endRequestSpace: ActionCreator<EndRequestSpaceAction> = () => ({
     type: END_REQUEST_SPACE,
+});
+
+export const resetSpace: ActionCreator<ResetSpaceAction> = () => ({
+    type: RESET_SPACE,
 });
 
 export const updateSpaceIntroduce: ActionCreator<UpdateSpaceIntroduceAction> = (
@@ -49,8 +53,7 @@ export const updateSpaceIntroduce: ActionCreator<UpdateSpaceIntroduceAction> = (
     spaceIntroduce,
 });
 
-export const startUpdateOH: ActionCreator<StartUpdateOHAction> = (
-) => ({
+export const startUpdateOH: ActionCreator<StartUpdateOHAction> = () => ({
     type: START_UPDATE_OH,
 });
 
@@ -61,8 +64,7 @@ export const finishUpdateOH: ActionCreator<FinishUpdateOHAction> = (
     operatingHours,
 });
 
-export const endUpdateOH: ActionCreator<EndUpdateOHAction> = (
-) => ({
+export const endUpdateOH: ActionCreator<EndUpdateOHAction> = () => ({
     type: END_UPDATE_OH,
 });
 
