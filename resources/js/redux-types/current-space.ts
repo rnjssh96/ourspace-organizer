@@ -5,13 +5,13 @@ import Space, { BusyLevel, AmenityTag } from '../model/space';
 /**
  * Current Space State
  */
-export type CurrentSpaceState = {
+export interface CurrentSpaceState {
     data?: Space;
     status: {
         requestingSpace: boolean;
         updatingOperatingHour: boolean;
     };
-};
+}
 
 /**
  * Action Constants

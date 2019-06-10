@@ -23,6 +23,7 @@ import {
     finishUpdateOH,
     endUpdateOH,
 } from './current-space';
+import { pushIntoSpaceHistory } from './space-history';
 
 /**
  * Fetch space trees from OSDB
@@ -45,13 +46,21 @@ export const fetchSpaceTrees: ActionCreator<
  */
 export const fetchSpace: ActionCreator<
     ThunkAction<void, Space, null, Action<any>>
-> = (spaceID: string) => async (
+> = (spaceID: string, saveHistory: boolean = false) => async (
     dispatch: ThunkDispatch<Space, null, Action<any>>,
 ) => {
     dispatch(requestSpace());
     osdbGetSpace(spaceID)
         .then((space: Space) => {
             dispatch(receiveSpace(space));
+            if (saveHistory) {
+                dispatch(
+                    pushIntoSpaceHistory({
+                        id: spaceID,
+                        names: space.spaceNames,
+                    }),
+                );
+            }
         })
         .catch(() => dispatch(endRequestSpace()));
 };

@@ -5,9 +5,9 @@ import { AmenityTag } from '../model/space';
 /**
  * Selected Amenities State
  */
-export type SelectedAmenitiesState = {
+export interface SelectedAmenitiesState {
     selectedAmenities: Set<AmenityTag>;
-};
+}
 
 /**
  * Action Constants

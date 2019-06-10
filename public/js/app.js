@@ -74648,6 +74648,7 @@ const organizer_1 = __webpack_require__(/*! ../osdb-api/organizer */ "./resource
 const auth_1 = __webpack_require__(/*! ./auth */ "./resources/js/actions/auth.ts");
 const current_space_1 = __webpack_require__(/*! ./current-space */ "./resources/js/actions/current-space.ts");
 const space_trees_1 = __webpack_require__(/*! ./space-trees */ "./resources/js/actions/space-trees.ts");
+const space_history_1 = __webpack_require__(/*! ./space-history */ "./resources/js/actions/space-history.ts");
 /**
  * Attempt log in
  */
@@ -74684,6 +74685,7 @@ exports.logOut = () => async (dispatch) => {
         .then(() => {
         dispatch(current_space_1.resetSpace());
         dispatch(space_trees_1.resetSpaceTrees());
+        dispatch(space_history_1.resetSpaceHistory());
         dispatch(auth_1.logout());
     });
 };
@@ -74726,6 +74728,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const space_1 = __webpack_require__(/*! ../osdb-api/space */ "./resources/js/osdb-api/space.ts");
 const space_trees_1 = __webpack_require__(/*! ./space-trees */ "./resources/js/actions/space-trees.ts");
 const current_space_1 = __webpack_require__(/*! ./current-space */ "./resources/js/actions/current-space.ts");
+const space_history_1 = __webpack_require__(/*! ./space-history */ "./resources/js/actions/space-history.ts");
 /**
  * Fetch space trees from OSDB
  */
@@ -74740,11 +74743,17 @@ exports.fetchSpaceTrees = (organizerUID) => async (dispatch) => {
 /**
  * Fetch space from OSDB
  */
-exports.fetchSpace = (spaceID) => async (dispatch) => {
+exports.fetchSpace = (spaceID, saveHistory = false) => async (dispatch) => {
     dispatch(current_space_1.requestSpace());
     space_1.osdbGetSpace(spaceID)
         .then((space) => {
         dispatch(current_space_1.receiveSpace(space));
+        if (saveHistory) {
+            dispatch(space_history_1.pushIntoSpaceHistory({
+                id: spaceID,
+                names: space.spaceNames,
+            }));
+        }
     })
         .catch(() => dispatch(current_space_1.endRequestSpace()));
 };
@@ -74780,6 +74789,31 @@ const selected_amenities_1 = __webpack_require__(/*! ../redux-types/selected-ame
 exports.setSelectedAmenities = (selectedAmenities) => ({
     type: selected_amenities_1.SET_SELECTED_AMENITIES,
     selectedAmenities,
+});
+
+
+/***/ }),
+
+/***/ "./resources/js/actions/space-history.ts":
+/*!***********************************************!*\
+  !*** ./resources/js/actions/space-history.ts ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const space_history_1 = __webpack_require__(/*! ../redux-types/space-history */ "./resources/js/redux-types/space-history.ts");
+/**
+ * Action Creators
+ */
+exports.resetSpaceHistory = () => ({
+    type: space_history_1.RESET_SPACE_HISTORY,
+});
+exports.pushIntoSpaceHistory = (spaceHeader) => ({
+    type: space_history_1.PUSH_INTO_SPACE_HISTORY,
+    spaceHeader,
 });
 
 
@@ -75732,6 +75766,80 @@ exports.default = OSRankDisplay;
 
 /***/ }),
 
+/***/ "./resources/js/components/os-space-history.tsx":
+/*!******************************************************!*\
+  !*** ./resources/js/components/os-space-history.tsx ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const osdb_api_1 = __webpack_require__(/*! ../actions/osdb-api */ "./resources/js/actions/osdb-api.ts");
+class _OSSpaceHistory extends react_1.default.Component {
+    constructor() {
+        super(...arguments);
+        this.state = {
+            searchWord: '',
+        };
+        this._onSpaceClick = (spaceID) => this.props.fetchSpace(spaceID);
+        this._onSearchClick = () => {
+            this.props.fetchSpace(this.state.searchWord, true);
+        };
+        this._renderSpaceHistory = () => {
+            let rtn = [];
+            this.props.historyStack.forEach((spaceID) => rtn.push(this._renderSpaceHeader(this.props.historyHeaders[spaceID])));
+            return rtn;
+        };
+        this._renderSearchbar = () => {
+            return (react_1.default.createElement("div", { id: "search-bar", className: "input-group" },
+                react_1.default.createElement("input", { type: "text", className: "form-control", placeholder: "\uC2A4\uD398\uC774\uC2A4 ID", value: this.state.searchWord, onChange: ev => {
+                        this.setState({ searchWord: ev.target.value });
+                    } }),
+                react_1.default.createElement("div", { className: "input-group-append" },
+                    react_1.default.createElement("button", { className: "btn btn-outline-secondary", type: "button", onClick: this._onSearchClick }, "\uAC80\uC0C9"))));
+        };
+    }
+    _renderSpaceHeader(spaceHeader) {
+        return (react_1.default.createElement("a", { key: spaceHeader.id, className: `space-item
+                ${spaceHeader.id === this.props.currentSpaceID
+                ? 'selected'
+                : ''}`, onClick: () => this._onSpaceClick(spaceHeader.id) },
+            react_1.default.createElement("img", { src: "./demo-images/about_img_01.jpg", className: "rounded" }),
+            react_1.default.createElement("div", { className: "space-item-body" },
+                react_1.default.createElement("p", { className: "h5 os-text-ellipsis" }, spaceHeader.names['ko']),
+                react_1.default.createElement("p", { className: "h6 os-grey-1" },
+                    react_1.default.createElement("i", { className: "material-icons" }, "location_on"),
+                    "\uC11C\uC6B8 \uC1A1\uD30C\uAD6C \uC62C\uB9BC\uD53D\uB85C 35\uAE38 104"))));
+    }
+    render() {
+        return (react_1.default.createElement("div", { id: "os-space-history" },
+            react_1.default.createElement("p", { id: "header-text", className: "h5" }, "\uC2A4\uD398\uC774\uC2A4"),
+            this._renderSearchbar(),
+            react_1.default.createElement("p", { id: "header-text", className: "h5" }, "\uD788\uC2A4\uD1A0\uB9AC"),
+            react_1.default.createElement("div", { id: "history" }, this._renderSpaceHistory())));
+    }
+}
+const mapStateToProps = (state) => ({
+    currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
+    historyStack: state.spaceHistory.data.stack,
+    historyHeaders: state.spaceHistory.data.headers,
+});
+const mapDispatchToProps = {
+    fetchSpace: osdb_api_1.fetchSpace,
+};
+const OSSpaceHistory = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_OSSpaceHistory);
+exports.default = OSSpaceHistory;
+
+
+/***/ }),
+
 /***/ "./resources/js/components/os-space-introduce.tsx":
 /*!********************************************************!*\
   !*** ./resources/js/components/os-space-introduce.tsx ***!
@@ -75827,35 +75935,19 @@ const MAX_DEPTH = 4;
 class _OSSpaceTree extends react_1.default.Component {
     constructor() {
         super(...arguments);
-        this.state = {
-            searchWord: '',
-        };
         this._onSpaceClick = (spaceID) => this.props.fetchSpace(spaceID);
         this._renderSpaceGroup = (group) => {
             let rtn = [];
             space_tree_1.traverseSpaceTree(group, (spaceHeader, depth) => {
-                rtn.push(this._renderSpace(spaceHeader, depth));
+                rtn.push(this._renderSpaceHeader(spaceHeader, depth));
             });
             return rtn;
         };
         this._renderSpaceTrees = () => this.props.spaceTrees.map((group) => (react_1.default.createElement("div", { key: group.spaceHeader.id, className: "space-group" }, this._renderSpaceGroup(group))));
-        this._renderSearchbarForAdmin = () => {
-            if (this.props.currentUser &&
-                this.props.currentUser.authority === 'Admin') {
-                return (react_1.default.createElement("div", { id: "search-bar", className: "input-group" },
-                    react_1.default.createElement("input", { type: "text", className: "form-control", placeholder: "\uC2A4\uD398\uC774\uC2A4 ID", value: this.state.searchWord, onChange: ev => {
-                            this.setState({ searchWord: ev.target.value });
-                        } }),
-                    react_1.default.createElement("div", { className: "input-group-append" },
-                        react_1.default.createElement("button", { className: "btn btn-outline-secondary", type: "button", onClick: () => {
-                                this.props.fetchSpace(this.state.searchWord);
-                            } }, "\uAC80\uC0C9"))));
-            }
-        };
     }
-    _renderSpace(spaceHeader, depth, selcted = false) {
+    _renderSpaceHeader(spaceHeader, depth) {
         return (react_1.default.createElement("a", { key: spaceHeader.id, className: `space-item
-                    depth-${depth > MAX_DEPTH ? MAX_DEPTH : depth} ${selcted ? 'selected' : ''}
+                    depth-${depth > MAX_DEPTH ? MAX_DEPTH : depth} 
                 ${spaceHeader.id === this.props.currentSpaceID
                 ? 'selected'
                 : ''}`, onClick: () => this._onSpaceClick(spaceHeader.id) },
@@ -75870,12 +75962,10 @@ class _OSSpaceTree extends react_1.default.Component {
     render() {
         return (react_1.default.createElement("div", { id: "os-space-tree" },
             react_1.default.createElement("p", { id: "header-text", className: "h5" }, "\uC2A4\uD398\uC774\uC2A4"),
-            this._renderSearchbarForAdmin(),
             this._renderSpaceTrees()));
     }
 }
 const mapStateToProps = (state) => ({
-    currentUser: state.auth.currentUser,
     spaceTrees: state.spaceTrees.data,
     currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
 });
@@ -76422,6 +76512,7 @@ const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/rea
 const osdb_api_1 = __webpack_require__(/*! ../actions/osdb-api */ "./resources/js/actions/osdb-api.ts");
 const os_page_status_1 = __importDefault(__webpack_require__(/*! ../components/os-page-status */ "./resources/js/components/os-page-status.tsx"));
 const os_space_tree_1 = __importDefault(__webpack_require__(/*! ../components/os-space-tree */ "./resources/js/components/os-space-tree.tsx"));
+const os_space_history_1 = __importDefault(__webpack_require__(/*! ../components/os-space-history */ "./resources/js/components/os-space-history.tsx"));
 class _HomeSpacesTab extends react_1.default.Component {
     componentWillMount() {
         this.props.currentUser &&
@@ -76437,7 +76528,13 @@ class _HomeSpacesTab extends react_1.default.Component {
             return (react_1.default.createElement(os_page_status_1.default, { status: "information", info: "\uAD00\uB9AC\uC911\uC778 \uC2A4\uD398\uC774\uC2A4\uAC00 \uC874\uC7AC\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4." }));
         }
         else {
-            return react_1.default.createElement(os_space_tree_1.default, null);
+            if (this.props.currentUser &&
+                this.props.currentUser.authority === 'Admin') {
+                return react_1.default.createElement(os_space_history_1.default, null);
+            }
+            else {
+                return react_1.default.createElement(os_space_tree_1.default, null);
+            }
         }
     }
 }
@@ -76938,6 +77035,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const redux_1 = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
 const auth_1 = __importDefault(__webpack_require__(/*! ./auth */ "./resources/js/reducer/auth.ts"));
 const space_trees_1 = __importDefault(__webpack_require__(/*! ./space-trees */ "./resources/js/reducer/space-trees.ts"));
+const space_history_1 = __importDefault(__webpack_require__(/*! ./space-history */ "./resources/js/reducer/space-history.ts"));
 const current_space_1 = __importDefault(__webpack_require__(/*! ./current-space */ "./resources/js/reducer/current-space.ts"));
 const selected_amenities_1 = __importDefault(__webpack_require__(/*! ./selected-amenities */ "./resources/js/reducer/selected-amenities.ts"));
 const upload_images_1 = __importDefault(__webpack_require__(/*! ./upload-images */ "./resources/js/reducer/upload-images.ts"));
@@ -76947,6 +77045,7 @@ const upload_images_1 = __importDefault(__webpack_require__(/*! ./upload-images 
 const RootReducer = redux_1.combineReducers({
     auth: auth_1.default,
     spaceTrees: space_trees_1.default,
+    spaceHistory: space_history_1.default,
     currentSpace: current_space_1.default,
     selectedAmenities: selected_amenities_1.default,
     selectedImages: upload_images_1.default,
@@ -76988,6 +77087,63 @@ function SelectedAmenitiesReducer(state = initialState, action) {
     }
 }
 exports.default = SelectedAmenitiesReducer;
+
+
+/***/ }),
+
+/***/ "./resources/js/reducer/space-history.ts":
+/*!***********************************************!*\
+  !*** ./resources/js/reducer/space-history.ts ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const space_history_1 = __webpack_require__(/*! ../redux-types/space-history */ "./resources/js/redux-types/space-history.ts");
+/**
+ * Initial State
+ */
+const initialState = {
+    data: {
+        stack: [],
+        headers: {},
+    },
+};
+/**
+ * SpaceHistoryReducer
+ */
+function SpaceHistoryReducer(state = initialState, action) {
+    switch (action.type) {
+        case space_history_1.RESET_SPACE_HISTORY:
+            return {
+                data: {
+                    stack: [],
+                    headers: {},
+                },
+            };
+        case space_history_1.PUSH_INTO_SPACE_HISTORY:
+            if (!state.data.headers[action.spaceHeader.id]) {
+                state.data.stack.push(action.spaceHeader.id);
+                return {
+                    data: {
+                        stack: state.data.stack,
+                        headers: {
+                            ...state.data.headers,
+                            [action.spaceHeader.id]: action.spaceHeader,
+                        },
+                    },
+                };
+            }
+            else {
+                return state;
+            }
+        default:
+            return state;
+    }
+}
+exports.default = SpaceHistoryReducer;
 
 
 /***/ }),
@@ -77218,6 +77374,27 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 // prettier-ignore
 exports.SET_SELECTED_AMENITIES = 'selected-amenities/SET_SELECTED_AMENITIES';
+
+
+/***/ }),
+
+/***/ "./resources/js/redux-types/space-history.ts":
+/*!***************************************************!*\
+  !*** ./resources/js/redux-types/space-history.ts ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Action Constants
+ */
+// prettier-ignore
+exports.RESET_SPACE_HISTORY = 'current-space/RESET_SPACE_HISTORY';
+// prettier-ignore
+exports.PUSH_INTO_SPACE_HISTORY = 'current-space/PUSH_INTO_SPACE_HISTORY';
 
 
 /***/ }),

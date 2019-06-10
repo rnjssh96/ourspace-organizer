@@ -10,6 +10,7 @@ import { fetchSpaceTrees } from '../actions/osdb-api';
 import OSPageStatus from '../components/os-page-status';
 import OSOrganizer from '../model/organizer';
 import OSSpaceTree from '../components/os-space-tree';
+import OSSpaceHistory from '../components/os-space-history';
 
 interface _ReduxProps {
     /**
@@ -58,7 +59,14 @@ class _HomeSpacesTab extends React.Component<HomeSpacesTabProps> {
                 />
             );
         } else {
-            return <OSSpaceTree />;
+            if (
+                this.props.currentUser &&
+                this.props.currentUser.authority === 'Admin'
+            ) {
+                return <OSSpaceHistory />;
+            } else {
+                return <OSSpaceTree />;
+            }
         }
     }
 }

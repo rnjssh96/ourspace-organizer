@@ -23,6 +23,7 @@ import {
 
 import { resetSpace } from './current-space';
 import { resetSpaceTrees } from './space-trees';
+import { resetSpaceHistory } from './space-history';
 
 /**
  * Attempt log in
@@ -68,6 +69,7 @@ export const logOut: ActionCreator<
         .then(() => {
             dispatch(resetSpace());
             dispatch(resetSpaceTrees());
+            dispatch(resetSpaceHistory());
             dispatch(logout());
         });
 };

@@ -4,22 +4,13 @@ import { connect } from 'react-redux';
 import RootState from '../redux-types';
 import { FetchSpaceAction } from '../redux-types/osdb-api';
 
-import SpaceTrees, {
-    traverseSpaceTree,
-    SpaceTree,
-    SpaceHeader,
-} from '../model/space-tree';
+import SpaceTrees, { traverseSpaceTree, SpaceTree } from '../model/space-tree';
 import { fetchSpace } from '../actions/osdb-api';
-import OSOrganizer from '../model/organizer';
+import { SpaceHeader } from '../model/space-header';
 
 const MAX_DEPTH = 4;
 
 interface _ReduxProps {
-    /**
-     * Current user
-     */
-    currentUser?: OSOrganizer;
-
     /**
      * All spaces in tree structure
      */
@@ -41,24 +32,14 @@ interface _ReduxActionCreators {
 interface OSSpaceTreeProps extends _ReduxProps, _ReduxActionCreators {}
 
 class _OSSpaceTree extends React.Component<OSSpaceTreeProps> {
-    state = {
-        searchWord: '',
-    };
-
     private _onSpaceClick = (spaceID: string) => this.props.fetchSpace(spaceID);
 
-    private _renderSpace(
-        spaceHeader: SpaceHeader,
-        depth: number,
-        selcted = false,
-    ) {
+    private _renderSpaceHeader(spaceHeader: SpaceHeader, depth: number) {
         return (
             <a
                 key={spaceHeader.id}
                 className={`space-item
-                    depth-${depth > MAX_DEPTH ? MAX_DEPTH : depth} ${
-                    selcted ? 'selected' : ''
-                }
+                    depth-${depth > MAX_DEPTH ? MAX_DEPTH : depth} 
                 ${
                     spaceHeader.id === this.props.currentSpaceID
                         ? 'selected'
@@ -89,7 +70,7 @@ class _OSSpaceTree extends React.Component<OSSpaceTreeProps> {
     private _renderSpaceGroup = (group: SpaceTree) => {
         let rtn: JSX.Element[] = [];
         traverseSpaceTree(group, (spaceHeader: SpaceHeader, depth: number) => {
-            rtn.push(this._renderSpace(spaceHeader, depth));
+            rtn.push(this._renderSpaceHeader(spaceHeader, depth));
         });
         return rtn;
     };
@@ -101,45 +82,12 @@ class _OSSpaceTree extends React.Component<OSSpaceTreeProps> {
             </div>
         ));
 
-    private _renderSearchbarForAdmin = () => {
-        if (
-            this.props.currentUser &&
-            this.props.currentUser.authority === 'Admin'
-        ) {
-            return (
-                <div id="search-bar" className="input-group">
-                    <input
-                        type="text"
-                        className="form-control"
-                        placeholder="스페이스 ID"
-                        value={this.state.searchWord}
-                        onChange={ev => {
-                            this.setState({ searchWord: ev.target.value });
-                        }}
-                    />
-                    <div className="input-group-append">
-                        <button
-                            className="btn btn-outline-secondary"
-                            type="button"
-                            onClick={() => {
-                                this.props.fetchSpace(this.state.searchWord);
-                            }}
-                        >
-                            검색
-                        </button>
-                    </div>
-                </div>
-            );
-        }
-    };
-
     render() {
         return (
             <div id="os-space-tree">
                 <p id="header-text" className="h5">
                     스페이스
                 </p>
-                {this._renderSearchbarForAdmin()}
                 {this._renderSpaceTrees()}
             </div>
         );
@@ -147,7 +95,6 @@ class _OSSpaceTree extends React.Component<OSSpaceTreeProps> {
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
-    currentUser: state.auth.currentUser,
     spaceTrees: state.spaceTrees.data,
     currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
 });

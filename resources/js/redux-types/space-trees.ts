@@ -4,12 +4,12 @@ import { Action } from 'redux';
 /**
  * Space Trees State
  */
-export type SpaceTreesState = {
+export interface SpaceTreesState {
     data: SpaceTrees;
     status: {
         requestingSpaceTrees: boolean;
     };
-};
+}
 
 /**
  * Action Constants

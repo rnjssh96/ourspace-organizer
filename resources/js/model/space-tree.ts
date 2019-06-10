@@ -1,15 +1,9 @@
-import { SpaceNames } from './space';
+import { RawSpaceHeader, SpaceHeader } from './space-header';
 
 /**
  * buildArray2Tree
  * - Build tree from an array
  */
-export interface RawSpaceHeader {
-    id: string;
-    pid: string;
-    names: SpaceNames;
-}
-
 interface WorkUnit {
     nodes: SpaceNodeMap;
     parentFound: boolean;
@@ -66,14 +60,6 @@ export const traverseSpaceTree = (
         traverseSpaceTree(node, (callbackfn = callbackfn), initDepth + 1);
     });
 };
-
-/**
- * Space Header
- */
-export interface SpaceHeader {
-    id: string;
-    names: SpaceNames;
-}
 
 /**
  * Space Node

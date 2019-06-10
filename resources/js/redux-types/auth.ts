@@ -9,12 +9,12 @@ export type LoggedStatus = 'ready' | 'processing' | 'success' | 'failed';
 
 export type SignupStatus = 'ready' | 'processing' | 'success' | 'failed';
 
-export type AuthState = {
+export interface AuthState {
     loggedStatus: LoggedStatus;
     signupStatus: SignupStatus;
     currentUser?: OSOrganizer;
     errorMessage?: string;
-};
+}
 
 /**
  * Action Constants

@@ -1,4 +1,4 @@
-#os-space-tree {
+#os-space-history {
     // size
     flex: 1;
 
@@ -26,24 +26,21 @@
         padding-left: 0.5rem;
     }
 
-    & > .space-group {
+    & > #search-bar {
+        // margin
+        margin-bottom: 0.5rem;
+    }
+
+    & > #history {
+        // size
+        flex: 1;
+
         // flex
         display: flex;
-        flex-direction: column;
+        flex-direction: column-reverse;
+        justify-content: flex-end;
 
-        // border
-        border-top: 1px solid $main-theme;
-
-        // padding
-        padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
-
-        &:last-child {
-            // border
-            border-bottom: 1px solid $main-theme;
-        }
-
-        .space-item {
+        & > .space-item {
             // flex
             display: flex;
             align-items: stretch;
@@ -64,26 +61,6 @@
             &:hover {
                 // background
                 background-color: $grey-3;
-            }
-
-            @for $depth from 0 through 4 {
-                &.depth-#{$depth} {
-                    & > .bullet {
-                        // size
-                        $width: $depth * 1.5;
-                        width: $width + 0rem;
-                    }
-
-                    & > .space-item-body {
-                        @if $depth==0 {
-                            // justify content
-                            justify-content: flex-end;
-
-                            // margin
-                            margin-bottom: 0.5rem;
-                        }
-                    }
-                }
             }
 
             &.selected {
@@ -108,6 +85,7 @@
                 // flex
                 display: flex;
                 flex-direction: column;
+                justify-content: flex-end;
                 align-items: flex-start;
 
                 // overflow

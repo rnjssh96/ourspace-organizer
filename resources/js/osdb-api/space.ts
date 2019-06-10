@@ -1,10 +1,8 @@
 import { getFromServer, postToServer } from './request';
 
 import Space, { AmenityTag } from '../model/space';
-import SpaceTrees, {
-    RawSpaceHeader,
-    buildArray2Tree,
-} from '../model/space-tree';
+import SpaceTrees, { buildArray2Tree } from '../model/space-tree';
+import { RawSpaceHeader } from '../model/space-header';
 
 /**
  * Get space trees by organizerUID
