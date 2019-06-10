@@ -75749,10 +75749,18 @@ class _OSRankDisplay extends react_1.default.Component {
             }
             return rtn;
         };
+        this._renderRank = () => {
+            if (this.props.rank === 0) {
+                return react_1.default.createElement("p", { className: "h1" }, "-.--");
+            }
+            else {
+                return react_1.default.createElement("p", { className: "h1" }, this.props.rank.toFixed(2));
+            }
+        };
     }
     render() {
         return (react_1.default.createElement("div", { id: "os-rank-display" },
-            react_1.default.createElement("p", { className: "h1" }, this.props.rank),
+            this._renderRank(),
             react_1.default.createElement("div", { id: "stars" }, this._renderStars())));
     }
 }

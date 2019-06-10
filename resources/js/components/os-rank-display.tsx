@@ -33,10 +33,18 @@ class _OSRankDisplay extends React.Component<OSRankDisplayProps> {
         return rtn;
     };
 
+    private _renderRank = () => {
+        if (this.props.rank === 0) {
+            return <p className="h1">- . - -</p>;
+        } else {
+            return <p className="h1">{this.props.rank.toFixed(2)}</p>;
+        }
+    };
+
     render() {
         return (
             <div id="os-rank-display">
-                <p className="h1">{this.props.rank}</p>
+                {this._renderRank()}
                 <div id="stars">{this._renderStars()}</div>
             </div>
         );
