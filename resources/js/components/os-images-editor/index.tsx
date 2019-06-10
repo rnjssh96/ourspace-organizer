@@ -7,11 +7,18 @@ import ImageUploadModal, { ImageUploadModalID } from './image-upload-modal';
 
 import { resetUploadImages } from '../../actions/upload-images';
 
+import OSPageStatus from '../os-page-status';
+
 interface _ReduxProps {
     /**
      * Images of the space
      */
     images?: string[];
+
+    /**
+     * Updating image
+     */
+    updatingImages: boolean;
 }
 
 interface _ReduxActionCreators {
@@ -37,7 +44,9 @@ class _OSImagesEditor extends React.Component<OSImagesEditorProps> {
     };
 
     private _renderImages() {
-        if (this.props.images && this.props.images.length > 0) {
+        if (this.props.updatingImages) {
+            return <OSPageStatus status="loading" />;
+        } else if (this.props.images && this.props.images.length > 0) {
             return this.props.images.map((image: string) => (
                 <img key={image} src={image} className="rounded" />
             ));
@@ -76,6 +85,7 @@ class _OSImagesEditor extends React.Component<OSImagesEditorProps> {
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
+    updatingImages: state.currentSpace.status.updatingImages,
     images: state.currentSpace.data && state.currentSpace.data.images,
 });
 

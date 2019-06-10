@@ -26,6 +26,12 @@ import {
     START_UPDATE_AT,
     END_UPDATE_AT,
     FINISH_UPDATE_AT,
+    StartUpdateImagesAction,
+    FinishUpdateImagesAction,
+    START_UPDATE_IMAGES,
+    FINISH_UPDATE_IMAGES,
+    END_UPDATE_IMAGES,
+    EndUpdateImagesAction,
 } from '../redux-types/current-space';
 
 /**
@@ -92,4 +98,21 @@ export const finishUpdateAT: ActionCreator<FinishUpdateATAction> = (
 
 export const endUpdateAT: ActionCreator<EndUpdateATAction> = () => ({
     type: END_UPDATE_AT,
+});
+
+export const startUpdateImages: ActionCreator<
+    StartUpdateImagesAction
+> = () => ({
+    type: START_UPDATE_IMAGES,
+});
+
+export const finishUpdateImages: ActionCreator<FinishUpdateImagesAction> = (
+    images: string[],
+) => ({
+    type: FINISH_UPDATE_IMAGES,
+    images,
+});
+
+export const endUpdateImages: ActionCreator<EndUpdateImagesAction> = () => ({
+    type: END_UPDATE_IMAGES,
 });

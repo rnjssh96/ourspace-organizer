@@ -9,6 +9,7 @@ import {
     osdbGetSpaceTrees,
     osdbUpdateOperatingHour,
     osdbUpdateAmenityTags,
+    osdbUpdateImages,
 } from '../osdb-api/space';
 
 import {
@@ -26,6 +27,8 @@ import {
     startUpdateAT,
     finishUpdateAT,
     endUpdateAT,
+    endUpdateImages,
+    finishUpdateImages,
 } from './current-space';
 import { pushIntoSpaceHistory } from './space-history';
 
@@ -99,4 +102,19 @@ export const updateAmenityTags: ActionCreator<
             dispatch(finishUpdateAT(amenityTags));
         })
         .catch(() => dispatch(endUpdateAT()));
+};
+
+/**
+ * Update images of the space space from OSDB
+ */
+export const updateImages: ActionCreator<
+    ThunkAction<void, string[], null, Action<any>>
+> = (spaceID: string, images: string[]) => async (
+    dispatch: ThunkDispatch<string[], null, Action<any>>,
+) => {
+    osdbUpdateImages(spaceID, images)
+        .then(() => {
+            dispatch(finishUpdateImages(images));
+        })
+        .catch(() => dispatch(endUpdateImages()));
 };

@@ -11,6 +11,7 @@ export interface CurrentSpaceState {
         requestingSpace: boolean;
         updatingOperatingHour: boolean;
         updatingAmentiyTags: boolean;
+        updatingImages: boolean;
     };
 }
 
@@ -45,6 +46,13 @@ export const START_UPDATE_AT = 'current-space/START_UPDATE_AT';
 export const FINISH_UPDATE_AT = 'current-space/FINISH_UPDATE_AT';
 // prettier-ignore
 export const END_UPDATE_AT = 'current-space/END_UPDATE_AT';
+
+// prettier-ignore
+export const START_UPDATE_IMAGES = 'current-space/START_UPDATE_IMAGES';
+// prettier-ignore
+export const FINISH_UPDATE_IMAGES = 'current-space/FINISH_UPDATE_IMAGES';
+// prettier-ignore
+export const END_UPDATE_IMAGES = 'current-space/END_UPDATE_IMAGES';
 
 /**
  * Action Interfaces
@@ -85,6 +93,17 @@ export interface FinishUpdateATAction extends Action<typeof FINISH_UPDATE_AT> {
 
 export interface EndUpdateATAction extends Action<typeof END_UPDATE_AT> {}
 
+export interface StartUpdateImagesAction
+    extends Action<typeof START_UPDATE_IMAGES> {}
+
+export interface FinishUpdateImagesAction
+    extends Action<typeof FINISH_UPDATE_IMAGES> {
+    images: string[];
+}
+
+export interface EndUpdateImagesAction
+    extends Action<typeof END_UPDATE_IMAGES> {}
+
 /**
  * Action Types
  */
@@ -100,4 +119,7 @@ export type CurrentSpaceActions =
     | SetBusyLevelAction
     | StartUpdateATAction
     | FinishUpdateATAction
-    | EndUpdateATAction;
+    | EndUpdateATAction
+    | StartUpdateImagesAction
+    | FinishUpdateImagesAction
+    | EndUpdateImagesAction;

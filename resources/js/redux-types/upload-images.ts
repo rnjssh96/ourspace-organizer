@@ -8,6 +8,7 @@ export interface UploadImage {
     name: string;
     size: number;
     dataURL?: string;
+    file: File;
     progress: number;
 }
 export type UploadImagesMap = { [key in number]: UploadImage };

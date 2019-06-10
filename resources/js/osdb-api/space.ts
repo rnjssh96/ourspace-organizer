@@ -121,3 +121,24 @@ export const osdbUpdateAmenityTags = async (
             .catch(error => reject(error));
     });
 };
+
+/**
+ * Update space images
+ */
+export const osdbUpdateImages = async (
+    spaceID: string,
+    images: string[],
+): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        postToServer(
+            { url: `/ospace/${spaceID}` },
+            {
+                images: images,
+            },
+        )
+            .then(() => {
+                resolve();
+            })
+            .catch(error => reject(error));
+    });
+};

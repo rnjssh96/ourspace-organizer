@@ -18,10 +18,17 @@ import {
     setImageData,
     deleteUploadImage,
 } from '../../actions/upload-images';
+import { UploadImagesToServerAction } from '../../redux-types/firebase-storage';
+import { uploadImagesToServer } from '../../actions/firebase-storage';
 
 export const ImageUploadModalID = 'image-upload-modal';
 
 interface _ReduxProps {
+    /**
+     * Current space ID
+     */
+    currentSpaceID?: string;
+
     /**
      * Total number of selected images
      */
@@ -31,6 +38,11 @@ interface _ReduxProps {
      * Upload images array
      */
     uploadImages: UploadImagesMap;
+
+    /**
+     * Current images
+     */
+    currentImages?: string[];
 }
 
 interface _ReduxActionCreators {
@@ -53,6 +65,11 @@ interface _ReduxActionCreators {
      * Delete uploaded image
      */
     deleteUploadImage: typeof deleteUploadImage;
+
+    /**
+     * Upload images to server
+     */
+    uploadImagesToServer: UploadImagesToServerAction;
 }
 
 interface ImageUploadModalProps extends _ReduxProps, _ReduxActionCreators {}
@@ -65,6 +82,7 @@ class _ImageUploadModal extends React.Component<ImageUploadModalProps> {
                 this.props.addUploadImage(imageKey, {
                     key: imageKey,
                     name: file.name,
+                    file: file,
                     size: file.size,
                     progress: 0,
                 });
@@ -92,6 +110,18 @@ class _ImageUploadModal extends React.Component<ImageUploadModalProps> {
                 alert(`"${file.name}": 허용되지 않는 파일형식입니다.`);
             }
         });
+    };
+
+    private _onSubmit = (ev: React.MouseEvent) => {
+        ev.preventDefault();
+
+        this.props.currentSpaceID &&
+            this.props.currentImages &&
+            this.props.uploadImagesToServer(
+                this.props.currentSpaceID,
+                this.props.uploadImages,
+                this.props.currentImages,
+            );
     };
 
     private _renderSelectedImages = () => {
@@ -212,6 +242,7 @@ class _ImageUploadModal extends React.Component<ImageUploadModalProps> {
                                 type="submit"
                                 className="btn btn-primary"
                                 data-dismiss="modal"
+                                onClick={this._onSubmit}
                             >
                                 업로드
                             </button>
@@ -224,8 +255,10 @@ class _ImageUploadModal extends React.Component<ImageUploadModalProps> {
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
+    currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
     imagesCount: state.selectedImages.imagesCount,
     uploadImages: state.selectedImages.uploadImages,
+    currentImages: state.currentSpace.data && state.currentSpace.data.images,
 });
 
 const mapDispatchToProps = {
@@ -233,6 +266,7 @@ const mapDispatchToProps = {
     updateUploadProgress,
     setImageData,
     deleteUploadImage,
+    uploadImagesToServer,
 };
 
 const ImageUploadModal = connect(

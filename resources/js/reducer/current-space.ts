@@ -13,6 +13,9 @@ import {
     START_UPDATE_AT,
     FINISH_UPDATE_AT,
     END_UPDATE_AT,
+    START_UPDATE_IMAGES,
+    FINISH_UPDATE_IMAGES,
+    END_UPDATE_IMAGES,
 } from '../redux-types/current-space';
 
 /**
@@ -23,6 +26,7 @@ const initialState: CurrentSpaceState = {
         requestingSpace: false,
         updatingOperatingHour: false,
         updatingAmentiyTags: false,
+        updatingImages: false,
     },
 };
 
@@ -66,6 +70,7 @@ export default function CurrentSpaceReducer(
                     requestingSpace: false,
                     updatingOperatingHour: false,
                     updatingAmentiyTags: false,
+                    updatingImages: false,
                 },
             };
 
@@ -154,6 +159,39 @@ export default function CurrentSpaceReducer(
                 status: {
                     ...state.status,
                     updatingAmentiyTags: false,
+                },
+            };
+
+        case START_UPDATE_IMAGES:
+            return {
+                ...state,
+                status: {
+                    ...state.status,
+                    updatingImages: true,
+                },
+            };
+
+        case FINISH_UPDATE_IMAGES:
+            if (state.data)
+                return {
+                    ...state,
+                    data: {
+                        ...state.data,
+                        images: action.images,
+                    },
+                    status: {
+                        ...state.status,
+                        updatingImages: false,
+                    },
+                };
+            else return state;
+
+        case END_UPDATE_IMAGES:
+            return {
+                ...state,
+                status: {
+                    ...state.status,
+                    updatingImages: false,
                 },
             };
 
