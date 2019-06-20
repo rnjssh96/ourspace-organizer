@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import RootState from '../redux-types';
 
-import { GeoCoordinate } from '../model/space';
+import { LatLng } from '../model/space';
 
 import OSGoogleMap from './os-google-map';
 import OSPageStatus from './os-page-status';
@@ -12,7 +12,7 @@ interface _ReduxProps {
     /**
      * Geographical coordinate of the space location
      */
-    location?: GeoCoordinate;
+    location?: LatLng;
 }
 
 interface OSLoactionMapProps extends _ReduxProps {}

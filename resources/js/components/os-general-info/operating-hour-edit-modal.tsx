@@ -1,7 +1,25 @@
 import React, { ChangeEvent, MouseEvent } from 'react';
 
-import * as DayInterpret from './day-interpret.json';
+import * as DayInterpret from '../../config/weekdays.json';
 
+/**
+ *
+ *
+ * OperatingHourEditModal props
+ *
+ *
+ */
+interface OperatingHourEditModalProps
+    extends _ReduxProps,
+        _ReduxActionCreators {}
+
+/**
+ *
+ *
+ * OperatingHourEditModal component
+ *
+ *
+ */
 export const OperatingHourEditModalID = 'operating-hour-edit-modal';
 
 type Day = keyof typeof DayInterpret;
@@ -12,14 +30,7 @@ interface DayOperatingTime {
     endTime: string;
 }
 
-interface OperatingHourEditModalProps {
-    /**
-     * Update operating hours of the space
-     */
-    updateOperatingHour: (operatingHours: string[]) => void;
-}
-
-export default class OperatingHourEditModal extends React.Component<
+class _OperatingHourEditModal extends React.Component<
     OperatingHourEditModalProps
 > {
     state: { [key in Day]: DayOperatingTime } = {
@@ -35,36 +46,38 @@ export default class OperatingHourEditModal extends React.Component<
     private _saveOperatingHour = (event: MouseEvent) => {
         event.preventDefault();
 
-        let map: { [time: string]: Day[] } = {};
-        let priority: string[] = [];
+        if (this.props.currentSpaceID) {
+            let map: { [time: string]: Day[] } = {};
+            let priority: string[] = [];
 
-        Object.keys(this.state).map((day: string) => {
-            if (this.state[day as Day].off) {
-                return;
-            }
-            let timeKey = `${this.state[day as Day].startTime} - ${
-                this.state[day as Day].endTime
-            }`;
-            if (map[timeKey]) {
-                map[timeKey].push(day as Day);
-            } else {
-                map[timeKey] = [day as Day];
-                priority.push(timeKey);
-            }
-        });
-
-        let temp = '';
-        let result = priority.map((timeKey: string) => {
-            temp = `${timeKey} / `;
-            map[timeKey].map((day: Day, index: number) => {
-                if (index > 0) {
-                    temp += ', ';
+            Object.keys(this.state).map((day: string) => {
+                if (this.state[day as Day].off) {
+                    return;
                 }
-                temp += DayInterpret[day]['ko'];
+                let timeKey = `${this.state[day as Day].startTime} - ${
+                    this.state[day as Day].endTime
+                }`;
+                if (map[timeKey]) {
+                    map[timeKey].push(day as Day);
+                } else {
+                    map[timeKey] = [day as Day];
+                    priority.push(timeKey);
+                }
             });
-            return temp;
-        });
-        this.props.updateOperatingHour(result);
+
+            let temp = '';
+            let result = priority.map((timeKey: string) => {
+                temp = `${timeKey} / `;
+                map[timeKey].map((day: Day, index: number) => {
+                    if (index > 0) {
+                        temp += ', ';
+                    }
+                    temp += DayInterpret[day]['ko'];
+                });
+                return temp;
+            });
+            this.props.updateOperatingHours(this.props.currentSpaceID, result);
+        }
     };
 
     private _renderRow = (day: Day) => {
@@ -184,3 +197,44 @@ export default class OperatingHourEditModal extends React.Component<
         );
     }
 }
+
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+import { connect } from 'react-redux';
+import RootState from '../../redux-types';
+
+import { updateOperatingHours } from '../../thunk-action/current-space';
+
+interface _ReduxProps {
+    /**
+     * Current space ID
+     */
+    currentSpaceID?: string;
+}
+
+interface _ReduxActionCreators {
+    /**
+     * Update operating hours of the space
+     */
+    updateOperatingHours: (spaceID: string, operatingHours: string[]) => void;
+}
+
+const mapStateToProps = (state: RootState): _ReduxProps => ({
+    currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
+});
+
+const mapDispatchToProps = {
+    updateOperatingHours,
+};
+
+const OperatingHourEditModal = connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(_OperatingHourEditModal);
+
+export default OperatingHourEditModal;

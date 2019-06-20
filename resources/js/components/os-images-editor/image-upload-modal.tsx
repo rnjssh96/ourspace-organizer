@@ -1,78 +1,29 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import Dropzone from 'react-dropzone';
 import ContentLoader from 'react-content-loader';
 import filesize from 'filesize';
 
 import { AllowedFileMime } from '../../config/allowed-file-mime';
 
-import RootState from '../../redux-types';
-import {
-    UploadImagesMap,
-    UploadImage,
-} from '../../redux-types/upload-images.js';
+import { UploadImage } from '../../redux-types/upload-images';
 
-import {
-    addUploadImage,
-    updateUploadProgress,
-    setImageData,
-    deleteUploadImage,
-} from '../../actions/upload-images';
-import { UploadImagesToServerAction } from '../../redux-types/firebase-storage';
-import { uploadImagesToServer } from '../../actions/firebase-storage';
-
-export const ImageUploadModalID = 'image-upload-modal';
-
-interface _ReduxProps {
-    /**
-     * Current space ID
-     */
-    currentSpaceID?: string;
-
-    /**
-     * Total number of selected images
-     */
-    imagesCount: number;
-
-    /**
-     * Upload images array
-     */
-    uploadImages: UploadImagesMap;
-
-    /**
-     * Current images
-     */
-    currentImages?: string[];
-}
-
-interface _ReduxActionCreators {
-    /**
-     * Add upload image
-     */
-    addUploadImage: typeof addUploadImage;
-
-    /**
-     * Update upload progress
-     */
-    updateUploadProgress: typeof updateUploadProgress;
-
-    /**
-     * Set uploaded image data
-     */
-    setImageData: typeof setImageData;
-
-    /**
-     * Delete uploaded image
-     */
-    deleteUploadImage: typeof deleteUploadImage;
-
-    /**
-     * Upload images to server
-     */
-    uploadImagesToServer: UploadImagesToServerAction;
-}
-
+/**
+ *
+ *
+ * ImageUploadModal props
+ *
+ *
+ */
 interface ImageUploadModalProps extends _ReduxProps, _ReduxActionCreators {}
+
+/**
+ *
+ *
+ * ImageUploadModal component
+ *
+ *
+ */
+export const ImageUploadModalID = 'image-upload-modal';
 
 class _ImageUploadModal extends React.Component<ImageUploadModalProps> {
     private _onFileDrop = (acceptedFiles: File[]) => {
@@ -117,10 +68,10 @@ class _ImageUploadModal extends React.Component<ImageUploadModalProps> {
 
         this.props.currentSpaceID &&
             this.props.currentImages &&
-            this.props.uploadImagesToServer(
+            this.props.updateImages(
                 this.props.currentSpaceID,
-                this.props.uploadImages,
                 this.props.currentImages,
+                this.props.uploadImages,
             );
     };
 
@@ -254,6 +205,80 @@ class _ImageUploadModal extends React.Component<ImageUploadModalProps> {
     }
 }
 
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+import { connect } from 'react-redux';
+import RootState from '../../redux-types';
+
+import { UploadImagesMap } from '../../redux-types/upload-images';
+
+import {
+    addUploadImage,
+    updateUploadProgress,
+    setImageData,
+    deleteUploadImage,
+} from '../../actions/upload-images';
+
+import { updateImages } from '../../thunk-action/current-space';
+
+interface _ReduxProps {
+    /**
+     * Current space ID
+     */
+    currentSpaceID?: string;
+
+    /**
+     * Total number of selected images
+     */
+    imagesCount: number;
+
+    /**
+     * Upload images array
+     */
+    uploadImages: UploadImagesMap;
+
+    /**
+     * Current images
+     */
+    currentImages?: string[];
+}
+
+interface _ReduxActionCreators {
+    /**
+     * Add upload image
+     */
+    addUploadImage: typeof addUploadImage;
+
+    /**
+     * Update upload progress
+     */
+    updateUploadProgress: typeof updateUploadProgress;
+
+    /**
+     * Set uploaded image data
+     */
+    setImageData: typeof setImageData;
+
+    /**
+     * Delete uploaded image
+     */
+    deleteUploadImage: typeof deleteUploadImage;
+
+    /**
+     * update images on server
+     */
+    updateImages: (
+        spaceID: string,
+        spaceImages: string[],
+        uploadings: UploadImagesMap,
+    ) => void;
+}
+
 const mapStateToProps = (state: RootState): _ReduxProps => ({
     currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
     imagesCount: state.selectedImages.imagesCount,
@@ -266,7 +291,7 @@ const mapDispatchToProps = {
     updateUploadProgress,
     setImageData,
     deleteUploadImage,
-    uploadImagesToServer,
+    updateImages,
 };
 
 const ImageUploadModal = connect(

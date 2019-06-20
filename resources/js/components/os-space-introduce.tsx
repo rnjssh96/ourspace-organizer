@@ -1,27 +1,22 @@
 import React from 'react';
-import { connect } from 'react-redux';
 
-import RootState from '../redux-types';
-
-import { updateSpaceIntroduce } from '../actions/current-space';
-
-type Mode = 'display' | 'edit';
-
-interface _ReduxProps {
-    /**
-     * Introduction of the space
-     */
-    spaceIntroduce?: string;
-}
-
-interface _ReduxActionCreators {
-    /**
-     * Update introduction of the space
-     */
-    updateSpaceIntroduce: typeof updateSpaceIntroduce;
-}
-
+/**
+ *
+ *
+ * OSSpaceIntroduce props
+ *
+ *
+ */
 interface OSSpaceIntroduceProps extends _ReduxProps, _ReduxActionCreators {}
+
+/**
+ *
+ *
+ * OSSpaceIntroduce component
+ *
+ *
+ */
+type Mode = 'display' | 'edit';
 
 class _OSSpaceIntroduce extends React.Component<OSSpaceIntroduceProps> {
     state: { mode: Mode; textValue: string } = {
@@ -111,6 +106,32 @@ class _OSSpaceIntroduce extends React.Component<OSSpaceIntroduceProps> {
             </div>
         );
     }
+}
+
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+import { connect } from 'react-redux';
+import RootState from '../redux-types';
+
+import { updateSpaceIntroduce } from '../actions/current-space';
+
+interface _ReduxProps {
+    /**
+     * Introduction of the space
+     */
+    spaceIntroduce?: string;
+}
+
+interface _ReduxActionCreators {
+    /**
+     * Update introduction of the space
+     */
+    updateSpaceIntroduce: typeof updateSpaceIntroduce;
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({

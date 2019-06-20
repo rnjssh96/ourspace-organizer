@@ -1,38 +1,29 @@
 import React from 'react';
-import { connect } from 'react-redux';
 
-import RootState from '../redux-types';
-import { FetchSpaceAction } from '../redux-types/osdb-api';
-
-import SpaceTrees, { traverseSpaceTree, SpaceTree } from '../model/space-tree';
-import { fetchSpace } from '../actions/osdb-api';
+import { traverseSpaceTree, SpaceTree } from '../model/space-tree';
 import { SpaceHeader } from '../model/space-header';
 
-const MAX_DEPTH = 4;
-
-interface _ReduxProps {
-    /**
-     * All spaces in tree structure
-     */
-    spaceTrees: SpaceTrees;
-
-    /**
-     * Current space ID
-     */
-    currentSpaceID?: string;
-}
-
-interface _ReduxActionCreators {
-    /**
-     * Fetch space trees from OSDB
-     */
-    fetchSpace: FetchSpaceAction;
-}
-
+/**
+ *
+ *
+ * OSSpaceTree props
+ *
+ *
+ */
 interface OSSpaceTreeProps extends _ReduxProps, _ReduxActionCreators {}
 
+/**
+ *
+ *
+ * OSSpaceTree component
+ *
+ *
+ */
+const MAX_DEPTH = 4;
+
 class _OSSpaceTree extends React.Component<OSSpaceTreeProps> {
-    private _onSpaceClick = (spaceID: string) => this.props.fetchSpace(spaceID);
+    private _onSpaceClick = (spaceID: string) =>
+        this.props.requestSpace(spaceID);
 
     private _renderSpaceHeader(spaceHeader: SpaceHeader, depth: number) {
         return (
@@ -75,12 +66,15 @@ class _OSSpaceTree extends React.Component<OSSpaceTreeProps> {
         return rtn;
     };
 
-    private _renderSpaceTrees = () =>
-        this.props.spaceTrees.map((group: SpaceTree) => (
-            <div key={group.spaceHeader.id} className="space-group">
-                {this._renderSpaceGroup(group)}
-            </div>
-        ));
+    private _renderSpaceTrees = () => {
+        if (this.props.spaceTrees) {
+            return this.props.spaceTrees.map((group: SpaceTree) => (
+                <div key={group.spaceHeader.id} className="space-group">
+                    {this._renderSpaceGroup(group)}
+                </div>
+            ));
+        }
+    };
 
     render() {
         return (
@@ -94,13 +88,46 @@ class _OSSpaceTree extends React.Component<OSSpaceTreeProps> {
     }
 }
 
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+import { connect } from 'react-redux';
+import RootState from '../redux-types';
+
+import SpaceTrees from '../model/space-tree';
+
+import { requestSpace } from '../thunk-action/current-space';
+
+interface _ReduxProps {
+    /**
+     * All spaces in tree structure
+     */
+    spaceTrees?: SpaceTrees;
+
+    /**
+     * Current space ID
+     */
+    currentSpaceID?: string;
+}
+
+interface _ReduxActionCreators {
+    /**
+     * Request space from the server
+     */
+    requestSpace: (spaceID: string) => void;
+}
+
 const mapStateToProps = (state: RootState): _ReduxProps => ({
     spaceTrees: state.spaceTrees.data,
     currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
 });
 
 const mapDispatchToProps = {
-    fetchSpace,
+    requestSpace,
 };
 
 const OSSpaceTree = connect(

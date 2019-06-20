@@ -1,47 +1,32 @@
 import React from 'react';
-import { connect } from 'react-redux';
-
-import RootState from '../redux-types';
-import { FetchSpaceAction } from '../redux-types/osdb-api';
-
-import { fetchSpace } from '../actions/osdb-api';
 import { SpaceHeader } from '../model/space-header';
 
-interface _ReduxProps {
-    /**
-     * Current space ID
-     */
-    currentSpaceID?: string;
-
-    /**
-     * Stack of space history
-     */
-    historyStack: string[];
-
-    /**
-     * Headers of space history
-     */
-    historyHeaders: { [spaceID: string]: SpaceHeader };
-}
-
-interface _ReduxActionCreators {
-    /**
-     * Fetch space trees from OSDB
-     */
-    fetchSpace: FetchSpaceAction;
-}
-
+/**
+ *
+ *
+ * OSSpaceHistory props
+ *
+ *
+ */
 interface OSSpaceHistoryProps extends _ReduxProps, _ReduxActionCreators {}
 
+/**
+ *
+ *
+ * OSSpaceHistory component
+ *
+ *
+ */
 class _OSSpaceHistory extends React.Component<OSSpaceHistoryProps> {
     state = {
         searchWord: '',
     };
 
-    private _onSpaceClick = (spaceID: string) => this.props.fetchSpace(spaceID);
+    private _onSpaceClick = (spaceID: string) =>
+        this.props.requestSpace(spaceID, false);
 
     private _onSearchClick = () => {
-        this.props.fetchSpace(this.state.searchWord, true);
+        this.props.requestSpace(this.state.searchWord, true);
     };
 
     private _renderSpaceHeader(spaceHeader: SpaceHeader) {
@@ -121,6 +106,42 @@ class _OSSpaceHistory extends React.Component<OSSpaceHistoryProps> {
     }
 }
 
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+import { connect } from 'react-redux';
+import RootState from '../redux-types';
+
+import { requestSpace } from '../thunk-action/current-space';
+
+interface _ReduxProps {
+    /**
+     * Current space ID
+     */
+    currentSpaceID?: string;
+
+    /**
+     * Stack of space history
+     */
+    historyStack: string[];
+
+    /**
+     * Headers of space history
+     */
+    historyHeaders: { [spaceID: string]: SpaceHeader };
+}
+
+interface _ReduxActionCreators {
+    /**
+     * Fetch space trees from OSDB
+     */
+    requestSpace: (spaceID: string, pushHistory: boolean) => void;
+}
+
 const mapStateToProps = (state: RootState): _ReduxProps => ({
     currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
     historyStack: state.spaceHistory.data.stack,
@@ -128,7 +149,7 @@ const mapStateToProps = (state: RootState): _ReduxProps => ({
 });
 
 const mapDispatchToProps = {
-    fetchSpace,
+    requestSpace,
 };
 
 const OSSpaceHistory = connect(

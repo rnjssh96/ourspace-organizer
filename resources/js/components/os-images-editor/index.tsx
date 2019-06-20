@@ -1,40 +1,25 @@
 import React from 'react';
-import { connect } from 'react-redux';
-
-import RootState from '../../redux-types';
 
 import ImageUploadModal, { ImageUploadModalID } from './image-upload-modal';
-
-import { resetUploadImages } from '../../actions/upload-images';
-
 import OSPageStatus from '../os-page-status';
 
-interface _ReduxProps {
-    /**
-     * Images of the space
-     */
-    images?: string[];
+/**
+ *
+ *
+ * OSImagesEditor props
+ *
+ *
+ */
+interface OSImagesEditorProps extends _ReduxProps {}
 
-    /**
-     * Updating image
-     */
-    updatingImages: boolean;
-}
-
-interface _ReduxActionCreators {
-    /**
-     * Reset upload images
-     */
-    resetUploadImages: typeof resetUploadImages;
-}
-
-interface OSImagesEditorProps extends _ReduxProps, _ReduxActionCreators {}
-
+/**
+ *
+ *
+ * OSImagesEditor component
+ *
+ *
+ */
 class _OSImagesEditor extends React.Component<OSImagesEditorProps> {
-    private _resetUploadImages = () => {
-        this.props.resetUploadImages();
-    };
-
     private _renderEmpty = () => {
         return (
             <div id="empty">
@@ -44,7 +29,7 @@ class _OSImagesEditor extends React.Component<OSImagesEditorProps> {
     };
 
     private _renderImages() {
-        if (this.props.updatingImages) {
+        if (this.props.updatingImagesStatus) {
             return <OSPageStatus status="loading" />;
         } else if (this.props.images && this.props.images.length > 0) {
             return this.props.images.map((image: string) => (
@@ -63,7 +48,6 @@ class _OSImagesEditor extends React.Component<OSImagesEditorProps> {
                     <button
                         data-toggle="modal"
                         data-target={`#${ImageUploadModalID}`}
-                        onClick={this._resetUploadImages}
                     >
                         <p className="h6 os-grey-1">
                             <i className="material-icons">add</i>
@@ -84,18 +68,35 @@ class _OSImagesEditor extends React.Component<OSImagesEditorProps> {
     }
 }
 
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+import { connect } from 'react-redux';
+import RootState from '../../redux-types';
+
+import { RequestStatus } from '../../model/system';
+
+interface _ReduxProps {
+    /**
+     * Images of the space
+     */
+    images?: string[];
+
+    /**
+     * Updating image status
+     */
+    updatingImagesStatus: RequestStatus;
+}
+
 const mapStateToProps = (state: RootState): _ReduxProps => ({
-    updatingImages: state.currentSpace.status.updatingImages,
+    updatingImagesStatus: state.currentSpace.updatingImagesStatus,
     images: state.currentSpace.data && state.currentSpace.data.images,
 });
 
-const mapDispatchToProps = {
-    resetUploadImages,
-};
-
-const OSImagesEditor = connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(_OSImagesEditor);
+const OSImagesEditor = connect(mapStateToProps)(_OSImagesEditor);
 
 export default OSImagesEditor;

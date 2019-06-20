@@ -1,62 +1,30 @@
 import React from 'react';
-import { connect } from 'react-redux';
 
-import RootState from '../../redux-types';
-
-import { SpaceNames, SpaceType, interpretSpaceType } from '../../model/space';
+import { SpaceType, interpretSpaceType } from '../../model/space';
 
 import OperatingHourEditModal, {
     OperatingHourEditModalID,
 } from './operating-hour-edit-modal';
 
-import { UpdateOperatingHourAction } from '../../redux-types/osdb-api';
+/**
+ *
+ *
+ * OSGeneralInfo props
+ *
+ *
+ */
+interface OSGeneralInfoProps extends _ReduxProps {}
 
-import { updateOperatingHour } from '../../actions/osdb-api';
-
-interface _ReduxProps {
-    /**
-     * ID of the space
-     */
-    spaceID?: string;
-
-    /**
-     * Names of the space
-     */
-    spaceNames?: SpaceNames;
-
-    /**
-     * Types of the space
-     */
-    types?: SpaceType[];
-
-    /**
-     * Location address
-     */
-    locationText?: string;
-
-    /**
-     * Operating hours and days
-     */
-    operatingHours?: string[];
-
-    /**
-     * Updating operating hour
-     */
-    updatingOperatingHour: boolean;
-}
-
-interface _ReduxActionCreators {
-    /**
-     * Update operating hours of the space
-     */
-    updateOperatingHour: UpdateOperatingHourAction;
-}
-
-interface OSGeneralInfoProps extends _ReduxProps, _ReduxActionCreators {}
-
+/**
+ *
+ *
+ * OSGeneralInfo component
+ *
+ *
+ */
 class _OSGeneralInfo extends React.Component<OSGeneralInfoProps> {
     private _renderOperatingHours = () => {
-        if (this.props.updatingOperatingHour) {
+        if (this.props.updatingOHStatus.status === 'requesting') {
             return (
                 <p className="h6 os-grey-1 os-text-ellipsis">
                     (업데이트 중...)
@@ -142,18 +110,7 @@ class _OSGeneralInfo extends React.Component<OSGeneralInfoProps> {
                                 수정
                             </p>
                         </button>
-                        {this.props.spaceID && (
-                            <OperatingHourEditModal
-                                updateOperatingHour={(
-                                    operatingHours: string[],
-                                ) => {
-                                    this.props.updateOperatingHour(
-                                        this.props.spaceID!,
-                                        operatingHours,
-                                    );
-                                }}
-                            />
-                        )}
+                        <OperatingHourEditModal />
                     </div>
                 </div>
             </div>
@@ -161,24 +118,58 @@ class _OSGeneralInfo extends React.Component<OSGeneralInfoProps> {
     }
 }
 
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+import { connect } from 'react-redux';
+import RootState from '../../redux-types';
+
+import { SpaceNames } from '../../model/space';
+import { RequestStatus } from '../../model/system';
+
+import { updateOperatingHours } from '../../thunk-action/current-space';
+
+interface _ReduxProps {
+    /**
+     * Names of the space
+     */
+    spaceNames?: SpaceNames;
+
+    /**
+     * Types of the space
+     */
+    types?: SpaceType[];
+
+    /**
+     * Location address
+     */
+    locationText?: string;
+
+    /**
+     * Operating hours and days
+     */
+    operatingHours?: string[];
+
+    /**
+     * Updating operating hour status
+     */
+    updatingOHStatus: RequestStatus;
+}
+
 const mapStateToProps = (state: RootState): _ReduxProps => ({
-    spaceID: state.currentSpace.data && state.currentSpace.data.id,
     spaceNames: state.currentSpace.data && state.currentSpace.data.spaceNames,
     types: state.currentSpace.data && state.currentSpace.data.types,
     locationText:
         state.currentSpace.data && state.currentSpace.data.locationText,
     operatingHours:
         state.currentSpace.data && state.currentSpace.data.operatingHours,
-    updatingOperatingHour: state.currentSpace.status.updatingOperatingHour,
+    updatingOHStatus: state.currentSpace.updatingOHStatus,
 });
 
-const mapDispatchToProps = {
-    updateOperatingHour,
-};
-
-const OSGeneralInfo = connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(_OSGeneralInfo);
+const OSGeneralInfo = connect(mapStateToProps)(_OSGeneralInfo);
 
 export default OSGeneralInfo;

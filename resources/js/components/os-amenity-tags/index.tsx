@@ -1,11 +1,6 @@
 import React from 'react';
-import { connect } from 'react-redux';
-
-import RootState from '../../redux-types';
 
 import { AmenityTag, interpretAmenity } from '../../model/space';
-
-import { setSelectedAmenities } from '../../actions/selected-amenities';
 
 import AmenitiesEditModal, {
     AmenitiesEditModalID,
@@ -13,27 +8,22 @@ import AmenitiesEditModal, {
 
 import OSPageStatus from '../os-page-status';
 
-interface _ReduxProps {
-    /**
-     * Amenity tags of the space
-     */
-    amenityTags?: AmenityTag[];
-
-    /**
-     * Updating amenity tags
-     */
-    updatingAmentiyTags: boolean;
-}
-
-interface _ReduxActionCreators {
-    /**
-     * Set selected amenities
-     */
-    setSelectedAmenities: typeof setSelectedAmenities;
-}
-
+/**
+ *
+ *
+ * OSAmenityTags props
+ *
+ *
+ */
 interface OSAmenityTagsProps extends _ReduxProps, _ReduxActionCreators {}
 
+/**
+ *
+ *
+ * OSAmenityTags component
+ *
+ *
+ */
 class _OSAmenityTags extends React.Component<OSAmenityTagsProps> {
     private _renderEmpty = () => {
         return (
@@ -110,9 +100,42 @@ class _OSAmenityTags extends React.Component<OSAmenityTagsProps> {
     }
 }
 
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+import { connect } from 'react-redux';
+import RootState from '../../redux-types';
+
+import { RequestStatus } from '../../model/system';
+
+import { setSelectedAmenities } from '../../actions/selected-amenities';
+
+interface _ReduxProps {
+    /**
+     * Amenity tags of the space
+     */
+    amenityTags?: AmenityTag[];
+
+    /**
+     * Updating amenity tags
+     */
+    updatingAmentiyTags: RequestStatus;
+}
+
+interface _ReduxActionCreators {
+    /**
+     * Set selected amenities
+     */
+    setSelectedAmenities: typeof setSelectedAmenities;
+}
+
 const mapStateToProps = (state: RootState): _ReduxProps => ({
     amenityTags: state.currentSpace.data && state.currentSpace.data.amenityTags,
-    updatingAmentiyTags: state.currentSpace.status.updatingAmentiyTags,
+    updatingAmentiyTags: state.currentSpace.updatingATStatus,
 });
 
 const mapDispatchToProps = {

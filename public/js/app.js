@@ -6840,6 +6840,18 @@ module.exports = function xhrAdapter(config) {
       request = null;
     };
 
+    // Handle browser request cancellation (as opposed to a manual cancellation)
+    request.onabort = function handleAbort() {
+      if (!request) {
+        return;
+      }
+
+      reject(createError('Request aborted', config, 'ECONNABORTED', request));
+
+      // Clean up request
+      request = null;
+    };
+
     // Handle low level network errors
     request.onerror = function handleError() {
       // Real errors are hidden from us by the browser
@@ -6867,8 +6879,8 @@ module.exports = function xhrAdapter(config) {
 
       // Add xsrf header
       var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
-          cookies.read(config.xsrfCookieName) :
-          undefined;
+        cookies.read(config.xsrfCookieName) :
+        undefined;
 
       if (xsrfValue) {
         requestHeaders[config.xsrfHeaderName] = xsrfValue;
@@ -6955,6 +6967,7 @@ module.exports = function xhrAdapter(config) {
 var utils = __webpack_require__(/*! ./utils */ "./node_modules/axios/lib/utils.js");
 var bind = __webpack_require__(/*! ./helpers/bind */ "./node_modules/axios/lib/helpers/bind.js");
 var Axios = __webpack_require__(/*! ./core/Axios */ "./node_modules/axios/lib/core/Axios.js");
+var mergeConfig = __webpack_require__(/*! ./core/mergeConfig */ "./node_modules/axios/lib/core/mergeConfig.js");
 var defaults = __webpack_require__(/*! ./defaults */ "./node_modules/axios/lib/defaults.js");
 
 /**
@@ -6984,7 +6997,7 @@ axios.Axios = Axios;
 
 // Factory for creating new instances
 axios.create = function create(instanceConfig) {
-  return createInstance(utils.merge(defaults, instanceConfig));
+  return createInstance(mergeConfig(axios.defaults, instanceConfig));
 };
 
 // Expose Cancel & CancelToken
@@ -7133,10 +7146,11 @@ module.exports = function isCancel(value) {
 "use strict";
 
 
-var defaults = __webpack_require__(/*! ./../defaults */ "./node_modules/axios/lib/defaults.js");
 var utils = __webpack_require__(/*! ./../utils */ "./node_modules/axios/lib/utils.js");
+var buildURL = __webpack_require__(/*! ../helpers/buildURL */ "./node_modules/axios/lib/helpers/buildURL.js");
 var InterceptorManager = __webpack_require__(/*! ./InterceptorManager */ "./node_modules/axios/lib/core/InterceptorManager.js");
 var dispatchRequest = __webpack_require__(/*! ./dispatchRequest */ "./node_modules/axios/lib/core/dispatchRequest.js");
+var mergeConfig = __webpack_require__(/*! ./mergeConfig */ "./node_modules/axios/lib/core/mergeConfig.js");
 
 /**
  * Create a new instance of Axios
@@ -7160,13 +7174,14 @@ Axios.prototype.request = function request(config) {
   /*eslint no-param-reassign:0*/
   // Allow for axios('example/url'[, config]) a la fetch API
   if (typeof config === 'string') {
-    config = utils.merge({
-      url: arguments[0]
-    }, arguments[1]);
+    config = arguments[1] || {};
+    config.url = arguments[0];
+  } else {
+    config = config || {};
   }
 
-  config = utils.merge(defaults, {method: 'get'}, this.defaults, config);
-  config.method = config.method.toLowerCase();
+  config = mergeConfig(this.defaults, config);
+  config.method = config.method ? config.method.toLowerCase() : 'get';
 
   // Hook up interceptors middleware
   var chain = [dispatchRequest, undefined];
@@ -7185,6 +7200,11 @@ Axios.prototype.request = function request(config) {
   }
 
   return promise;
+};
+
+Axios.prototype.getUri = function getUri(config) {
+  config = mergeConfig(this.defaults, config);
+  return buildURL(config.url, config.params, config.paramsSerializer).replace(/^\?/, '');
 };
 
 // Provide aliases for supported request methods
@@ -7431,9 +7451,93 @@ module.exports = function enhanceError(error, config, code, request, response) {
   if (code) {
     error.code = code;
   }
+
   error.request = request;
   error.response = response;
+  error.isAxiosError = true;
+
+  error.toJSON = function() {
+    return {
+      // Standard
+      message: this.message,
+      name: this.name,
+      // Microsoft
+      description: this.description,
+      number: this.number,
+      // Mozilla
+      fileName: this.fileName,
+      lineNumber: this.lineNumber,
+      columnNumber: this.columnNumber,
+      stack: this.stack,
+      // Axios
+      config: this.config,
+      code: this.code
+    };
+  };
   return error;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/axios/lib/core/mergeConfig.js":
+/*!****************************************************!*\
+  !*** ./node_modules/axios/lib/core/mergeConfig.js ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var utils = __webpack_require__(/*! ../utils */ "./node_modules/axios/lib/utils.js");
+
+/**
+ * Config-specific merge-function which creates a new config-object
+ * by merging two configuration objects together.
+ *
+ * @param {Object} config1
+ * @param {Object} config2
+ * @returns {Object} New object resulting from merging config2 to config1
+ */
+module.exports = function mergeConfig(config1, config2) {
+  // eslint-disable-next-line no-param-reassign
+  config2 = config2 || {};
+  var config = {};
+
+  utils.forEach(['url', 'method', 'params', 'data'], function valueFromConfig2(prop) {
+    if (typeof config2[prop] !== 'undefined') {
+      config[prop] = config2[prop];
+    }
+  });
+
+  utils.forEach(['headers', 'auth', 'proxy'], function mergeDeepProperties(prop) {
+    if (utils.isObject(config2[prop])) {
+      config[prop] = utils.deepMerge(config1[prop], config2[prop]);
+    } else if (typeof config2[prop] !== 'undefined') {
+      config[prop] = config2[prop];
+    } else if (utils.isObject(config1[prop])) {
+      config[prop] = utils.deepMerge(config1[prop]);
+    } else if (typeof config1[prop] !== 'undefined') {
+      config[prop] = config1[prop];
+    }
+  });
+
+  utils.forEach([
+    'baseURL', 'transformRequest', 'transformResponse', 'paramsSerializer',
+    'timeout', 'withCredentials', 'adapter', 'responseType', 'xsrfCookieName',
+    'xsrfHeaderName', 'onUploadProgress', 'onDownloadProgress', 'maxContentLength',
+    'validateStatus', 'maxRedirects', 'httpAgent', 'httpsAgent', 'cancelToken',
+    'socketPath'
+  ], function defaultToConfig2(prop) {
+    if (typeof config2[prop] !== 'undefined') {
+      config[prop] = config2[prop];
+    } else if (typeof config1[prop] !== 'undefined') {
+      config[prop] = config1[prop];
+    }
+  });
+
+  return config;
 };
 
 
@@ -7460,8 +7564,7 @@ var createError = __webpack_require__(/*! ./createError */ "./node_modules/axios
  */
 module.exports = function settle(resolve, reject, response) {
   var validateStatus = response.config.validateStatus;
-  // Note: status is not exposed by XDomainRequest
-  if (!response.status || !validateStatus || validateStatus(response.status)) {
+  if (!validateStatus || validateStatus(response.status)) {
     resolve(response);
   } else {
     reject(createError(
@@ -7534,12 +7637,13 @@ function setContentTypeIfUnset(headers, value) {
 
 function getDefaultAdapter() {
   var adapter;
-  if (typeof XMLHttpRequest !== 'undefined') {
-    // For browsers use XHR adapter
-    adapter = __webpack_require__(/*! ./adapters/xhr */ "./node_modules/axios/lib/adapters/xhr.js");
-  } else if (typeof process !== 'undefined') {
+  // Only Node.JS has a process variable that is of [[Class]] process
+  if (typeof process !== 'undefined' && Object.prototype.toString.call(process) === '[object process]') {
     // For node use HTTP adapter
     adapter = __webpack_require__(/*! ./adapters/http */ "./node_modules/axios/lib/adapters/xhr.js");
+  } else if (typeof XMLHttpRequest !== 'undefined') {
+    // For browsers use XHR adapter
+    adapter = __webpack_require__(/*! ./adapters/xhr */ "./node_modules/axios/lib/adapters/xhr.js");
   }
   return adapter;
 }
@@ -7548,6 +7652,7 @@ var defaults = {
   adapter: getDefaultAdapter(),
 
   transformRequest: [function transformRequest(data, headers) {
+    normalizeHeaderName(headers, 'Accept');
     normalizeHeaderName(headers, 'Content-Type');
     if (utils.isFormData(data) ||
       utils.isArrayBuffer(data) ||
@@ -7710,6 +7815,11 @@ module.exports = function buildURL(url, params, paramsSerializer) {
   }
 
   if (serializedParams) {
+    var hashmarkIndex = url.indexOf('#');
+    if (hashmarkIndex !== -1) {
+      url = url.slice(0, hashmarkIndex);
+    }
+
     url += (url.indexOf('?') === -1 ? '?' : '&') + serializedParams;
   }
 
@@ -7761,50 +7871,50 @@ module.exports = (
   utils.isStandardBrowserEnv() ?
 
   // Standard browser envs support document.cookie
-  (function standardBrowserEnv() {
-    return {
-      write: function write(name, value, expires, path, domain, secure) {
-        var cookie = [];
-        cookie.push(name + '=' + encodeURIComponent(value));
+    (function standardBrowserEnv() {
+      return {
+        write: function write(name, value, expires, path, domain, secure) {
+          var cookie = [];
+          cookie.push(name + '=' + encodeURIComponent(value));
 
-        if (utils.isNumber(expires)) {
-          cookie.push('expires=' + new Date(expires).toGMTString());
+          if (utils.isNumber(expires)) {
+            cookie.push('expires=' + new Date(expires).toGMTString());
+          }
+
+          if (utils.isString(path)) {
+            cookie.push('path=' + path);
+          }
+
+          if (utils.isString(domain)) {
+            cookie.push('domain=' + domain);
+          }
+
+          if (secure === true) {
+            cookie.push('secure');
+          }
+
+          document.cookie = cookie.join('; ');
+        },
+
+        read: function read(name) {
+          var match = document.cookie.match(new RegExp('(^|;\\s*)(' + name + ')=([^;]*)'));
+          return (match ? decodeURIComponent(match[3]) : null);
+        },
+
+        remove: function remove(name) {
+          this.write(name, '', Date.now() - 86400000);
         }
-
-        if (utils.isString(path)) {
-          cookie.push('path=' + path);
-        }
-
-        if (utils.isString(domain)) {
-          cookie.push('domain=' + domain);
-        }
-
-        if (secure === true) {
-          cookie.push('secure');
-        }
-
-        document.cookie = cookie.join('; ');
-      },
-
-      read: function read(name) {
-        var match = document.cookie.match(new RegExp('(^|;\\s*)(' + name + ')=([^;]*)'));
-        return (match ? decodeURIComponent(match[3]) : null);
-      },
-
-      remove: function remove(name) {
-        this.write(name, '', Date.now() - 86400000);
-      }
-    };
-  })() :
+      };
+    })() :
 
   // Non standard browser env (web workers, react-native) lack needed support.
-  (function nonStandardBrowserEnv() {
-    return {
-      write: function write() {},
-      read: function read() { return null; },
-      remove: function remove() {}
-    };
-  })()
+    (function nonStandardBrowserEnv() {
+      return {
+        write: function write() {},
+        read: function read() { return null; },
+        remove: function remove() {}
+      };
+    })()
 );
 
 
@@ -7853,64 +7963,64 @@ module.exports = (
 
   // Standard browser envs have full support of the APIs needed to test
   // whether the request URL is of the same origin as current location.
-  (function standardBrowserEnv() {
-    var msie = /(msie|trident)/i.test(navigator.userAgent);
-    var urlParsingNode = document.createElement('a');
-    var originURL;
+    (function standardBrowserEnv() {
+      var msie = /(msie|trident)/i.test(navigator.userAgent);
+      var urlParsingNode = document.createElement('a');
+      var originURL;
 
-    /**
+      /**
     * Parse a URL to discover it's components
     *
     * @param {String} url The URL to be parsed
     * @returns {Object}
     */
-    function resolveURL(url) {
-      var href = url;
+      function resolveURL(url) {
+        var href = url;
 
-      if (msie) {
+        if (msie) {
         // IE needs attribute set twice to normalize properties
+          urlParsingNode.setAttribute('href', href);
+          href = urlParsingNode.href;
+        }
+
         urlParsingNode.setAttribute('href', href);
-        href = urlParsingNode.href;
+
+        // urlParsingNode provides the UrlUtils interface - http://url.spec.whatwg.org/#urlutils
+        return {
+          href: urlParsingNode.href,
+          protocol: urlParsingNode.protocol ? urlParsingNode.protocol.replace(/:$/, '') : '',
+          host: urlParsingNode.host,
+          search: urlParsingNode.search ? urlParsingNode.search.replace(/^\?/, '') : '',
+          hash: urlParsingNode.hash ? urlParsingNode.hash.replace(/^#/, '') : '',
+          hostname: urlParsingNode.hostname,
+          port: urlParsingNode.port,
+          pathname: (urlParsingNode.pathname.charAt(0) === '/') ?
+            urlParsingNode.pathname :
+            '/' + urlParsingNode.pathname
+        };
       }
 
-      urlParsingNode.setAttribute('href', href);
+      originURL = resolveURL(window.location.href);
 
-      // urlParsingNode provides the UrlUtils interface - http://url.spec.whatwg.org/#urlutils
-      return {
-        href: urlParsingNode.href,
-        protocol: urlParsingNode.protocol ? urlParsingNode.protocol.replace(/:$/, '') : '',
-        host: urlParsingNode.host,
-        search: urlParsingNode.search ? urlParsingNode.search.replace(/^\?/, '') : '',
-        hash: urlParsingNode.hash ? urlParsingNode.hash.replace(/^#/, '') : '',
-        hostname: urlParsingNode.hostname,
-        port: urlParsingNode.port,
-        pathname: (urlParsingNode.pathname.charAt(0) === '/') ?
-                  urlParsingNode.pathname :
-                  '/' + urlParsingNode.pathname
-      };
-    }
-
-    originURL = resolveURL(window.location.href);
-
-    /**
+      /**
     * Determine if a URL shares the same origin as the current location
     *
     * @param {String} requestURL The URL to test
     * @returns {boolean} True if URL shares the same origin, otherwise false
     */
-    return function isURLSameOrigin(requestURL) {
-      var parsed = (utils.isString(requestURL)) ? resolveURL(requestURL) : requestURL;
-      return (parsed.protocol === originURL.protocol &&
+      return function isURLSameOrigin(requestURL) {
+        var parsed = (utils.isString(requestURL)) ? resolveURL(requestURL) : requestURL;
+        return (parsed.protocol === originURL.protocol &&
             parsed.host === originURL.host);
-    };
-  })() :
+      };
+    })() :
 
   // Non standard browser envs (web workers, react-native) lack needed support.
-  (function nonStandardBrowserEnv() {
-    return function isURLSameOrigin() {
-      return true;
-    };
-  })()
+    (function nonStandardBrowserEnv() {
+      return function isURLSameOrigin() {
+        return true;
+      };
+    })()
 );
 
 
@@ -8231,9 +8341,13 @@ function trim(str) {
  *
  * react-native:
  *  navigator.product -> 'ReactNative'
+ * nativescript
+ *  navigator.product -> 'NativeScript' or 'NS'
  */
 function isStandardBrowserEnv() {
-  if (typeof navigator !== 'undefined' && navigator.product === 'ReactNative') {
+  if (typeof navigator !== 'undefined' && (navigator.product === 'ReactNative' ||
+                                           navigator.product === 'NativeScript' ||
+                                           navigator.product === 'NS')) {
     return false;
   }
   return (
@@ -8315,6 +8429,32 @@ function merge(/* obj1, obj2, obj3, ... */) {
 }
 
 /**
+ * Function equal to merge with the difference being that no reference
+ * to original objects is kept.
+ *
+ * @see merge
+ * @param {Object} obj1 Object to merge
+ * @returns {Object} Result of all merge properties
+ */
+function deepMerge(/* obj1, obj2, obj3, ... */) {
+  var result = {};
+  function assignValue(val, key) {
+    if (typeof result[key] === 'object' && typeof val === 'object') {
+      result[key] = deepMerge(result[key], val);
+    } else if (typeof val === 'object') {
+      result[key] = deepMerge({}, val);
+    } else {
+      result[key] = val;
+    }
+  }
+
+  for (var i = 0, l = arguments.length; i < l; i++) {
+    forEach(arguments[i], assignValue);
+  }
+  return result;
+}
+
+/**
  * Extends object a by mutably adding to it the properties of object b.
  *
  * @param {Object} a The object to be extended
@@ -8352,6 +8492,7 @@ module.exports = {
   isStandardBrowserEnv: isStandardBrowserEnv,
   forEach: forEach,
   merge: merge,
+  deepMerge: deepMerge,
   extend: extend,
   trim: trim
 };
@@ -46110,2063 +46251,6 @@ module.exports = ReactPropTypesSecret;
 
 /***/ }),
 
-/***/ "./node_modules/q/q.js":
-/*!*****************************!*\
-  !*** ./node_modules/q/q.js ***!
-  \*****************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(process, setImmediate) {// vim:ts=4:sts=4:sw=4:
-/*!
- *
- * Copyright 2009-2017 Kris Kowal under the terms of the MIT
- * license found at https://github.com/kriskowal/q/blob/v1/LICENSE
- *
- * With parts by Tyler Close
- * Copyright 2007-2009 Tyler Close under the terms of the MIT X license found
- * at http://www.opensource.org/licenses/mit-license.html
- * Forked at ref_send.js version: 2009-05-11
- *
- * With parts by Mark Miller
- * Copyright (C) 2011 Google Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
-
-(function (definition) {
-    "use strict";
-
-    // This file will function properly as a <script> tag, or a module
-    // using CommonJS and NodeJS or RequireJS module formats.  In
-    // Common/Node/RequireJS, the module exports the Q API and when
-    // executed as a simple <script>, it creates a Q global instead.
-
-    // Montage Require
-    if (typeof bootstrap === "function") {
-        bootstrap("promise", definition);
-
-    // CommonJS
-    } else if (true) {
-        module.exports = definition();
-
-    // RequireJS
-    } else { var previousQ, global; }
-
-})(function () {
-"use strict";
-
-var hasStacks = false;
-try {
-    throw new Error();
-} catch (e) {
-    hasStacks = !!e.stack;
-}
-
-// All code after this point will be filtered from stack traces reported
-// by Q.
-var qStartingLine = captureLine();
-var qFileName;
-
-// shims
-
-// used for fallback in "allResolved"
-var noop = function () {};
-
-// Use the fastest possible means to execute a task in a future turn
-// of the event loop.
-var nextTick =(function () {
-    // linked list of tasks (single, with head node)
-    var head = {task: void 0, next: null};
-    var tail = head;
-    var flushing = false;
-    var requestTick = void 0;
-    var isNodeJS = false;
-    // queue for late tasks, used by unhandled rejection tracking
-    var laterQueue = [];
-
-    function flush() {
-        /* jshint loopfunc: true */
-        var task, domain;
-
-        while (head.next) {
-            head = head.next;
-            task = head.task;
-            head.task = void 0;
-            domain = head.domain;
-
-            if (domain) {
-                head.domain = void 0;
-                domain.enter();
-            }
-            runSingle(task, domain);
-
-        }
-        while (laterQueue.length) {
-            task = laterQueue.pop();
-            runSingle(task);
-        }
-        flushing = false;
-    }
-    // runs a single function in the async queue
-    function runSingle(task, domain) {
-        try {
-            task();
-
-        } catch (e) {
-            if (isNodeJS) {
-                // In node, uncaught exceptions are considered fatal errors.
-                // Re-throw them synchronously to interrupt flushing!
-
-                // Ensure continuation if the uncaught exception is suppressed
-                // listening "uncaughtException" events (as domains does).
-                // Continue in next event to avoid tick recursion.
-                if (domain) {
-                    domain.exit();
-                }
-                setTimeout(flush, 0);
-                if (domain) {
-                    domain.enter();
-                }
-
-                throw e;
-
-            } else {
-                // In browsers, uncaught exceptions are not fatal.
-                // Re-throw them asynchronously to avoid slow-downs.
-                setTimeout(function () {
-                    throw e;
-                }, 0);
-            }
-        }
-
-        if (domain) {
-            domain.exit();
-        }
-    }
-
-    nextTick = function (task) {
-        tail = tail.next = {
-            task: task,
-            domain: isNodeJS && process.domain,
-            next: null
-        };
-
-        if (!flushing) {
-            flushing = true;
-            requestTick();
-        }
-    };
-
-    if (typeof process === "object" &&
-        process.toString() === "[object process]" && process.nextTick) {
-        // Ensure Q is in a real Node environment, with a `process.nextTick`.
-        // To see through fake Node environments:
-        // * Mocha test runner - exposes a `process` global without a `nextTick`
-        // * Browserify - exposes a `process.nexTick` function that uses
-        //   `setTimeout`. In this case `setImmediate` is preferred because
-        //    it is faster. Browserify's `process.toString()` yields
-        //   "[object Object]", while in a real Node environment
-        //   `process.toString()` yields "[object process]".
-        isNodeJS = true;
-
-        requestTick = function () {
-            process.nextTick(flush);
-        };
-
-    } else if (typeof setImmediate === "function") {
-        // In IE10, Node.js 0.9+, or https://github.com/NobleJS/setImmediate
-        if (typeof window !== "undefined") {
-            requestTick = setImmediate.bind(window, flush);
-        } else {
-            requestTick = function () {
-                setImmediate(flush);
-            };
-        }
-
-    } else if (typeof MessageChannel !== "undefined") {
-        // modern browsers
-        // http://www.nonblocking.io/2011/06/windownexttick.html
-        var channel = new MessageChannel();
-        // At least Safari Version 6.0.5 (8536.30.1) intermittently cannot create
-        // working message ports the first time a page loads.
-        channel.port1.onmessage = function () {
-            requestTick = requestPortTick;
-            channel.port1.onmessage = flush;
-            flush();
-        };
-        var requestPortTick = function () {
-            // Opera requires us to provide a message payload, regardless of
-            // whether we use it.
-            channel.port2.postMessage(0);
-        };
-        requestTick = function () {
-            setTimeout(flush, 0);
-            requestPortTick();
-        };
-
-    } else {
-        // old browsers
-        requestTick = function () {
-            setTimeout(flush, 0);
-        };
-    }
-    // runs a task after all other tasks have been run
-    // this is useful for unhandled rejection tracking that needs to happen
-    // after all `then`d tasks have been run.
-    nextTick.runAfter = function (task) {
-        laterQueue.push(task);
-        if (!flushing) {
-            flushing = true;
-            requestTick();
-        }
-    };
-    return nextTick;
-})();
-
-// Attempt to make generics safe in the face of downstream
-// modifications.
-// There is no situation where this is necessary.
-// If you need a security guarantee, these primordials need to be
-// deeply frozen anyway, and if you don’t need a security guarantee,
-// this is just plain paranoid.
-// However, this **might** have the nice side-effect of reducing the size of
-// the minified code by reducing x.call() to merely x()
-// See Mark Miller’s explanation of what this does.
-// http://wiki.ecmascript.org/doku.php?id=conventions:safe_meta_programming
-var call = Function.call;
-function uncurryThis(f) {
-    return function () {
-        return call.apply(f, arguments);
-    };
-}
-// This is equivalent, but slower:
-// uncurryThis = Function_bind.bind(Function_bind.call);
-// http://jsperf.com/uncurrythis
-
-var array_slice = uncurryThis(Array.prototype.slice);
-
-var array_reduce = uncurryThis(
-    Array.prototype.reduce || function (callback, basis) {
-        var index = 0,
-            length = this.length;
-        // concerning the initial value, if one is not provided
-        if (arguments.length === 1) {
-            // seek to the first value in the array, accounting
-            // for the possibility that is is a sparse array
-            do {
-                if (index in this) {
-                    basis = this[index++];
-                    break;
-                }
-                if (++index >= length) {
-                    throw new TypeError();
-                }
-            } while (1);
-        }
-        // reduce
-        for (; index < length; index++) {
-            // account for the possibility that the array is sparse
-            if (index in this) {
-                basis = callback(basis, this[index], index);
-            }
-        }
-        return basis;
-    }
-);
-
-var array_indexOf = uncurryThis(
-    Array.prototype.indexOf || function (value) {
-        // not a very good shim, but good enough for our one use of it
-        for (var i = 0; i < this.length; i++) {
-            if (this[i] === value) {
-                return i;
-            }
-        }
-        return -1;
-    }
-);
-
-var array_map = uncurryThis(
-    Array.prototype.map || function (callback, thisp) {
-        var self = this;
-        var collect = [];
-        array_reduce(self, function (undefined, value, index) {
-            collect.push(callback.call(thisp, value, index, self));
-        }, void 0);
-        return collect;
-    }
-);
-
-var object_create = Object.create || function (prototype) {
-    function Type() { }
-    Type.prototype = prototype;
-    return new Type();
-};
-
-var object_defineProperty = Object.defineProperty || function (obj, prop, descriptor) {
-    obj[prop] = descriptor.value;
-    return obj;
-};
-
-var object_hasOwnProperty = uncurryThis(Object.prototype.hasOwnProperty);
-
-var object_keys = Object.keys || function (object) {
-    var keys = [];
-    for (var key in object) {
-        if (object_hasOwnProperty(object, key)) {
-            keys.push(key);
-        }
-    }
-    return keys;
-};
-
-var object_toString = uncurryThis(Object.prototype.toString);
-
-function isObject(value) {
-    return value === Object(value);
-}
-
-// generator related shims
-
-// FIXME: Remove this function once ES6 generators are in SpiderMonkey.
-function isStopIteration(exception) {
-    return (
-        object_toString(exception) === "[object StopIteration]" ||
-        exception instanceof QReturnValue
-    );
-}
-
-// FIXME: Remove this helper and Q.return once ES6 generators are in
-// SpiderMonkey.
-var QReturnValue;
-if (typeof ReturnValue !== "undefined") {
-    QReturnValue = ReturnValue;
-} else {
-    QReturnValue = function (value) {
-        this.value = value;
-    };
-}
-
-// long stack traces
-
-var STACK_JUMP_SEPARATOR = "From previous event:";
-
-function makeStackTraceLong(error, promise) {
-    // If possible, transform the error stack trace by removing Node and Q
-    // cruft, then concatenating with the stack trace of `promise`. See #57.
-    if (hasStacks &&
-        promise.stack &&
-        typeof error === "object" &&
-        error !== null &&
-        error.stack
-    ) {
-        var stacks = [];
-        for (var p = promise; !!p; p = p.source) {
-            if (p.stack && (!error.__minimumStackCounter__ || error.__minimumStackCounter__ > p.stackCounter)) {
-                object_defineProperty(error, "__minimumStackCounter__", {value: p.stackCounter, configurable: true});
-                stacks.unshift(p.stack);
-            }
-        }
-        stacks.unshift(error.stack);
-
-        var concatedStacks = stacks.join("\n" + STACK_JUMP_SEPARATOR + "\n");
-        var stack = filterStackString(concatedStacks);
-        object_defineProperty(error, "stack", {value: stack, configurable: true});
-    }
-}
-
-function filterStackString(stackString) {
-    var lines = stackString.split("\n");
-    var desiredLines = [];
-    for (var i = 0; i < lines.length; ++i) {
-        var line = lines[i];
-
-        if (!isInternalFrame(line) && !isNodeFrame(line) && line) {
-            desiredLines.push(line);
-        }
-    }
-    return desiredLines.join("\n");
-}
-
-function isNodeFrame(stackLine) {
-    return stackLine.indexOf("(module.js:") !== -1 ||
-           stackLine.indexOf("(node.js:") !== -1;
-}
-
-function getFileNameAndLineNumber(stackLine) {
-    // Named functions: "at functionName (filename:lineNumber:columnNumber)"
-    // In IE10 function name can have spaces ("Anonymous function") O_o
-    var attempt1 = /at .+ \((.+):(\d+):(?:\d+)\)$/.exec(stackLine);
-    if (attempt1) {
-        return [attempt1[1], Number(attempt1[2])];
-    }
-
-    // Anonymous functions: "at filename:lineNumber:columnNumber"
-    var attempt2 = /at ([^ ]+):(\d+):(?:\d+)$/.exec(stackLine);
-    if (attempt2) {
-        return [attempt2[1], Number(attempt2[2])];
-    }
-
-    // Firefox style: "function@filename:lineNumber or @filename:lineNumber"
-    var attempt3 = /.*@(.+):(\d+)$/.exec(stackLine);
-    if (attempt3) {
-        return [attempt3[1], Number(attempt3[2])];
-    }
-}
-
-function isInternalFrame(stackLine) {
-    var fileNameAndLineNumber = getFileNameAndLineNumber(stackLine);
-
-    if (!fileNameAndLineNumber) {
-        return false;
-    }
-
-    var fileName = fileNameAndLineNumber[0];
-    var lineNumber = fileNameAndLineNumber[1];
-
-    return fileName === qFileName &&
-        lineNumber >= qStartingLine &&
-        lineNumber <= qEndingLine;
-}
-
-// discover own file name and line number range for filtering stack
-// traces
-function captureLine() {
-    if (!hasStacks) {
-        return;
-    }
-
-    try {
-        throw new Error();
-    } catch (e) {
-        var lines = e.stack.split("\n");
-        var firstLine = lines[0].indexOf("@") > 0 ? lines[1] : lines[2];
-        var fileNameAndLineNumber = getFileNameAndLineNumber(firstLine);
-        if (!fileNameAndLineNumber) {
-            return;
-        }
-
-        qFileName = fileNameAndLineNumber[0];
-        return fileNameAndLineNumber[1];
-    }
-}
-
-function deprecate(callback, name, alternative) {
-    return function () {
-        if (typeof console !== "undefined" &&
-            typeof console.warn === "function") {
-            console.warn(name + " is deprecated, use " + alternative +
-                         " instead.", new Error("").stack);
-        }
-        return callback.apply(callback, arguments);
-    };
-}
-
-// end of shims
-// beginning of real work
-
-/**
- * Constructs a promise for an immediate reference, passes promises through, or
- * coerces promises from different systems.
- * @param value immediate reference or promise
- */
-function Q(value) {
-    // If the object is already a Promise, return it directly.  This enables
-    // the resolve function to both be used to created references from objects,
-    // but to tolerably coerce non-promises to promises.
-    if (value instanceof Promise) {
-        return value;
-    }
-
-    // assimilate thenables
-    if (isPromiseAlike(value)) {
-        return coerce(value);
-    } else {
-        return fulfill(value);
-    }
-}
-Q.resolve = Q;
-
-/**
- * Performs a task in a future turn of the event loop.
- * @param {Function} task
- */
-Q.nextTick = nextTick;
-
-/**
- * Controls whether or not long stack traces will be on
- */
-Q.longStackSupport = false;
-
-/**
- * The counter is used to determine the stopping point for building
- * long stack traces. In makeStackTraceLong we walk backwards through
- * the linked list of promises, only stacks which were created before
- * the rejection are concatenated.
- */
-var longStackCounter = 1;
-
-// enable long stacks if Q_DEBUG is set
-if (typeof process === "object" && process && process.env && process.env.Q_DEBUG) {
-    Q.longStackSupport = true;
-}
-
-/**
- * Constructs a {promise, resolve, reject} object.
- *
- * `resolve` is a callback to invoke with a more resolved value for the
- * promise. To fulfill the promise, invoke `resolve` with any value that is
- * not a thenable. To reject the promise, invoke `resolve` with a rejected
- * thenable, or invoke `reject` with the reason directly. To resolve the
- * promise to another thenable, thus putting it in the same state, invoke
- * `resolve` with that other thenable.
- */
-Q.defer = defer;
-function defer() {
-    // if "messages" is an "Array", that indicates that the promise has not yet
-    // been resolved.  If it is "undefined", it has been resolved.  Each
-    // element of the messages array is itself an array of complete arguments to
-    // forward to the resolved promise.  We coerce the resolution value to a
-    // promise using the `resolve` function because it handles both fully
-    // non-thenable values and other thenables gracefully.
-    var messages = [], progressListeners = [], resolvedPromise;
-
-    var deferred = object_create(defer.prototype);
-    var promise = object_create(Promise.prototype);
-
-    promise.promiseDispatch = function (resolve, op, operands) {
-        var args = array_slice(arguments);
-        if (messages) {
-            messages.push(args);
-            if (op === "when" && operands[1]) { // progress operand
-                progressListeners.push(operands[1]);
-            }
-        } else {
-            Q.nextTick(function () {
-                resolvedPromise.promiseDispatch.apply(resolvedPromise, args);
-            });
-        }
-    };
-
-    // XXX deprecated
-    promise.valueOf = function () {
-        if (messages) {
-            return promise;
-        }
-        var nearerValue = nearer(resolvedPromise);
-        if (isPromise(nearerValue)) {
-            resolvedPromise = nearerValue; // shorten chain
-        }
-        return nearerValue;
-    };
-
-    promise.inspect = function () {
-        if (!resolvedPromise) {
-            return { state: "pending" };
-        }
-        return resolvedPromise.inspect();
-    };
-
-    if (Q.longStackSupport && hasStacks) {
-        try {
-            throw new Error();
-        } catch (e) {
-            // NOTE: don't try to use `Error.captureStackTrace` or transfer the
-            // accessor around; that causes memory leaks as per GH-111. Just
-            // reify the stack trace as a string ASAP.
-            //
-            // At the same time, cut off the first line; it's always just
-            // "[object Promise]\n", as per the `toString`.
-            promise.stack = e.stack.substring(e.stack.indexOf("\n") + 1);
-            promise.stackCounter = longStackCounter++;
-        }
-    }
-
-    // NOTE: we do the checks for `resolvedPromise` in each method, instead of
-    // consolidating them into `become`, since otherwise we'd create new
-    // promises with the lines `become(whatever(value))`. See e.g. GH-252.
-
-    function become(newPromise) {
-        resolvedPromise = newPromise;
-
-        if (Q.longStackSupport && hasStacks) {
-            // Only hold a reference to the new promise if long stacks
-            // are enabled to reduce memory usage
-            promise.source = newPromise;
-        }
-
-        array_reduce(messages, function (undefined, message) {
-            Q.nextTick(function () {
-                newPromise.promiseDispatch.apply(newPromise, message);
-            });
-        }, void 0);
-
-        messages = void 0;
-        progressListeners = void 0;
-    }
-
-    deferred.promise = promise;
-    deferred.resolve = function (value) {
-        if (resolvedPromise) {
-            return;
-        }
-
-        become(Q(value));
-    };
-
-    deferred.fulfill = function (value) {
-        if (resolvedPromise) {
-            return;
-        }
-
-        become(fulfill(value));
-    };
-    deferred.reject = function (reason) {
-        if (resolvedPromise) {
-            return;
-        }
-
-        become(reject(reason));
-    };
-    deferred.notify = function (progress) {
-        if (resolvedPromise) {
-            return;
-        }
-
-        array_reduce(progressListeners, function (undefined, progressListener) {
-            Q.nextTick(function () {
-                progressListener(progress);
-            });
-        }, void 0);
-    };
-
-    return deferred;
-}
-
-/**
- * Creates a Node-style callback that will resolve or reject the deferred
- * promise.
- * @returns a nodeback
- */
-defer.prototype.makeNodeResolver = function () {
-    var self = this;
-    return function (error, value) {
-        if (error) {
-            self.reject(error);
-        } else if (arguments.length > 2) {
-            self.resolve(array_slice(arguments, 1));
-        } else {
-            self.resolve(value);
-        }
-    };
-};
-
-/**
- * @param resolver {Function} a function that returns nothing and accepts
- * the resolve, reject, and notify functions for a deferred.
- * @returns a promise that may be resolved with the given resolve and reject
- * functions, or rejected by a thrown exception in resolver
- */
-Q.Promise = promise; // ES6
-Q.promise = promise;
-function promise(resolver) {
-    if (typeof resolver !== "function") {
-        throw new TypeError("resolver must be a function.");
-    }
-    var deferred = defer();
-    try {
-        resolver(deferred.resolve, deferred.reject, deferred.notify);
-    } catch (reason) {
-        deferred.reject(reason);
-    }
-    return deferred.promise;
-}
-
-promise.race = race; // ES6
-promise.all = all; // ES6
-promise.reject = reject; // ES6
-promise.resolve = Q; // ES6
-
-// XXX experimental.  This method is a way to denote that a local value is
-// serializable and should be immediately dispatched to a remote upon request,
-// instead of passing a reference.
-Q.passByCopy = function (object) {
-    //freeze(object);
-    //passByCopies.set(object, true);
-    return object;
-};
-
-Promise.prototype.passByCopy = function () {
-    //freeze(object);
-    //passByCopies.set(object, true);
-    return this;
-};
-
-/**
- * If two promises eventually fulfill to the same value, promises that value,
- * but otherwise rejects.
- * @param x {Any*}
- * @param y {Any*}
- * @returns {Any*} a promise for x and y if they are the same, but a rejection
- * otherwise.
- *
- */
-Q.join = function (x, y) {
-    return Q(x).join(y);
-};
-
-Promise.prototype.join = function (that) {
-    return Q([this, that]).spread(function (x, y) {
-        if (x === y) {
-            // TODO: "===" should be Object.is or equiv
-            return x;
-        } else {
-            throw new Error("Q can't join: not the same: " + x + " " + y);
-        }
-    });
-};
-
-/**
- * Returns a promise for the first of an array of promises to become settled.
- * @param answers {Array[Any*]} promises to race
- * @returns {Any*} the first promise to be settled
- */
-Q.race = race;
-function race(answerPs) {
-    return promise(function (resolve, reject) {
-        // Switch to this once we can assume at least ES5
-        // answerPs.forEach(function (answerP) {
-        //     Q(answerP).then(resolve, reject);
-        // });
-        // Use this in the meantime
-        for (var i = 0, len = answerPs.length; i < len; i++) {
-            Q(answerPs[i]).then(resolve, reject);
-        }
-    });
-}
-
-Promise.prototype.race = function () {
-    return this.then(Q.race);
-};
-
-/**
- * Constructs a Promise with a promise descriptor object and optional fallback
- * function.  The descriptor contains methods like when(rejected), get(name),
- * set(name, value), post(name, args), and delete(name), which all
- * return either a value, a promise for a value, or a rejection.  The fallback
- * accepts the operation name, a resolver, and any further arguments that would
- * have been forwarded to the appropriate method above had a method been
- * provided with the proper name.  The API makes no guarantees about the nature
- * of the returned object, apart from that it is usable whereever promises are
- * bought and sold.
- */
-Q.makePromise = Promise;
-function Promise(descriptor, fallback, inspect) {
-    if (fallback === void 0) {
-        fallback = function (op) {
-            return reject(new Error(
-                "Promise does not support operation: " + op
-            ));
-        };
-    }
-    if (inspect === void 0) {
-        inspect = function () {
-            return {state: "unknown"};
-        };
-    }
-
-    var promise = object_create(Promise.prototype);
-
-    promise.promiseDispatch = function (resolve, op, args) {
-        var result;
-        try {
-            if (descriptor[op]) {
-                result = descriptor[op].apply(promise, args);
-            } else {
-                result = fallback.call(promise, op, args);
-            }
-        } catch (exception) {
-            result = reject(exception);
-        }
-        if (resolve) {
-            resolve(result);
-        }
-    };
-
-    promise.inspect = inspect;
-
-    // XXX deprecated `valueOf` and `exception` support
-    if (inspect) {
-        var inspected = inspect();
-        if (inspected.state === "rejected") {
-            promise.exception = inspected.reason;
-        }
-
-        promise.valueOf = function () {
-            var inspected = inspect();
-            if (inspected.state === "pending" ||
-                inspected.state === "rejected") {
-                return promise;
-            }
-            return inspected.value;
-        };
-    }
-
-    return promise;
-}
-
-Promise.prototype.toString = function () {
-    return "[object Promise]";
-};
-
-Promise.prototype.then = function (fulfilled, rejected, progressed) {
-    var self = this;
-    var deferred = defer();
-    var done = false;   // ensure the untrusted promise makes at most a
-                        // single call to one of the callbacks
-
-    function _fulfilled(value) {
-        try {
-            return typeof fulfilled === "function" ? fulfilled(value) : value;
-        } catch (exception) {
-            return reject(exception);
-        }
-    }
-
-    function _rejected(exception) {
-        if (typeof rejected === "function") {
-            makeStackTraceLong(exception, self);
-            try {
-                return rejected(exception);
-            } catch (newException) {
-                return reject(newException);
-            }
-        }
-        return reject(exception);
-    }
-
-    function _progressed(value) {
-        return typeof progressed === "function" ? progressed(value) : value;
-    }
-
-    Q.nextTick(function () {
-        self.promiseDispatch(function (value) {
-            if (done) {
-                return;
-            }
-            done = true;
-
-            deferred.resolve(_fulfilled(value));
-        }, "when", [function (exception) {
-            if (done) {
-                return;
-            }
-            done = true;
-
-            deferred.resolve(_rejected(exception));
-        }]);
-    });
-
-    // Progress propagator need to be attached in the current tick.
-    self.promiseDispatch(void 0, "when", [void 0, function (value) {
-        var newValue;
-        var threw = false;
-        try {
-            newValue = _progressed(value);
-        } catch (e) {
-            threw = true;
-            if (Q.onerror) {
-                Q.onerror(e);
-            } else {
-                throw e;
-            }
-        }
-
-        if (!threw) {
-            deferred.notify(newValue);
-        }
-    }]);
-
-    return deferred.promise;
-};
-
-Q.tap = function (promise, callback) {
-    return Q(promise).tap(callback);
-};
-
-/**
- * Works almost like "finally", but not called for rejections.
- * Original resolution value is passed through callback unaffected.
- * Callback may return a promise that will be awaited for.
- * @param {Function} callback
- * @returns {Q.Promise}
- * @example
- * doSomething()
- *   .then(...)
- *   .tap(console.log)
- *   .then(...);
- */
-Promise.prototype.tap = function (callback) {
-    callback = Q(callback);
-
-    return this.then(function (value) {
-        return callback.fcall(value).thenResolve(value);
-    });
-};
-
-/**
- * Registers an observer on a promise.
- *
- * Guarantees:
- *
- * 1. that fulfilled and rejected will be called only once.
- * 2. that either the fulfilled callback or the rejected callback will be
- *    called, but not both.
- * 3. that fulfilled and rejected will not be called in this turn.
- *
- * @param value      promise or immediate reference to observe
- * @param fulfilled  function to be called with the fulfilled value
- * @param rejected   function to be called with the rejection exception
- * @param progressed function to be called on any progress notifications
- * @return promise for the return value from the invoked callback
- */
-Q.when = when;
-function when(value, fulfilled, rejected, progressed) {
-    return Q(value).then(fulfilled, rejected, progressed);
-}
-
-Promise.prototype.thenResolve = function (value) {
-    return this.then(function () { return value; });
-};
-
-Q.thenResolve = function (promise, value) {
-    return Q(promise).thenResolve(value);
-};
-
-Promise.prototype.thenReject = function (reason) {
-    return this.then(function () { throw reason; });
-};
-
-Q.thenReject = function (promise, reason) {
-    return Q(promise).thenReject(reason);
-};
-
-/**
- * If an object is not a promise, it is as "near" as possible.
- * If a promise is rejected, it is as "near" as possible too.
- * If it’s a fulfilled promise, the fulfillment value is nearer.
- * If it’s a deferred promise and the deferred has been resolved, the
- * resolution is "nearer".
- * @param object
- * @returns most resolved (nearest) form of the object
- */
-
-// XXX should we re-do this?
-Q.nearer = nearer;
-function nearer(value) {
-    if (isPromise(value)) {
-        var inspected = value.inspect();
-        if (inspected.state === "fulfilled") {
-            return inspected.value;
-        }
-    }
-    return value;
-}
-
-/**
- * @returns whether the given object is a promise.
- * Otherwise it is a fulfilled value.
- */
-Q.isPromise = isPromise;
-function isPromise(object) {
-    return object instanceof Promise;
-}
-
-Q.isPromiseAlike = isPromiseAlike;
-function isPromiseAlike(object) {
-    return isObject(object) && typeof object.then === "function";
-}
-
-/**
- * @returns whether the given object is a pending promise, meaning not
- * fulfilled or rejected.
- */
-Q.isPending = isPending;
-function isPending(object) {
-    return isPromise(object) && object.inspect().state === "pending";
-}
-
-Promise.prototype.isPending = function () {
-    return this.inspect().state === "pending";
-};
-
-/**
- * @returns whether the given object is a value or fulfilled
- * promise.
- */
-Q.isFulfilled = isFulfilled;
-function isFulfilled(object) {
-    return !isPromise(object) || object.inspect().state === "fulfilled";
-}
-
-Promise.prototype.isFulfilled = function () {
-    return this.inspect().state === "fulfilled";
-};
-
-/**
- * @returns whether the given object is a rejected promise.
- */
-Q.isRejected = isRejected;
-function isRejected(object) {
-    return isPromise(object) && object.inspect().state === "rejected";
-}
-
-Promise.prototype.isRejected = function () {
-    return this.inspect().state === "rejected";
-};
-
-//// BEGIN UNHANDLED REJECTION TRACKING
-
-// This promise library consumes exceptions thrown in handlers so they can be
-// handled by a subsequent promise.  The exceptions get added to this array when
-// they are created, and removed when they are handled.  Note that in ES6 or
-// shimmed environments, this would naturally be a `Set`.
-var unhandledReasons = [];
-var unhandledRejections = [];
-var reportedUnhandledRejections = [];
-var trackUnhandledRejections = true;
-
-function resetUnhandledRejections() {
-    unhandledReasons.length = 0;
-    unhandledRejections.length = 0;
-
-    if (!trackUnhandledRejections) {
-        trackUnhandledRejections = true;
-    }
-}
-
-function trackRejection(promise, reason) {
-    if (!trackUnhandledRejections) {
-        return;
-    }
-    if (typeof process === "object" && typeof process.emit === "function") {
-        Q.nextTick.runAfter(function () {
-            if (array_indexOf(unhandledRejections, promise) !== -1) {
-                process.emit("unhandledRejection", reason, promise);
-                reportedUnhandledRejections.push(promise);
-            }
-        });
-    }
-
-    unhandledRejections.push(promise);
-    if (reason && typeof reason.stack !== "undefined") {
-        unhandledReasons.push(reason.stack);
-    } else {
-        unhandledReasons.push("(no stack) " + reason);
-    }
-}
-
-function untrackRejection(promise) {
-    if (!trackUnhandledRejections) {
-        return;
-    }
-
-    var at = array_indexOf(unhandledRejections, promise);
-    if (at !== -1) {
-        if (typeof process === "object" && typeof process.emit === "function") {
-            Q.nextTick.runAfter(function () {
-                var atReport = array_indexOf(reportedUnhandledRejections, promise);
-                if (atReport !== -1) {
-                    process.emit("rejectionHandled", unhandledReasons[at], promise);
-                    reportedUnhandledRejections.splice(atReport, 1);
-                }
-            });
-        }
-        unhandledRejections.splice(at, 1);
-        unhandledReasons.splice(at, 1);
-    }
-}
-
-Q.resetUnhandledRejections = resetUnhandledRejections;
-
-Q.getUnhandledReasons = function () {
-    // Make a copy so that consumers can't interfere with our internal state.
-    return unhandledReasons.slice();
-};
-
-Q.stopUnhandledRejectionTracking = function () {
-    resetUnhandledRejections();
-    trackUnhandledRejections = false;
-};
-
-resetUnhandledRejections();
-
-//// END UNHANDLED REJECTION TRACKING
-
-/**
- * Constructs a rejected promise.
- * @param reason value describing the failure
- */
-Q.reject = reject;
-function reject(reason) {
-    var rejection = Promise({
-        "when": function (rejected) {
-            // note that the error has been handled
-            if (rejected) {
-                untrackRejection(this);
-            }
-            return rejected ? rejected(reason) : this;
-        }
-    }, function fallback() {
-        return this;
-    }, function inspect() {
-        return { state: "rejected", reason: reason };
-    });
-
-    // Note that the reason has not been handled.
-    trackRejection(rejection, reason);
-
-    return rejection;
-}
-
-/**
- * Constructs a fulfilled promise for an immediate reference.
- * @param value immediate reference
- */
-Q.fulfill = fulfill;
-function fulfill(value) {
-    return Promise({
-        "when": function () {
-            return value;
-        },
-        "get": function (name) {
-            return value[name];
-        },
-        "set": function (name, rhs) {
-            value[name] = rhs;
-        },
-        "delete": function (name) {
-            delete value[name];
-        },
-        "post": function (name, args) {
-            // Mark Miller proposes that post with no name should apply a
-            // promised function.
-            if (name === null || name === void 0) {
-                return value.apply(void 0, args);
-            } else {
-                return value[name].apply(value, args);
-            }
-        },
-        "apply": function (thisp, args) {
-            return value.apply(thisp, args);
-        },
-        "keys": function () {
-            return object_keys(value);
-        }
-    }, void 0, function inspect() {
-        return { state: "fulfilled", value: value };
-    });
-}
-
-/**
- * Converts thenables to Q promises.
- * @param promise thenable promise
- * @returns a Q promise
- */
-function coerce(promise) {
-    var deferred = defer();
-    Q.nextTick(function () {
-        try {
-            promise.then(deferred.resolve, deferred.reject, deferred.notify);
-        } catch (exception) {
-            deferred.reject(exception);
-        }
-    });
-    return deferred.promise;
-}
-
-/**
- * Annotates an object such that it will never be
- * transferred away from this process over any promise
- * communication channel.
- * @param object
- * @returns promise a wrapping of that object that
- * additionally responds to the "isDef" message
- * without a rejection.
- */
-Q.master = master;
-function master(object) {
-    return Promise({
-        "isDef": function () {}
-    }, function fallback(op, args) {
-        return dispatch(object, op, args);
-    }, function () {
-        return Q(object).inspect();
-    });
-}
-
-/**
- * Spreads the values of a promised array of arguments into the
- * fulfillment callback.
- * @param fulfilled callback that receives variadic arguments from the
- * promised array
- * @param rejected callback that receives the exception if the promise
- * is rejected.
- * @returns a promise for the return value or thrown exception of
- * either callback.
- */
-Q.spread = spread;
-function spread(value, fulfilled, rejected) {
-    return Q(value).spread(fulfilled, rejected);
-}
-
-Promise.prototype.spread = function (fulfilled, rejected) {
-    return this.all().then(function (array) {
-        return fulfilled.apply(void 0, array);
-    }, rejected);
-};
-
-/**
- * The async function is a decorator for generator functions, turning
- * them into asynchronous generators.  Although generators are only part
- * of the newest ECMAScript 6 drafts, this code does not cause syntax
- * errors in older engines.  This code should continue to work and will
- * in fact improve over time as the language improves.
- *
- * ES6 generators are currently part of V8 version 3.19 with the
- * --harmony-generators runtime flag enabled.  SpiderMonkey has had them
- * for longer, but under an older Python-inspired form.  This function
- * works on both kinds of generators.
- *
- * Decorates a generator function such that:
- *  - it may yield promises
- *  - execution will continue when that promise is fulfilled
- *  - the value of the yield expression will be the fulfilled value
- *  - it returns a promise for the return value (when the generator
- *    stops iterating)
- *  - the decorated function returns a promise for the return value
- *    of the generator or the first rejected promise among those
- *    yielded.
- *  - if an error is thrown in the generator, it propagates through
- *    every following yield until it is caught, or until it escapes
- *    the generator function altogether, and is translated into a
- *    rejection for the promise returned by the decorated generator.
- */
-Q.async = async;
-function async(makeGenerator) {
-    return function () {
-        // when verb is "send", arg is a value
-        // when verb is "throw", arg is an exception
-        function continuer(verb, arg) {
-            var result;
-
-            // Until V8 3.19 / Chromium 29 is released, SpiderMonkey is the only
-            // engine that has a deployed base of browsers that support generators.
-            // However, SM's generators use the Python-inspired semantics of
-            // outdated ES6 drafts.  We would like to support ES6, but we'd also
-            // like to make it possible to use generators in deployed browsers, so
-            // we also support Python-style generators.  At some point we can remove
-            // this block.
-
-            if (typeof StopIteration === "undefined") {
-                // ES6 Generators
-                try {
-                    result = generator[verb](arg);
-                } catch (exception) {
-                    return reject(exception);
-                }
-                if (result.done) {
-                    return Q(result.value);
-                } else {
-                    return when(result.value, callback, errback);
-                }
-            } else {
-                // SpiderMonkey Generators
-                // FIXME: Remove this case when SM does ES6 generators.
-                try {
-                    result = generator[verb](arg);
-                } catch (exception) {
-                    if (isStopIteration(exception)) {
-                        return Q(exception.value);
-                    } else {
-                        return reject(exception);
-                    }
-                }
-                return when(result, callback, errback);
-            }
-        }
-        var generator = makeGenerator.apply(this, arguments);
-        var callback = continuer.bind(continuer, "next");
-        var errback = continuer.bind(continuer, "throw");
-        return callback();
-    };
-}
-
-/**
- * The spawn function is a small wrapper around async that immediately
- * calls the generator and also ends the promise chain, so that any
- * unhandled errors are thrown instead of forwarded to the error
- * handler. This is useful because it's extremely common to run
- * generators at the top-level to work with libraries.
- */
-Q.spawn = spawn;
-function spawn(makeGenerator) {
-    Q.done(Q.async(makeGenerator)());
-}
-
-// FIXME: Remove this interface once ES6 generators are in SpiderMonkey.
-/**
- * Throws a ReturnValue exception to stop an asynchronous generator.
- *
- * This interface is a stop-gap measure to support generator return
- * values in older Firefox/SpiderMonkey.  In browsers that support ES6
- * generators like Chromium 29, just use "return" in your generator
- * functions.
- *
- * @param value the return value for the surrounding generator
- * @throws ReturnValue exception with the value.
- * @example
- * // ES6 style
- * Q.async(function* () {
- *      var foo = yield getFooPromise();
- *      var bar = yield getBarPromise();
- *      return foo + bar;
- * })
- * // Older SpiderMonkey style
- * Q.async(function () {
- *      var foo = yield getFooPromise();
- *      var bar = yield getBarPromise();
- *      Q.return(foo + bar);
- * })
- */
-Q["return"] = _return;
-function _return(value) {
-    throw new QReturnValue(value);
-}
-
-/**
- * The promised function decorator ensures that any promise arguments
- * are settled and passed as values (`this` is also settled and passed
- * as a value).  It will also ensure that the result of a function is
- * always a promise.
- *
- * @example
- * var add = Q.promised(function (a, b) {
- *     return a + b;
- * });
- * add(Q(a), Q(B));
- *
- * @param {function} callback The function to decorate
- * @returns {function} a function that has been decorated.
- */
-Q.promised = promised;
-function promised(callback) {
-    return function () {
-        return spread([this, all(arguments)], function (self, args) {
-            return callback.apply(self, args);
-        });
-    };
-}
-
-/**
- * sends a message to a value in a future turn
- * @param object* the recipient
- * @param op the name of the message operation, e.g., "when",
- * @param args further arguments to be forwarded to the operation
- * @returns result {Promise} a promise for the result of the operation
- */
-Q.dispatch = dispatch;
-function dispatch(object, op, args) {
-    return Q(object).dispatch(op, args);
-}
-
-Promise.prototype.dispatch = function (op, args) {
-    var self = this;
-    var deferred = defer();
-    Q.nextTick(function () {
-        self.promiseDispatch(deferred.resolve, op, args);
-    });
-    return deferred.promise;
-};
-
-/**
- * Gets the value of a property in a future turn.
- * @param object    promise or immediate reference for target object
- * @param name      name of property to get
- * @return promise for the property value
- */
-Q.get = function (object, key) {
-    return Q(object).dispatch("get", [key]);
-};
-
-Promise.prototype.get = function (key) {
-    return this.dispatch("get", [key]);
-};
-
-/**
- * Sets the value of a property in a future turn.
- * @param object    promise or immediate reference for object object
- * @param name      name of property to set
- * @param value     new value of property
- * @return promise for the return value
- */
-Q.set = function (object, key, value) {
-    return Q(object).dispatch("set", [key, value]);
-};
-
-Promise.prototype.set = function (key, value) {
-    return this.dispatch("set", [key, value]);
-};
-
-/**
- * Deletes a property in a future turn.
- * @param object    promise or immediate reference for target object
- * @param name      name of property to delete
- * @return promise for the return value
- */
-Q.del = // XXX legacy
-Q["delete"] = function (object, key) {
-    return Q(object).dispatch("delete", [key]);
-};
-
-Promise.prototype.del = // XXX legacy
-Promise.prototype["delete"] = function (key) {
-    return this.dispatch("delete", [key]);
-};
-
-/**
- * Invokes a method in a future turn.
- * @param object    promise or immediate reference for target object
- * @param name      name of method to invoke
- * @param value     a value to post, typically an array of
- *                  invocation arguments for promises that
- *                  are ultimately backed with `resolve` values,
- *                  as opposed to those backed with URLs
- *                  wherein the posted value can be any
- *                  JSON serializable object.
- * @return promise for the return value
- */
-// bound locally because it is used by other methods
-Q.mapply = // XXX As proposed by "Redsandro"
-Q.post = function (object, name, args) {
-    return Q(object).dispatch("post", [name, args]);
-};
-
-Promise.prototype.mapply = // XXX As proposed by "Redsandro"
-Promise.prototype.post = function (name, args) {
-    return this.dispatch("post", [name, args]);
-};
-
-/**
- * Invokes a method in a future turn.
- * @param object    promise or immediate reference for target object
- * @param name      name of method to invoke
- * @param ...args   array of invocation arguments
- * @return promise for the return value
- */
-Q.send = // XXX Mark Miller's proposed parlance
-Q.mcall = // XXX As proposed by "Redsandro"
-Q.invoke = function (object, name /*...args*/) {
-    return Q(object).dispatch("post", [name, array_slice(arguments, 2)]);
-};
-
-Promise.prototype.send = // XXX Mark Miller's proposed parlance
-Promise.prototype.mcall = // XXX As proposed by "Redsandro"
-Promise.prototype.invoke = function (name /*...args*/) {
-    return this.dispatch("post", [name, array_slice(arguments, 1)]);
-};
-
-/**
- * Applies the promised function in a future turn.
- * @param object    promise or immediate reference for target function
- * @param args      array of application arguments
- */
-Q.fapply = function (object, args) {
-    return Q(object).dispatch("apply", [void 0, args]);
-};
-
-Promise.prototype.fapply = function (args) {
-    return this.dispatch("apply", [void 0, args]);
-};
-
-/**
- * Calls the promised function in a future turn.
- * @param object    promise or immediate reference for target function
- * @param ...args   array of application arguments
- */
-Q["try"] =
-Q.fcall = function (object /* ...args*/) {
-    return Q(object).dispatch("apply", [void 0, array_slice(arguments, 1)]);
-};
-
-Promise.prototype.fcall = function (/*...args*/) {
-    return this.dispatch("apply", [void 0, array_slice(arguments)]);
-};
-
-/**
- * Binds the promised function, transforming return values into a fulfilled
- * promise and thrown errors into a rejected one.
- * @param object    promise or immediate reference for target function
- * @param ...args   array of application arguments
- */
-Q.fbind = function (object /*...args*/) {
-    var promise = Q(object);
-    var args = array_slice(arguments, 1);
-    return function fbound() {
-        return promise.dispatch("apply", [
-            this,
-            args.concat(array_slice(arguments))
-        ]);
-    };
-};
-Promise.prototype.fbind = function (/*...args*/) {
-    var promise = this;
-    var args = array_slice(arguments);
-    return function fbound() {
-        return promise.dispatch("apply", [
-            this,
-            args.concat(array_slice(arguments))
-        ]);
-    };
-};
-
-/**
- * Requests the names of the owned properties of a promised
- * object in a future turn.
- * @param object    promise or immediate reference for target object
- * @return promise for the keys of the eventually settled object
- */
-Q.keys = function (object) {
-    return Q(object).dispatch("keys", []);
-};
-
-Promise.prototype.keys = function () {
-    return this.dispatch("keys", []);
-};
-
-/**
- * Turns an array of promises into a promise for an array.  If any of
- * the promises gets rejected, the whole array is rejected immediately.
- * @param {Array*} an array (or promise for an array) of values (or
- * promises for values)
- * @returns a promise for an array of the corresponding values
- */
-// By Mark Miller
-// http://wiki.ecmascript.org/doku.php?id=strawman:concurrency&rev=1308776521#allfulfilled
-Q.all = all;
-function all(promises) {
-    return when(promises, function (promises) {
-        var pendingCount = 0;
-        var deferred = defer();
-        array_reduce(promises, function (undefined, promise, index) {
-            var snapshot;
-            if (
-                isPromise(promise) &&
-                (snapshot = promise.inspect()).state === "fulfilled"
-            ) {
-                promises[index] = snapshot.value;
-            } else {
-                ++pendingCount;
-                when(
-                    promise,
-                    function (value) {
-                        promises[index] = value;
-                        if (--pendingCount === 0) {
-                            deferred.resolve(promises);
-                        }
-                    },
-                    deferred.reject,
-                    function (progress) {
-                        deferred.notify({ index: index, value: progress });
-                    }
-                );
-            }
-        }, void 0);
-        if (pendingCount === 0) {
-            deferred.resolve(promises);
-        }
-        return deferred.promise;
-    });
-}
-
-Promise.prototype.all = function () {
-    return all(this);
-};
-
-/**
- * Returns the first resolved promise of an array. Prior rejected promises are
- * ignored.  Rejects only if all promises are rejected.
- * @param {Array*} an array containing values or promises for values
- * @returns a promise fulfilled with the value of the first resolved promise,
- * or a rejected promise if all promises are rejected.
- */
-Q.any = any;
-
-function any(promises) {
-    if (promises.length === 0) {
-        return Q.resolve();
-    }
-
-    var deferred = Q.defer();
-    var pendingCount = 0;
-    array_reduce(promises, function (prev, current, index) {
-        var promise = promises[index];
-
-        pendingCount++;
-
-        when(promise, onFulfilled, onRejected, onProgress);
-        function onFulfilled(result) {
-            deferred.resolve(result);
-        }
-        function onRejected(err) {
-            pendingCount--;
-            if (pendingCount === 0) {
-                var rejection = err || new Error("" + err);
-
-                rejection.message = ("Q can't get fulfillment value from any promise, all " +
-                    "promises were rejected. Last error message: " + rejection.message);
-
-                deferred.reject(rejection);
-            }
-        }
-        function onProgress(progress) {
-            deferred.notify({
-                index: index,
-                value: progress
-            });
-        }
-    }, undefined);
-
-    return deferred.promise;
-}
-
-Promise.prototype.any = function () {
-    return any(this);
-};
-
-/**
- * Waits for all promises to be settled, either fulfilled or
- * rejected.  This is distinct from `all` since that would stop
- * waiting at the first rejection.  The promise returned by
- * `allResolved` will never be rejected.
- * @param promises a promise for an array (or an array) of promises
- * (or values)
- * @return a promise for an array of promises
- */
-Q.allResolved = deprecate(allResolved, "allResolved", "allSettled");
-function allResolved(promises) {
-    return when(promises, function (promises) {
-        promises = array_map(promises, Q);
-        return when(all(array_map(promises, function (promise) {
-            return when(promise, noop, noop);
-        })), function () {
-            return promises;
-        });
-    });
-}
-
-Promise.prototype.allResolved = function () {
-    return allResolved(this);
-};
-
-/**
- * @see Promise#allSettled
- */
-Q.allSettled = allSettled;
-function allSettled(promises) {
-    return Q(promises).allSettled();
-}
-
-/**
- * Turns an array of promises into a promise for an array of their states (as
- * returned by `inspect`) when they have all settled.
- * @param {Array[Any*]} values an array (or promise for an array) of values (or
- * promises for values)
- * @returns {Array[State]} an array of states for the respective values.
- */
-Promise.prototype.allSettled = function () {
-    return this.then(function (promises) {
-        return all(array_map(promises, function (promise) {
-            promise = Q(promise);
-            function regardless() {
-                return promise.inspect();
-            }
-            return promise.then(regardless, regardless);
-        }));
-    });
-};
-
-/**
- * Captures the failure of a promise, giving an oportunity to recover
- * with a callback.  If the given promise is fulfilled, the returned
- * promise is fulfilled.
- * @param {Any*} promise for something
- * @param {Function} callback to fulfill the returned promise if the
- * given promise is rejected
- * @returns a promise for the return value of the callback
- */
-Q.fail = // XXX legacy
-Q["catch"] = function (object, rejected) {
-    return Q(object).then(void 0, rejected);
-};
-
-Promise.prototype.fail = // XXX legacy
-Promise.prototype["catch"] = function (rejected) {
-    return this.then(void 0, rejected);
-};
-
-/**
- * Attaches a listener that can respond to progress notifications from a
- * promise's originating deferred. This listener receives the exact arguments
- * passed to ``deferred.notify``.
- * @param {Any*} promise for something
- * @param {Function} callback to receive any progress notifications
- * @returns the given promise, unchanged
- */
-Q.progress = progress;
-function progress(object, progressed) {
-    return Q(object).then(void 0, void 0, progressed);
-}
-
-Promise.prototype.progress = function (progressed) {
-    return this.then(void 0, void 0, progressed);
-};
-
-/**
- * Provides an opportunity to observe the settling of a promise,
- * regardless of whether the promise is fulfilled or rejected.  Forwards
- * the resolution to the returned promise when the callback is done.
- * The callback can return a promise to defer completion.
- * @param {Any*} promise
- * @param {Function} callback to observe the resolution of the given
- * promise, takes no arguments.
- * @returns a promise for the resolution of the given promise when
- * ``fin`` is done.
- */
-Q.fin = // XXX legacy
-Q["finally"] = function (object, callback) {
-    return Q(object)["finally"](callback);
-};
-
-Promise.prototype.fin = // XXX legacy
-Promise.prototype["finally"] = function (callback) {
-    if (!callback || typeof callback.apply !== "function") {
-        throw new Error("Q can't apply finally callback");
-    }
-    callback = Q(callback);
-    return this.then(function (value) {
-        return callback.fcall().then(function () {
-            return value;
-        });
-    }, function (reason) {
-        // TODO attempt to recycle the rejection with "this".
-        return callback.fcall().then(function () {
-            throw reason;
-        });
-    });
-};
-
-/**
- * Terminates a chain of promises, forcing rejections to be
- * thrown as exceptions.
- * @param {Any*} promise at the end of a chain of promises
- * @returns nothing
- */
-Q.done = function (object, fulfilled, rejected, progress) {
-    return Q(object).done(fulfilled, rejected, progress);
-};
-
-Promise.prototype.done = function (fulfilled, rejected, progress) {
-    var onUnhandledError = function (error) {
-        // forward to a future turn so that ``when``
-        // does not catch it and turn it into a rejection.
-        Q.nextTick(function () {
-            makeStackTraceLong(error, promise);
-            if (Q.onerror) {
-                Q.onerror(error);
-            } else {
-                throw error;
-            }
-        });
-    };
-
-    // Avoid unnecessary `nextTick`ing via an unnecessary `when`.
-    var promise = fulfilled || rejected || progress ?
-        this.then(fulfilled, rejected, progress) :
-        this;
-
-    if (typeof process === "object" && process && process.domain) {
-        onUnhandledError = process.domain.bind(onUnhandledError);
-    }
-
-    promise.then(void 0, onUnhandledError);
-};
-
-/**
- * Causes a promise to be rejected if it does not get fulfilled before
- * some milliseconds time out.
- * @param {Any*} promise
- * @param {Number} milliseconds timeout
- * @param {Any*} custom error message or Error object (optional)
- * @returns a promise for the resolution of the given promise if it is
- * fulfilled before the timeout, otherwise rejected.
- */
-Q.timeout = function (object, ms, error) {
-    return Q(object).timeout(ms, error);
-};
-
-Promise.prototype.timeout = function (ms, error) {
-    var deferred = defer();
-    var timeoutId = setTimeout(function () {
-        if (!error || "string" === typeof error) {
-            error = new Error(error || "Timed out after " + ms + " ms");
-            error.code = "ETIMEDOUT";
-        }
-        deferred.reject(error);
-    }, ms);
-
-    this.then(function (value) {
-        clearTimeout(timeoutId);
-        deferred.resolve(value);
-    }, function (exception) {
-        clearTimeout(timeoutId);
-        deferred.reject(exception);
-    }, deferred.notify);
-
-    return deferred.promise;
-};
-
-/**
- * Returns a promise for the given value (or promised value), some
- * milliseconds after it resolved. Passes rejections immediately.
- * @param {Any*} promise
- * @param {Number} milliseconds
- * @returns a promise for the resolution of the given promise after milliseconds
- * time has elapsed since the resolution of the given promise.
- * If the given promise rejects, that is passed immediately.
- */
-Q.delay = function (object, timeout) {
-    if (timeout === void 0) {
-        timeout = object;
-        object = void 0;
-    }
-    return Q(object).delay(timeout);
-};
-
-Promise.prototype.delay = function (timeout) {
-    return this.then(function (value) {
-        var deferred = defer();
-        setTimeout(function () {
-            deferred.resolve(value);
-        }, timeout);
-        return deferred.promise;
-    });
-};
-
-/**
- * Passes a continuation to a Node function, which is called with the given
- * arguments provided as an array, and returns a promise.
- *
- *      Q.nfapply(FS.readFile, [__filename])
- *      .then(function (content) {
- *      })
- *
- */
-Q.nfapply = function (callback, args) {
-    return Q(callback).nfapply(args);
-};
-
-Promise.prototype.nfapply = function (args) {
-    var deferred = defer();
-    var nodeArgs = array_slice(args);
-    nodeArgs.push(deferred.makeNodeResolver());
-    this.fapply(nodeArgs).fail(deferred.reject);
-    return deferred.promise;
-};
-
-/**
- * Passes a continuation to a Node function, which is called with the given
- * arguments provided individually, and returns a promise.
- * @example
- * Q.nfcall(FS.readFile, __filename)
- * .then(function (content) {
- * })
- *
- */
-Q.nfcall = function (callback /*...args*/) {
-    var args = array_slice(arguments, 1);
-    return Q(callback).nfapply(args);
-};
-
-Promise.prototype.nfcall = function (/*...args*/) {
-    var nodeArgs = array_slice(arguments);
-    var deferred = defer();
-    nodeArgs.push(deferred.makeNodeResolver());
-    this.fapply(nodeArgs).fail(deferred.reject);
-    return deferred.promise;
-};
-
-/**
- * Wraps a NodeJS continuation passing function and returns an equivalent
- * version that returns a promise.
- * @example
- * Q.nfbind(FS.readFile, __filename)("utf-8")
- * .then(console.log)
- * .done()
- */
-Q.nfbind =
-Q.denodeify = function (callback /*...args*/) {
-    if (callback === undefined) {
-        throw new Error("Q can't wrap an undefined function");
-    }
-    var baseArgs = array_slice(arguments, 1);
-    return function () {
-        var nodeArgs = baseArgs.concat(array_slice(arguments));
-        var deferred = defer();
-        nodeArgs.push(deferred.makeNodeResolver());
-        Q(callback).fapply(nodeArgs).fail(deferred.reject);
-        return deferred.promise;
-    };
-};
-
-Promise.prototype.nfbind =
-Promise.prototype.denodeify = function (/*...args*/) {
-    var args = array_slice(arguments);
-    args.unshift(this);
-    return Q.denodeify.apply(void 0, args);
-};
-
-Q.nbind = function (callback, thisp /*...args*/) {
-    var baseArgs = array_slice(arguments, 2);
-    return function () {
-        var nodeArgs = baseArgs.concat(array_slice(arguments));
-        var deferred = defer();
-        nodeArgs.push(deferred.makeNodeResolver());
-        function bound() {
-            return callback.apply(thisp, arguments);
-        }
-        Q(bound).fapply(nodeArgs).fail(deferred.reject);
-        return deferred.promise;
-    };
-};
-
-Promise.prototype.nbind = function (/*thisp, ...args*/) {
-    var args = array_slice(arguments, 0);
-    args.unshift(this);
-    return Q.nbind.apply(void 0, args);
-};
-
-/**
- * Calls a method of a Node-style object that accepts a Node-style
- * callback with a given array of arguments, plus a provided callback.
- * @param object an object that has the named method
- * @param {String} name name of the method of object
- * @param {Array} args arguments to pass to the method; the callback
- * will be provided by Q and appended to these arguments.
- * @returns a promise for the value or error
- */
-Q.nmapply = // XXX As proposed by "Redsandro"
-Q.npost = function (object, name, args) {
-    return Q(object).npost(name, args);
-};
-
-Promise.prototype.nmapply = // XXX As proposed by "Redsandro"
-Promise.prototype.npost = function (name, args) {
-    var nodeArgs = array_slice(args || []);
-    var deferred = defer();
-    nodeArgs.push(deferred.makeNodeResolver());
-    this.dispatch("post", [name, nodeArgs]).fail(deferred.reject);
-    return deferred.promise;
-};
-
-/**
- * Calls a method of a Node-style object that accepts a Node-style
- * callback, forwarding the given variadic arguments, plus a provided
- * callback argument.
- * @param object an object that has the named method
- * @param {String} name name of the method of object
- * @param ...args arguments to pass to the method; the callback will
- * be provided by Q and appended to these arguments.
- * @returns a promise for the value or error
- */
-Q.nsend = // XXX Based on Mark Miller's proposed "send"
-Q.nmcall = // XXX Based on "Redsandro's" proposal
-Q.ninvoke = function (object, name /*...args*/) {
-    var nodeArgs = array_slice(arguments, 2);
-    var deferred = defer();
-    nodeArgs.push(deferred.makeNodeResolver());
-    Q(object).dispatch("post", [name, nodeArgs]).fail(deferred.reject);
-    return deferred.promise;
-};
-
-Promise.prototype.nsend = // XXX Based on Mark Miller's proposed "send"
-Promise.prototype.nmcall = // XXX Based on "Redsandro's" proposal
-Promise.prototype.ninvoke = function (name /*...args*/) {
-    var nodeArgs = array_slice(arguments, 1);
-    var deferred = defer();
-    nodeArgs.push(deferred.makeNodeResolver());
-    this.dispatch("post", [name, nodeArgs]).fail(deferred.reject);
-    return deferred.promise;
-};
-
-/**
- * If a function would like to support both Node continuation-passing-style and
- * promise-returning-style, it can end its internal promise chain with
- * `nodeify(nodeback)`, forwarding the optional nodeback argument.  If the user
- * elects to use a nodeback, the result will be sent there.  If they do not
- * pass a nodeback, they will receive the result promise.
- * @param object a result (or a promise for a result)
- * @param {Function} nodeback a Node.js-style callback
- * @returns either the promise or nothing
- */
-Q.nodeify = nodeify;
-function nodeify(object, nodeback) {
-    return Q(object).nodeify(nodeback);
-}
-
-Promise.prototype.nodeify = function (nodeback) {
-    if (nodeback) {
-        this.then(function (value) {
-            Q.nextTick(function () {
-                nodeback(null, value);
-            });
-        }, function (error) {
-            Q.nextTick(function () {
-                nodeback(error);
-            });
-        });
-    } else {
-        return this;
-    }
-};
-
-Q.noConflict = function() {
-    throw new Error("Q.noConflict only works when Q is used as a global");
-};
-
-// All code before this point will be filtered from stack traces.
-var qEndingLine = captureLine();
-
-return Q;
-
-});
-
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../process/browser.js */ "./node_modules/process/browser.js"), __webpack_require__(/*! ./../timers-browserify/main.js */ "./node_modules/timers-browserify/main.js").setImmediate))
-
-/***/ }),
-
 /***/ "./node_modules/react-content-loader/dist/react-content-loader.es.js":
 /*!***************************************************************************!*\
   !*** ./node_modules/react-content-loader/dist/react-content-loader.es.js ***!
@@ -77503,204 +75587,6 @@ if (false) {} else {
 
 /***/ }),
 
-/***/ "./node_modules/setimmediate/setImmediate.js":
-/*!***************************************************!*\
-  !*** ./node_modules/setimmediate/setImmediate.js ***!
-  \***************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
-    "use strict";
-
-    if (global.setImmediate) {
-        return;
-    }
-
-    var nextHandle = 1; // Spec says greater than zero
-    var tasksByHandle = {};
-    var currentlyRunningATask = false;
-    var doc = global.document;
-    var registerImmediate;
-
-    function setImmediate(callback) {
-      // Callback can either be a function or a string
-      if (typeof callback !== "function") {
-        callback = new Function("" + callback);
-      }
-      // Copy function arguments
-      var args = new Array(arguments.length - 1);
-      for (var i = 0; i < args.length; i++) {
-          args[i] = arguments[i + 1];
-      }
-      // Store and register the task
-      var task = { callback: callback, args: args };
-      tasksByHandle[nextHandle] = task;
-      registerImmediate(nextHandle);
-      return nextHandle++;
-    }
-
-    function clearImmediate(handle) {
-        delete tasksByHandle[handle];
-    }
-
-    function run(task) {
-        var callback = task.callback;
-        var args = task.args;
-        switch (args.length) {
-        case 0:
-            callback();
-            break;
-        case 1:
-            callback(args[0]);
-            break;
-        case 2:
-            callback(args[0], args[1]);
-            break;
-        case 3:
-            callback(args[0], args[1], args[2]);
-            break;
-        default:
-            callback.apply(undefined, args);
-            break;
-        }
-    }
-
-    function runIfPresent(handle) {
-        // From the spec: "Wait until any invocations of this algorithm started before this one have completed."
-        // So if we're currently running a task, we'll need to delay this invocation.
-        if (currentlyRunningATask) {
-            // Delay by doing a setTimeout. setImmediate was tried instead, but in Firefox 7 it generated a
-            // "too much recursion" error.
-            setTimeout(runIfPresent, 0, handle);
-        } else {
-            var task = tasksByHandle[handle];
-            if (task) {
-                currentlyRunningATask = true;
-                try {
-                    run(task);
-                } finally {
-                    clearImmediate(handle);
-                    currentlyRunningATask = false;
-                }
-            }
-        }
-    }
-
-    function installNextTickImplementation() {
-        registerImmediate = function(handle) {
-            process.nextTick(function () { runIfPresent(handle); });
-        };
-    }
-
-    function canUsePostMessage() {
-        // The test against `importScripts` prevents this implementation from being installed inside a web worker,
-        // where `global.postMessage` means something completely different and can't be used for this purpose.
-        if (global.postMessage && !global.importScripts) {
-            var postMessageIsAsynchronous = true;
-            var oldOnMessage = global.onmessage;
-            global.onmessage = function() {
-                postMessageIsAsynchronous = false;
-            };
-            global.postMessage("", "*");
-            global.onmessage = oldOnMessage;
-            return postMessageIsAsynchronous;
-        }
-    }
-
-    function installPostMessageImplementation() {
-        // Installs an event handler on `global` for the `message` event: see
-        // * https://developer.mozilla.org/en/DOM/window.postMessage
-        // * http://www.whatwg.org/specs/web-apps/current-work/multipage/comms.html#crossDocumentMessages
-
-        var messagePrefix = "setImmediate$" + Math.random() + "$";
-        var onGlobalMessage = function(event) {
-            if (event.source === global &&
-                typeof event.data === "string" &&
-                event.data.indexOf(messagePrefix) === 0) {
-                runIfPresent(+event.data.slice(messagePrefix.length));
-            }
-        };
-
-        if (global.addEventListener) {
-            global.addEventListener("message", onGlobalMessage, false);
-        } else {
-            global.attachEvent("onmessage", onGlobalMessage);
-        }
-
-        registerImmediate = function(handle) {
-            global.postMessage(messagePrefix + handle, "*");
-        };
-    }
-
-    function installMessageChannelImplementation() {
-        var channel = new MessageChannel();
-        channel.port1.onmessage = function(event) {
-            var handle = event.data;
-            runIfPresent(handle);
-        };
-
-        registerImmediate = function(handle) {
-            channel.port2.postMessage(handle);
-        };
-    }
-
-    function installReadyStateChangeImplementation() {
-        var html = doc.documentElement;
-        registerImmediate = function(handle) {
-            // Create a <script> element; its readystatechange event will be fired asynchronously once it is inserted
-            // into the document. Do so, thus queuing up the task. Remember to clean up once it's been called.
-            var script = doc.createElement("script");
-            script.onreadystatechange = function () {
-                runIfPresent(handle);
-                script.onreadystatechange = null;
-                html.removeChild(script);
-                script = null;
-            };
-            html.appendChild(script);
-        };
-    }
-
-    function installSetTimeoutImplementation() {
-        registerImmediate = function(handle) {
-            setTimeout(runIfPresent, 0, handle);
-        };
-    }
-
-    // If supported, we should attach to the prototype of global, since that is where setTimeout et al. live.
-    var attachTo = Object.getPrototypeOf && Object.getPrototypeOf(global);
-    attachTo = attachTo && attachTo.setTimeout ? attachTo : global;
-
-    // Don't get fooled by e.g. browserify environments.
-    if ({}.toString.call(global.process) === "[object process]") {
-        // For Node.js before 0.9
-        installNextTickImplementation();
-
-    } else if (canUsePostMessage()) {
-        // For non-IE10 modern browsers
-        installPostMessageImplementation();
-
-    } else if (global.MessageChannel) {
-        // For web workers, where supported
-        installMessageChannelImplementation();
-
-    } else if (doc && "onreadystatechange" in doc.createElement("script")) {
-        // For IE 6–8
-        installReadyStateChangeImplementation();
-
-    } else {
-        // For older browsers
-        installSetTimeoutImplementation();
-    }
-
-    attachTo.setImmediate = setImmediate;
-    attachTo.clearImmediate = clearImmediate;
-}(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
-
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js"), __webpack_require__(/*! ./../process/browser.js */ "./node_modules/process/browser.js")))
-
-/***/ }),
-
 /***/ "./node_modules/symbol-observable/es/index.js":
 /*!****************************************************!*\
   !*** ./node_modules/symbol-observable/es/index.js ***!
@@ -77761,81 +75647,6 @@ function symbolObservablePonyfill(root) {
 	return result;
 };
 
-
-/***/ }),
-
-/***/ "./node_modules/timers-browserify/main.js":
-/*!************************************************!*\
-  !*** ./node_modules/timers-browserify/main.js ***!
-  \************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(global) {var scope = (typeof global !== "undefined" && global) ||
-            (typeof self !== "undefined" && self) ||
-            window;
-var apply = Function.prototype.apply;
-
-// DOM APIs, for completeness
-
-exports.setTimeout = function() {
-  return new Timeout(apply.call(setTimeout, scope, arguments), clearTimeout);
-};
-exports.setInterval = function() {
-  return new Timeout(apply.call(setInterval, scope, arguments), clearInterval);
-};
-exports.clearTimeout =
-exports.clearInterval = function(timeout) {
-  if (timeout) {
-    timeout.close();
-  }
-};
-
-function Timeout(id, clearFn) {
-  this._id = id;
-  this._clearFn = clearFn;
-}
-Timeout.prototype.unref = Timeout.prototype.ref = function() {};
-Timeout.prototype.close = function() {
-  this._clearFn.call(scope, this._id);
-};
-
-// Does not start the time, just sets up the members needed.
-exports.enroll = function(item, msecs) {
-  clearTimeout(item._idleTimeoutId);
-  item._idleTimeout = msecs;
-};
-
-exports.unenroll = function(item) {
-  clearTimeout(item._idleTimeoutId);
-  item._idleTimeout = -1;
-};
-
-exports._unrefActive = exports.active = function(item) {
-  clearTimeout(item._idleTimeoutId);
-
-  var msecs = item._idleTimeout;
-  if (msecs >= 0) {
-    item._idleTimeoutId = setTimeout(function onTimeout() {
-      if (item._onTimeout)
-        item._onTimeout();
-    }, msecs);
-  }
-};
-
-// setimmediate attaches itself to the global object
-__webpack_require__(/*! setimmediate */ "./node_modules/setimmediate/setImmediate.js");
-// On some exotic environments, it's not clear which object `setimmediate` was
-// able to install onto.  Search each possibility in the same order as the
-// `setimmediate` library.
-exports.setImmediate = (typeof self !== "undefined" && self.setImmediate) ||
-                       (typeof global !== "undefined" && global.setImmediate) ||
-                       (this && this.setImmediate);
-exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
-                         (typeof global !== "undefined" && global.clearImmediate) ||
-                         (this && this.clearImmediate);
-
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
 
 /***/ }),
 
@@ -78276,40 +76087,41 @@ module.exports = function(module) {
 
 "use strict";
 
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const auth_1 = __webpack_require__(/*! ../redux-types/auth */ "./resources/js/redux-types/auth.ts");
+const redux_types = __importStar(__webpack_require__(/*! ../redux-types/auth */ "./resources/js/redux-types/auth.ts"));
 /**
  * Action Creators
  */
-exports.onProcess = () => ({
-    type: auth_1.ON_PROCESS,
-    loggedStatus: 'processing',
+exports.requestLogin = () => ({
+    type: redux_types.REQUEST_LOGIN,
 });
-exports.loginSuccess = (currentUser) => ({
-    type: auth_1.LOGIN_SUCCESS,
-    loggedStatus: 'success',
+exports.succeedLogin = (currentUser) => ({
+    type: redux_types.SUCCEED_LOGIN,
     currentUser,
 });
-exports.loginFail = errorMessage => ({
-    type: auth_1.LOGIN_FAIL,
-    loggedStatus: 'failed',
-    errorMessage,
+exports.failLogin = (message) => ({
+    type: redux_types.FAIL_LOGIN,
+    message,
 });
 exports.logout = () => ({
-    type: auth_1.LOGOUT,
-    loggedStatus: 'ready',
+    type: redux_types.LOGOUT,
 });
-exports.signupOnProcess = () => ({
-    type: auth_1.SIGNUP_ON_PROCESS,
-    signupStatus: 'processing',
+exports.requestSignup = () => ({
+    type: redux_types.REQUEST_SIGNUP,
 });
-exports.signupSuccess = () => ({
-    type: auth_1.SIGNUP_SUCCESS,
-    signupStatus: 'success',
+exports.succeedSignup = () => ({
+    type: redux_types.SUCCEED_SIGNUP,
 });
-exports.signupFail = () => ({
-    type: auth_1.SIGNUP_FAIL,
-    signupStatus: 'failed',
+exports.failSignup = (message) => ({
+    type: redux_types.FAIL_SIGNUP,
+    message,
 });
 
 
@@ -78324,270 +76136,73 @@ exports.signupFail = () => ({
 
 "use strict";
 
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const current_space_1 = __webpack_require__(/*! ../redux-types/current-space */ "./resources/js/redux-types/current-space.ts");
+const redux_types = __importStar(__webpack_require__(/*! ../redux-types/current-space */ "./resources/js/redux-types/current-space.ts"));
 /**
  * Action Creators
  */
-exports.requestSpace = () => ({
-    type: current_space_1.REQUEST_SPACE,
+exports.startRequest = () => ({
+    type: redux_types.START_REQUEST,
 });
-exports.receiveSpace = (space) => ({
-    type: current_space_1.RECEIVE_SPACE,
+exports.receiveRequest = (space) => ({
+    type: redux_types.RECEIVE_REQUEST,
     space,
 });
-exports.endRequestSpace = () => ({
-    type: current_space_1.END_REQUEST_SPACE,
+exports.failRequest = (message) => ({
+    type: redux_types.FAIL_REQUEST,
+    message,
 });
-exports.resetSpace = () => ({
-    type: current_space_1.RESET_SPACE,
+exports.resetData = () => ({
+    type: redux_types.RESET_DATA,
 });
 exports.updateSpaceIntroduce = (spaceIntroduce) => ({
-    type: current_space_1.UPDATE_SPACE_INTRODUCE,
+    type: redux_types.UPDATE_SPACE_INTRODUCE,
     spaceIntroduce,
 });
 exports.startUpdateOH = () => ({
-    type: current_space_1.START_UPDATE_OH,
+    type: redux_types.START_UPDATE_OH,
 });
-exports.finishUpdateOH = (operatingHours) => ({
-    type: current_space_1.FINISH_UPDATE_OH,
+exports.succeedUpdateOH = (operatingHours) => ({
+    type: redux_types.SUCCEED_UPDATE_OH,
     operatingHours,
 });
-exports.endUpdateOH = () => ({
-    type: current_space_1.END_UPDATE_OH,
+exports.failUpdateOH = (message) => ({
+    type: redux_types.FAIL_UPDATE_OH,
+    message,
 });
 exports.setBusyLevel = (busyLevel) => ({
-    type: current_space_1.SET_BUSY_LEVEL,
+    type: redux_types.SET_BUSY_LEVEL,
     busyLevel,
 });
 exports.startUpdateAT = () => ({
-    type: current_space_1.START_UPDATE_AT,
+    type: redux_types.START_UPDATE_AT,
 });
-exports.finishUpdateAT = (amenityTags) => ({
-    type: current_space_1.FINISH_UPDATE_AT,
+exports.succeedUpdateAT = (amenityTags) => ({
+    type: redux_types.SUCCEED_UPDATE_AT,
     amenityTags,
 });
-exports.endUpdateAT = () => ({
-    type: current_space_1.END_UPDATE_AT,
+exports.failUpdateAT = (message) => ({
+    type: redux_types.FAIL_UPDATE_AT,
+    message,
 });
 exports.startUpdateImages = () => ({
-    type: current_space_1.START_UPDATE_IMAGES,
+    type: redux_types.START_UPDATE_IMAGES,
 });
-exports.finishUpdateImages = (images) => ({
-    type: current_space_1.FINISH_UPDATE_IMAGES,
+exports.succeedUpdateImages = (images) => ({
+    type: redux_types.SUCCEED_UPDATE_IMAGES,
     images,
 });
-exports.endUpdateImages = () => ({
-    type: current_space_1.END_UPDATE_IMAGES,
+exports.failUpdateImages = (message) => ({
+    type: redux_types.FAIL_UPDATE_IMAGES,
+    message,
 });
-
-
-/***/ }),
-
-/***/ "./resources/js/actions/firebase-auth.ts":
-/*!***********************************************!*\
-  !*** ./resources/js/actions/firebase-auth.ts ***!
-  \***********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const firebase_1 = __importDefault(__webpack_require__(/*! ../config/firebase */ "./resources/js/config/firebase/index.ts"));
-const organizer_1 = __webpack_require__(/*! ../osdb-api/organizer */ "./resources/js/osdb-api/organizer.ts");
-const auth_1 = __webpack_require__(/*! ./auth */ "./resources/js/actions/auth.ts");
-const current_space_1 = __webpack_require__(/*! ./current-space */ "./resources/js/actions/current-space.ts");
-const space_trees_1 = __webpack_require__(/*! ./space-trees */ "./resources/js/actions/space-trees.ts");
-const space_history_1 = __webpack_require__(/*! ./space-history */ "./resources/js/actions/space-history.ts");
-/**
- * Attempt log in
- */
-exports.attemptLogIn = (userEmail, userPassword) => async (dispatch) => {
-    dispatch(auth_1.onProcess());
-    firebase_1.default.auth()
-        .signInWithEmailAndPassword(userEmail, userPassword)
-        .then(() => {
-        let currentUser = firebase_1.default.auth().currentUser;
-        if (currentUser !== null) {
-            organizer_1.osdbFetchOrganizerInfo(currentUser.uid)
-                .then((user) => {
-                dispatch(auth_1.loginSuccess(user));
-            })
-                .catch(error => {
-                console.log(error);
-                dispatch(auth_1.loginFail('사용자 정보를 가져오는데 실패했습니다.'));
-            });
-        }
-        else {
-            dispatch(auth_1.loginFail('로그인에 실패하였습니다.'));
-        }
-    })
-        .catch(() => {
-        dispatch(auth_1.loginFail('로그인에 실패하였습니다.'));
-    });
-};
-/**
- * Log out
- */
-exports.logOut = () => async (dispatch) => {
-    firebase_1.default.auth()
-        .signOut()
-        .then(() => {
-        dispatch(current_space_1.resetSpace());
-        dispatch(space_trees_1.resetSpaceTrees());
-        dispatch(space_history_1.resetSpaceHistory());
-        dispatch(auth_1.logout());
-    });
-};
-/**
- * Signup
- */
-exports.signup = (userEmail, userName, userPassword) => async (dispatch) => {
-    dispatch(auth_1.signupOnProcess());
-    firebase_1.default.auth()
-        .createUserWithEmailAndPassword(userEmail, userPassword)
-        .then((user) => {
-        if (user.user && user.user.uid) {
-            organizer_1.osdbCreatOrganizerInfo(user.user.uid, userName, userEmail)
-                .then(() => {
-                dispatch(auth_1.signupSuccess());
-            })
-                .catch(() => {
-                dispatch(auth_1.signupFail());
-            });
-        }
-    })
-        .catch(() => {
-        dispatch(auth_1.signupFail());
-    });
-};
-
-
-/***/ }),
-
-/***/ "./resources/js/actions/firebase-storage.ts":
-/*!**************************************************!*\
-  !*** ./resources/js/actions/firebase-storage.ts ***!
-  \**************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const firebase_1 = __importDefault(__webpack_require__(/*! ../config/firebase */ "./resources/js/config/firebase/index.ts"));
-const osdb_api_1 = __webpack_require__(/*! ./osdb-api */ "./resources/js/actions/osdb-api.ts");
-const current_space_1 = __webpack_require__(/*! ./current-space */ "./resources/js/actions/current-space.ts");
-/**
- * Upload images to server
- */
-exports.uploadImagesToServer = (spaceID, images, currentImages) => async (dispatch) => {
-    dispatch(current_space_1.startUpdateImages());
-    let uploadedImages = [];
-    images = Object.values(images);
-    for (let idx in images) {
-        if (images[idx].progress >= 100) {
-            const uploadTask = firebase_1.default.storage()
-                .ref(`${spaceID}/${images[idx].key}`)
-                .put(images[idx].file);
-            await uploadTask.then(async () => {
-                await firebase_1.default.storage()
-                    .ref(spaceID)
-                    .child(`${images[idx].key}`)
-                    .getDownloadURL()
-                    .then(url => {
-                    uploadedImages.push(url);
-                });
-            });
-        }
-    }
-    dispatch(osdb_api_1.updateImages(spaceID, [...currentImages, ...uploadedImages]));
-};
-
-
-/***/ }),
-
-/***/ "./resources/js/actions/osdb-api.ts":
-/*!******************************************!*\
-  !*** ./resources/js/actions/osdb-api.ts ***!
-  \******************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-const space_1 = __webpack_require__(/*! ../osdb-api/space */ "./resources/js/osdb-api/space.ts");
-const space_trees_1 = __webpack_require__(/*! ./space-trees */ "./resources/js/actions/space-trees.ts");
-const current_space_1 = __webpack_require__(/*! ./current-space */ "./resources/js/actions/current-space.ts");
-const space_history_1 = __webpack_require__(/*! ./space-history */ "./resources/js/actions/space-history.ts");
-/**
- * Fetch space trees from OSDB
- */
-exports.fetchSpaceTrees = (organizerUID) => async (dispatch) => {
-    dispatch(space_trees_1.requestSpaceTrees());
-    space_1.osdbGetSpaceTrees(organizerUID)
-        .then((spaceTrees) => {
-        dispatch(space_trees_1.receiveSpaceTrees(spaceTrees));
-    })
-        .catch(() => dispatch(space_trees_1.endRequestSpaceTrees()));
-};
-/**
- * Fetch space from OSDB
- */
-exports.fetchSpace = (spaceID, saveHistory = false) => async (dispatch) => {
-    dispatch(current_space_1.requestSpace());
-    space_1.osdbGetSpace(spaceID)
-        .then((space) => {
-        dispatch(current_space_1.receiveSpace(space));
-        if (saveHistory) {
-            dispatch(space_history_1.pushIntoSpaceHistory({
-                id: spaceID,
-                names: space.spaceNames,
-            }));
-        }
-    })
-        .catch(() => dispatch(current_space_1.endRequestSpace()));
-};
-/**
- * Update operating hours of the space space from OSDB
- */
-exports.updateOperatingHour = (spaceID, operatingHours) => async (dispatch) => {
-    dispatch(current_space_1.startUpdateOH());
-    space_1.osdbUpdateOperatingHour(spaceID, operatingHours)
-        .then(() => {
-        dispatch(current_space_1.finishUpdateOH(operatingHours));
-    })
-        .catch(() => dispatch(current_space_1.endUpdateOH()));
-};
-/**
- * Update amenity tags of the space space from OSDB
- */
-exports.updateAmenityTags = (spaceID, amenityTags) => async (dispatch) => {
-    dispatch(current_space_1.startUpdateAT());
-    space_1.osdbUpdateAmenityTags(spaceID, amenityTags)
-        .then(() => {
-        dispatch(current_space_1.finishUpdateAT(amenityTags));
-    })
-        .catch(() => dispatch(current_space_1.endUpdateAT()));
-};
-/**
- * Update images of the space space from OSDB
- */
-exports.updateImages = (spaceID, images) => async (dispatch) => {
-    space_1.osdbUpdateImages(spaceID, images)
-        .then(() => {
-        dispatch(current_space_1.finishUpdateImages(images));
-    })
-        .catch(() => dispatch(current_space_1.endUpdateImages()));
-};
 
 
 /***/ }),
@@ -78623,16 +76238,23 @@ exports.setSelectedAmenities = (selectedAmenities) => ({
 
 "use strict";
 
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const space_history_1 = __webpack_require__(/*! ../redux-types/space-history */ "./resources/js/redux-types/space-history.ts");
+const redux_types = __importStar(__webpack_require__(/*! ../redux-types/space-history */ "./resources/js/redux-types/space-history.ts"));
 /**
  * Action Creators
  */
 exports.resetSpaceHistory = () => ({
-    type: space_history_1.RESET_SPACE_HISTORY,
+    type: redux_types.RESET_SPACE_HISTORY,
 });
 exports.pushIntoSpaceHistory = (spaceHeader) => ({
-    type: space_history_1.PUSH_INTO_SPACE_HISTORY,
+    type: redux_types.PUSH_INTO_SPACE_HISTORY,
     spaceHeader,
 });
 
@@ -78648,23 +76270,31 @@ exports.pushIntoSpaceHistory = (spaceHeader) => ({
 
 "use strict";
 
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const space_trees_1 = __webpack_require__(/*! ../redux-types/space-trees */ "./resources/js/redux-types/space-trees.ts");
+const redux_types = __importStar(__webpack_require__(/*! ../redux-types/space-trees */ "./resources/js/redux-types/space-trees.ts"));
 /**
  * Action Creators
  */
-exports.requestSpaceTrees = () => ({
-    type: space_trees_1.REQUEST_SPACE_TREES,
+exports.startRequest = () => ({
+    type: redux_types.START_REQUEST,
 });
-exports.receiveSpaceTrees = (spaceTrees) => ({
-    type: space_trees_1.RECEIVE_SPACE_TREES,
-    spaceTrees,
+exports.receiveRequest = (data) => ({
+    type: redux_types.RECEIVE_REQUEST,
+    data,
 });
-exports.endRequestSpaceTrees = () => ({
-    type: space_trees_1.END_REQUEST_SPACE_TREES,
+exports.failRequest = (message) => ({
+    type: redux_types.FAIL_REQUEST,
+    message,
 });
-exports.resetSpaceTrees = () => ({
-    type: space_trees_1.RESET_SPACE_TREES,
+exports.resetData = () => ({
+    type: redux_types.RESET_DATA,
 });
 
 
@@ -78739,7 +76369,7 @@ class App extends react_1.default.Component {
             react_1.default.createElement(react_router_dom_1.BrowserRouter, null,
                 react_1.default.createElement(react_router_dom_1.Switch, null,
                     react_1.default.createElement(react_router_dom_1.Route, { exact: true, path: "/", component: os_begin_container_1.default }),
-                    react_1.default.createElement(react_router_dom_1.Route, { path: "/:userid", component: react_router_dom_1.withRouter(os_home_container_1.default) })))));
+                    react_1.default.createElement(react_router_dom_1.Route, { path: "/:userid", component: os_home_container_1.default })))));
     }
 }
 if (document.getElementById('app-container')) {
@@ -78845,10 +76475,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 const space_1 = __webpack_require__(/*! ../../model/space */ "./resources/js/model/space.ts");
-const selected_amenities_1 = __webpack_require__(/*! ../../actions/selected-amenities */ "./resources/js/actions/selected-amenities.ts");
-const osdb_api_1 = __webpack_require__(/*! ../../actions/osdb-api */ "./resources/js/actions/osdb-api.ts");
+/**
+ *
+ *
+ * AmenitiesEditModal component
+ *
+ *
+ */
 exports.AmenitiesEditModalID = 'amenities-edit-modal';
 const COL_PER_ROW = 4;
 const tags = Object.keys(space_1.amenities);
@@ -78918,13 +76552,23 @@ class _AmenitiesEditModal extends react_1.default.Component {
                         react_1.default.createElement("button", { type: "submit", className: "btn btn-primary", "data-dismiss": "modal", onClick: this._saveAmenityTags }, "\uC800\uC7A5"))))));
     }
 }
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const selected_amenities_1 = __webpack_require__(/*! ../../actions/selected-amenities */ "./resources/js/actions/selected-amenities.ts");
+const current_space_1 = __webpack_require__(/*! ../../thunk-action/current-space */ "./resources/js/thunk-action/current-space.ts");
 const mapStateToProps = (state) => ({
     currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
     selectedAmenities: state.selectedAmenities.selectedAmenities,
 });
 const mapDispatchToProps = {
     setSelectedAmenities: selected_amenities_1.setSelectedAmenities,
-    updateAmenityTags: osdb_api_1.updateAmenityTags,
+    updateAmenityTags: current_space_1.updateAmenityTags,
 };
 const AmenitiesEditModal = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_AmenitiesEditModal);
 exports.default = AmenitiesEditModal;
@@ -78953,11 +76597,16 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 const space_1 = __webpack_require__(/*! ../../model/space */ "./resources/js/model/space.ts");
-const selected_amenities_1 = __webpack_require__(/*! ../../actions/selected-amenities */ "./resources/js/actions/selected-amenities.ts");
 const amenities_edit_modal_1 = __importStar(__webpack_require__(/*! ./amenities-edit-modal */ "./resources/js/components/os-amenity-tags/amenities-edit-modal.tsx"));
 const os_page_status_1 = __importDefault(__webpack_require__(/*! ../os-page-status */ "./resources/js/components/os-page-status.tsx"));
+/**
+ *
+ *
+ * OSAmenityTags component
+ *
+ *
+ */
 class _OSAmenityTags extends react_1.default.Component {
     constructor() {
         super(...arguments);
@@ -79005,9 +76654,18 @@ class _OSAmenityTags extends react_1.default.Component {
                     "\uB9C8\uC6B0\uC2A4\uB97C \uC544\uC774\uCF58 \uC704\uC5D0 \uC62C\uB9AC\uC2DC\uBA74 \uC124\uBA85\uC744 \uBCFC \uC218 \uC788\uC2B5\uB2C8\uB2E4."))));
     }
 }
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const selected_amenities_1 = __webpack_require__(/*! ../../actions/selected-amenities */ "./resources/js/actions/selected-amenities.ts");
 const mapStateToProps = (state) => ({
     amenityTags: state.currentSpace.data && state.currentSpace.data.amenityTags,
-    updatingAmentiyTags: state.currentSpace.status.updatingAmentiyTags,
+    updatingAmentiyTags: state.currentSpace.updatingATStatus,
 });
 const mapDispatchToProps = {
     setSelectedAmenities: selected_amenities_1.setSelectedAmenities,
@@ -79015,17 +76673,6 @@ const mapDispatchToProps = {
 const OSAmenityTags = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_OSAmenityTags);
 exports.default = OSAmenityTags;
 
-
-/***/ }),
-
-/***/ "./resources/js/components/os-general-info/day-interpret.json":
-/*!********************************************************************!*\
-  !*** ./resources/js/components/os-general-info/day-interpret.json ***!
-  \********************************************************************/
-/*! exports provided: MON, TUE, WED, THU, FRI, SAT, SUN, default */
-/***/ (function(module) {
-
-module.exports = {"MON":{"en":"Mon","ko":"월"},"TUE":{"en":"Tue","ko":"화"},"WED":{"en":"Wed","ko":"수"},"THU":{"en":"Thu","ko":"목"},"FRI":{"en":"Fri","ko":"금"},"SAT":{"en":"Sat","ko":"토"},"SUN":{"en":"Sun","ko":"일"}};
 
 /***/ }),
 
@@ -79050,15 +76697,20 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 const space_1 = __webpack_require__(/*! ../../model/space */ "./resources/js/model/space.ts");
 const operating_hour_edit_modal_1 = __importStar(__webpack_require__(/*! ./operating-hour-edit-modal */ "./resources/js/components/os-general-info/operating-hour-edit-modal.tsx"));
-const osdb_api_1 = __webpack_require__(/*! ../../actions/osdb-api */ "./resources/js/actions/osdb-api.ts");
+/**
+ *
+ *
+ * OSGeneralInfo component
+ *
+ *
+ */
 class _OSGeneralInfo extends react_1.default.Component {
     constructor() {
         super(...arguments);
         this._renderOperatingHours = () => {
-            if (this.props.updatingOperatingHour) {
+            if (this.props.updatingOHStatus.status === 'requesting') {
                 return (react_1.default.createElement("p", { className: "h6 os-grey-1 os-text-ellipsis" }, "(\uC5C5\uB370\uC774\uD2B8 \uC911...)"));
             }
             else if (!this.props.operatingHours ||
@@ -79099,23 +76751,25 @@ class _OSGeneralInfo extends react_1.default.Component {
                         react_1.default.createElement("p", { className: "h6 os-grey-1" },
                             react_1.default.createElement("i", { className: "material-icons" }, "edit"),
                             "\uC218\uC815")),
-                    this.props.spaceID && (react_1.default.createElement(operating_hour_edit_modal_1.default, { updateOperatingHour: (operatingHours) => {
-                            this.props.updateOperatingHour(this.props.spaceID, operatingHours);
-                        } }))))));
+                    react_1.default.createElement(operating_hour_edit_modal_1.default, null)))));
     }
 }
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 const mapStateToProps = (state) => ({
-    spaceID: state.currentSpace.data && state.currentSpace.data.id,
     spaceNames: state.currentSpace.data && state.currentSpace.data.spaceNames,
     types: state.currentSpace.data && state.currentSpace.data.types,
     locationText: state.currentSpace.data && state.currentSpace.data.locationText,
     operatingHours: state.currentSpace.data && state.currentSpace.data.operatingHours,
-    updatingOperatingHour: state.currentSpace.status.updatingOperatingHour,
+    updatingOHStatus: state.currentSpace.updatingOHStatus,
 });
-const mapDispatchToProps = {
-    updateOperatingHour: osdb_api_1.updateOperatingHour,
-};
-const OSGeneralInfo = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_OSGeneralInfo);
+const OSGeneralInfo = react_redux_1.connect(mapStateToProps)(_OSGeneralInfo);
 exports.default = OSGeneralInfo;
 
 
@@ -79142,9 +76796,16 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const DayInterpret = __importStar(__webpack_require__(/*! ./day-interpret.json */ "./resources/js/components/os-general-info/day-interpret.json"));
+const DayInterpret = __importStar(__webpack_require__(/*! ../../config/weekdays.json */ "./resources/js/config/weekdays.json"));
+/**
+ *
+ *
+ * OperatingHourEditModal component
+ *
+ *
+ */
 exports.OperatingHourEditModalID = 'operating-hour-edit-modal';
-class OperatingHourEditModal extends react_1.default.Component {
+class _OperatingHourEditModal extends react_1.default.Component {
     constructor() {
         super(...arguments);
         this.state = {
@@ -79158,33 +76819,35 @@ class OperatingHourEditModal extends react_1.default.Component {
         };
         this._saveOperatingHour = (event) => {
             event.preventDefault();
-            let map = {};
-            let priority = [];
-            Object.keys(this.state).map((day) => {
-                if (this.state[day].off) {
-                    return;
-                }
-                let timeKey = `${this.state[day].startTime} - ${this.state[day].endTime}`;
-                if (map[timeKey]) {
-                    map[timeKey].push(day);
-                }
-                else {
-                    map[timeKey] = [day];
-                    priority.push(timeKey);
-                }
-            });
-            let temp = '';
-            let result = priority.map((timeKey) => {
-                temp = `${timeKey} / `;
-                map[timeKey].map((day, index) => {
-                    if (index > 0) {
-                        temp += ', ';
+            if (this.props.currentSpaceID) {
+                let map = {};
+                let priority = [];
+                Object.keys(this.state).map((day) => {
+                    if (this.state[day].off) {
+                        return;
                     }
-                    temp += DayInterpret[day]['ko'];
+                    let timeKey = `${this.state[day].startTime} - ${this.state[day].endTime}`;
+                    if (map[timeKey]) {
+                        map[timeKey].push(day);
+                    }
+                    else {
+                        map[timeKey] = [day];
+                        priority.push(timeKey);
+                    }
                 });
-                return temp;
-            });
-            this.props.updateOperatingHour(result);
+                let temp = '';
+                let result = priority.map((timeKey) => {
+                    temp = `${timeKey} / `;
+                    map[timeKey].map((day, index) => {
+                        if (index > 0) {
+                            temp += ', ';
+                        }
+                        temp += DayInterpret[day]['ko'];
+                    });
+                    return temp;
+                });
+                this.props.updateOperatingHours(this.props.currentSpaceID, result);
+            }
         };
         this._renderRow = (day) => {
             const operatingTime = this.state[day];
@@ -79234,6 +76897,22 @@ class OperatingHourEditModal extends react_1.default.Component {
                             react_1.default.createElement("button", { type: "submit", className: "btn btn-primary", "data-dismiss": "modal", onClick: this._saveOperatingHour }, "\uC800\uC7A5")))))));
     }
 }
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const current_space_1 = __webpack_require__(/*! ../../thunk-action/current-space */ "./resources/js/thunk-action/current-space.ts");
+const mapStateToProps = (state) => ({
+    currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
+});
+const mapDispatchToProps = {
+    updateOperatingHours: current_space_1.updateOperatingHours,
+};
+const OperatingHourEditModal = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_OperatingHourEditModal);
 exports.default = OperatingHourEditModal;
 
 
@@ -79301,13 +76980,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 const react_dropzone_1 = __importDefault(__webpack_require__(/*! react-dropzone */ "./node_modules/react-dropzone/dist/es/index.js"));
 const react_content_loader_1 = __importDefault(__webpack_require__(/*! react-content-loader */ "./node_modules/react-content-loader/dist/react-content-loader.es.js"));
 const filesize_1 = __importDefault(__webpack_require__(/*! filesize */ "./node_modules/filesize/lib/filesize.js"));
 const allowed_file_mime_1 = __webpack_require__(/*! ../../config/allowed-file-mime */ "./resources/js/config/allowed-file-mime/index.ts");
-const upload_images_1 = __webpack_require__(/*! ../../actions/upload-images */ "./resources/js/actions/upload-images.ts");
-const firebase_storage_1 = __webpack_require__(/*! ../../actions/firebase-storage */ "./resources/js/actions/firebase-storage.ts");
+/**
+ *
+ *
+ * ImageUploadModal component
+ *
+ *
+ */
 exports.ImageUploadModalID = 'image-upload-modal';
 class _ImageUploadModal extends react_1.default.Component {
     constructor() {
@@ -79346,7 +77029,7 @@ class _ImageUploadModal extends react_1.default.Component {
             ev.preventDefault();
             this.props.currentSpaceID &&
                 this.props.currentImages &&
-                this.props.uploadImagesToServer(this.props.currentSpaceID, this.props.uploadImages, this.props.currentImages);
+                this.props.updateImages(this.props.currentSpaceID, this.props.currentImages, this.props.uploadImages);
         };
         this._renderSelectedImages = () => {
             const placeholder = (react_1.default.createElement(react_content_loader_1.default, { width: 90, height: 90, speed: 2, primaryColor: "#f3f3f3", secondaryColor: "#ecebeb" },
@@ -79390,6 +77073,16 @@ class _ImageUploadModal extends react_1.default.Component {
                         react_1.default.createElement("button", { type: "submit", className: "btn btn-primary", "data-dismiss": "modal", onClick: this._onSubmit }, "\uC5C5\uB85C\uB4DC"))))));
     }
 }
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const upload_images_1 = __webpack_require__(/*! ../../actions/upload-images */ "./resources/js/actions/upload-images.ts");
+const current_space_1 = __webpack_require__(/*! ../../thunk-action/current-space */ "./resources/js/thunk-action/current-space.ts");
 const mapStateToProps = (state) => ({
     currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
     imagesCount: state.selectedImages.imagesCount,
@@ -79401,7 +77094,7 @@ const mapDispatchToProps = {
     updateUploadProgress: upload_images_1.updateUploadProgress,
     setImageData: upload_images_1.setImageData,
     deleteUploadImage: upload_images_1.deleteUploadImage,
-    uploadImagesToServer: firebase_storage_1.uploadImagesToServer,
+    updateImages: current_space_1.updateImages,
 };
 const ImageUploadModal = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_ImageUploadModal);
 exports.default = ImageUploadModal;
@@ -79430,23 +77123,25 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 const image_upload_modal_1 = __importStar(__webpack_require__(/*! ./image-upload-modal */ "./resources/js/components/os-images-editor/image-upload-modal.tsx"));
-const upload_images_1 = __webpack_require__(/*! ../../actions/upload-images */ "./resources/js/actions/upload-images.ts");
 const os_page_status_1 = __importDefault(__webpack_require__(/*! ../os-page-status */ "./resources/js/components/os-page-status.tsx"));
+/**
+ *
+ *
+ * OSImagesEditor component
+ *
+ *
+ */
 class _OSImagesEditor extends react_1.default.Component {
     constructor() {
         super(...arguments);
-        this._resetUploadImages = () => {
-            this.props.resetUploadImages();
-        };
         this._renderEmpty = () => {
             return (react_1.default.createElement("div", { id: "empty" },
                 react_1.default.createElement("p", { className: "h6" }, "\uB4F1\uB85D\uB41C \uC0AC\uC9C4\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.")));
         };
     }
     _renderImages() {
-        if (this.props.updatingImages) {
+        if (this.props.updatingImagesStatus) {
             return react_1.default.createElement(os_page_status_1.default, { status: "loading" });
         }
         else if (this.props.images && this.props.images.length > 0) {
@@ -79460,7 +77155,7 @@ class _OSImagesEditor extends react_1.default.Component {
         return (react_1.default.createElement("div", { id: "os-images-editor" },
             react_1.default.createElement("div", { className: "header" },
                 react_1.default.createElement("p", { className: "h5" }, "\uC0AC\uC9C4"),
-                react_1.default.createElement("button", { "data-toggle": "modal", "data-target": `#${image_upload_modal_1.ImageUploadModalID}`, onClick: this._resetUploadImages },
+                react_1.default.createElement("button", { "data-toggle": "modal", "data-target": `#${image_upload_modal_1.ImageUploadModalID}` },
                     react_1.default.createElement("p", { className: "h6 os-grey-1" },
                         react_1.default.createElement("i", { className: "material-icons" }, "add"),
                         "\uCD94\uAC00")),
@@ -79472,14 +77167,19 @@ class _OSImagesEditor extends react_1.default.Component {
                     "\uC0AC\uC9C4 \uC0AD\uC81C \uAE30\uB2A5\uC740 \uCD94\uD6C4\uC5D0 \uC5C5\uB370\uC774\uD2B8\uB420 \uC608\uC815\uC785\uB2C8\uB2E4."))));
     }
 }
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 const mapStateToProps = (state) => ({
-    updatingImages: state.currentSpace.status.updatingImages,
+    updatingImagesStatus: state.currentSpace.updatingImagesStatus,
     images: state.currentSpace.data && state.currentSpace.data.images,
 });
-const mapDispatchToProps = {
-    resetUploadImages: upload_images_1.resetUploadImages,
-};
-const OSImagesEditor = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_OSImagesEditor);
+const OSImagesEditor = react_redux_1.connect(mapStateToProps)(_OSImagesEditor);
 exports.default = OSImagesEditor;
 
 
@@ -79577,7 +77277,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/**
+ *
+ *
+ * OSRankDisplay component
+ *
+ *
+ */
 class _OSRankDisplay extends react_1.default.Component {
     constructor() {
         super(...arguments);
@@ -79609,6 +77315,14 @@ class _OSRankDisplay extends react_1.default.Component {
             react_1.default.createElement("div", { id: "stars" }, this._renderStars())));
     }
 }
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 const mapStateToProps = (state) => ({
     rank: (state.currentSpace.data && state.currentSpace.data.rank) || 0,
 });
@@ -79633,17 +77347,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-const osdb_api_1 = __webpack_require__(/*! ../actions/osdb-api */ "./resources/js/actions/osdb-api.ts");
+/**
+ *
+ *
+ * OSSpaceHistory component
+ *
+ *
+ */
 class _OSSpaceHistory extends react_1.default.Component {
     constructor() {
         super(...arguments);
         this.state = {
             searchWord: '',
         };
-        this._onSpaceClick = (spaceID) => this.props.fetchSpace(spaceID);
+        this._onSpaceClick = (spaceID) => this.props.requestSpace(spaceID, false);
         this._onSearchClick = () => {
-            this.props.fetchSpace(this.state.searchWord, true);
+            this.props.requestSpace(this.state.searchWord, true);
         };
         this._renderSpaceHistory = () => {
             let rtn = [];
@@ -79679,13 +77398,22 @@ class _OSSpaceHistory extends react_1.default.Component {
             react_1.default.createElement("div", { id: "history" }, this._renderSpaceHistory())));
     }
 }
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const current_space_1 = __webpack_require__(/*! ../thunk-action/current-space */ "./resources/js/thunk-action/current-space.ts");
 const mapStateToProps = (state) => ({
     currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
     historyStack: state.spaceHistory.data.stack,
     historyHeaders: state.spaceHistory.data.headers,
 });
 const mapDispatchToProps = {
-    fetchSpace: osdb_api_1.fetchSpace,
+    requestSpace: current_space_1.requestSpace,
 };
 const OSSpaceHistory = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_OSSpaceHistory);
 exports.default = OSSpaceHistory;
@@ -79707,8 +77435,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-const current_space_1 = __webpack_require__(/*! ../actions/current-space */ "./resources/js/actions/current-space.ts");
 class _OSSpaceIntroduce extends react_1.default.Component {
     constructor() {
         super(...arguments);
@@ -79755,6 +77481,15 @@ class _OSSpaceIntroduce extends react_1.default.Component {
                 : this._renderEditMode())));
     }
 }
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const current_space_1 = __webpack_require__(/*! ../actions/current-space */ "./resources/js/actions/current-space.ts");
 const mapStateToProps = (state) => ({
     spaceIntroduce: state.currentSpace.data && state.currentSpace.data.spaceIntroduce,
 });
@@ -79781,14 +77516,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 const space_tree_1 = __webpack_require__(/*! ../model/space-tree */ "./resources/js/model/space-tree.ts");
-const osdb_api_1 = __webpack_require__(/*! ../actions/osdb-api */ "./resources/js/actions/osdb-api.ts");
+/**
+ *
+ *
+ * OSSpaceTree component
+ *
+ *
+ */
 const MAX_DEPTH = 4;
 class _OSSpaceTree extends react_1.default.Component {
     constructor() {
         super(...arguments);
-        this._onSpaceClick = (spaceID) => this.props.fetchSpace(spaceID);
+        this._onSpaceClick = (spaceID) => this.props.requestSpace(spaceID);
         this._renderSpaceGroup = (group) => {
             let rtn = [];
             space_tree_1.traverseSpaceTree(group, (spaceHeader, depth) => {
@@ -79796,7 +77536,11 @@ class _OSSpaceTree extends react_1.default.Component {
             });
             return rtn;
         };
-        this._renderSpaceTrees = () => this.props.spaceTrees.map((group) => (react_1.default.createElement("div", { key: group.spaceHeader.id, className: "space-group" }, this._renderSpaceGroup(group))));
+        this._renderSpaceTrees = () => {
+            if (this.props.spaceTrees) {
+                return this.props.spaceTrees.map((group) => (react_1.default.createElement("div", { key: group.spaceHeader.id, className: "space-group" }, this._renderSpaceGroup(group))));
+            }
+        };
     }
     _renderSpaceHeader(spaceHeader, depth) {
         return (react_1.default.createElement("a", { key: spaceHeader.id, className: `space-item
@@ -79818,12 +77562,21 @@ class _OSSpaceTree extends react_1.default.Component {
             this._renderSpaceTrees()));
     }
 }
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const current_space_1 = __webpack_require__(/*! ../thunk-action/current-space */ "./resources/js/thunk-action/current-space.ts");
 const mapStateToProps = (state) => ({
     spaceTrees: state.spaceTrees.data,
     currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
 });
 const mapDispatchToProps = {
-    fetchSpace: osdb_api_1.fetchSpace,
+    requestSpace: current_space_1.requestSpace,
 };
 const OSSpaceTree = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_OSSpaceTree);
 exports.default = OSSpaceTree;
@@ -79905,14 +77658,82 @@ exports.default = app_1.default;
 
 /***/ }),
 
-/***/ "./resources/js/model/space-interpret.json":
-/*!*************************************************!*\
-  !*** ./resources/js/model/space-interpret.json ***!
-  \*************************************************/
-/*! exports provided: busy-level, type, amenity, default */
+/***/ "./resources/js/config/osdb-axios.ts":
+/*!*******************************************!*\
+  !*** ./resources/js/config/osdb-axios.ts ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
+/**
+ * Axios default config
+ */
+const OSDBAxios = axios_1.default.create({
+    baseURL: 'http://dbserver.ourspace.dev',
+    headers: { Authorization: '5401aa1394c126b762f691cf0f2d0cf6' },
+    timeout: 1000,
+});
+exports.default = OSDBAxios;
+
+
+/***/ }),
+
+/***/ "./resources/js/config/space.json":
+/*!****************************************!*\
+  !*** ./resources/js/config/space.json ***!
+  \****************************************/
+/*! exports provided: busy_level, space_type, amenity, default */
 /***/ (function(module) {
 
-module.exports = {"busy-level":{"1":{"en":"Normal","ko":"보통"},"2":{"en":"Busy","ko":"바쁨"},"3":{"en":"Very Busy","ko":"매우 바쁨"}},"type":{"0":{"en":"library","ko":"도서관"},"1":{"en":"startup","ko":"창업공간"},"2":{"en":"museum","ko":"박물관"},"3":{"en":"bookstore","ko":"서점"},"4":{"en":"experience","ko":"체험공간"},"5":{"en":"nature","ko":"공원"},"6":{"en":"youth","ko":"청년공간"},"7":{"en":"lounge","ko":"라운지"},"8":{"en":"starbucks","ko":"스타벅스"},"9":{"en":"cafe","ko":"카페"}},"amenity":{"apple-pay":{"name":{"en":"Apple Pay","ko":"애플페이"},"faicon":"fab fa-cc-apple-pay"},"shower":{"name":{"en":"Shower","ko":"샤워시설"},"faicon":"fas fa-shower"},"sleep-area":{"name":{"en":"Sleep Area","ko":"수면실"},"faicon":"fas fa-bed"},"amazon-pay":{"name":{"en":"Amazon Pay","ko":"아마존페이"},"faicon":"fab fa-cc-amazon-pay"},"paypal":{"name":{"en":"PayPal","ko":"페이팔"},"faicon":"fab fa-cc-paypal"},"mastercard":{"name":{"en":"Mastercard","ko":"마스터카드"},"faicon":"fab fa-cc-mastercard"},"visa":{"name":{"en":"Visa","ko":"비자"},"faicon":"fab fa-cc-visa"},"classroom":{"name":{"en":"Classroom","ko":"강의실"},"faicon":"fas fa-chalkboard"},"coffee":{"name":{"en":"Coffee","ko":"커피"},"faicon":"fas fa-coffee"},"sofa":{"name":{"en":"Sofa","ko":"소파"},"faicon":"fas fa-couch"},"pet":{"name":{"en":"Pet","ko":"동물출입"},"faicon":"fas fa-dog"},"gym":{"name":{"en":"Gym","ko":"헬스장"},"faicon":"fas fa-dumbbell"},"bar":{"name":{"en":"Bar","ko":"바"},"faicon":"fas fa-glass-cheers"},"snack":{"name":{"en":"Snack","ko":"먹거리"},"faicon":"fas fa-hamburger"},"science-lab":{"name":{"en":"Science Lab","ko":"실험실"},"faicon":"fas fa-microscope"},"private-area":{"name":{"en":"Private Area","ko":"개인공간"},"faicon":"fas fa-person-booth"},"plug":{"name":{"en":"Plug","ko":"플러그"},"faicon":"fas fa-plug"},"toilet":{"name":{"en":"Toilet","ko":"화장실"},"faicon":"fas fa-restroom"},"smoking-area":{"name":{"en":"Smoking Area","ko":"흡연실"},"faicon":"fas fa-smoking"},"no-smoking":{"name":{"en":"No Smoking","ko":"금연"},"faicon":"fas fa-smoking-ban"},"dining-area":{"name":{"en":"Dining Area","ko":"식당"},"faicon":"fas fa-utensils"},"quiet-zone":{"name":{"en":"Quiet Zone","ko":"정숙공간"},"faicon":"fas fa-volume-mute"},"disabled-facility":{"name":{"en":"Disabled Facilities","ko":"장애인시설"},"faicon":"fas fa-wheelchair"},"wifi":{"name":{"en":"Wi-Fi","ko":"와이파이"},"faicon":"fas fa-wifi"},"game-zone":{"name":{"en":"Game Zone","ko":"게임존"},"faicon":"fas fa-gamepad"},"parking":{"name":{"en":"Parking","ko":"주차"},"faicon":"fas fa-parking"}}};
+module.exports = {"busy_level":{"1":{"en":"Normal","ko":"보통"},"2":{"en":"Busy","ko":"바쁨"},"3":{"en":"Very Busy","ko":"매우 바쁨"}},"space_type":{"0":{"en":"library","ko":"도서관"},"1":{"en":"startup","ko":"창업공간"},"2":{"en":"museum","ko":"박물관"},"3":{"en":"bookstore","ko":"서점"},"4":{"en":"experience","ko":"체험공간"},"5":{"en":"nature","ko":"공원"},"6":{"en":"youth","ko":"청년공간"},"7":{"en":"lounge","ko":"라운지"},"8":{"en":"starbucks","ko":"스타벅스"},"9":{"en":"cafe","ko":"카페"}},"amenity":{"apple-pay":{"name":{"en":"Apple Pay","ko":"애플페이"},"faicon":"fab fa-cc-apple-pay"},"shower":{"name":{"en":"Shower","ko":"샤워시설"},"faicon":"fas fa-shower"},"sleep-area":{"name":{"en":"Sleep Area","ko":"수면실"},"faicon":"fas fa-bed"},"amazon-pay":{"name":{"en":"Amazon Pay","ko":"아마존페이"},"faicon":"fab fa-cc-amazon-pay"},"paypal":{"name":{"en":"PayPal","ko":"페이팔"},"faicon":"fab fa-cc-paypal"},"mastercard":{"name":{"en":"Mastercard","ko":"마스터카드"},"faicon":"fab fa-cc-mastercard"},"visa":{"name":{"en":"Visa","ko":"비자"},"faicon":"fab fa-cc-visa"},"classroom":{"name":{"en":"Classroom","ko":"강의실"},"faicon":"fas fa-chalkboard"},"coffee":{"name":{"en":"Coffee","ko":"커피"},"faicon":"fas fa-coffee"},"sofa":{"name":{"en":"Sofa","ko":"소파"},"faicon":"fas fa-couch"},"pet":{"name":{"en":"Pet","ko":"동물출입"},"faicon":"fas fa-dog"},"gym":{"name":{"en":"Gym","ko":"헬스장"},"faicon":"fas fa-dumbbell"},"bar":{"name":{"en":"Bar","ko":"바"},"faicon":"fas fa-glass-cheers"},"snack":{"name":{"en":"Snack","ko":"먹거리"},"faicon":"fas fa-hamburger"},"science-lab":{"name":{"en":"Science Lab","ko":"실험실"},"faicon":"fas fa-microscope"},"private-area":{"name":{"en":"Private Area","ko":"개인공간"},"faicon":"fas fa-person-booth"},"plug":{"name":{"en":"Plug","ko":"플러그"},"faicon":"fas fa-plug"},"toilet":{"name":{"en":"Toilet","ko":"화장실"},"faicon":"fas fa-restroom"},"smoking-area":{"name":{"en":"Smoking Area","ko":"흡연실"},"faicon":"fas fa-smoking"},"no-smoking":{"name":{"en":"No Smoking","ko":"금연"},"faicon":"fas fa-smoking-ban"},"dining-area":{"name":{"en":"Dining Area","ko":"식당"},"faicon":"fas fa-utensils"},"quiet-zone":{"name":{"en":"Quiet Zone","ko":"정숙공간"},"faicon":"fas fa-volume-mute"},"disabled-facility":{"name":{"en":"Disabled Facilities","ko":"장애인시설"},"faicon":"fas fa-wheelchair"},"wifi":{"name":{"en":"Wi-Fi","ko":"와이파이"},"faicon":"fas fa-wifi"},"game-zone":{"name":{"en":"Game Zone","ko":"게임존"},"faicon":"fas fa-gamepad"},"parking":{"name":{"en":"Parking","ko":"주차"},"faicon":"fas fa-parking"}}};
+
+/***/ }),
+
+/***/ "./resources/js/config/weekdays.json":
+/*!*******************************************!*\
+  !*** ./resources/js/config/weekdays.json ***!
+  \*******************************************/
+/*! exports provided: MON, TUE, WED, THU, FRI, SAT, SUN, default */
+/***/ (function(module) {
+
+module.exports = {"MON":{"en":"Mon","ko":"월"},"TUE":{"en":"Tue","ko":"화"},"WED":{"en":"Wed","ko":"수"},"THU":{"en":"Thu","ko":"목"},"FRI":{"en":"Fri","ko":"금"},"SAT":{"en":"Sat","ko":"토"},"SUN":{"en":"Sun","ko":"일"}};
+
+/***/ }),
+
+/***/ "./resources/js/model/organizer.ts":
+/*!*****************************************!*\
+  !*** ./resources/js/model/organizer.ts ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ *
+ *
+ * Interpret ```RawOrganizer``` data to a list of ```Organizer```
+ *
+ *
+ */
+exports.rawOrganizer2Organizer = (rawOrganizer) => {
+    return {
+        uid: rawOrganizer.uid,
+        email: rawOrganizer.email,
+        name: rawOrganizer.name,
+        owningSpaces: rawOrganizer.owning_spaces,
+        authority: rawOrganizer.authority === 'admin' ? 'Admin' : 'Organizer',
+    };
+};
+
 
 /***/ }),
 
@@ -79981,24 +77802,58 @@ exports.traverseSpaceTree = (tree, callbackfn, initDepth = 0) => {
 
 "use strict";
 
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const space_interpret_json_1 = __importDefault(__webpack_require__(/*! ./space-interpret.json */ "./resources/js/model/space-interpret.json"));
-const busyLevels = space_interpret_json_1.default['busy-level'];
+/**
+ * Busy Level
+ */
+const space_json_1 = __webpack_require__(/*! ../config/space.json */ "./resources/js/config/space.json");
+const busyLevels = space_json_1.busy_level;
 exports.interpretBusyLevel = (level, locale = 'en') => {
     return busyLevels[level][locale] || busyLevels[level]['en'];
 };
-const spaceTypes = space_interpret_json_1.default['type'];
+/**
+ * Space Type
+ */
+const space_json_2 = __webpack_require__(/*! ../config/space.json */ "./resources/js/config/space.json");
+const spaceTypes = space_json_2.space_type;
 exports.interpretSpaceType = (type, locale = 'en') => {
     return spaceTypes[type][locale] || spaceTypes[type]['en'];
 };
-exports.amenities = space_interpret_json_1.default['amenity'];
+/**
+ * Amenity
+ */
+const space_json_3 = __webpack_require__(/*! ../config/space.json */ "./resources/js/config/space.json");
+exports.amenities = space_json_3.amenity;
 exports.interpretAmenity = (tag, locale = 'en') => {
     return {
         name: exports.amenities[tag].name[locale] || exports.amenities[tag].name['en'],
         faicon: exports.amenities[tag].faicon,
+    };
+};
+/**
+ *
+ *
+ * Interpret ```RawSpaces``` data to a list of ```Space```
+ *
+ *
+ */
+exports.rawSpaces2SpaceList = (sid, rawSpace) => {
+    return {
+        id: sid,
+        spaceNames: rawSpace.space_names,
+        types: [rawSpace.type.toString()],
+        locationText: rawSpace.location_text,
+        location: {
+            lat: rawSpace.latitude,
+            lng: rawSpace.longitude,
+        },
+        operatingHours: rawSpace.operating_hours.split('\n'),
+        amenityTags: Object.keys(rawSpace.amenity_tags),
+        spaceIntroduce: '',
+        images: rawSpace.images ? rawSpace.images : [],
+        rank: rawSpace.rank,
+        busyLevel: '1',
+        paid: rawSpace.paid,
     };
 };
 
@@ -80019,10 +77874,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 const react_router_1 = __webpack_require__(/*! react-router */ "./node_modules/react-router/esm/react-router.js");
 const login_form_1 = __importDefault(__webpack_require__(/*! ./login-form */ "./resources/js/os-begin-container/login-form.tsx"));
 const signup_form_1 = __importDefault(__webpack_require__(/*! ./signup-form */ "./resources/js/os-begin-container/signup-form.tsx"));
+/**
+ *
+ *
+ * OSBeginContainer component
+ *
+ *
+ */
 class _OSBeginContainer extends react_1.default.Component {
     constructor() {
         super(...arguments);
@@ -80044,7 +77905,8 @@ class _OSBeginContainer extends react_1.default.Component {
         };
     }
     render() {
-        if (this.props.loggedStatus === 'success' && this.props.currentUser) {
+        if (this.props.loginStatus.status === 'succeed' &&
+            this.props.currentUser) {
             return react_1.default.createElement(react_router_1.Redirect, { to: `/${this.props.currentUser.uid}` });
         }
         else
@@ -80061,8 +77923,16 @@ class _OSBeginContainer extends react_1.default.Component {
                         this.state.currentView === 'signup' && (react_1.default.createElement(signup_form_1.default, null))))));
     }
 }
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 const mapStateToProps = (state) => ({
-    loggedStatus: state.auth.loggedStatus,
+    loginStatus: state.auth.loginStatus,
     currentUser: state.auth.currentUser,
 });
 const OSBeginContainer = react_redux_1.connect(mapStateToProps)(_OSBeginContainer);
@@ -80085,9 +77955,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-const firebase_auth_1 = __webpack_require__(/*! ../actions/firebase-auth */ "./resources/js/actions/firebase-auth.ts");
 const os_page_status_1 = __importDefault(__webpack_require__(/*! ../components/os-page-status */ "./resources/js/components/os-page-status.tsx"));
+/**
+ *
+ *
+ * LoginForm component
+ *
+ *
+ */
 class _LoginForm extends react_1.default.Component {
     constructor() {
         super(...arguments);
@@ -80097,10 +77972,10 @@ class _LoginForm extends react_1.default.Component {
         };
         this._onLogin = (ev) => {
             ev.preventDefault();
-            this.props.attemptLogIn(this.state.userEmail, this.state.userPassword);
+            this.props.requestLogin(this.state.userEmail, this.state.userPassword);
         };
         this._renderForm = () => {
-            if (this.props.loggedStatus === 'processing') {
+            if (this.props.loginStatus.status === 'processing') {
                 return react_1.default.createElement(os_page_status_1.default, { status: "loading" });
             }
             else {
@@ -80122,8 +77997,8 @@ class _LoginForm extends react_1.default.Component {
                                 });
                             } })),
                     react_1.default.createElement("button", { id: "login-button", className: "btn btn-block btn-primary", onClick: this._onLogin }, "\uB85C\uADF8\uC778"),
-                    this.props.loggedStatus === 'failed' &&
-                        this.props.loginMessage && (react_1.default.createElement("p", { id: "failed-message", className: "h6" }, this.props.loginMessage))));
+                    this.props.loginStatus.status === 'failed' &&
+                        this.props.loginStatus.message && (react_1.default.createElement("p", { id: "failed-message", className: "h6" }, this.props.loginStatus.message))));
             }
         };
     }
@@ -80131,12 +78006,20 @@ class _LoginForm extends react_1.default.Component {
         return react_1.default.createElement("div", { id: "login-form" }, this._renderForm());
     }
 }
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const auth_1 = __webpack_require__(/*! ../thunk-action/auth */ "./resources/js/thunk-action/auth.ts");
 const mapStateToProps = (state) => ({
-    loggedStatus: state.auth.loggedStatus,
-    loginMessage: state.auth.errorMessage,
+    loginStatus: state.auth.loginStatus,
 });
 const mapDispatchToProps = {
-    attemptLogIn: firebase_auth_1.attemptLogIn,
+    requestLogin: auth_1.requestLogin,
 };
 const LoginForm = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_LoginForm);
 exports.default = LoginForm;
@@ -80158,9 +78041,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-const firebase_auth_1 = __webpack_require__(/*! ../actions/firebase-auth */ "./resources/js/actions/firebase-auth.ts");
 const os_page_status_1 = __importDefault(__webpack_require__(/*! ../components/os-page-status */ "./resources/js/components/os-page-status.tsx"));
+/**
+ *
+ *
+ * SignupForm component
+ *
+ *
+ */
 class _SignupForm extends react_1.default.Component {
     constructor() {
         super(...arguments);
@@ -80172,13 +78060,13 @@ class _SignupForm extends react_1.default.Component {
         };
         this._onSubmit = (ev) => {
             ev.preventDefault();
-            this.props.signup(this.state.userEmail, this.state.userName, this.state.userPassword);
+            this.props.requestSignup(this.state.userEmail, this.state.userName, this.state.userPassword);
         };
         this._renderForm = () => {
-            if (this.props.signupStatus === 'processing') {
+            if (this.props.signupStatus.status === 'processing') {
                 return react_1.default.createElement(os_page_status_1.default, { status: "loading" });
             }
-            else if (this.props.signupStatus === 'success') {
+            else if (this.props.signupStatus.status === 'succeed') {
                 return (react_1.default.createElement(os_page_status_1.default, { status: "success", info: "\uD68C\uC6D0\uAC00\uC785\uC774 \uC131\uACF5\uC801\uC73C\uB85C \uC644\uB8CC\uB418\uC5C8\uC2B5\uB2C8\uB2E4." }));
             }
             else {
@@ -80222,11 +78110,13 @@ class _SignupForm extends react_1.default.Component {
         return react_1.default.createElement("div", { id: "signup-form" }, this._renderForm());
     }
 }
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const auth_1 = __webpack_require__(/*! ../thunk-action/auth */ "./resources/js/thunk-action/auth.ts");
 const mapStateToProps = (state) => ({
     signupStatus: state.auth.signupStatus,
 });
 const mapDispatchToProps = {
-    signup: firebase_auth_1.signup,
+    requestSignup: auth_1.requestSignup,
 };
 const SignupForm = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_SignupForm);
 exports.default = SignupForm;
@@ -80248,14 +78138,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-const firebase_auth_1 = __webpack_require__(/*! ../actions/firebase-auth */ "./resources/js/actions/firebase-auth.ts");
+/**
+ *
+ *
+ * HomeHeader component
+ *
+ *
+ */
 class _HomeHeader extends react_1.default.Component {
     constructor() {
         super(...arguments);
         this._onLogout = (ev) => {
             ev.preventDefault();
-            this.props.logOut();
+            this.props.requestLogout();
         };
     }
     render() {
@@ -80271,11 +78166,20 @@ class _HomeHeader extends react_1.default.Component {
                 react_1.default.createElement("button", { className: "btn btn-outline-light", onClick: this._onLogout }, "Logout"))));
     }
 }
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const auth_1 = __webpack_require__(/*! ../thunk-action/auth */ "./resources/js/thunk-action/auth.ts");
 const mapStateToProps = (state) => ({
     currentUser: state.auth.currentUser,
 });
 const mapDispatchToProps = {
-    logOut: firebase_auth_1.logOut,
+    requestLogout: auth_1.requestLogout,
 };
 const HomeHeader = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_HomeHeader);
 exports.default = HomeHeader;
@@ -80297,8 +78201,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-const osdb_api_1 = __webpack_require__(/*! ../actions/osdb-api */ "./resources/js/actions/osdb-api.ts");
 const os_page_status_1 = __importDefault(__webpack_require__(/*! ../components/os-page-status */ "./resources/js/components/os-page-status.tsx"));
 const os_rank_display_1 = __importDefault(__webpack_require__(/*! ../components/os-rank-display */ "./resources/js/components/os-rank-display.tsx"));
 const os_images_editor_1 = __importDefault(__webpack_require__(/*! ../components/os-images-editor */ "./resources/js/components/os-images-editor/index.tsx"));
@@ -80306,9 +78208,16 @@ const os_amenity_tags_1 = __importDefault(__webpack_require__(/*! ../components/
 const os_loaction_map_1 = __importDefault(__webpack_require__(/*! ../components/os-loaction-map */ "./resources/js/components/os-loaction-map.tsx"));
 const os_general_info_1 = __importDefault(__webpack_require__(/*! ../components/os-general-info */ "./resources/js/components/os-general-info/index.tsx"));
 const os_space_introduce_1 = __importDefault(__webpack_require__(/*! ../components/os-space-introduce */ "./resources/js/components/os-space-introduce.tsx"));
+/**
+ *
+ *
+ * HomeMainView component
+ *
+ *
+ */
 class _HomeMainView extends react_1.default.Component {
     render() {
-        if (this.props.requestingSpace) {
+        if (this.props.requestingSpaceStatus) {
             return react_1.default.createElement(os_page_status_1.default, { status: "loading" });
         }
         else if (!this.props.currentSpaceID) {
@@ -80331,14 +78240,19 @@ class _HomeMainView extends react_1.default.Component {
         }
     }
 }
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 const mapStateToProps = (state) => ({
     currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
-    requestingSpace: state.currentSpace.status.requestingSpace,
+    requestingSpaceStatus: state.currentSpace.requestingStatus,
 });
-const mapDispatchToProps = {
-    fetchSpace: osdb_api_1.fetchSpace,
-};
-const HomeMainView = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_HomeMainView);
+const HomeMainView = react_redux_1.connect(mapStateToProps)(_HomeMainView);
 exports.default = HomeMainView;
 
 
@@ -80358,24 +78272,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-const osdb_api_1 = __webpack_require__(/*! ../actions/osdb-api */ "./resources/js/actions/osdb-api.ts");
 const os_page_status_1 = __importDefault(__webpack_require__(/*! ../components/os-page-status */ "./resources/js/components/os-page-status.tsx"));
 const os_space_tree_1 = __importDefault(__webpack_require__(/*! ../components/os-space-tree */ "./resources/js/components/os-space-tree.tsx"));
 const os_space_history_1 = __importDefault(__webpack_require__(/*! ../components/os-space-history */ "./resources/js/components/os-space-history.tsx"));
+/**
+ *
+ *
+ * HomeSpacesTab component
+ *
+ *
+ */
 class _HomeSpacesTab extends react_1.default.Component {
     componentWillMount() {
         this.props.currentUser &&
-            this.props.fetchSpaceTrees(this.props.currentUser.uid);
+            this.props.requestSpaceTrees(this.props.currentUser.owningSpaces);
     }
     render() {
-        if (this.props.requestingSpaceTrees) {
+        if (this.props.requestingStatus) {
             return react_1.default.createElement(os_page_status_1.default, { status: "loading" });
-        }
-        else if (this.props.spaceTrees.length <= 0 &&
-            (this.props.currentUser &&
-                this.props.currentUser.authority === 'Organizer')) {
-            return (react_1.default.createElement(os_page_status_1.default, { status: "information", info: "\uAD00\uB9AC\uC911\uC778 \uC2A4\uD398\uC774\uC2A4\uAC00 \uC874\uC7AC\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4." }));
         }
         else {
             if (this.props.currentUser &&
@@ -80383,18 +78297,33 @@ class _HomeSpacesTab extends react_1.default.Component {
                 return react_1.default.createElement(os_space_history_1.default, null);
             }
             else {
-                return react_1.default.createElement(os_space_tree_1.default, null);
+                if (this.props.spaceTrees &&
+                    this.props.spaceTrees.length <= 0) {
+                    return (react_1.default.createElement(os_page_status_1.default, { status: "information", info: "\uAD00\uB9AC\uC911\uC778 \uC2A4\uD398\uC774\uC2A4\uAC00 \uC874\uC7AC\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4." }));
+                }
+                else {
+                    return react_1.default.createElement(os_space_tree_1.default, null);
+                }
             }
         }
     }
 }
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const space_trees_1 = __webpack_require__(/*! ../thunk-action/space-trees */ "./resources/js/thunk-action/space-trees.ts");
 const mapStateToProps = (state) => ({
     currentUser: state.auth.currentUser,
+    requestingStatus: state.spaceTrees.requestingStatus,
     spaceTrees: state.spaceTrees.data,
-    requestingSpaceTrees: state.spaceTrees.status.requestingSpaceTrees,
 });
 const mapDispatchToProps = {
-    fetchSpaceTrees: osdb_api_1.fetchSpaceTrees,
+    requestSpaceTrees: space_trees_1.requestSpaceTrees,
 };
 const HomeSpacesTab = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_HomeSpacesTab);
 exports.default = HomeSpacesTab;
@@ -80416,14 +78345,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 const react_router_1 = __webpack_require__(/*! react-router */ "./node_modules/react-router/esm/react-router.js");
 const home_header_1 = __importDefault(__webpack_require__(/*! ./home-header */ "./resources/js/os-home-container/home-header.tsx"));
 const home_spaces_tab_1 = __importDefault(__webpack_require__(/*! ./home-spaces-tab */ "./resources/js/os-home-container/home-spaces-tab.tsx"));
 const home_main_view_1 = __importDefault(__webpack_require__(/*! ./home-main-view */ "./resources/js/os-home-container/home-main-view.tsx"));
+/**
+ *
+ *
+ * OSHomeContainer component
+ *
+ *
+ */
 class _OSHomeContainer extends react_1.default.Component {
     render() {
-        if (this.props.loggedStatus === 'success')
+        if (this.props.loginStatus.status === 'succeed')
             return (react_1.default.createElement("div", { id: "os-home-container", className: "container-fluid" },
                 react_1.default.createElement(home_header_1.default, null),
                 react_1.default.createElement("div", { id: "body", className: "row" },
@@ -80435,276 +78370,19 @@ class _OSHomeContainer extends react_1.default.Component {
             return react_1.default.createElement(react_router_1.Redirect, { to: "/" });
     }
 }
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 const mapStateToProps = (state) => ({
-    loggedStatus: state.auth.loggedStatus,
+    loginStatus: state.auth.loginStatus,
 });
 const OSHomeContainer = react_redux_1.connect(mapStateToProps)(_OSHomeContainer);
 exports.default = OSHomeContainer;
-
-
-/***/ }),
-
-/***/ "./resources/js/osdb-api/organizer.ts":
-/*!********************************************!*\
-  !*** ./resources/js/osdb-api/organizer.ts ***!
-  \********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-const request_1 = __webpack_require__(/*! ./request */ "./resources/js/osdb-api/request.ts");
-const q_1 = __webpack_require__(/*! q */ "./node_modules/q/q.js");
-/**
- * Create user info
- */
-exports.osdbCreatOrganizerInfo = async (uid, name, email) => {
-    return new Promise(resolve => {
-        request_1.postToServer({ url: '/organizers' }, {
-            uid: uid,
-            name: name,
-            authority: 'organizer',
-            email: email,
-        })
-            .then(responseBody => {
-            if (responseBody.success) {
-                resolve();
-            }
-            else {
-                q_1.reject('OS DEBUG :: Creating organizer info replied FAILED');
-            }
-        })
-            .catch(error => q_1.reject(error));
-    });
-};
-/**
- * Get user info
- */
-exports.osdbFetchOrganizerInfo = async (uid) => {
-    return new Promise((resolve, reject) => {
-        request_1.getFromServer({ url: `/organizers/${uid}` })
-            .then(responseBody => {
-            if (responseBody.name &&
-                responseBody.authority &&
-                responseBody.email) {
-                resolve({
-                    uid: uid,
-                    name: responseBody.name,
-                    email: responseBody.email,
-                    authority: responseBody.authority === 'admin'
-                        ? 'Admin'
-                        : 'Organizer',
-                });
-            }
-            else {
-                reject('OS DEBUG :: Fetched organizer info is improperly formatted');
-            }
-        })
-            .catch(error => reject(error));
-    });
-};
-
-
-/***/ }),
-
-/***/ "./resources/js/osdb-api/request.ts":
-/*!******************************************!*\
-  !*** ./resources/js/osdb-api/request.ts ***!
-  \******************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
-/**
- * Axios default config
- */
-axios_1.default.defaults.baseURL = 'https://dbserver.ourspace.dev';
-axios_1.default.defaults.headers.common['Authorization'] =
-    '5401aa1394c126b762f691cf0f2d0cf6';
-/**
- * GET data from the server
- */
-exports.getFromServer = async (axiosConfig) => {
-    return new Promise((resolve, reject) => {
-        const axiosCombinedConfig = {
-            ...axiosConfig,
-            method: 'get',
-        };
-        axios_1.default(axiosCombinedConfig)
-            .then(response => {
-            if (response.status === 200) {
-                resolve(response.data);
-            }
-            else {
-                reject('OS DEBUG :: DB server response is not 200');
-            }
-        })
-            .catch(error => {
-            if (error.request) {
-                reject('OS DEBUG :: DB gave no response back');
-            }
-        });
-    });
-};
-/**
- * POST data to the server
- */
-exports.postToServer = async (axiosConfig, data) => {
-    return new Promise((resolve, reject) => {
-        const axiosCombinedConfig = {
-            ...axiosConfig,
-            method: 'post',
-            data: data,
-        };
-        axios_1.default(axiosCombinedConfig)
-            .then(response => {
-            if (response.status === 200) {
-                resolve(response.data);
-            }
-            else {
-                reject('OS DEBUG :: DB server response is not 200');
-            }
-        })
-            .catch(error => {
-            if (error.request) {
-                reject('OS DEBUG :: DB gave no response back');
-            }
-        });
-    });
-};
-
-
-/***/ }),
-
-/***/ "./resources/js/osdb-api/space.ts":
-/*!****************************************!*\
-  !*** ./resources/js/osdb-api/space.ts ***!
-  \****************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-const request_1 = __webpack_require__(/*! ./request */ "./resources/js/osdb-api/request.ts");
-const space_tree_1 = __webpack_require__(/*! ../model/space-tree */ "./resources/js/model/space-tree.ts");
-/**
- * Get space trees by organizerUID
- */
-exports.osdbGetSpaceTrees = async (organizerUID) => {
-    return new Promise(async (resolve, reject) => {
-        let spaceIDs = [];
-        let spaceHeaders = [];
-        await request_1.getFromServer({ url: `/organizers/${organizerUID}` })
-            .then(response => {
-            if (response.owning_spaces) {
-                spaceIDs = response.owning_spaces;
-            }
-            else {
-                reject('OS DEBUG :: Could not fetch owning spaces list');
-            }
-        })
-            .catch(error => reject(error));
-        await Promise.all(spaceIDs.map(async (sid) => {
-            await request_1.getFromServer({
-                url: `/ospace/${sid}`,
-            }).then(responseBody => {
-                if (responseBody.space_names) {
-                    spaceHeaders.push({
-                        id: sid,
-                        pid: responseBody.parent_space_id,
-                        names: responseBody.space_names,
-                    });
-                }
-            });
-        }));
-        resolve(space_tree_1.buildArray2Tree(spaceHeaders));
-    });
-};
-/**
- * Get space by space
- */
-exports.osdbGetSpace = async (spaceID) => {
-    return new Promise((resolve, reject) => {
-        request_1.getFromServer({ url: `/ospace/${spaceID}` })
-            .then(responseBody => {
-            resolve({
-                id: spaceID,
-                spaceNames: responseBody.space_names,
-                types: [responseBody.type],
-                locationText: responseBody.location_text,
-                location: {
-                    lat: responseBody.latitude,
-                    lng: responseBody.longitude,
-                },
-                operatingHours: responseBody.operating_hours === ''
-                    ? []
-                    : responseBody.operating_hours.split('\n'),
-                amenityTags: Object.keys(responseBody.amenity_tags),
-                spaceIntroduce: '',
-                images: responseBody.images,
-                rank: responseBody.rank,
-                busyLevel: '1',
-            });
-        })
-            .catch(error => {
-            reject(error);
-        });
-    });
-};
-/**
- * Update space operating hour
- */
-exports.osdbUpdateOperatingHour = async (spaceID, operatingHours) => {
-    return new Promise((resolve, reject) => {
-        request_1.postToServer({ url: `/ospace/${spaceID}` }, {
-            operating_hours: operatingHours.join('\n'),
-        })
-            .then(() => {
-            resolve();
-        })
-            .catch(error => reject(error));
-    });
-};
-/**
- * Update space amenity tags
- */
-exports.osdbUpdateAmenityTags = async (spaceID, amenityTags) => {
-    return new Promise((resolve, reject) => {
-        let amenities = {};
-        amenityTags.forEach((tag) => {
-            amenities[tag] = {};
-        });
-        request_1.postToServer({ url: `/ospace/${spaceID}` }, {
-            amenity_tags: amenities,
-        })
-            .then(() => {
-            resolve();
-        })
-            .catch(error => reject(error));
-    });
-};
-/**
- * Update space images
- */
-exports.osdbUpdateImages = async (spaceID, images) => {
-    return new Promise((resolve, reject) => {
-        request_1.postToServer({ url: `/ospace/${spaceID}` }, {
-            images: images,
-        })
-            .then(() => {
-            resolve();
-        })
-            .catch(error => reject(error));
-    });
-};
 
 
 /***/ }),
@@ -80718,63 +78396,65 @@ exports.osdbUpdateImages = async (spaceID, images) => {
 
 "use strict";
 
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const auth_1 = __webpack_require__(/*! ../redux-types/auth */ "./resources/js/redux-types/auth.ts");
+const redux_types = __importStar(__webpack_require__(/*! ../redux-types/auth */ "./resources/js/redux-types/auth.ts"));
 /**
  * Initial State
  */
 const initialState = {
-    loggedStatus: 'ready',
-    signupStatus: 'ready',
+    loginStatus: { status: 'ready' },
+    signupStatus: { status: 'ready' },
 };
 /**
- * AuthReducer
+ * Reducer
  */
-function AuthReducer(state = initialState, action) {
+function Reducer(state = initialState, action) {
     switch (action.type) {
-        case auth_1.ON_PROCESS:
+        case redux_types.REQUEST_LOGIN:
             return {
                 ...state,
-                loggedStatus: action.loggedStatus,
+                loginStatus: { status: 'processing' },
             };
-        case auth_1.LOGIN_SUCCESS:
+        case redux_types.SUCCEED_LOGIN:
             return {
                 ...state,
-                loggedStatus: action.loggedStatus,
+                loginStatus: { status: 'succeed' },
                 currentUser: action.currentUser,
             };
-        case auth_1.LOGIN_FAIL:
+        case redux_types.FAIL_LOGIN:
             return {
                 ...state,
-                loggedStatus: action.loggedStatus,
-                errorMessage: action.errorMessage,
+                loginStatus: { status: 'failed', message: action.message },
             };
-        case auth_1.LOGOUT:
+        case redux_types.LOGOUT:
+            return initialState;
+        case redux_types.REQUEST_SIGNUP:
             return {
                 ...state,
-                loggedStatus: action.loggedStatus,
-                currentUser: undefined,
+                signupStatus: { status: 'processing' },
             };
-        case auth_1.SIGNUP_ON_PROCESS:
+        case redux_types.SUCCEED_SIGNUP:
             return {
                 ...state,
-                signupStatus: action.signupStatus,
+                signupStatus: { status: 'succeed' },
             };
-        case auth_1.SIGNUP_SUCCESS:
+        case redux_types.FAIL_SIGNUP:
             return {
                 ...state,
-                signupStatus: action.signupStatus,
-            };
-        case auth_1.SIGNUP_FAIL:
-            return {
-                ...state,
-                signupStatus: action.signupStatus,
+                signupStatus: { status: 'failed', message: action.message },
             };
         default:
             return state;
     }
 }
-exports.default = AuthReducer;
+exports.default = Reducer;
 
 
 /***/ }),
@@ -80788,57 +78468,48 @@ exports.default = AuthReducer;
 
 "use strict";
 
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const current_space_1 = __webpack_require__(/*! ../redux-types/current-space */ "./resources/js/redux-types/current-space.ts");
+const redux_types = __importStar(__webpack_require__(/*! ../redux-types/current-space */ "./resources/js/redux-types/current-space.ts"));
 /**
  * Initial State
  */
 const initialState = {
-    status: {
-        requestingSpace: false,
-        updatingOperatingHour: false,
-        updatingAmentiyTags: false,
-        updatingImages: false,
-    },
+    requestingStatus: { status: 'ready' },
+    updatingOHStatus: { status: 'ready' },
+    updatingATStatus: { status: 'ready' },
+    updatingImagesStatus: { status: 'ready' },
 };
 /**
- * CurrentSpaceReducer
+ * Reducer
  */
-function CurrentSpaceReducer(state = initialState, action) {
+function Reducer(state = initialState, action) {
     switch (action.type) {
-        case current_space_1.REQUEST_SPACE:
+        case redux_types.START_REQUEST:
             return {
                 ...state,
-                status: {
-                    ...state.status,
-                    requestingSpace: true,
-                },
+                requestingStatus: { status: 'requesting' },
             };
-        case current_space_1.RECEIVE_SPACE:
+        case redux_types.RECEIVE_REQUEST:
             return {
+                ...state,
                 data: action.space,
-                status: {
-                    ...state.status,
-                    requestingSpace: false,
-                },
+                requestingStatus: { status: 'succeed' },
             };
-        case current_space_1.END_REQUEST_SPACE:
+        case redux_types.FAIL_REQUEST:
             return {
-                status: {
-                    ...state.status,
-                    requestingSpace: false,
-                },
+                ...state,
+                requestingStatus: { status: 'failed', message: action.message },
             };
-        case current_space_1.RESET_SPACE:
-            return {
-                status: {
-                    requestingSpace: false,
-                    updatingOperatingHour: false,
-                    updatingAmentiyTags: false,
-                    updatingImages: false,
-                },
-            };
-        case current_space_1.UPDATE_SPACE_INTRODUCE:
+        case redux_types.RESET_DATA:
+            return initialState;
+        case redux_types.UPDATE_SPACE_INTRODUCE:
             if (state.data)
                 return {
                     ...state,
@@ -80849,15 +78520,12 @@ function CurrentSpaceReducer(state = initialState, action) {
                 };
             else
                 return state;
-        case current_space_1.START_UPDATE_OH:
+        case redux_types.START_UPDATE_OH:
             return {
                 ...state,
-                status: {
-                    ...state.status,
-                    updatingOperatingHour: true,
-                },
+                updatingOHStatus: { status: 'requesting' },
             };
-        case current_space_1.FINISH_UPDATE_OH:
+        case redux_types.SUCCEED_UPDATE_OH:
             if (state.data)
                 return {
                     ...state,
@@ -80865,22 +78533,16 @@ function CurrentSpaceReducer(state = initialState, action) {
                         ...state.data,
                         operatingHours: action.operatingHours,
                     },
-                    status: {
-                        ...state.status,
-                        updatingOperatingHour: false,
-                    },
+                    updatingOHStatus: { status: 'succeed' },
                 };
             else
                 return state;
-        case current_space_1.END_UPDATE_OH:
+        case redux_types.FAIL_UPDATE_OH:
             return {
                 ...state,
-                status: {
-                    ...state.status,
-                    updatingOperatingHour: false,
-                },
+                updatingOHStatus: { status: 'failed', message: action.message },
             };
-        case current_space_1.SET_BUSY_LEVEL:
+        case redux_types.SET_BUSY_LEVEL:
             if (state.data)
                 return {
                     ...state,
@@ -80891,15 +78553,12 @@ function CurrentSpaceReducer(state = initialState, action) {
                 };
             else
                 return state;
-        case current_space_1.START_UPDATE_AT:
+        case redux_types.START_UPDATE_AT:
             return {
                 ...state,
-                status: {
-                    ...state.status,
-                    updatingAmentiyTags: true,
-                },
+                updatingATStatus: { status: 'requesting' },
             };
-        case current_space_1.FINISH_UPDATE_AT:
+        case redux_types.SUCCEED_UPDATE_AT:
             if (state.data)
                 return {
                     ...state,
@@ -80907,30 +78566,21 @@ function CurrentSpaceReducer(state = initialState, action) {
                         ...state.data,
                         amenityTags: action.amenityTags,
                     },
-                    status: {
-                        ...state.status,
-                        updatingAmentiyTags: false,
-                    },
+                    updatingATStatus: { status: 'succeed' },
                 };
             else
                 return state;
-        case current_space_1.END_UPDATE_AT:
+        case redux_types.FAIL_UPDATE_AT:
             return {
                 ...state,
-                status: {
-                    ...state.status,
-                    updatingAmentiyTags: false,
-                },
+                updatingATStatus: { status: 'failed', message: action.message },
             };
-        case current_space_1.START_UPDATE_IMAGES:
+        case redux_types.START_UPDATE_IMAGES:
             return {
                 ...state,
-                status: {
-                    ...state.status,
-                    updatingImages: true,
-                },
+                updatingImagesStatus: { status: 'requesting' },
             };
-        case current_space_1.FINISH_UPDATE_IMAGES:
+        case redux_types.SUCCEED_UPDATE_IMAGES:
             if (state.data)
                 return {
                     ...state,
@@ -80938,26 +78588,20 @@ function CurrentSpaceReducer(state = initialState, action) {
                         ...state.data,
                         images: action.images,
                     },
-                    status: {
-                        ...state.status,
-                        updatingImages: false,
-                    },
+                    updatingImagesStatus: { status: 'succeed' },
                 };
             else
                 return state;
-        case current_space_1.END_UPDATE_IMAGES:
+        case redux_types.FAIL_UPDATE_IMAGES:
             return {
                 ...state,
-                status: {
-                    ...state.status,
-                    updatingImages: false,
-                },
+                updatingATStatus: { status: 'failed', message: action.message },
             };
         default:
             return state;
     }
 }
-exports.default = CurrentSpaceReducer;
+exports.default = Reducer;
 
 
 /***/ }),
@@ -81043,8 +78687,15 @@ exports.default = SelectedAmenitiesReducer;
 
 "use strict";
 
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const space_history_1 = __webpack_require__(/*! ../redux-types/space-history */ "./resources/js/redux-types/space-history.ts");
+const redux_types = __importStar(__webpack_require__(/*! ../redux-types/space-history */ "./resources/js/redux-types/space-history.ts"));
 /**
  * Initial State
  */
@@ -81055,18 +78706,18 @@ const initialState = {
     },
 };
 /**
- * SpaceHistoryReducer
+ * Reducer
  */
-function SpaceHistoryReducer(state = initialState, action) {
+function Reducer(state = initialState, action) {
     switch (action.type) {
-        case space_history_1.RESET_SPACE_HISTORY:
+        case redux_types.RESET_SPACE_HISTORY:
             return {
                 data: {
                     stack: [],
                     headers: {},
                 },
             };
-        case space_history_1.PUSH_INTO_SPACE_HISTORY:
+        case redux_types.PUSH_INTO_SPACE_HISTORY:
             if (!state.data.headers[action.spaceHeader.id]) {
                 state.data.stack.push(action.spaceHeader.id);
                 return {
@@ -81086,7 +78737,7 @@ function SpaceHistoryReducer(state = initialState, action) {
             return state;
     }
 }
-exports.default = SpaceHistoryReducer;
+exports.default = Reducer;
 
 
 /***/ }),
@@ -81100,59 +78751,52 @@ exports.default = SpaceHistoryReducer;
 
 "use strict";
 
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const space_trees_1 = __webpack_require__(/*! ../redux-types/space-trees */ "./resources/js/redux-types/space-trees.ts");
+const redux_types = __importStar(__webpack_require__(/*! ../redux-types/space-trees */ "./resources/js/redux-types/space-trees.ts"));
 /**
  * Initial State
  */
 const initialState = {
-    data: [],
-    status: {
-        requestingSpaceTrees: false,
-    },
+    requestingStatus: { status: 'ready' },
 };
 /**
- * SpaceTreesReducer
+ * Reducer
  */
-function SpaceTreesReducer(state = initialState, action) {
+function Reducer(state = initialState, action) {
     switch (action.type) {
-        case space_trees_1.REQUEST_SPACE_TREES:
+        case redux_types.START_REQUEST:
             return {
                 ...state,
-                status: {
-                    ...state.status,
-                    requestingSpaceTrees: true,
-                },
+                requestingStatus: { status: 'requesting' },
             };
-        case space_trees_1.RECEIVE_SPACE_TREES:
+        case redux_types.RECEIVE_REQUEST:
             return {
                 ...state,
-                data: action.spaceTrees,
-                status: {
-                    ...state.status,
-                    requestingSpaceTrees: false,
-                },
+                data: action.data,
+                requestingStatus: { status: 'succeed' },
             };
-        case space_trees_1.END_REQUEST_SPACE_TREES:
+        case redux_types.FAIL_REQUEST:
             return {
                 ...state,
-                status: {
-                    ...state.status,
-                    requestingSpaceTrees: false,
+                requestingStatus: {
+                    status: 'failed',
+                    message: action.message,
                 },
             };
-        case space_trees_1.RESET_SPACE_TREES:
-            return {
-                data: [],
-                status: {
-                    requestingSpaceTrees: false,
-                },
-            };
+        case redux_types.RESET_DATA:
+            return initialState;
         default:
             return state;
     }
 }
-exports.default = SpaceTreesReducer;
+exports.default = Reducer;
 
 
 /***/ }),
@@ -81248,19 +78892,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * Action Constants
  */
 // prettier-ignore
-exports.ON_PROCESS = 'current-space/ON_PROCESS';
+exports.REQUEST_LOGIN = 'auth/REQUEST_LOGIN';
 // prettier-ignore
-exports.LOGIN_SUCCESS = 'current-space/LOGIN_SUCCESS';
+exports.SUCCEED_LOGIN = 'auth/SUCCEED_LOGIN';
 // prettier-ignore
-exports.LOGIN_FAIL = 'current-space/LOGIN_FAIL';
+exports.FAIL_LOGIN = 'auth/FAIL_LOGIN';
 // prettier-ignore
-exports.LOGOUT = 'current-space/LOGOUT';
+exports.LOGOUT = 'auth/LOGOUT';
 // prettier-ignore
-exports.SIGNUP_ON_PROCESS = 'current-space/SIGNUP_ON_PROCESS';
+exports.REQUEST_SIGNUP = 'auth/SIGNUP_ON_PROCESS';
 // prettier-ignore
-exports.SIGNUP_SUCCESS = 'current-space/SIGNUP_SUCCESS';
+exports.SUCCEED_SIGNUP = 'auth/SUCCEED_SIGNUP';
 // prettier-ignore
-exports.SIGNUP_FAIL = 'current-space/SIGNUP_FAIL';
+exports.FAIL_SIGNUP = 'auth/FAIL_SIGNUP';
 
 
 /***/ }),
@@ -81278,36 +78922,42 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * Action Constants
  */
+// Current space data
 // prettier-ignore
-exports.REQUEST_SPACE = 'current-space/REQUEST_SPACE';
+exports.START_REQUEST = 'current-space/START_REQUEST';
 // prettier-ignore
-exports.RECEIVE_SPACE = 'current-space/RECEIVE_SPACE';
+exports.RECEIVE_REQUEST = 'current-space/RECEIVE_REQUEST';
 // prettier-ignore
-exports.END_REQUEST_SPACE = 'current-space/END_REQUEST_SPACE';
+exports.FAIL_REQUEST = 'current-space/FAIL_REQUEST';
 // prettier-ignore
-exports.RESET_SPACE = 'current-space/RESET_SPACE';
+exports.RESET_DATA = 'current-space/RESET_DATA';
+// Space introduce
 // prettier-ignore
 exports.UPDATE_SPACE_INTRODUCE = 'current-space/UPDATE_SPACE_INTRODUCE';
+// Operating hour
 // prettier-ignore
 exports.START_UPDATE_OH = 'current-space/START_UPDATE_OH';
 // prettier-ignore
-exports.FINISH_UPDATE_OH = 'current-space/FINISH_UPDATE_OH';
+exports.SUCCEED_UPDATE_OH = 'current-space/SUCCEED_UPDATE_OH';
 // prettier-ignore
-exports.END_UPDATE_OH = 'current-space/END_UPDATE_OH';
+exports.FAIL_UPDATE_OH = 'current-space/FAIL_UPDATE_OH';
+// Busy level
 // prettier-ignore
 exports.SET_BUSY_LEVEL = 'current-space/SET_BUSY_LEVEL';
+// Amenity tags
 // prettier-ignore
 exports.START_UPDATE_AT = 'current-space/START_UPDATE_AT';
 // prettier-ignore
-exports.FINISH_UPDATE_AT = 'current-space/FINISH_UPDATE_AT';
+exports.SUCCEED_UPDATE_AT = 'current-space/SUCCEED_UPDATE_AT';
 // prettier-ignore
-exports.END_UPDATE_AT = 'current-space/END_UPDATE_AT';
+exports.FAIL_UPDATE_AT = 'current-space/FAIL_UPDATE_AT';
+// Images
 // prettier-ignore
 exports.START_UPDATE_IMAGES = 'current-space/START_UPDATE_IMAGES';
 // prettier-ignore
-exports.FINISH_UPDATE_IMAGES = 'current-space/FINISH_UPDATE_IMAGES';
+exports.SUCCEED_UPDATE_IMAGES = 'current-space/SUCCEED_UPDATE_IMAGES';
 // prettier-ignore
-exports.END_UPDATE_IMAGES = 'current-space/END_UPDATE_IMAGES';
+exports.FAIL_UPDATE_IMAGES = 'current-space/FAIL_UPDATE_IMAGES';
 
 
 /***/ }),
@@ -81345,9 +78995,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * Action Constants
  */
 // prettier-ignore
-exports.RESET_SPACE_HISTORY = 'current-space/RESET_SPACE_HISTORY';
+exports.RESET_SPACE_HISTORY = 'space-history/RESET_SPACE_HISTORY';
 // prettier-ignore
-exports.PUSH_INTO_SPACE_HISTORY = 'current-space/PUSH_INTO_SPACE_HISTORY';
+exports.PUSH_INTO_SPACE_HISTORY = 'space-history/PUSH_INTO_SPACE_HISTORY';
 
 
 /***/ }),
@@ -81366,13 +79016,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * Action Constants
  */
 // prettier-ignore
-exports.REQUEST_SPACE_TREES = 'space-tree/REQUEST_SPACE_TREES';
+exports.START_REQUEST = 'space-trees/START_REQUEST';
 // prettier-ignore
-exports.RECEIVE_SPACE_TREES = 'space-tree/RECEIVE_SPACE_TREES';
+exports.RECEIVE_REQUEST = 'space-trees/RECEIVE_REQUEST';
 // prettier-ignore
-exports.END_REQUEST_SPACE_TREES = 'current-space/END_REQUEST_SPACE_TREES';
+exports.FAIL_REQUEST = 'space-trees/FAIL_REQUEST';
 // prettier-ignore
-exports.RESET_SPACE_TREES = 'current-space/RESET_SPACE_TREES';
+exports.RESET_DATA = 'space-trees/RESET_DATA';
 
 
 /***/ }),
@@ -81400,6 +79050,305 @@ exports.UPDATE_UPLOAD_PROGRESS = 'upload-images/UPDATE_UPLOAD_PROGRESS';
 exports.SET_IMAGE_DATA = 'upload-images/SET_IMAGE_DATA';
 // prettier-ignore
 exports.DELETE_UPLOAD_IMAGE = 'upload-images/DELETE_UPLOAD_IMAGE';
+
+
+/***/ }),
+
+/***/ "./resources/js/thunk-action/auth.ts":
+/*!*******************************************!*\
+  !*** ./resources/js/thunk-action/auth.ts ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const firebase_1 = __importDefault(__webpack_require__(/*! ../config/firebase */ "./resources/js/config/firebase/index.ts"));
+const osdb_axios_1 = __importDefault(__webpack_require__(/*! ../config/osdb-axios */ "./resources/js/config/osdb-axios.ts"));
+const organizer_1 = __webpack_require__(/*! ../model/organizer */ "./resources/js/model/organizer.ts");
+const authActions = __importStar(__webpack_require__(/*! ../actions/auth */ "./resources/js/actions/auth.ts"));
+const space_trees_1 = __webpack_require__(/*! ../actions/space-trees */ "./resources/js/actions/space-trees.ts");
+const space_history_1 = __webpack_require__(/*! ../actions/space-history */ "./resources/js/actions/space-history.ts");
+const space_trees_2 = __webpack_require__(/*! ../actions/space-trees */ "./resources/js/actions/space-trees.ts");
+/**
+ *
+ *
+ * Request login
+ *
+ *
+ */
+exports.requestLogin = (userEmail, userPassword) => async (dispatch) => {
+    dispatch(authActions.requestLogin());
+    try {
+        await firebase_1.default.auth().signInWithEmailAndPassword(userEmail, userPassword);
+        let currentUser = await firebase_1.default.auth().currentUser;
+        if (currentUser !== null) {
+            try {
+                const { data } = await osdb_axios_1.default.get(`organizers/${currentUser.uid}`);
+                const organizer = organizer_1.rawOrganizer2Organizer(data);
+                dispatch(authActions.succeedLogin(organizer));
+            }
+            catch (error) {
+                dispatch(authActions.failLogin('사용자 정보를 가져오는데 실패했습니다.'));
+            }
+        }
+        else {
+            dispatch(authActions.failLogin('로그인에 실패하였습니다.'));
+        }
+    }
+    catch (error) {
+        dispatch(authActions.failLogin(error));
+    }
+};
+/**
+ *
+ *
+ * Log out
+ *
+ *
+ */
+exports.requestLogout = () => async (dispatch) => {
+    firebase_1.default.auth()
+        .signOut()
+        .then(() => {
+        dispatch(space_trees_1.resetData());
+        dispatch(space_history_1.resetSpaceHistory());
+        dispatch(space_trees_2.resetData());
+        dispatch(authActions.logout());
+    });
+};
+/**
+ * Signup
+ */
+exports.requestSignup = (userEmail, userName, userPassword) => async (dispatch) => {
+    dispatch(authActions.requestSignup());
+    try {
+        const UserCredential = await firebase_1.default.auth().createUserWithEmailAndPassword(userEmail, userPassword);
+        if (UserCredential.user !== null && UserCredential.user.uid) {
+            const { data } = await osdb_axios_1.default.post('/organizers', {
+                uid: UserCredential.user.uid,
+                name: userName,
+                authority: 'organizer',
+                email: userEmail,
+            });
+            if (data.success) {
+                dispatch(authActions.succeedSignup());
+            }
+            else {
+                dispatch(authActions.failSignup('회원가입에 실패했습니다.'));
+            }
+        }
+    }
+    catch (error) {
+        dispatch(authActions.failSignup(error));
+    }
+};
+
+
+/***/ }),
+
+/***/ "./resources/js/thunk-action/current-space.ts":
+/*!****************************************************!*\
+  !*** ./resources/js/thunk-action/current-space.ts ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const osdb_axios_1 = __importDefault(__webpack_require__(/*! ../config/osdb-axios */ "./resources/js/config/osdb-axios.ts"));
+const firebase_1 = __importDefault(__webpack_require__(/*! ../config/firebase */ "./resources/js/config/firebase/index.ts"));
+const space_1 = __webpack_require__(/*! ../model/space */ "./resources/js/model/space.ts");
+const currentSpaceActions = __importStar(__webpack_require__(/*! ../actions/current-space */ "./resources/js/actions/current-space.ts"));
+const space_history_1 = __webpack_require__(/*! ../actions/space-history */ "./resources/js/actions/space-history.ts");
+/**
+ *
+ *
+ * Request space data from the server
+ *
+ *
+ */
+exports.requestSpace = (spaceID, pushHistory = false) => async (dispatch) => {
+    dispatch(currentSpaceActions.startRequest());
+    try {
+        const { data } = await osdb_axios_1.default.get(`/ospace/${spaceID}`);
+        const space = space_1.rawSpaces2SpaceList(spaceID, data);
+        dispatch(currentSpaceActions.receiveRequest(space));
+        if (pushHistory) {
+            dispatch(space_history_1.pushIntoSpaceHistory({
+                id: spaceID,
+                names: space.spaceNames,
+            }));
+        }
+    }
+    catch (error) {
+        dispatch(currentSpaceActions.failRequest(error));
+    }
+};
+/**
+ *
+ *
+ * Update operating hours of the space on server
+ *
+ *
+ */
+exports.updateOperatingHours = (spaceID, operatingHours) => async (dispatch) => {
+    dispatch(currentSpaceActions.startUpdateOH());
+    try {
+        const { data } = await osdb_axios_1.default.post(`/ospace/${spaceID}`, {
+            operating_hours: operatingHours.join('\n'),
+        });
+        if (data.updated_space_id === spaceID) {
+            dispatch(currentSpaceActions.succeedUpdateOH(operatingHours));
+        }
+        else {
+            dispatch(currentSpaceActions.failUpdateOH('업데이트에 실패했습니다.'));
+        }
+    }
+    catch (error) {
+        dispatch(currentSpaceActions.failUpdateOH(error));
+    }
+};
+/**
+ *
+ *
+ * Update amenity tags of the space on server
+ *
+ *
+ */
+exports.updateAmenityTags = (spaceID, amenityTags) => async (dispatch) => {
+    dispatch(currentSpaceActions.startUpdateAT());
+    try {
+        let amenities = {};
+        amenityTags.forEach((tag) => {
+            amenities[tag] = {};
+        });
+        const { data } = await osdb_axios_1.default.post(`/ospace/${spaceID}`, {
+            amenity_tags: amenities,
+        });
+        if (data.updated_space_id === spaceID) {
+            dispatch(currentSpaceActions.succeedUpdateAT(amenityTags));
+        }
+        else {
+            dispatch(currentSpaceActions.failUpdateAT('업데이트에 실패했습니다.'));
+        }
+    }
+    catch (error) {
+        dispatch(currentSpaceActions.failUpdateAT(error));
+    }
+};
+/**
+ *
+ *
+ * Update space images of the space on server
+ *
+ *
+ */
+exports.updateImages = (spaceID, spaceImages, uploadings) => async (dispatch) => {
+    dispatch(currentSpaceActions.startUpdateImages());
+    const uploadingImages = Object.values(uploadings);
+    try {
+        await Promise.all(uploadingImages.map((uploadImage) => {
+            if (uploadImage.progress >= 100) {
+                return firebase_1.default.storage()
+                    .ref(`${spaceID}/${uploadImage.key}`)
+                    .put(uploadImage.file)
+                    .then((uploadTask) => {
+                    uploadTask.ref
+                        .getDownloadURL()
+                        .then((url) => {
+                        spaceImages.push(url);
+                    });
+                });
+            }
+        }));
+        const { data } = await osdb_axios_1.default.post(`/ospace/${spaceID}`, {
+            images: spaceImages,
+        });
+        if (data.updated_space_id === spaceID) {
+            dispatch(currentSpaceActions.succeedUpdateImages(spaceImages));
+        }
+        else {
+            dispatch(currentSpaceActions.failUpdateImages('업데이트에 실패했습니다.'));
+        }
+    }
+    catch (error) {
+        dispatch(currentSpaceActions.failUpdateImages(error));
+    }
+};
+
+
+/***/ }),
+
+/***/ "./resources/js/thunk-action/space-trees.ts":
+/*!**************************************************!*\
+  !*** ./resources/js/thunk-action/space-trees.ts ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const osdb_axios_1 = __importDefault(__webpack_require__(/*! ../config/osdb-axios */ "./resources/js/config/osdb-axios.ts"));
+const space_tree_1 = __webpack_require__(/*! ../model/space-tree */ "./resources/js/model/space-tree.ts");
+const spaceTreesActions = __importStar(__webpack_require__(/*! ../actions/space-trees */ "./resources/js/actions/space-trees.ts"));
+/**
+ *
+ *
+ * Request space trees data from the server
+ *
+ *
+ */
+exports.requestSpaceTrees = (sids) => async (dispatch) => {
+    dispatch(spaceTreesActions.startRequest());
+    try {
+        const responses = await Promise.all(sids.map((sid) => osdb_axios_1.default.get(`/ospace/${sid}`).then((response) => {
+            return { sid: sid, response: response };
+        })));
+        const spaceTrees = space_tree_1.buildArray2Tree(responses.map(({ sid, response, }) => ({
+            id: sid,
+            pid: response.data.parent_space_id,
+            names: response.data.space_names,
+        })));
+        dispatch(spaceTreesActions.receiveRequest(spaceTrees));
+    }
+    catch (error) {
+        dispatch(spaceTreesActions.failRequest(error));
+    }
+};
 
 
 /***/ }),

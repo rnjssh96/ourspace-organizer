@@ -1,7 +1,4 @@
 import React, { MouseEvent } from 'react';
-import { connect } from 'react-redux';
-
-import RootState from '../../redux-types';
 
 import {
     AmenityTag,
@@ -10,10 +7,22 @@ import {
     interpretedAmentiy,
 } from '../../model/space';
 
-import { setSelectedAmenities } from '../../actions/selected-amenities';
-import { UpdateAmenityTagsAction } from '../../redux-types/osdb-api';
-import { updateAmenityTags } from '../../actions/osdb-api';
+/**
+ *
+ *
+ * AmenitiesEditModal props
+ *
+ *
+ */
+interface AmenitiesEditModalProps extends _ReduxProps, _ReduxActionCreators {}
 
+/**
+ *
+ *
+ * AmenitiesEditModal component
+ *
+ *
+ */
 export const AmenitiesEditModalID = 'amenities-edit-modal';
 
 const COL_PER_ROW = 4;
@@ -23,32 +32,6 @@ type amenityTuple = {
     key: AmenityTag;
     value: interpretedAmentiy;
 };
-
-interface _ReduxProps {
-    /**
-     * Current space ID
-     */
-    currentSpaceID?: string;
-
-    /**
-     * Selected amenities set
-     */
-    selectedAmenities: Set<AmenityTag>;
-}
-
-interface _ReduxActionCreators {
-    /**
-     * Set selected amenities
-     */
-    setSelectedAmenities: typeof setSelectedAmenities;
-
-    /**
-     * Update amenity tags
-     */
-    updateAmenityTags: UpdateAmenityTagsAction;
-}
-
-interface AmenitiesEditModalProps extends _ReduxProps, _ReduxActionCreators {}
 
 class _AmenitiesEditModal extends React.Component<AmenitiesEditModalProps> {
     private _amenityTableStructure: amenityTuple[][] = [];
@@ -171,6 +154,44 @@ class _AmenitiesEditModal extends React.Component<AmenitiesEditModalProps> {
             </div>
         );
     }
+}
+
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+import { connect } from 'react-redux';
+import RootState from '../../redux-types';
+
+import { setSelectedAmenities } from '../../actions/selected-amenities';
+
+import { updateAmenityTags } from '../../thunk-action/current-space';
+
+interface _ReduxProps {
+    /**
+     * Current space ID
+     */
+    currentSpaceID?: string;
+
+    /**
+     * Selected amenities set
+     */
+    selectedAmenities: Set<AmenityTag>;
+}
+
+interface _ReduxActionCreators {
+    /**
+     * Set selected amenities
+     */
+    setSelectedAmenities: typeof setSelectedAmenities;
+
+    /**
+     * Update amenity tags
+     */
+    updateAmenityTags: (spaceID: string, amenityTags: AmenityTag[]) => void;
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({

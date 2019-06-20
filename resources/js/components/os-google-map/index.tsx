@@ -12,6 +12,7 @@ interface OSGoogleMapProps {
     center: google.maps.LatLng | google.maps.LatLngLiteral; // center of the map
     zoom: number; // initial zoom level
 }
+
 export default class OSGoogleMap extends React.Component<OSGoogleMapProps> {
     private _map?: google.maps.Map;
 

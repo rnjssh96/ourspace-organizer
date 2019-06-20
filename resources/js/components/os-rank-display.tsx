@@ -1,17 +1,21 @@
 import React from 'react';
-import { connect } from 'react-redux';
 
-import RootState from '../redux-types';
-
-interface _ReduxProps {
-    /**
-     * Overall rank of the spcae
-     */
-    rank: number;
-}
-
+/**
+ *
+ *
+ * OSRankDisplay props
+ *
+ *
+ */
 interface OSRankDisplayProps extends _ReduxProps {}
 
+/**
+ *
+ *
+ * OSRankDisplay component
+ *
+ *
+ */
 class _OSRankDisplay extends React.Component<OSRankDisplayProps> {
     private _renderStar = (index: number, percentage: number) => (
         <div key={index} className="star">
@@ -49,6 +53,23 @@ class _OSRankDisplay extends React.Component<OSRankDisplayProps> {
             </div>
         );
     }
+}
+
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+import { connect } from 'react-redux';
+import RootState from '../redux-types';
+
+interface _ReduxProps {
+    /**
+     * Overall rank of the spcae
+     */
+    rank: number;
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
