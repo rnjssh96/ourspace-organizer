@@ -1,29 +1,23 @@
 import React from 'react';
-import RootState from '../redux-types';
-import { connect } from 'react-redux';
 
-import { SignupAction } from '../redux-types/firebase-auth';
-
-import { signup } from '../actions/firebase-auth';
 import OSPageStatus from '../components/os-page-status';
-import { SignupStatus } from '../redux-types/auth';
 
-interface _ReduxProps {
-    /**
-     * Signup status
-     */
-    signupStatus: SignupStatus;
-}
-
-interface _ReduxActionCreators {
-    /**
-     * Create account
-     */
-    signup: SignupAction;
-}
-
+/**
+ *
+ *
+ * SignupForm props
+ *
+ *
+ */
 interface SignupFormProps extends _ReduxProps, _ReduxActionCreators {}
 
+/**
+ *
+ *
+ * SignupForm component
+ *
+ *
+ */
 class _SignupForm extends React.Component<SignupFormProps> {
     state = {
         userEmail: '',
@@ -34,7 +28,7 @@ class _SignupForm extends React.Component<SignupFormProps> {
 
     private _onSubmit = (ev: React.MouseEvent) => {
         ev.preventDefault();
-        this.props.signup(
+        this.props.requestSignup(
             this.state.userEmail,
             this.state.userName,
             this.state.userPassword,
@@ -42,9 +36,9 @@ class _SignupForm extends React.Component<SignupFormProps> {
     };
 
     private _renderForm = () => {
-        if (this.props.signupStatus === 'processing') {
+        if (this.props.signupStatus.status === 'processing') {
             return <OSPageStatus status="loading" />;
-        } else if (this.props.signupStatus === 'success') {
+        } else if (this.props.signupStatus.status === 'succeed') {
             return (
                 <OSPageStatus
                     status="success"
@@ -129,12 +123,44 @@ class _SignupForm extends React.Component<SignupFormProps> {
     }
 }
 
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+import RootState from '../redux-types';
+import { connect } from 'react-redux';
+
+import { SignupStatus } from '../model/system';
+
+import { requestSignup } from '../thunk-action/auth';
+
+interface _ReduxProps {
+    /**
+     * Signup status
+     */
+    signupStatus: SignupStatus;
+}
+
+interface _ReduxActionCreators {
+    /**
+     * Request signup
+     */
+    requestSignup: (
+        userEmail: string,
+        userName: string,
+        userPassword: string,
+    ) => void;
+}
+
 const mapStateToProps = (state: RootState): _ReduxProps => ({
     signupStatus: state.auth.signupStatus,
 });
 
 const mapDispatchToProps = {
-    signup,
+    requestSignup,
 };
 
 const SignupForm = connect(

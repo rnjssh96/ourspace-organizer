@@ -1,10 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
-
-import RootState from '../redux-types';
-
-import { fetchSpace } from '../actions/osdb-api';
-import { FetchSpaceAction } from '../redux-types/osdb-api';
 
 import OSPageStatus from '../components/os-page-status';
 import OSRankDisplay from '../components/os-rank-display';
@@ -14,30 +8,25 @@ import OSLoactionMap from '../components/os-loaction-map';
 import OSGeneralInfo from '../components/os-general-info';
 import OSSpaceIntroduce from '../components/os-space-introduce';
 
-interface _ReduxProps {
-    /**
-     * ID of the current space
-     */
-    currentSpaceID?: string;
+/**
+ *
+ *
+ * HomeMainView props
+ *
+ *
+ */
+interface HomeMainViewProps extends _ReduxProps {}
 
-    /**
-     * Space requesting
-     */
-    requestingSpace: boolean;
-}
-
-interface _ReduxActionCreators {
-    /**
-     * Fetch space from OSDB
-     */
-    fetchSpace: FetchSpaceAction;
-}
-
-interface HomeMainViewProps extends _ReduxProps, _ReduxActionCreators {}
-
+/**
+ *
+ *
+ * HomeMainView component
+ *
+ *
+ */
 class _HomeMainView extends React.Component<HomeMainViewProps> {
     render() {
-        if (this.props.requestingSpace) {
+        if (this.props.requestingSpaceStatus) {
             return <OSPageStatus status="loading" />;
         } else if (!this.props.currentSpaceID) {
             return (
@@ -75,18 +64,35 @@ class _HomeMainView extends React.Component<HomeMainViewProps> {
     }
 }
 
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+import { connect } from 'react-redux';
+import RootState from '../redux-types';
+
+import { RequestStatus } from '../model/system';
+
+interface _ReduxProps {
+    /**
+     * ID of the current space
+     */
+    currentSpaceID?: string;
+
+    /**
+     * Space requesting
+     */
+    requestingSpaceStatus: RequestStatus;
+}
+
 const mapStateToProps = (state: RootState): _ReduxProps => ({
     currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
-    requestingSpace: state.currentSpace.status.requestingSpace,
+    requestingSpaceStatus: state.currentSpace.requestingStatus,
 });
 
-const mapDispatchToProps = {
-    fetchSpace,
-};
-
-const HomeMainView = connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(_HomeMainView);
+const HomeMainView = connect(mapStateToProps)(_HomeMainView);
 
 export default HomeMainView;

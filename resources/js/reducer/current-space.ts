@@ -1,80 +1,46 @@
-import {
-    CurrentSpaceActions,
-    CurrentSpaceState,
-    START_UPDATE_OH,
-    FINISH_UPDATE_OH,
-    SET_BUSY_LEVEL,
-    UPDATE_SPACE_INTRODUCE,
-    REQUEST_SPACE,
-    RECEIVE_SPACE,
-    END_REQUEST_SPACE,
-    END_UPDATE_OH,
-    RESET_SPACE,
-    START_UPDATE_AT,
-    FINISH_UPDATE_AT,
-    END_UPDATE_AT,
-    START_UPDATE_IMAGES,
-    FINISH_UPDATE_IMAGES,
-    END_UPDATE_IMAGES,
-} from '../redux-types/current-space';
+import * as redux_types from '../redux-types/current-space';
 
 /**
  * Initial State
  */
-const initialState: CurrentSpaceState = {
-    status: {
-        requestingSpace: false,
-        updatingOperatingHour: false,
-        updatingAmentiyTags: false,
-        updatingImages: false,
-    },
+const initialState: redux_types.State = {
+    requestingStatus: { status: 'ready' },
+    updatingOHStatus: { status: 'ready' },
+    updatingATStatus: { status: 'ready' },
+    updatingImagesStatus: { status: 'ready' },
 };
 
 /**
- * CurrentSpaceReducer
+ * Reducer
  */
-export default function CurrentSpaceReducer(
+export default function Reducer(
     state = initialState,
-    action: CurrentSpaceActions,
-): CurrentSpaceState {
+    action: redux_types.Actions,
+): redux_types.State {
     switch (action.type) {
-        case REQUEST_SPACE:
+        case redux_types.START_REQUEST:
             return {
                 ...state,
-                status: {
-                    ...state.status,
-                    requestingSpace: true,
-                },
+                requestingStatus: { status: 'requesting' },
             };
 
-        case RECEIVE_SPACE:
+        case redux_types.RECEIVE_REQUEST:
             return {
+                ...state,
                 data: action.space,
-                status: {
-                    ...state.status,
-                    requestingSpace: false,
-                },
+                requestingStatus: { status: 'succeed' },
             };
 
-        case END_REQUEST_SPACE:
+        case redux_types.FAIL_REQUEST:
             return {
-                status: {
-                    ...state.status,
-                    requestingSpace: false,
-                },
+                ...state,
+                requestingStatus: { status: 'failed', message: action.message },
             };
 
-        case RESET_SPACE:
-            return {
-                status: {
-                    requestingSpace: false,
-                    updatingOperatingHour: false,
-                    updatingAmentiyTags: false,
-                    updatingImages: false,
-                },
-            };
+        case redux_types.RESET_DATA:
+            return initialState;
 
-        case UPDATE_SPACE_INTRODUCE:
+        case redux_types.UPDATE_SPACE_INTRODUCE:
             if (state.data)
                 return {
                     ...state,
@@ -85,16 +51,13 @@ export default function CurrentSpaceReducer(
                 };
             else return state;
 
-        case START_UPDATE_OH:
+        case redux_types.START_UPDATE_OH:
             return {
                 ...state,
-                status: {
-                    ...state.status,
-                    updatingOperatingHour: true,
-                },
+                updatingOHStatus: { status: 'requesting' },
             };
 
-        case FINISH_UPDATE_OH:
+        case redux_types.SUCCEED_UPDATE_OH:
             if (state.data)
                 return {
                     ...state,
@@ -102,23 +65,17 @@ export default function CurrentSpaceReducer(
                         ...state.data,
                         operatingHours: action.operatingHours,
                     },
-                    status: {
-                        ...state.status,
-                        updatingOperatingHour: false,
-                    },
+                    updatingOHStatus: { status: 'succeed' },
                 };
             else return state;
 
-        case END_UPDATE_OH:
+        case redux_types.FAIL_UPDATE_OH:
             return {
                 ...state,
-                status: {
-                    ...state.status,
-                    updatingOperatingHour: false,
-                },
+                updatingOHStatus: { status: 'failed', message: action.message },
             };
 
-        case SET_BUSY_LEVEL:
+        case redux_types.SET_BUSY_LEVEL:
             if (state.data)
                 return {
                     ...state,
@@ -129,16 +86,13 @@ export default function CurrentSpaceReducer(
                 };
             else return state;
 
-        case START_UPDATE_AT:
+        case redux_types.START_UPDATE_AT:
             return {
                 ...state,
-                status: {
-                    ...state.status,
-                    updatingAmentiyTags: true,
-                },
+                updatingATStatus: { status: 'requesting' },
             };
 
-        case FINISH_UPDATE_AT:
+        case redux_types.SUCCEED_UPDATE_AT:
             if (state.data)
                 return {
                     ...state,
@@ -146,32 +100,23 @@ export default function CurrentSpaceReducer(
                         ...state.data,
                         amenityTags: action.amenityTags,
                     },
-                    status: {
-                        ...state.status,
-                        updatingAmentiyTags: false,
-                    },
+                    updatingATStatus: { status: 'succeed' },
                 };
             else return state;
 
-        case END_UPDATE_AT:
+        case redux_types.FAIL_UPDATE_AT:
             return {
                 ...state,
-                status: {
-                    ...state.status,
-                    updatingAmentiyTags: false,
-                },
+                updatingATStatus: { status: 'failed', message: action.message },
             };
 
-        case START_UPDATE_IMAGES:
+        case redux_types.START_UPDATE_IMAGES:
             return {
                 ...state,
-                status: {
-                    ...state.status,
-                    updatingImages: true,
-                },
+                updatingImagesStatus: { status: 'requesting' },
             };
 
-        case FINISH_UPDATE_IMAGES:
+        case redux_types.SUCCEED_UPDATE_IMAGES:
             if (state.data)
                 return {
                     ...state,
@@ -179,20 +124,14 @@ export default function CurrentSpaceReducer(
                         ...state.data,
                         images: action.images,
                     },
-                    status: {
-                        ...state.status,
-                        updatingImages: false,
-                    },
+                    updatingImagesStatus: { status: 'succeed' },
                 };
             else return state;
 
-        case END_UPDATE_IMAGES:
+        case redux_types.FAIL_UPDATE_IMAGES:
             return {
                 ...state,
-                status: {
-                    ...state.status,
-                    updatingImages: false,
-                },
+                updatingATStatus: { status: 'failed', message: action.message },
             };
 
         default:

@@ -74,10 +74,13 @@ interface SpaceNodeMap {
 }
 
 /**
- * Space Trees
+ * Space Tree
  */
 export type SpaceTree = SpaceNode;
 
+/**
+ * Space Trees
+ */
 type SpaceTrees = SpaceTree[];
 
 export default SpaceTrees;

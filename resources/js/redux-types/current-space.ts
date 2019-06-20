@@ -1,125 +1,154 @@
 import { Action } from 'redux';
 
 import Space, { BusyLevel, AmenityTag } from '../model/space';
+import { RequestStatus } from '../model/system';
 
 /**
- * Current Space State
+ * State
  */
-export interface CurrentSpaceState {
+export interface State {
     data?: Space;
-    status: {
-        requestingSpace: boolean;
-        updatingOperatingHour: boolean;
-        updatingAmentiyTags: boolean;
-        updatingImages: boolean;
-    };
+    requestingStatus: RequestStatus;
+    updatingOHStatus: RequestStatus;
+    updatingATStatus: RequestStatus;
+    updatingImagesStatus: RequestStatus;
 }
 
 /**
  * Action Constants
  */
+// Current space data
+
 // prettier-ignore
-export const REQUEST_SPACE = 'current-space/REQUEST_SPACE';
+export const START_REQUEST = 'current-space/START_REQUEST';
 // prettier-ignore
-export const RECEIVE_SPACE = 'current-space/RECEIVE_SPACE';
+export const RECEIVE_REQUEST = 'current-space/RECEIVE_REQUEST';
 // prettier-ignore
-export const END_REQUEST_SPACE = 'current-space/END_REQUEST_SPACE';
+export const FAIL_REQUEST = 'current-space/FAIL_REQUEST';
 // prettier-ignore
-export const RESET_SPACE = 'current-space/RESET_SPACE';
+export const RESET_DATA = 'current-space/RESET_DATA';
+
+// Space introduce
 
 // prettier-ignore
 export const UPDATE_SPACE_INTRODUCE = 'current-space/UPDATE_SPACE_INTRODUCE';
 
+// Operating hour
+
 // prettier-ignore
 export const START_UPDATE_OH = 'current-space/START_UPDATE_OH';
 // prettier-ignore
-export const FINISH_UPDATE_OH = 'current-space/FINISH_UPDATE_OH';
+export const SUCCEED_UPDATE_OH = 'current-space/SUCCEED_UPDATE_OH';
 // prettier-ignore
-export const END_UPDATE_OH = 'current-space/END_UPDATE_OH';
+export const FAIL_UPDATE_OH = 'current-space/FAIL_UPDATE_OH';
 
+// Busy level
 // prettier-ignore
 export const SET_BUSY_LEVEL = 'current-space/SET_BUSY_LEVEL';
 
+// Amenity tags
 // prettier-ignore
 export const START_UPDATE_AT = 'current-space/START_UPDATE_AT';
 // prettier-ignore
-export const FINISH_UPDATE_AT = 'current-space/FINISH_UPDATE_AT';
+export const SUCCEED_UPDATE_AT = 'current-space/SUCCEED_UPDATE_AT';
 // prettier-ignore
-export const END_UPDATE_AT = 'current-space/END_UPDATE_AT';
+export const FAIL_UPDATE_AT = 'current-space/FAIL_UPDATE_AT';
 
+// Images
 // prettier-ignore
 export const START_UPDATE_IMAGES = 'current-space/START_UPDATE_IMAGES';
 // prettier-ignore
-export const FINISH_UPDATE_IMAGES = 'current-space/FINISH_UPDATE_IMAGES';
+export const SUCCEED_UPDATE_IMAGES = 'current-space/SUCCEED_UPDATE_IMAGES';
 // prettier-ignore
-export const END_UPDATE_IMAGES = 'current-space/END_UPDATE_IMAGES';
+export const FAIL_UPDATE_IMAGES = 'current-space/FAIL_UPDATE_IMAGES';
 
 /**
  * Action Interfaces
  */
-export interface RequestSpaceAction extends Action<typeof REQUEST_SPACE> {}
+// Current space data
+export interface StartRequestAction extends Action<typeof START_REQUEST> {}
 
-export interface ReceiveSpaceAction extends Action<typeof RECEIVE_SPACE> {
+export interface ReceiveRequestAction extends Action<typeof RECEIVE_REQUEST> {
     space: Space;
 }
 
-export interface EndRequestSpaceAction
-    extends Action<typeof END_REQUEST_SPACE> {}
+export interface FailRequestAction extends Action<typeof FAIL_REQUEST> {
+    message: string;
+}
 
-export interface ResetSpaceAction extends Action<typeof RESET_SPACE> {}
+export interface ResetDataAction extends Action<typeof RESET_DATA> {}
 
+// Space introduce
 export interface UpdateSpaceIntroduceAction
     extends Action<typeof UPDATE_SPACE_INTRODUCE> {
     spaceIntroduce: string;
 }
 
+// Operating hour
 export interface StartUpdateOHAction extends Action<typeof START_UPDATE_OH> {}
 
-export interface FinishUpdateOHAction extends Action<typeof FINISH_UPDATE_OH> {
+export interface SucceedUpdateOHAction
+    extends Action<typeof SUCCEED_UPDATE_OH> {
     operatingHours: string[];
 }
 
-export interface EndUpdateOHAction extends Action<typeof END_UPDATE_OH> {}
+export interface FailUpdateOHAction extends Action<typeof FAIL_UPDATE_OH> {
+    message: string;
+}
 
+// Busy level
 export interface SetBusyLevelAction extends Action<typeof SET_BUSY_LEVEL> {
     busyLevel: BusyLevel;
 }
 
+// Amenity tags
 export interface StartUpdateATAction extends Action<typeof START_UPDATE_AT> {}
 
-export interface FinishUpdateATAction extends Action<typeof FINISH_UPDATE_AT> {
+export interface SucceedUpdateATAction
+    extends Action<typeof SUCCEED_UPDATE_AT> {
     amenityTags: AmenityTag[];
 }
 
-export interface EndUpdateATAction extends Action<typeof END_UPDATE_AT> {}
+export interface FailUpdateATAction extends Action<typeof FAIL_UPDATE_AT> {
+    message: string;
+}
 
+// Images
 export interface StartUpdateImagesAction
     extends Action<typeof START_UPDATE_IMAGES> {}
 
-export interface FinishUpdateImagesAction
-    extends Action<typeof FINISH_UPDATE_IMAGES> {
+export interface SucceedUpdateImagesAction
+    extends Action<typeof SUCCEED_UPDATE_IMAGES> {
     images: string[];
 }
 
-export interface EndUpdateImagesAction
-    extends Action<typeof END_UPDATE_IMAGES> {}
+export interface FailUpdateImagesAction
+    extends Action<typeof FAIL_UPDATE_IMAGES> {
+    message: string;
+}
 
 /**
  * Action Types
  */
-export type CurrentSpaceActions =
-    | RequestSpaceAction
-    | ReceiveSpaceAction
-    | EndRequestSpaceAction
-    | ResetSpaceAction
+export type Actions =
+    // Current space data
+    | StartRequestAction
+    | ReceiveRequestAction
+    | FailRequestAction
+    | ResetDataAction
+    // Space introduce
     | UpdateSpaceIntroduceAction
+    // Operating hour
     | StartUpdateOHAction
-    | FinishUpdateOHAction
-    | EndUpdateOHAction
+    | SucceedUpdateOHAction
+    | FailUpdateOHAction
+    // Busy level
     | SetBusyLevelAction
+    // Amenity tags
     | StartUpdateATAction
-    | FinishUpdateATAction
-    | EndUpdateATAction
+    | SucceedUpdateATAction
+    | FailUpdateATAction
+    // Images
     | StartUpdateImagesAction
-    | FinishUpdateImagesAction
-    | EndUpdateImagesAction;
+    | SucceedUpdateImagesAction
+    | FailUpdateImagesAction;

@@ -1,63 +1,34 @@
 import React from 'react';
-import { connect } from 'react-redux';
-
-import RootState from '../redux-types';
-import { FetchSpaceTreesAction } from '../redux-types/osdb-api';
-
-import SpaceTrees from '../model/space-tree';
-import { fetchSpaceTrees } from '../actions/osdb-api';
 
 import OSPageStatus from '../components/os-page-status';
-import OSOrganizer from '../model/organizer';
 import OSSpaceTree from '../components/os-space-tree';
 import OSSpaceHistory from '../components/os-space-history';
 
-interface _ReduxProps {
-    /**
-     * Current user
-     */
-    currentUser?: OSOrganizer;
-
-    /**
-     * All spaces in tree structure
-     */
-    spaceTrees: SpaceTrees;
-
-    /**
-     * Space trees requesting
-     */
-    requestingSpaceTrees: boolean;
-}
-
-interface _ReduxActionCreators {
-    /**
-     * Fetch space trees from OSDB
-     */
-    fetchSpaceTrees: FetchSpaceTreesAction;
-}
-
+/**
+ *
+ *
+ * HomeSpacesTab props
+ *
+ *
+ */
 interface HomeSpacesTabProps extends _ReduxProps, _ReduxActionCreators {}
 
+/**
+ *
+ *
+ * HomeSpacesTab component
+ *
+ *
+ */
 class _HomeSpacesTab extends React.Component<HomeSpacesTabProps> {
     componentWillMount() {
         this.props.currentUser &&
-            this.props.fetchSpaceTrees(this.props.currentUser.uid);
+            this.props.requestSpaceTrees(this.props.currentUser.owningSpaces);
     }
 
     render() {
-        if (this.props.requestingSpaceTrees) {
+        if (this.props.requestingStatus) {
             return <OSPageStatus status="loading" />;
-        } else if (
-            this.props.spaceTrees.length <= 0 &&
-            (this.props.currentUser &&
-                this.props.currentUser.authority === 'Organizer')
-        ) {
-            return (
-                <OSPageStatus
-                    status="information"
-                    info="관리중인 스페이스가 존재하지 않습니다."
-                />
-            );
         } else {
             if (
                 this.props.currentUser &&
@@ -65,20 +36,73 @@ class _HomeSpacesTab extends React.Component<HomeSpacesTabProps> {
             ) {
                 return <OSSpaceHistory />;
             } else {
-                return <OSSpaceTree />;
+                if (
+                    this.props.spaceTrees &&
+                    this.props.spaceTrees.length <= 0
+                ) {
+                    return (
+                        <OSPageStatus
+                            status="information"
+                            info="관리중인 스페이스가 존재하지 않습니다."
+                        />
+                    );
+                } else {
+                    return <OSSpaceTree />;
+                }
             }
         }
     }
 }
 
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+import { connect } from 'react-redux';
+import RootState from '../redux-types';
+
+import { SpaceID } from '../model/space';
+import SpaceTrees from '../model/space-tree';
+import Organizer from '../model/organizer';
+import { RequestStatus } from '../model/system';
+
+import { requestSpaceTrees } from '../thunk-action/space-trees';
+
+interface _ReduxProps {
+    /**
+     * Current user
+     */
+    currentUser?: Organizer;
+
+    /**
+     * Space trees requesting status
+     */
+    requestingStatus: RequestStatus;
+
+    /**
+     * All spaces in tree structure
+     */
+    spaceTrees?: SpaceTrees;
+}
+
+interface _ReduxActionCreators {
+    /**
+     * Request space trees from the server
+     */
+    requestSpaceTrees: (sids: SpaceID[]) => void;
+}
+
 const mapStateToProps = (state: RootState): _ReduxProps => ({
     currentUser: state.auth.currentUser,
+    requestingStatus: state.spaceTrees.requestingStatus,
     spaceTrees: state.spaceTrees.data,
-    requestingSpaceTrees: state.spaceTrees.status.requestingSpaceTrees,
 });
 
 const mapDispatchToProps = {
-    fetchSpaceTrees,
+    requestSpaceTrees,
 };
 
 const HomeSpacesTab = connect(

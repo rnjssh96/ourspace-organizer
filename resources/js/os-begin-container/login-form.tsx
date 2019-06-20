@@ -1,34 +1,23 @@
 import React from 'react';
-import { connect } from 'react-redux';
 
-import RootState from '../redux-types';
-import { LoggedStatus } from '../redux-types/auth';
-import { AttemptLogInAction } from '../redux-types/firebase-auth';
-
-import { attemptLogIn } from '../actions/firebase-auth';
 import OSPageStatus from '../components/os-page-status';
 
-interface _ReduxProps {
-    /**
-     * Logged status
-     */
-    loggedStatus: LoggedStatus;
-
-    /**
-     * Login message
-     */
-    loginMessage?: string;
-}
-
-interface _ReduxActionCreators {
-    /**
-     * Attempt log in
-     */
-    attemptLogIn: AttemptLogInAction;
-}
-
+/**
+ *
+ *
+ * LoginForm props
+ *
+ *
+ */
 interface LoginFormProps extends _ReduxProps, _ReduxActionCreators {}
 
+/**
+ *
+ *
+ * LoginForm component
+ *
+ *
+ */
 class _LoginForm extends React.Component<LoginFormProps> {
     state = {
         userEmail: '',
@@ -37,11 +26,11 @@ class _LoginForm extends React.Component<LoginFormProps> {
 
     private _onLogin = (ev: React.MouseEvent) => {
         ev.preventDefault();
-        this.props.attemptLogIn(this.state.userEmail, this.state.userPassword);
+        this.props.requestLogin(this.state.userEmail, this.state.userPassword);
     };
 
     private _renderForm = () => {
-        if (this.props.loggedStatus === 'processing') {
+        if (this.props.loginStatus.status === 'processing') {
             return <OSPageStatus status="loading" />;
         } else {
             return (
@@ -83,10 +72,10 @@ class _LoginForm extends React.Component<LoginFormProps> {
                     >
                         로그인
                     </button>
-                    {this.props.loggedStatus === 'failed' &&
-                        this.props.loginMessage && (
+                    {this.props.loginStatus.status === 'failed' &&
+                        this.props.loginStatus.message && (
                             <p id="failed-message" className="h6">
-                                {this.props.loginMessage}
+                                {this.props.loginStatus.message}
                             </p>
                         )}
                 </form>
@@ -99,13 +88,40 @@ class _LoginForm extends React.Component<LoginFormProps> {
     }
 }
 
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+import { connect } from 'react-redux';
+import RootState from '../redux-types';
+
+import { LoginStatus } from '../model/system';
+
+import { requestLogin } from '../thunk-action/auth';
+
+interface _ReduxProps {
+    /**
+     * Login status
+     */
+    loginStatus: LoginStatus;
+}
+
+interface _ReduxActionCreators {
+    /**
+     * Request login
+     */
+    requestLogin: (userEmail: string, userPassword: string) => void;
+}
+
 const mapStateToProps = (state: RootState): _ReduxProps => ({
-    loggedStatus: state.auth.loggedStatus,
-    loginMessage: state.auth.errorMessage,
+    loginStatus: state.auth.loginStatus,
 });
 
 const mapDispatchToProps = {
-    attemptLogIn,
+    requestLogin,
 };
 
 const LoginForm = connect(

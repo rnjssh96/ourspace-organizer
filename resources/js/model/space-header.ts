@@ -1,15 +1,26 @@
 import { SpaceNames } from './space';
 
-export interface RawSpaceHeader {
+/**
+ *
+ *
+ * Space Header
+ *
+ *
+ */
+export interface SpaceHeader {
     id: string;
-    pid: string;
     names: SpaceNames;
 }
 
 /**
- * Space Header
+ *
+ *
+ * Raw space header
+ *
+ *
  */
-export interface SpaceHeader {
+export interface RawSpaceHeader {
     id: string;
+    pid: string;
     names: SpaceNames;
 }

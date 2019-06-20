@@ -1,82 +1,67 @@
 import { Action } from 'redux';
 
-import OSOrganizer from '../model/organizer';
+import Organizer from '../model/organizer';
+import { LoginStatus, SignupStatus } from '../model/system';
 
 /**
- * Auth State
+ * State
  */
-export type LoggedStatus = 'ready' | 'processing' | 'success' | 'failed';
-
-export type SignupStatus = 'ready' | 'processing' | 'success' | 'failed';
-
-export interface AuthState {
-    loggedStatus: LoggedStatus;
+export interface State {
+    currentUser?: Organizer;
+    loginStatus: LoginStatus;
     signupStatus: SignupStatus;
-    currentUser?: OSOrganizer;
-    errorMessage?: string;
 }
 
 /**
  * Action Constants
  */
 // prettier-ignore
-export const ON_PROCESS = 'current-space/ON_PROCESS';
+export const REQUEST_LOGIN = 'auth/REQUEST_LOGIN';
 // prettier-ignore
-export const LOGIN_SUCCESS = 'current-space/LOGIN_SUCCESS';
+export const SUCCEED_LOGIN = 'auth/SUCCEED_LOGIN';
 // prettier-ignore
-export const LOGIN_FAIL = 'current-space/LOGIN_FAIL';
+export const FAIL_LOGIN = 'auth/FAIL_LOGIN';
 // prettier-ignore
-export const LOGOUT = 'current-space/LOGOUT';
+export const LOGOUT = 'auth/LOGOUT';
 
 // prettier-ignore
-export const SIGNUP_ON_PROCESS = 'current-space/SIGNUP_ON_PROCESS';
+export const REQUEST_SIGNUP = 'auth/SIGNUP_ON_PROCESS';
 // prettier-ignore
-export const SIGNUP_SUCCESS = 'current-space/SIGNUP_SUCCESS';
+export const SUCCEED_SIGNUP = 'auth/SUCCEED_SIGNUP';
 // prettier-ignore
-export const SIGNUP_FAIL = 'current-space/SIGNUP_FAIL';
+export const FAIL_SIGNUP = 'auth/FAIL_SIGNUP';
 
 /**
  * Action Interfaces
  */
-export interface OnProcessAction extends Action<typeof ON_PROCESS> {
-    loggedStatus: 'processing';
+export interface RequestLoginAction extends Action<typeof REQUEST_LOGIN> {}
+
+export interface SucceedLoginAction extends Action<typeof SUCCEED_LOGIN> {
+    currentUser: Organizer;
 }
 
-export interface LoginSuccessAction extends Action<typeof LOGIN_SUCCESS> {
-    loggedStatus: 'success';
-    currentUser: OSOrganizer;
+export interface FailLoginAction extends Action<typeof FAIL_LOGIN> {
+    message: string;
 }
 
-export interface LoginFailAction extends Action<typeof LOGIN_FAIL> {
-    loggedStatus: 'failed';
-    errorMessage: string;
-}
+export interface LogoutAction extends Action<typeof LOGOUT> {}
 
-export interface LogoutAction extends Action<typeof LOGOUT> {
-    loggedStatus: 'ready';
-}
+export interface RequestSignupAction extends Action<typeof REQUEST_SIGNUP> {}
 
-export interface SignupOnProcessAction
-    extends Action<typeof SIGNUP_ON_PROCESS> {
-    signupStatus: 'processing';
-}
+export interface SucceedSignupAction extends Action<typeof SUCCEED_SIGNUP> {}
 
-export interface SignupSuccessAction extends Action<typeof SIGNUP_SUCCESS> {
-    signupStatus: 'success';
-}
-
-export interface SignupFailAction extends Action<typeof SIGNUP_FAIL> {
-    signupStatus: 'failed';
+export interface FailSignupAction extends Action<typeof FAIL_SIGNUP> {
+    message: string;
 }
 
 /**
  * Action Types
  */
-export type AuthActions =
-    | OnProcessAction
-    | LoginSuccessAction
-    | LoginFailAction
+export type Actions =
+    | RequestLoginAction
+    | SucceedLoginAction
+    | FailLoginAction
     | LogoutAction
-    | SignupOnProcessAction
-    | SignupSuccessAction
-    | SignupFailAction;
+    | RequestSignupAction
+    | SucceedSignupAction
+    | FailSignupAction;

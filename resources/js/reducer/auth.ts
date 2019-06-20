@@ -1,74 +1,59 @@
-import {
-    AuthActions,
-    AuthState,
-    LOGIN_SUCCESS,
-    ON_PROCESS,
-    LOGIN_FAIL,
-    LOGOUT,
-    SIGNUP_ON_PROCESS,
-    SIGNUP_SUCCESS,
-    SIGNUP_FAIL,
-} from '../redux-types/auth';
+import * as redux_types from '../redux-types/auth';
 
 /**
  * Initial State
  */
-const initialState: AuthState = {
-    loggedStatus: 'ready',
-    signupStatus: 'ready',
+const initialState: redux_types.State = {
+    loginStatus: { status: 'ready' },
+    signupStatus: { status: 'ready' },
 };
 
 /**
- * AuthReducer
+ * Reducer
  */
-export default function AuthReducer(
+export default function Reducer(
     state = initialState,
-    action: AuthActions,
-): AuthState {
+    action: redux_types.Actions,
+): redux_types.State {
     switch (action.type) {
-        case ON_PROCESS:
+        case redux_types.REQUEST_LOGIN:
             return {
                 ...state,
-                loggedStatus: action.loggedStatus,
+                loginStatus: { status: 'processing' },
             };
 
-        case LOGIN_SUCCESS:
+        case redux_types.SUCCEED_LOGIN:
             return {
                 ...state,
-                loggedStatus: action.loggedStatus,
+                loginStatus: { status: 'succeed' },
                 currentUser: action.currentUser,
             };
 
-        case LOGIN_FAIL:
+        case redux_types.FAIL_LOGIN:
             return {
                 ...state,
-                loggedStatus: action.loggedStatus,
-                errorMessage: action.errorMessage,
+                loginStatus: { status: 'failed', message: action.message },
             };
 
-        case LOGOUT:
+        case redux_types.LOGOUT:
+            return initialState;
+
+        case redux_types.REQUEST_SIGNUP:
             return {
                 ...state,
-                loggedStatus: action.loggedStatus,
-                currentUser: undefined,
+                signupStatus: { status: 'processing' },
             };
 
-        case SIGNUP_ON_PROCESS:
+        case redux_types.SUCCEED_SIGNUP:
             return {
                 ...state,
-                signupStatus: action.signupStatus,
+                signupStatus: { status: 'succeed' },
             };
 
-        case SIGNUP_SUCCESS:
+        case redux_types.FAIL_SIGNUP:
             return {
                 ...state,
-                signupStatus: action.signupStatus,
-            };
-
-        case SIGNUP_FAIL:
-            return {
-                ...state,
-                signupStatus: action.signupStatus,
+                signupStatus: { status: 'failed', message: action.message },
             };
 
         default:

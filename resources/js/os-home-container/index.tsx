@@ -1,28 +1,29 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { RouteComponentProps, Redirect } from 'react-router';
-
-import RootState from '../redux-types';
-import { LoggedStatus } from '../redux-types/auth';
+import { Redirect } from 'react-router';
 
 import HomeHeader from './home-header';
 import HomeSpacesTab from './home-spaces-tab';
 import HomeMainView from './home-main-view';
 
-interface _ReduxProps {
-    /**
-     * Logged status
-     */
-    loggedStatus: LoggedStatus;
-}
+/**
+ *
+ *
+ * OSHomeContainer props
+ *
+ *
+ */
+interface OSHomeContainerProps extends _ReduxProps {}
 
-interface OSHomeContainerProps
-    extends _ReduxProps,
-        RouteComponentProps<{ userid: string }> {}
-
+/**
+ *
+ *
+ * OSHomeContainer component
+ *
+ *
+ */
 class _OSHomeContainer extends React.Component<OSHomeContainerProps> {
     render() {
-        if (this.props.loggedStatus === 'success')
+        if (this.props.loginStatus.status === 'succeed')
             return (
                 <div id="os-home-container" className="container-fluid">
                     <HomeHeader />
@@ -40,8 +41,27 @@ class _OSHomeContainer extends React.Component<OSHomeContainerProps> {
     }
 }
 
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+import { connect } from 'react-redux';
+import RootState from '../redux-types';
+
+import { LoginStatus } from '../model/system';
+
+interface _ReduxProps {
+    /**
+     * Logged status
+     */
+    loginStatus: LoginStatus;
+}
+
 const mapStateToProps = (state: RootState): _ReduxProps => ({
-    loggedStatus: state.auth.loggedStatus,
+    loginStatus: state.auth.loginStatus,
 });
 
 const OSHomeContainer = connect(mapStateToProps)(_OSHomeContainer);

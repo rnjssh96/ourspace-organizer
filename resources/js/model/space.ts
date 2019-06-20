@@ -1,20 +1,29 @@
-import SpaceInterpret from './space-interpret.json';
+import { Locale } from './system.js';
 
-export interface SpaceNames {
-    [lan: string]: string;
-}
+/**
+ * Space ID
+ */
+export type SpaceID = string;
+
+/**
+ * Space names
+ */
+export type SpaceNames = { [locale in Locale]: string };
 
 /**
  * Busy Level
  */
-export type BusyLevel = keyof typeof SpaceInterpret['busy-level'];
+import { busy_level } from '../config/space.json';
 
-const busyLevels: { [level in BusyLevel]: { [lan: string]: string } } =
-    SpaceInterpret['busy-level'];
+export type BusyLevel = keyof typeof busy_level;
+
+const busyLevels: {
+    [level in BusyLevel]: { [locale in Locale]: string }
+} = busy_level;
 
 export const interpretBusyLevel = (
     level: BusyLevel,
-    locale: string = 'en',
+    locale: Locale = 'en',
 ): string => {
     return busyLevels[level][locale] || busyLevels[level]['en'];
 };
@@ -22,14 +31,17 @@ export const interpretBusyLevel = (
 /**
  * Space Type
  */
-export type SpaceType = keyof typeof SpaceInterpret['type'];
+import { space_type } from '../config/space.json';
 
-const spaceTypes: { [type in SpaceType]: { [lan: string]: string } } =
-    SpaceInterpret['type'];
+export type SpaceType = keyof typeof space_type;
+
+const spaceTypes: {
+    [type in SpaceType]: { [locale in Locale]: string }
+} = space_type;
 
 export const interpretSpaceType = (
     type: SpaceType,
-    locale: string = 'en',
+    locale: Locale = 'en',
 ): string => {
     return spaceTypes[type][locale] || spaceTypes[type]['en'];
 };
@@ -37,11 +49,16 @@ export const interpretSpaceType = (
 /**
  * Amenity
  */
-export type AmenityTag = keyof typeof SpaceInterpret['amenity'];
+import { amenity } from '../config/space.json';
+
+export type AmenityTag = keyof typeof amenity;
 
 export const amenities: {
-    [tag in AmenityTag]: { name: { [lan: string]: string }; faicon: string }
-} = SpaceInterpret['amenity'];
+    [tag in AmenityTag]: {
+        name: { [locale in Locale]: string };
+        faicon: string;
+    }
+} = amenity;
 
 export interface interpretedAmentiy {
     name: string;
@@ -50,7 +67,7 @@ export interface interpretedAmentiy {
 
 export const interpretAmenity = (
     tag: AmenityTag,
-    locale: string = 'en',
+    locale: Locale = 'en',
 ): interpretedAmentiy => {
     return {
         name: amenities[tag].name[locale] || amenities[tag].name['en'],
@@ -59,28 +76,83 @@ export const interpretAmenity = (
 };
 
 /**
- * GeoCoordinate
+ * LatLng
  */
-export interface GeoCoordinate {
+export interface LatLng {
     lat: number;
     lng: number;
 }
 
 /**
- * Space
+ *
+ *
+ * Full data of space
+ *
+ *
  */
-interface Space {
-    id: string;
+export default interface Space {
+    id: SpaceID;
     spaceNames: SpaceNames;
     types: SpaceType[];
     locationText: string;
-    location: GeoCoordinate;
+    location: LatLng;
     operatingHours: string[];
     amenityTags: AmenityTag[];
     spaceIntroduce: string;
     images: string[];
     rank: number;
     busyLevel: BusyLevel;
+    paid: boolean;
 }
 
-export default Space;
+/**
+ *
+ *
+ * Raw data of space from DB
+ *
+ *
+ */
+export interface RawSpace {
+    parent_space_id: string;
+    space_names: SpaceNames;
+    images: string[];
+    amenity_tags: { [tag in AmenityTag]: {} };
+    longitude: number;
+    latitude: number;
+    location_text: string;
+    operating_hours: string;
+    paid: boolean;
+    type: number;
+    rank: number;
+    [key: string]: any; // any additional data
+}
+
+/**
+ *
+ *
+ * Interpret ```RawSpaces``` data to a list of ```Space```
+ *
+ *
+ */
+export const rawSpaces2SpaceList = (
+    sid: SpaceID,
+    rawSpace: RawSpace,
+): Space => {
+    return {
+        id: sid,
+        spaceNames: rawSpace.space_names,
+        types: [rawSpace.type.toString() as SpaceType],
+        locationText: rawSpace.location_text,
+        location: {
+            lat: rawSpace.latitude,
+            lng: rawSpace.longitude,
+        },
+        operatingHours: rawSpace.operating_hours.split('\n'),
+        amenityTags: Object.keys(rawSpace.amenity_tags) as AmenityTag[],
+        spaceIntroduce: '',
+        images: rawSpace.images ? rawSpace.images : [],
+        rank: rawSpace.rank,
+        busyLevel: '1',
+        paid: rawSpace.paid,
+    };
+};

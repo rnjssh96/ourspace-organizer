@@ -1,65 +1,44 @@
-import {
-    SpaceTreesState,
-    SpaceTreesActions,
-    REQUEST_SPACE_TREES,
-    RECEIVE_SPACE_TREES,
-    END_REQUEST_SPACE_TREES,
-    RESET_SPACE_TREES,
-} from '../redux-types/space-trees';
+import * as redux_types from '../redux-types/space-trees';
 
 /**
  * Initial State
  */
-const initialState: SpaceTreesState = {
-    data: [],
-    status: {
-        requestingSpaceTrees: false,
-    },
+const initialState: redux_types.State = {
+    requestingStatus: { status: 'ready' },
 };
 
 /**
- * SpaceTreesReducer
+ * Reducer
  */
-export default function SpaceTreesReducer(
+export default function Reducer(
     state = initialState,
-    action: SpaceTreesActions,
-): SpaceTreesState {
+    action: redux_types.Actions,
+): redux_types.State {
     switch (action.type) {
-        case REQUEST_SPACE_TREES:
+        case redux_types.START_REQUEST:
             return {
                 ...state,
-                status: {
-                    ...state.status,
-                    requestingSpaceTrees: true,
+                requestingStatus: { status: 'requesting' },
+            };
+
+        case redux_types.RECEIVE_REQUEST:
+            return {
+                ...state,
+                data: action.data,
+                requestingStatus: { status: 'succeed' },
+            };
+
+        case redux_types.FAIL_REQUEST:
+            return {
+                ...state,
+                requestingStatus: {
+                    status: 'failed',
+                    message: action.message,
                 },
             };
 
-        case RECEIVE_SPACE_TREES:
-            return {
-                ...state,
-                data: action.spaceTrees,
-                status: {
-                    ...state.status,
-                    requestingSpaceTrees: false,
-                },
-            };
-
-        case END_REQUEST_SPACE_TREES:
-            return {
-                ...state,
-                status: {
-                    ...state.status,
-                    requestingSpaceTrees: false,
-                },
-            };
-
-        case RESET_SPACE_TREES:
-            return {
-                data: [],
-                status: {
-                    requestingSpaceTrees: false,
-                },
-            };
+        case redux_types.RESET_DATA:
+            return initialState;
 
         default:
             return state;

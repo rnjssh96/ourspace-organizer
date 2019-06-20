@@ -1,40 +1,32 @@
 import { ActionCreator } from 'redux';
 
-import SpaceTrees from '../model/space-tree';
+import * as redux_types from '../redux-types/space-trees';
 
-import {
-    RequestSpaceTreesAction,
-    ReceiveSpaceTreesAction,
-    REQUEST_SPACE_TREES,
-    RECEIVE_SPACE_TREES,
-    EndRequestSpaceTreesAction,
-    END_REQUEST_SPACE_TREES,
-    ResetSpaceTreesAction,
-    RESET_SPACE_TREES,
-} from '../redux-types/space-trees';
+import SpaceTrees from '../model/space-tree';
 
 /**
  * Action Creators
  */
-export const requestSpaceTrees: ActionCreator<
-    RequestSpaceTreesAction
+export const startRequest: ActionCreator<
+    redux_types.StartRequestAction
 > = () => ({
-    type: REQUEST_SPACE_TREES,
+    type: redux_types.START_REQUEST,
 });
 
-export const receiveSpaceTrees: ActionCreator<ReceiveSpaceTreesAction> = (
-    spaceTrees: SpaceTrees,
+export const receiveRequest: ActionCreator<redux_types.ReceiveRequestAction> = (
+    data: SpaceTrees,
 ) => ({
-    type: RECEIVE_SPACE_TREES,
-    spaceTrees,
+    type: redux_types.RECEIVE_REQUEST,
+    data,
 });
 
-export const endRequestSpaceTrees: ActionCreator<
-    EndRequestSpaceTreesAction
-> = () => ({
-    type: END_REQUEST_SPACE_TREES,
+export const failRequest: ActionCreator<redux_types.FailRequestAction> = (
+    message: string,
+) => ({
+    type: redux_types.FAIL_REQUEST,
+    message,
 });
 
-export const resetSpaceTrees: ActionCreator<ResetSpaceTreesAction> = () => ({
-    type: RESET_SPACE_TREES,
+export const resetData: ActionCreator<redux_types.ResetDataAction> = () => ({
+    type: redux_types.RESET_DATA,
 });

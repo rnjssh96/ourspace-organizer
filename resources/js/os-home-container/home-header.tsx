@@ -1,34 +1,25 @@
 import React from 'react';
-import { connect } from 'react-redux';
 
-import RootState from '../redux-types';
-
-import { LogOutAction } from '../redux-types/firebase-auth';
-
-import { logOut } from '../actions/firebase-auth';
-
-import OSOrganizer from '../model/organizer';
-
-interface _ReduxProps {
-    /**
-     * Current user
-     */
-    currentUser?: OSOrganizer;
-}
-
-interface _ReduxActionCreators {
-    /**
-     * Log out
-     */
-    logOut: LogOutAction;
-}
-
+/**
+ *
+ *
+ * HomeHeader props
+ *
+ *
+ */
 interface HomeHeaderProps extends _ReduxProps, _ReduxActionCreators {}
 
+/**
+ *
+ *
+ * HomeHeader component
+ *
+ *
+ */
 class _HomeHeader extends React.Component<HomeHeaderProps> {
     private _onLogout = (ev: React.MouseEvent) => {
         ev.preventDefault();
-        this.props.logOut();
+        this.props.requestLogout();
     };
 
     render() {
@@ -63,12 +54,40 @@ class _HomeHeader extends React.Component<HomeHeaderProps> {
     }
 }
 
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+import { connect } from 'react-redux';
+import RootState from '../redux-types';
+
+import Organizer from '../model/organizer';
+
+import { requestLogout } from '../thunk-action/auth';
+
+interface _ReduxProps {
+    /**
+     * Current user
+     */
+    currentUser?: Organizer;
+}
+
+interface _ReduxActionCreators {
+    /**
+     * Log out
+     */
+    requestLogout: () => void;
+}
+
 const mapStateToProps = (state: RootState): _ReduxProps => ({
     currentUser: state.auth.currentUser,
 });
 
 const mapDispatchToProps = {
-    logOut,
+    requestLogout,
 };
 
 const HomeHeader = connect(

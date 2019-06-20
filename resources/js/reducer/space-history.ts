@@ -1,14 +1,9 @@
-import {
-    SpaceHistoryActions,
-    SpaceHistoryState,
-    RESET_SPACE_HISTORY,
-    PUSH_INTO_SPACE_HISTORY,
-} from '../redux-types/space-history';
+import * as redux_types from '../redux-types/space-history';
 
 /**
  * Initial State
  */
-const initialState: SpaceHistoryState = {
+const initialState: redux_types.State = {
     data: {
         stack: [],
         headers: {},
@@ -16,14 +11,14 @@ const initialState: SpaceHistoryState = {
 };
 
 /**
- * SpaceHistoryReducer
+ * Reducer
  */
-export default function SpaceHistoryReducer(
+export default function Reducer(
     state = initialState,
-    action: SpaceHistoryActions,
-): SpaceHistoryState {
+    action: redux_types.Actions,
+): redux_types.State {
     switch (action.type) {
-        case RESET_SPACE_HISTORY:
+        case redux_types.RESET_SPACE_HISTORY:
             return {
                 data: {
                     stack: [],
@@ -31,7 +26,7 @@ export default function SpaceHistoryReducer(
                 },
             };
 
-        case PUSH_INTO_SPACE_HISTORY:
+        case redux_types.PUSH_INTO_SPACE_HISTORY:
             if (!state.data.headers[action.spaceHeader.id]) {
                 state.data.stack.push(action.spaceHeader.id);
                 return {

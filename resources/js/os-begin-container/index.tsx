@@ -1,31 +1,27 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
-
-import RootState from '../redux-types';
-import { LoggedStatus } from '../redux-types/auth';
 
 import LoginForm from './login-form';
 import SignupForm from './signup-form';
 
-import OSOrganizer from '../model/organizer';
-
-interface _ReduxProps {
-    /**
-     * Logged status
-     */
-    loggedStatus: LoggedStatus;
-
-    /**
-     * Current user
-     */
-    currentUser?: OSOrganizer;
-}
-
+/**
+ *
+ *
+ * OSBeginContainer props
+ *
+ *
+ */
 interface OSBeginContainerProps extends _ReduxProps {}
 
+/**
+ *
+ *
+ * OSBeginContainer component
+ *
+ *
+ */
 class _OSBeginContainer extends React.Component<OSBeginContainerProps> {
-    state = {
+    public state = {
         currentView: 'login',
     };
 
@@ -59,7 +55,10 @@ class _OSBeginContainer extends React.Component<OSBeginContainerProps> {
     };
 
     render() {
-        if (this.props.loggedStatus === 'success' && this.props.currentUser) {
+        if (
+            this.props.loginStatus.status === 'succeed' &&
+            this.props.currentUser
+        ) {
             return <Redirect to={`/${this.props.currentUser.uid}`} />;
         } else
             return (
@@ -87,8 +86,33 @@ class _OSBeginContainer extends React.Component<OSBeginContainerProps> {
     }
 }
 
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+import { connect } from 'react-redux';
+import RootState from '../redux-types';
+
+import Organizer from '../model/organizer';
+import { LoginStatus } from '../model/system';
+
+interface _ReduxProps {
+    /**
+     * Logged status
+     */
+    loginStatus: LoginStatus;
+
+    /**
+     * Current user
+     */
+    currentUser?: Organizer;
+}
+
 const mapStateToProps = (state: RootState): _ReduxProps => ({
-    loggedStatus: state.auth.loggedStatus,
+    loginStatus: state.auth.loginStatus,
     currentUser: state.auth.currentUser,
 });
 

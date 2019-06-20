@@ -1,25 +1,21 @@
 import { ActionCreator } from 'redux';
 
-import {
-    ResetSpaceHistoryAction,
-    RESET_SPACE_HISTORY,
-    PushIntoSpaceHistoryAction,
-    PUSH_INTO_SPACE_HISTORY,
-} from '../redux-types/space-history';
+import * as redux_types from '../redux-types/space-history';
+
 import { SpaceHeader } from '../model/space-header';
 
 /**
  * Action Creators
  */
 export const resetSpaceHistory: ActionCreator<
-    ResetSpaceHistoryAction
+    redux_types.ResetSpaceHistoryAction
 > = () => ({
-    type: RESET_SPACE_HISTORY,
+    type: redux_types.RESET_SPACE_HISTORY,
 });
 
-export const pushIntoSpaceHistory: ActionCreator<PushIntoSpaceHistoryAction> = (
-    spaceHeader: SpaceHeader,
-) => ({
-    type: PUSH_INTO_SPACE_HISTORY,
+export const pushIntoSpaceHistory: ActionCreator<
+    redux_types.PushIntoSpaceHistoryAction
+> = (spaceHeader: SpaceHeader) => ({
+    type: redux_types.PUSH_INTO_SPACE_HISTORY,
     spaceHeader,
 });

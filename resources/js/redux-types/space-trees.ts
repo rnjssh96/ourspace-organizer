@@ -1,50 +1,48 @@
-import SpaceTrees from '../model/space-tree';
 import { Action } from 'redux';
 
+import SpaceTrees from '../model/space-tree';
+import { RequestStatus } from '../model/system';
+
 /**
- * Space Trees State
+ * State
  */
-export interface SpaceTreesState {
-    data: SpaceTrees;
-    status: {
-        requestingSpaceTrees: boolean;
-    };
+export interface State {
+    data?: SpaceTrees;
+    requestingStatus: RequestStatus;
 }
 
 /**
  * Action Constants
  */
 // prettier-ignore
-export const REQUEST_SPACE_TREES = 'space-tree/REQUEST_SPACE_TREES';
+export const START_REQUEST = 'space-trees/START_REQUEST';
 // prettier-ignore
-export const RECEIVE_SPACE_TREES = 'space-tree/RECEIVE_SPACE_TREES';
+export const RECEIVE_REQUEST = 'space-trees/RECEIVE_REQUEST';
 // prettier-ignore
-export const END_REQUEST_SPACE_TREES = 'current-space/END_REQUEST_SPACE_TREES';
+export const FAIL_REQUEST = 'space-trees/FAIL_REQUEST';
 // prettier-ignore
-export const RESET_SPACE_TREES = 'current-space/RESET_SPACE_TREES';
+export const RESET_DATA = 'space-trees/RESET_DATA';
 
 /**
  * Action Interfacess
  */
-export interface RequestSpaceTreesAction
-    extends Action<typeof REQUEST_SPACE_TREES> {}
+export interface StartRequestAction extends Action<typeof START_REQUEST> {}
 
-export interface ReceiveSpaceTreesAction
-    extends Action<typeof RECEIVE_SPACE_TREES> {
-    spaceTrees: SpaceTrees;
+export interface ReceiveRequestAction extends Action<typeof RECEIVE_REQUEST> {
+    data: SpaceTrees;
 }
 
-export interface EndRequestSpaceTreesAction
-    extends Action<typeof END_REQUEST_SPACE_TREES> {}
+export interface FailRequestAction extends Action<typeof FAIL_REQUEST> {
+    message: string;
+}
 
-export interface ResetSpaceTreesAction
-    extends Action<typeof RESET_SPACE_TREES> {}
+export interface ResetDataAction extends Action<typeof RESET_DATA> {}
 
 /**
  * Action Types
  */
-export type SpaceTreesActions =
-    | RequestSpaceTreesAction
-    | ReceiveSpaceTreesAction
-    | EndRequestSpaceTreesAction
-    | ResetSpaceTreesAction;
+export type Actions =
+    | StartRequestAction
+    | ReceiveRequestAction
+    | FailRequestAction
+    | ResetDataAction;

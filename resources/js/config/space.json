@@ -1,10 +1,10 @@
 {
-    "busy-level": {
+    "busy_level": {
         "1": { "en": "Normal", "ko": "보통" },
         "2": { "en": "Busy", "ko": "바쁨" },
         "3": { "en": "Very Busy", "ko": "매우 바쁨" }
     },
-    "type": {
+    "space_type": {
         "0": { "en": "library", "ko": "도서관" },
         "1": { "en": "startup", "ko": "창업공간" },
         "2": { "en": "museum", "ko": "박물관" },

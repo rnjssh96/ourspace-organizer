@@ -1,118 +1,106 @@
 import { ActionCreator } from 'redux';
 
+import * as redux_types from '../redux-types/current-space';
+
 import Space, { BusyLevel, AmenityTag } from '../model/space';
-import {
-    UPDATE_SPACE_INTRODUCE,
-    UpdateSpaceIntroduceAction,
-    SET_BUSY_LEVEL,
-    SetBusyLevelAction,
-    RequestSpaceAction,
-    ReceiveSpaceAction,
-    REQUEST_SPACE,
-    RECEIVE_SPACE,
-    EndRequestSpaceAction,
-    END_REQUEST_SPACE,
-    StartUpdateOHAction,
-    FinishUpdateOHAction,
-    START_UPDATE_OH,
-    FINISH_UPDATE_OH,
-    EndUpdateOHAction,
-    END_UPDATE_OH,
-    ResetSpaceAction,
-    RESET_SPACE,
-    StartUpdateATAction,
-    FinishUpdateATAction,
-    EndUpdateATAction,
-    START_UPDATE_AT,
-    END_UPDATE_AT,
-    FINISH_UPDATE_AT,
-    StartUpdateImagesAction,
-    FinishUpdateImagesAction,
-    START_UPDATE_IMAGES,
-    FINISH_UPDATE_IMAGES,
-    END_UPDATE_IMAGES,
-    EndUpdateImagesAction,
-} from '../redux-types/current-space';
 
 /**
  * Action Creators
  */
-export const requestSpace: ActionCreator<RequestSpaceAction> = () => ({
-    type: REQUEST_SPACE,
+export const startRequest: ActionCreator<
+    redux_types.StartRequestAction
+> = () => ({
+    type: redux_types.START_REQUEST,
 });
 
-export const receiveSpace: ActionCreator<ReceiveSpaceAction> = (
+export const receiveRequest: ActionCreator<redux_types.ReceiveRequestAction> = (
     space: Space,
 ) => ({
-    type: RECEIVE_SPACE,
+    type: redux_types.RECEIVE_REQUEST,
     space,
 });
 
-export const endRequestSpace: ActionCreator<EndRequestSpaceAction> = () => ({
-    type: END_REQUEST_SPACE,
-});
-
-export const resetSpace: ActionCreator<ResetSpaceAction> = () => ({
-    type: RESET_SPACE,
-});
-
-export const updateSpaceIntroduce: ActionCreator<UpdateSpaceIntroduceAction> = (
-    spaceIntroduce: string,
+export const failRequest: ActionCreator<redux_types.FailRequestAction> = (
+    message: string,
 ) => ({
-    type: UPDATE_SPACE_INTRODUCE,
+    type: redux_types.FAIL_REQUEST,
+    message,
+});
+
+export const resetData: ActionCreator<redux_types.ResetDataAction> = () => ({
+    type: redux_types.RESET_DATA,
+});
+
+export const updateSpaceIntroduce: ActionCreator<
+    redux_types.UpdateSpaceIntroduceAction
+> = (spaceIntroduce: string) => ({
+    type: redux_types.UPDATE_SPACE_INTRODUCE,
     spaceIntroduce,
 });
 
-export const startUpdateOH: ActionCreator<StartUpdateOHAction> = () => ({
-    type: START_UPDATE_OH,
+export const startUpdateOH: ActionCreator<
+    redux_types.StartUpdateOHAction
+> = () => ({
+    type: redux_types.START_UPDATE_OH,
 });
 
-export const finishUpdateOH: ActionCreator<FinishUpdateOHAction> = (
-    operatingHours: string[],
-) => ({
-    type: FINISH_UPDATE_OH,
+export const succeedUpdateOH: ActionCreator<
+    redux_types.SucceedUpdateOHAction
+> = (operatingHours: string[]) => ({
+    type: redux_types.SUCCEED_UPDATE_OH,
     operatingHours,
 });
 
-export const endUpdateOH: ActionCreator<EndUpdateOHAction> = () => ({
-    type: END_UPDATE_OH,
+export const failUpdateOH: ActionCreator<redux_types.FailUpdateOHAction> = (
+    message: string,
+) => ({
+    type: redux_types.FAIL_UPDATE_OH,
+    message,
 });
 
-export const setBusyLevel: ActionCreator<SetBusyLevelAction> = (
+export const setBusyLevel: ActionCreator<redux_types.SetBusyLevelAction> = (
     busyLevel: BusyLevel,
 ) => ({
-    type: SET_BUSY_LEVEL,
+    type: redux_types.SET_BUSY_LEVEL,
     busyLevel,
 });
 
-export const startUpdateAT: ActionCreator<StartUpdateATAction> = () => ({
-    type: START_UPDATE_AT,
+export const startUpdateAT: ActionCreator<
+    redux_types.StartUpdateATAction
+> = () => ({
+    type: redux_types.START_UPDATE_AT,
 });
 
-export const finishUpdateAT: ActionCreator<FinishUpdateATAction> = (
-    amenityTags: AmenityTag[],
-) => ({
-    type: FINISH_UPDATE_AT,
+export const succeedUpdateAT: ActionCreator<
+    redux_types.SucceedUpdateATAction
+> = (amenityTags: AmenityTag[]) => ({
+    type: redux_types.SUCCEED_UPDATE_AT,
     amenityTags,
 });
 
-export const endUpdateAT: ActionCreator<EndUpdateATAction> = () => ({
-    type: END_UPDATE_AT,
+export const failUpdateAT: ActionCreator<redux_types.FailUpdateATAction> = (
+    message: string,
+) => ({
+    type: redux_types.FAIL_UPDATE_AT,
+    message,
 });
 
 export const startUpdateImages: ActionCreator<
-    StartUpdateImagesAction
+    redux_types.StartUpdateImagesAction
 > = () => ({
-    type: START_UPDATE_IMAGES,
+    type: redux_types.START_UPDATE_IMAGES,
 });
 
-export const finishUpdateImages: ActionCreator<FinishUpdateImagesAction> = (
-    images: string[],
-) => ({
-    type: FINISH_UPDATE_IMAGES,
+export const succeedUpdateImages: ActionCreator<
+    redux_types.SucceedUpdateImagesAction
+> = (images: string[]) => ({
+    type: redux_types.SUCCEED_UPDATE_IMAGES,
     images,
 });
 
-export const endUpdateImages: ActionCreator<EndUpdateImagesAction> = () => ({
-    type: END_UPDATE_IMAGES,
+export const failUpdateImages: ActionCreator<
+    redux_types.FailUpdateImagesAction
+> = (message: string) => ({
+    type: redux_types.FAIL_UPDATE_IMAGES,
+    message,
 });

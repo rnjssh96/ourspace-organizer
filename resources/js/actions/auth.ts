@@ -1,62 +1,51 @@
 import { ActionCreator } from 'redux';
 
-import {
-    ON_PROCESS,
-    LOGIN_SUCCESS,
-    OnProcessAction,
-    LoginSuccessAction,
-    LoginFailAction,
-    LOGIN_FAIL,
-    LogoutAction,
-    LOGOUT,
-    SignupOnProcessAction,
-    SignupSuccessAction,
-    SignupFailAction,
-    SIGNUP_ON_PROCESS,
-    SIGNUP_SUCCESS,
-    SIGNUP_FAIL,
-} from '../redux-types/auth';
+import * as redux_types from '../redux-types/auth';
 
-import OSOrganizer from '../model/organizer';
+import Organizer from '../model/organizer';
 
 /**
  * Action Creators
  */
-export const onProcess: ActionCreator<OnProcessAction> = () => ({
-    type: ON_PROCESS,
-    loggedStatus: 'processing',
+export const requestLogin: ActionCreator<
+    redux_types.RequestLoginAction
+> = () => ({
+    type: redux_types.REQUEST_LOGIN,
 });
 
-export const loginSuccess: ActionCreator<LoginSuccessAction> = (
-    currentUser: OSOrganizer,
+export const succeedLogin: ActionCreator<redux_types.SucceedLoginAction> = (
+    currentUser: Organizer,
 ) => ({
-    type: LOGIN_SUCCESS,
-    loggedStatus: 'success',
+    type: redux_types.SUCCEED_LOGIN,
     currentUser,
 });
 
-export const loginFail: ActionCreator<LoginFailAction> = errorMessage => ({
-    type: LOGIN_FAIL,
-    loggedStatus: 'failed',
-    errorMessage,
+export const failLogin: ActionCreator<redux_types.FailLoginAction> = (
+    message: string,
+) => ({
+    type: redux_types.FAIL_LOGIN,
+    message,
 });
 
-export const logout: ActionCreator<LogoutAction> = () => ({
-    type: LOGOUT,
-    loggedStatus: 'ready',
+export const logout: ActionCreator<redux_types.LogoutAction> = () => ({
+    type: redux_types.LOGOUT,
 });
 
-export const signupOnProcess: ActionCreator<SignupOnProcessAction> = () => ({
-    type: SIGNUP_ON_PROCESS,
-    signupStatus: 'processing',
+export const requestSignup: ActionCreator<
+    redux_types.RequestSignupAction
+> = () => ({
+    type: redux_types.REQUEST_SIGNUP,
 });
 
-export const signupSuccess: ActionCreator<SignupSuccessAction> = () => ({
-    type: SIGNUP_SUCCESS,
-    signupStatus: 'success',
+export const succeedSignup: ActionCreator<
+    redux_types.SucceedSignupAction
+> = () => ({
+    type: redux_types.SUCCEED_SIGNUP,
 });
 
-export const signupFail: ActionCreator<SignupFailAction> = () => ({
-    type: SIGNUP_FAIL,
-    signupStatus: 'failed',
+export const failSignup: ActionCreator<redux_types.FailSignupAction> = (
+    message: string,
+) => ({
+    type: redux_types.FAIL_SIGNUP,
+    message,
 });

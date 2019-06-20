@@ -4,9 +4,9 @@ import SpaceHistory from '../model/space-history';
 import { SpaceHeader } from '../model/space-header';
 
 /**
- * Space History State
+ * State
  */
-export interface SpaceHistoryState {
+export interface State {
     data: SpaceHistory;
 }
 
@@ -14,9 +14,9 @@ export interface SpaceHistoryState {
  * Action Constants
  */
 // prettier-ignore
-export const RESET_SPACE_HISTORY = 'current-space/RESET_SPACE_HISTORY';
+export const RESET_SPACE_HISTORY = 'space-history/RESET_SPACE_HISTORY';
 // prettier-ignore
-export const PUSH_INTO_SPACE_HISTORY = 'current-space/PUSH_INTO_SPACE_HISTORY';
+export const PUSH_INTO_SPACE_HISTORY = 'space-history/PUSH_INTO_SPACE_HISTORY';
 
 /**
  * Action Interfacess
@@ -32,6 +32,4 @@ export interface PushIntoSpaceHistoryAction
 /**
  * Action Types
  */
-export type SpaceHistoryActions =
-    | ResetSpaceHistoryAction
-    | PushIntoSpaceHistoryAction;
+export type Actions = ResetSpaceHistoryAction | PushIntoSpaceHistoryAction;
