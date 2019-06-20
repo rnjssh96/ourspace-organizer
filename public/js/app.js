@@ -77617,10 +77617,10 @@ exports.AllowedFileMime = {
 
 /***/ }),
 
-/***/ "./resources/js/config/firebase/index.ts":
-/*!***********************************************!*\
-  !*** ./resources/js/config/firebase/index.ts ***!
-  \***********************************************/
+/***/ "./resources/js/config/firebase.ts":
+/*!*****************************************!*\
+  !*** ./resources/js/config/firebase.ts ***!
+  \*****************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -79074,7 +79074,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const firebase_1 = __importDefault(__webpack_require__(/*! ../config/firebase */ "./resources/js/config/firebase/index.ts"));
+const firebase_1 = __importDefault(__webpack_require__(/*! ../config/firebase */ "./resources/js/config/firebase.ts"));
 const osdb_axios_1 = __importDefault(__webpack_require__(/*! ../config/osdb-axios */ "./resources/js/config/osdb-axios.ts"));
 const organizer_1 = __webpack_require__(/*! ../model/organizer */ "./resources/js/model/organizer.ts");
 const authActions = __importStar(__webpack_require__(/*! ../actions/auth */ "./resources/js/actions/auth.ts"));
@@ -79179,7 +79179,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const osdb_axios_1 = __importDefault(__webpack_require__(/*! ../config/osdb-axios */ "./resources/js/config/osdb-axios.ts"));
-const firebase_1 = __importDefault(__webpack_require__(/*! ../config/firebase */ "./resources/js/config/firebase/index.ts"));
+const firebase_1 = __importDefault(__webpack_require__(/*! ../config/firebase */ "./resources/js/config/firebase.ts"));
 const space_1 = __webpack_require__(/*! ../model/space */ "./resources/js/model/space.ts");
 const currentSpaceActions = __importStar(__webpack_require__(/*! ../actions/current-space */ "./resources/js/actions/current-space.ts"));
 const space_history_1 = __webpack_require__(/*! ../actions/space-history */ "./resources/js/actions/space-history.ts");
