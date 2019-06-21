@@ -17,14 +17,17 @@
 // Styles
 @import 'app-container';
 
+// Begin Screen
 @import 'os-begin-container/os-begin-container';
 @import 'os-begin-container/login-form';
 @import 'os-begin-container/signup-form';
 
+// Home Screen
 @import 'os-home-container/os-home-container';
 @import 'os-home-container/home-header';
 @import 'os-home-container/home-main-view';
 
+// Components
 @import 'components/os-space-tree';
 @import 'components/os-space-history';
 @import 'components/os-page-status';
@@ -38,5 +41,4 @@
 @import 'components/operating-hour-edit-modal';
 @import 'components/amenities-edit-modal';
 @import 'components/image-upload-modal';
-// @import 'components/location-edit-modal';
 @import 'components/os-space-introduce';

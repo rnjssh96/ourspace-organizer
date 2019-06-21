@@ -27,7 +27,7 @@ class _HomeSpacesTab extends React.Component<HomeSpacesTabProps> {
     }
 
     render() {
-        if (this.props.requestingStatus) {
+        if (this.props.requestingStatus.status === 'requesting') {
             return <OSPageStatus status="loading" />;
         } else {
             if (

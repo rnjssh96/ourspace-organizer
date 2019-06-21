@@ -51,7 +51,7 @@ class _OSAmenityTags extends React.Component<OSAmenityTagsProps> {
     };
 
     private _renderAmenities = () => {
-        if (this.props.updatingAmentiyTags) {
+        if (this.props.updatingAmentiyTags.status === 'requesting') {
             return <OSPageStatus status="loading" />;
         } else if (
             this.props.amenityTags &&

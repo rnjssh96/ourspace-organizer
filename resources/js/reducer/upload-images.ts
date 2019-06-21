@@ -1,17 +1,9 @@
-import {
-    UploadImagesState,
-    UploadImagesActions,
-    ADD_UPLOAD_IMAGE,
-    SET_IMAGE_DATA,
-    UPDATE_UPLOAD_PROGRESS,
-    RESET_UPLOAD_IMAGES,
-    DELETE_UPLOAD_IMAGE,
-} from '../redux-types/upload-images';
+import * as redux_types from '../redux-types/upload-images';
 
 /**
  * Initial State
  */
-const initialState: UploadImagesState = {
+const initialState: redux_types.State = {
     imagesCount: 0,
     uploadImages: {},
 };
@@ -21,17 +13,17 @@ const initialState: UploadImagesState = {
  */
 export default function UploadImagesReducer(
     state = initialState,
-    action: UploadImagesActions,
-): UploadImagesState {
+    action: redux_types.Actions,
+): redux_types.State {
     switch (action.type) {
-        case RESET_UPLOAD_IMAGES:
+        case redux_types.RESET_UPLOAD_IMAGES:
             return {
                 ...state,
                 imagesCount: 0,
                 uploadImages: {},
             };
 
-        case ADD_UPLOAD_IMAGE:
+        case redux_types.ADD_UPLOAD_IMAGE:
             return {
                 ...state,
                 imagesCount: state.imagesCount + 1,
@@ -41,7 +33,7 @@ export default function UploadImagesReducer(
                 },
             };
 
-        case UPDATE_UPLOAD_PROGRESS:
+        case redux_types.UPDATE_UPLOAD_PROGRESS:
             return {
                 ...state,
                 uploadImages: {
@@ -53,7 +45,7 @@ export default function UploadImagesReducer(
                 },
             };
 
-        case SET_IMAGE_DATA:
+        case redux_types.SET_IMAGE_DATA:
             return {
                 ...state,
                 uploadImages: {
@@ -65,7 +57,7 @@ export default function UploadImagesReducer(
                 },
             };
 
-        case DELETE_UPLOAD_IMAGE:
+        case redux_types.DELETE_UPLOAD_IMAGE:
             delete state.uploadImages[action.key];
             return {
                 ...state,

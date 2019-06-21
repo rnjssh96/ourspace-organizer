@@ -26,7 +26,7 @@ interface HomeMainViewProps extends _ReduxProps {}
  */
 class _HomeMainView extends React.Component<HomeMainViewProps> {
     render() {
-        if (this.props.requestingSpaceStatus) {
+        if (this.props.requestingSpaceStatus.status === 'requesting') {
             return <OSPageStatus status="loading" />;
         } else if (!this.props.currentSpaceID) {
             return (

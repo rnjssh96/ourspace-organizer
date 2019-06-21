@@ -1,8 +1,8 @@
 import { ActionCreator, Action } from 'redux';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 
-import OSFirebase from '../config/firebase';
 import OSDBAxios from '../config/osdb-axios';
+import OSFirebase from '../config/firebase';
 
 import { RawOrganizer, rawOrganizer2Organizer } from '../model/organizer';
 

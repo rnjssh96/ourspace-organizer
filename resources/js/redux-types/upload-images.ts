@@ -13,7 +13,7 @@ export interface UploadImage {
 }
 export type UploadImagesMap = { [key in number]: UploadImage };
 
-export type UploadImagesState = {
+export type State = {
     imagesCount: number;
     uploadImages: UploadImagesMap;
 };
@@ -62,7 +62,7 @@ export interface DeleteUploadImageAction
 /**
  * Action Types
  */
-export type UploadImagesActions =
+export type Actions =
     | ResetUploadImagesAction
     | AddUploadImageAction
     | UpdateUploadProgressAction

@@ -1,13 +1,9 @@
-import {
-    SelectedAmenitiesState,
-    SelectedAmenitiesActions,
-    SET_SELECTED_AMENITIES,
-} from '../redux-types/selected-amenities';
+import * as redux_types from '../redux-types/selected-amenities';
 
 /**
  * Initial State
  */
-const initialState: SelectedAmenitiesState = {
+const initialState: redux_types.State = {
     selectedAmenities: new Set([]),
 };
 
@@ -16,10 +12,10 @@ const initialState: SelectedAmenitiesState = {
  */
 export default function SelectedAmenitiesReducer(
     state = initialState,
-    action: SelectedAmenitiesActions,
-): SelectedAmenitiesState {
+    action: redux_types.Actions,
+): redux_types.State {
     switch (action.type) {
-        case SET_SELECTED_AMENITIES:
+        case redux_types.SET_SELECTED_AMENITIES:
             return {
                 ...state,
                 selectedAmenities: action.selectedAmenities,

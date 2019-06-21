@@ -5,7 +5,7 @@ import { AmenityTag } from '../model/space';
 /**
  * Selected Amenities State
  */
-export interface SelectedAmenitiesState {
+export interface State {
     selectedAmenities: Set<AmenityTag>;
 }
 
@@ -26,4 +26,4 @@ export interface SetSelectedAmenityAction
 /**
  * Action Types
  */
-export type SelectedAmenitiesActions = SetSelectedAmenityAction;
+export type Actions = SetSelectedAmenityAction;

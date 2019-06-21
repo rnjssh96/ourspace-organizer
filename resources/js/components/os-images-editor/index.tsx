@@ -29,7 +29,7 @@ class _OSImagesEditor extends React.Component<OSImagesEditorProps> {
     };
 
     private _renderImages() {
-        if (this.props.updatingImagesStatus) {
+        if (this.props.updatingImagesStatus.status === 'requesting') {
             return <OSPageStatus status="loading" />;
         } else if (this.props.images && this.props.images.length > 0) {
             return this.props.images.map((image: string) => (
