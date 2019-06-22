@@ -3,20 +3,20 @@ import React from 'react';
 /**
  *
  *
- * OSRankDisplay props
+ * OSRateDisplay props
  *
  *
  */
-interface OSRankDisplayProps extends _ReduxProps {}
+interface OSRateDisplayProps extends _ReduxProps {}
 
 /**
  *
  *
- * OSRankDisplay component
+ * OSRateDisplay component
  *
  *
  */
-class _OSRankDisplay extends React.Component<OSRankDisplayProps> {
+class _OSRateDisplay extends React.Component<OSRateDisplayProps> {
     private _renderStar = (index: number, percentage: number) => (
         <div key={index} className="star">
             <i className="far fa-star" />
@@ -30,25 +30,21 @@ class _OSRankDisplay extends React.Component<OSRankDisplayProps> {
         let p,
             rtn = [];
         for (let i = 0; i < 5; i++) {
-            p = this.props.rank - i;
+            p = this.props.rate - i;
             p = p > 1 ? 1 : p < 0 ? 0 : p;
             rtn.push(this._renderStar(i, p));
         }
         return rtn;
     };
 
-    private _renderRank = () => {
-        if (this.props.rank === 0) {
-            return <p className="h1">- . - -</p>;
-        } else {
-            return <p className="h1">{this.props.rank.toFixed(2)}</p>;
-        }
+    private _renderRate = () => {
+        return <p id="rate">{this.props.rate.toFixed(2)}</p>;
     };
 
     render() {
         return (
-            <div id="os-rank-display">
-                {this._renderRank()}
+            <div id="os-rate-display">
+                {this._renderRate()}
                 <div id="stars">{this._renderStars()}</div>
             </div>
         );
@@ -69,18 +65,18 @@ interface _ReduxProps {
     /**
      * Overall rank of the spcae
      */
-    rank: number;
+    rate: number;
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
-    rank: (state.currentSpace.data && state.currentSpace.data.rank) || 0,
+    rate: (state.currentSpace.data && state.currentSpace.data.rank) || 0,
 });
 
 const mapDispatchToProps = {};
 
-const OSRankDisplay = connect(
+const OSRateDisplay = connect(
     mapStateToProps,
     mapDispatchToProps,
-)(_OSRankDisplay);
+)(_OSRateDisplay);
 
-export default OSRankDisplay;
+export default OSRateDisplay;

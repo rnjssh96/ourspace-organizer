@@ -31,7 +31,7 @@ export const RESET_DATA = 'current-space/RESET_DATA';
 // Space introduce
 
 // prettier-ignore
-export const UPDATE_SPACE_INTRODUCE = 'current-space/UPDATE_SPACE_INTRODUCE';
+export const UPDATE_SPACE_DESCRIPTION = 'current-space/UPDATE_SPACE_DESCRIPTION';
 
 // Operating hour
 
@@ -79,9 +79,9 @@ export interface FailRequestAction extends Action<typeof FAIL_REQUEST> {
 export interface ResetDataAction extends Action<typeof RESET_DATA> {}
 
 // Space introduce
-export interface UpdateSpaceIntroduceAction
-    extends Action<typeof UPDATE_SPACE_INTRODUCE> {
-    spaceIntroduce: string;
+export interface UpdateSpaceDescriptionAction
+    extends Action<typeof UPDATE_SPACE_DESCRIPTION> {
+    spaceDescription: string;
 }
 
 // Operating hour
@@ -137,7 +137,7 @@ export type Actions =
     | FailRequestAction
     | ResetDataAction
     // Space introduce
-    | UpdateSpaceIntroduceAction
+    | UpdateSpaceDescriptionAction
     // Operating hour
     | StartUpdateOHAction
     | SucceedUpdateOHAction

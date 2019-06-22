@@ -1,0 +1,91 @@
+#general-info {
+    & > #space-name-row {
+        // flex
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
+
+        & > #space-name {
+            // flex
+            display: flex;
+            flex-direction: row;
+            align-items: flex-end;
+
+            // margin
+            margin-right: 1rem;
+
+            & > #type {
+                // text color
+                color: $grey-1;
+
+                // margin
+                margin-left: 0.5rem;
+            }
+        }
+    }
+
+    & > #rate-row {
+        // flex
+        display: flex;
+        flex-direction: row;
+
+        // margin
+        margin-top: 1rem;
+    }
+
+    & > #location-row {
+        // flex
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+
+        // margin
+        margin-top: 1rem;
+
+        p {
+            // text color
+            color: $grey-1;
+        }
+
+        & > #icon {
+            // margin
+            margin-right: 0.5rem;
+        }
+    }
+
+    & > #operating-hours-row {
+        // flex
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+
+        // margin
+        margin-top: 1rem;
+
+        & > #operating-hours {
+            // flex
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+
+            // margin
+            margin-right: 1rem;
+
+            p {
+                // text color
+                color: $grey-1;
+            }
+
+            & > #icon {
+                // margin
+                margin-right: 0.5rem;
+            }
+
+            & > #value {
+                // flex
+                display: flex;
+                flex-direction: column;
+            }
+        }
+    }
+}

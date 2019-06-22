@@ -1,3 +1,19 @@
+/**
+ *
+ *
+ * AmenityTags props
+ *
+ *
+ */
+interface AmenityTagsProps extends _ReduxProps, _ReduxActionCreators {}
+
+/**
+ *
+ *
+ * AmenityTags component
+ *
+ *
+ */
 import React from 'react';
 
 import { AmenityTag, interpretAmenity } from '../../model/space';
@@ -8,23 +24,7 @@ import AmenitiesEditModal, {
 
 import OSPageStatus from '../os-page-status';
 
-/**
- *
- *
- * OSAmenityTags props
- *
- *
- */
-interface OSAmenityTagsProps extends _ReduxProps, _ReduxActionCreators {}
-
-/**
- *
- *
- * OSAmenityTags component
- *
- *
- */
-class _OSAmenityTags extends React.Component<OSAmenityTagsProps> {
+class _AmenityTags extends React.Component<AmenityTagsProps> {
     private _renderEmpty = () => {
         return (
             <div id="empty">
@@ -69,9 +69,9 @@ class _OSAmenityTags extends React.Component<OSAmenityTagsProps> {
         this.props.setSelectedAmenities(new Set(this.props.amenityTags));
     };
 
-    render() {
+    render_temp() {
         return (
-            <div id="os-amenity-tags">
+            <div id="amenity-tags">
                 <div className="header">
                     <p className="h5">편의시설</p>
                     <button
@@ -98,6 +98,24 @@ class _OSAmenityTags extends React.Component<OSAmenityTagsProps> {
             </div>
         );
     }
+
+    render() {
+        return (
+            <div id="amenity-tags" className="category">
+                <div className="header">
+                    <p className="h5">편의시설</p>
+                    <OSEditButton
+                        modalID={AmenitiesEditModalID}
+                        onClick={this._resetSelectedAmenities}
+                    />
+                </div>
+                <div className="body">
+                    <div id="amenities">{this._renderAmenities()}</div>
+                </div>
+                <AmenitiesEditModal />
+            </div>
+        );
+    }
 }
 
 /**
@@ -113,6 +131,7 @@ import RootState from '../../redux-types';
 import { RequestStatus } from '../../model/system';
 
 import { setSelectedAmenities } from '../../actions/selected-amenities';
+import OSEditButton from '../os-edit-button';
 
 interface _ReduxProps {
     /**
@@ -142,9 +161,9 @@ const mapDispatchToProps = {
     setSelectedAmenities,
 };
 
-const OSAmenityTags = connect(
+const AmenityTags = connect(
     mapStateToProps,
     mapDispatchToProps,
-)(_OSAmenityTags);
+)(_AmenityTags);
 
-export default OSAmenityTags;
+export default AmenityTags;

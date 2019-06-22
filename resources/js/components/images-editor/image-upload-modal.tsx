@@ -1,12 +1,3 @@
-import React from 'react';
-import Dropzone from 'react-dropzone';
-import ContentLoader from 'react-content-loader';
-import filesize from 'filesize';
-
-import { AllowedFileMime } from '../../config/allowed-file-mime';
-
-import { UploadImage } from '../../redux-types/upload-images';
-
 /**
  *
  *
@@ -23,6 +14,15 @@ interface ImageUploadModalProps extends _ReduxProps, _ReduxActionCreators {}
  *
  *
  */
+import React from 'react';
+import Dropzone from 'react-dropzone';
+import ContentLoader from 'react-content-loader';
+import filesize from 'filesize';
+
+import { AllowedFileMime } from '../../config/allowed-file-mime';
+
+import { UploadImage } from '../../redux-types/upload-images';
+
 export const ImageUploadModalID = 'image-upload-modal';
 
 class _ImageUploadModal extends React.Component<ImageUploadModalProps> {

@@ -1,0 +1,57 @@
+#space-list {
+    // flex
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    // padding
+    padding: 1rem;
+
+    & > #tab-list {
+        // size
+        flex: 1;
+
+        // padding
+        padding-left: 5rem;
+        padding-right: 2rem;
+
+        & > #tabs {
+            // make scroll
+            max-width: 100%;
+            overflow: scroll;
+
+            // flex
+            display: flex;
+            flex-direction: row;
+
+            & > .space-tab {
+                // padding
+                padding-left: 1.5rem;
+                padding-right: 1.5rem;
+
+                // border
+                border-right: 1px solid $grey-2;
+
+                &:first-child {
+                    // border
+                    border-left: 1px solid $grey-2;
+                }
+
+                // text color
+                color: $grey-2;
+
+                // cursor
+                cursor: pointer;
+
+                // animation
+                transition: color 0.3s ease-in-out;
+
+                &:hover,
+                &.active-space {
+                    // text color
+                    color: $black;
+                }
+            }
+        }
+    }
+}

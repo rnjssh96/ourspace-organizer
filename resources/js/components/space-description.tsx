@@ -1,31 +1,33 @@
+/**
+ *
+ *
+ * SpaceDescription props
+ *
+ *
+ */
+interface SpaceDescriptionProps extends _ReduxProps, _ReduxActionCreators {}
+
+/**
+ *
+ *
+ * SpaceDescription component
+ *
+ *
+ */
 import React from 'react';
 
-/**
- *
- *
- * OSSpaceIntroduce props
- *
- *
- */
-interface OSSpaceIntroduceProps extends _ReduxProps, _ReduxActionCreators {}
+import OSEditButton from './os-edit-button';
 
-/**
- *
- *
- * OSSpaceIntroduce component
- *
- *
- */
 type Mode = 'display' | 'edit';
 
-class _OSSpaceIntroduce extends React.Component<OSSpaceIntroduceProps> {
-    state: { mode: Mode; textValue: string } = {
+class _SpaceDescription extends React.Component<SpaceDescriptionProps> {
+    public state: { mode: Mode; textValue: string } = {
         mode: 'display',
         textValue: '',
     };
 
     private _swtichMode = (m: Mode) => {
-        this.setState({ mode: m, textValue: this.props.spaceIntroduce });
+        this.setState({ mode: m, textValue: this.props.spaceDescription });
     };
 
     private _onTextChange = (ev: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -36,13 +38,15 @@ class _OSSpaceIntroduce extends React.Component<OSSpaceIntroduceProps> {
     };
 
     private _save = () => {
-        this.props.updateSpaceIntroduce(this.state.textValue);
+        this.props.updateSpaceDescription(this.state.textValue);
         this._swtichMode('display');
     };
 
     private _renderDisplayMode = () =>
-        this.props.spaceIntroduce ? (
-            <p className="h6">{this.props.spaceIntroduce}</p>
+        this.props.spaceDescription ? (
+            <p id="description-text" className="h6">
+                {this.props.spaceDescription}
+            </p>
         ) : (
             <p id="no-intro" className="h6">
                 등록된 소개글이 없습니다.
@@ -82,23 +86,18 @@ class _OSSpaceIntroduce extends React.Component<OSSpaceIntroduceProps> {
 
     render() {
         return (
-            <div id="os-space-introduce">
+            <div id="space-description" className="category">
                 <div className="header">
                     <p className="h5">소개</p>
                     {this.state.mode === 'display' && (
-                        <button
+                        <OSEditButton
                             onClick={() => {
                                 this._swtichMode('edit');
                             }}
-                        >
-                            <p className="h6 os-grey-1">
-                                <i className="material-icons">edit</i>
-                                수정
-                            </p>
-                        </button>
+                        />
                     )}
                 </div>
-                <div className="body">
+                <div id="description" className="body">
                     {this.state.mode === 'display'
                         ? this._renderDisplayMode()
                         : this._renderEditMode()}
@@ -118,34 +117,34 @@ class _OSSpaceIntroduce extends React.Component<OSSpaceIntroduceProps> {
 import { connect } from 'react-redux';
 import RootState from '../redux-types';
 
-import { updateSpaceIntroduce } from '../actions/current-space';
+import { updateSpaceDescription } from '../actions/current-space';
 
 interface _ReduxProps {
     /**
-     * Introduction of the space
+     * Description of the space
      */
-    spaceIntroduce?: string;
+    spaceDescription?: string;
 }
 
 interface _ReduxActionCreators {
     /**
      * Update introduction of the space
      */
-    updateSpaceIntroduce: typeof updateSpaceIntroduce;
+    updateSpaceDescription: typeof updateSpaceDescription;
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
-    spaceIntroduce:
-        state.currentSpace.data && state.currentSpace.data.spaceIntroduce,
+    spaceDescription:
+        state.currentSpace.data && state.currentSpace.data.spaceDescription,
 });
 
 const mapDispatchToProps = {
-    updateSpaceIntroduce,
+    updateSpaceDescription,
 };
 
-const OSSpaceIntroduce = connect(
+const SpaceDescription = connect(
     mapStateToProps,
     mapDispatchToProps,
-)(_OSSpaceIntroduce);
+)(_SpaceDescription);
 
-export default OSSpaceIntroduce;
+export default SpaceDescription;

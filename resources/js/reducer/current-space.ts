@@ -40,13 +40,13 @@ export default function Reducer(
         case redux_types.RESET_DATA:
             return initialState;
 
-        case redux_types.UPDATE_SPACE_INTRODUCE:
+        case redux_types.UPDATE_SPACE_DESCRIPTION:
             if (state.data)
                 return {
                     ...state,
                     data: {
                         ...state.data,
-                        spaceIntroduce: action.spaceIntroduce,
+                        spaceDescription: action.spaceDescription,
                     },
                 };
             else return state;

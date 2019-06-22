@@ -1,0 +1,35 @@
+#os-edit-button {
+    // size
+    height: 1rem;
+
+    // flex
+    display: flex;
+    align-items: center;
+
+    // border
+    border-radius: 1rem;
+    border: 1px solid $grey-2;
+
+    // padding
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+
+    // text color
+    color: $grey-2;
+
+    // cursor
+    cursor: pointer;
+
+    &:hover {
+        // border
+        border: 1px solid $grey-1;
+
+        // text color
+        color: $grey-1;
+    }
+
+    & > p {
+        // font size
+        font-size: 80%;
+    }
+}

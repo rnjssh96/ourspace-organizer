@@ -23,22 +23,29 @@
 @import 'os-begin-container/signup-form';
 
 // Home Screen
-@import 'os-home-container/os-home-container';
-@import 'os-home-container/home-header';
-@import 'os-home-container/home-main-view';
+@import 'screen/home-screen';
+// @import 'os-home-container/os-home-container';
+// @import 'os-home-container/home-header';
+// @import 'os-home-container/home-main-view';
 
 // Components
-@import 'components/os-space-tree';
-@import 'components/os-space-history';
-@import 'components/os-page-status';
-// @import 'components/os-busy-level-selector';
+@import 'components/space-list';
+@import 'components/general-info';
+@import 'components/images-editor';
+@import 'components/space-description';
+@import 'components/amenity-tags';
+@import 'components/location-map';
+
+@import 'components/os-edit-button';
 @import 'components/os-rate-display';
-@import 'components/os-images-editor';
-// @import 'components/os-comments-viewer';
-@import 'components/os-amenity-tags';
-@import 'components/os-location-map';
-@import 'components/os-general-info';
+
 @import 'components/operating-hour-edit-modal';
 @import 'components/amenities-edit-modal';
 @import 'components/image-upload-modal';
-@import 'components/os-space-introduce';
+
+// needs update
+// @import 'components/os-space-tree';
+@import 'components/os-space-history';
+@import 'components/os-page-status';
+// @import 'components/os-busy-level-selector';
+// @import 'components/os-comments-viewer';

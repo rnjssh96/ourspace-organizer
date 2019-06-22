@@ -31,11 +31,11 @@ export const resetData: ActionCreator<redux_types.ResetDataAction> = () => ({
     type: redux_types.RESET_DATA,
 });
 
-export const updateSpaceIntroduce: ActionCreator<
-    redux_types.UpdateSpaceIntroduceAction
-> = (spaceIntroduce: string) => ({
-    type: redux_types.UPDATE_SPACE_INTRODUCE,
-    spaceIntroduce,
+export const updateSpaceDescription: ActionCreator<
+    redux_types.UpdateSpaceDescriptionAction
+> = (spaceDescription: string) => ({
+    type: redux_types.UPDATE_SPACE_DESCRIPTION,
+    spaceDescription,
 });
 
 export const startUpdateOH: ActionCreator<

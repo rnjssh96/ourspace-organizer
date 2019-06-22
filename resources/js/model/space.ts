@@ -98,7 +98,7 @@ export default interface Space {
     location: LatLng;
     operatingHours: string[];
     amenityTags: AmenityTag[];
-    spaceIntroduce: string;
+    spaceDescription: string;
     images: string[];
     rank: number;
     busyLevel: BusyLevel;
@@ -149,7 +149,7 @@ export const rawSpaces2SpaceList = (
         },
         operatingHours: rawSpace.operating_hours.split('\n'),
         amenityTags: Object.keys(rawSpace.amenity_tags) as AmenityTag[],
-        spaceIntroduce: '',
+        spaceDescription: '',
         images: rawSpace.images ? rawSpace.images : [],
         rank: rawSpace.rank,
         busyLevel: '1',

@@ -1,0 +1,116 @@
+#home-container {
+    // size
+    height: 100vh;
+
+    // padding
+    padding: 0;
+
+    #home-header {
+        // size
+        height: 25%;
+        width: 100%;
+
+        // flex
+        display: flex;
+        flex-direction: row;
+
+        #title-div {
+            // size
+            flex: 4;
+
+            background-color: green;
+        }
+
+        #profile-div {
+            // size
+            flex: 1;
+
+            background-color: pink;
+        }
+    }
+
+    #home-body {
+        // size
+        height: 75%;
+        width: 100%;
+
+        // flex
+        display: flex;
+        flex-direction: column;
+
+        #space-menu {
+            // padding
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        #workspace {
+            // size
+            flex: 1;
+
+            // flex
+            display: flex;
+            flex-direction: row;
+
+            // border
+            border-top: 1px solid $grey-2;
+
+            // padding
+            padding-left: 1rem;
+            padding-right: 1rem;
+
+            #left {
+                // size
+                flex: 2;
+
+                // flex
+                display: flex;
+                flex-direction: column;
+
+                // padding
+                padding: 1rem;
+
+                // make scroll
+                max-height: 100%;
+                overflow: scroll;
+
+                // for each category
+                & > .category {
+                    // margin
+                    margin-top: 3rem;
+
+                    & > .header {
+                        // flex
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: space-between;
+                        align-items: center;
+
+                        // margin
+                        margin-bottom: 0.5rem;
+                    }
+
+                    & > .body {
+                        // border
+                        border-radius: 0.5rem;
+                        border: 0.5px solid $grey-2;
+
+                        // fit in border radius
+                        overflow: hidden;
+                    }
+                }
+            }
+
+            #right {
+                // size
+                flex: 1;
+
+                // padding
+                padding: 1rem;
+
+                // border
+                border-left: 1px solid $grey-2;
+            }
+        }
+    }
+}

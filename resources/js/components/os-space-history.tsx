@@ -18,7 +18,7 @@ interface OSSpaceHistoryProps extends _ReduxProps, _ReduxActionCreators {}
  *
  */
 class _OSSpaceHistory extends React.Component<OSSpaceHistoryProps> {
-    state = {
+    public state = {
         searchWord: '',
     };
 

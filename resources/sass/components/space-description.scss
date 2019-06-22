@@ -1,31 +1,30 @@
-#os-space-introduce {
-    & > .body {
-        // border
-        border-top: 0.5px solid $grey-2;
-        border-bottom: 0.5px solid $grey-2;
+#space-description {
+    & > #description {
+        // text color
+        color: $grey-1;
 
         // padding
         padding-top: 1rem;
         padding-bottom: 1rem;
 
-        & > p {
+        & > #description-text {
             // padding
             padding-left: 1.5rem;
             padding-right: 1.5rem;
-
-            // text color
-            color: $grey-1;
 
             // space between lines
             line-height: 2;
 
             // apply line breaks
             white-space: pre-wrap;
+        }
 
-            &#no-intro {
-                // align text
-                text-align: center;
-            }
+        & > #no-intro {
+            // align text
+            text-align: center;
+
+            // margin
+            margin: 2rem;
         }
 
         & > #editor {

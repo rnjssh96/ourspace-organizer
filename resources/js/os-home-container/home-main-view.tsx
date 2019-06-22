@@ -1,12 +1,12 @@
 import React from 'react';
 
 import OSPageStatus from '../components/os-page-status';
-import OSRankDisplay from '../components/os-rank-display';
-import OSImagesEditor from '../components/os-images-editor';
-import OSAmenityTags from '../components/os-amenity-tags';
-import OSLoactionMap from '../components/os-loaction-map';
-import OSGeneralInfo from '../components/os-general-info';
-import OSSpaceIntroduce from '../components/os-space-introduce';
+import OSRankDisplay from '../components/os-rate-display';
+import OSImagesEditor from '../components/images-editor';
+import OSAmenityTags from '../components/amenity-tags';
+import OSLoactionMap from '../components/loaction-map';
+import OSGeneralInfo from '../components/general-info';
+import OSSpaceIntroduce from '../components/space-description';
 
 /**
  *

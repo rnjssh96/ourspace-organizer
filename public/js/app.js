@@ -6746,6 +6746,17 @@ exports.validateNamespace = validateNamespace;
 
 /***/ }),
 
+/***/ "./node_modules/attr-accept/dist/index.js":
+/*!************************************************!*\
+  !*** ./node_modules/attr-accept/dist/index.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports=function(t){function n(e){if(r[e])return r[e].exports;var o=r[e]={i:e,l:!1,exports:{}};return t[e].call(o.exports,o,o.exports,n),o.l=!0,o.exports}var r={};return n.m=t,n.c=r,n.d=function(t,r,e){n.o(t,r)||Object.defineProperty(t,r,{configurable:!1,enumerable:!0,get:e})},n.n=function(t){var r=t&&t.__esModule?function(){return t.default}:function(){return t};return n.d(r,"a",r),r},n.o=function(t,n){return Object.prototype.hasOwnProperty.call(t,n)},n.p="",n(n.s=13)}([function(t,n){var r=t.exports="undefined"!=typeof window&&window.Math==Math?window:"undefined"!=typeof self&&self.Math==Math?self:Function("return this")();"number"==typeof __g&&(__g=r)},function(t,n){t.exports=function(t){return"object"==typeof t?null!==t:"function"==typeof t}},function(t,n){var r=t.exports={version:"2.5.0"};"number"==typeof __e&&(__e=r)},function(t,n,r){t.exports=!r(4)(function(){return 7!=Object.defineProperty({},"a",{get:function(){return 7}}).a})},function(t,n){t.exports=function(t){try{return!!t()}catch(t){return!0}}},function(t,n){var r={}.toString;t.exports=function(t){return r.call(t).slice(8,-1)}},function(t,n,r){var e=r(32)("wks"),o=r(9),i=r(0).Symbol,u="function"==typeof i;(t.exports=function(t){return e[t]||(e[t]=u&&i[t]||(u?i:o)("Symbol."+t))}).store=e},function(t,n,r){var e=r(0),o=r(2),i=r(8),u=r(22),c=r(10),f=function(t,n,r){var a,s,p,l,v=t&f.F,y=t&f.G,h=t&f.S,d=t&f.P,x=t&f.B,g=y?e:h?e[n]||(e[n]={}):(e[n]||{}).prototype,m=y?o:o[n]||(o[n]={}),b=m.prototype||(m.prototype={});y&&(r=n);for(a in r)s=!v&&g&&void 0!==g[a],p=(s?g:r)[a],l=x&&s?c(p,e):d&&"function"==typeof p?c(Function.call,p):p,g&&u(g,a,p,t&f.U),m[a]!=p&&i(m,a,l),d&&b[a]!=p&&(b[a]=p)};e.core=o,f.F=1,f.G=2,f.S=4,f.P=8,f.B=16,f.W=32,f.U=64,f.R=128,t.exports=f},function(t,n,r){var e=r(16),o=r(21);t.exports=r(3)?function(t,n,r){return e.f(t,n,o(1,r))}:function(t,n,r){return t[n]=r,t}},function(t,n){var r=0,e=Math.random();t.exports=function(t){return"Symbol(".concat(void 0===t?"":t,")_",(++r+e).toString(36))}},function(t,n,r){var e=r(24);t.exports=function(t,n,r){if(e(t),void 0===n)return t;switch(r){case 1:return function(r){return t.call(n,r)};case 2:return function(r,e){return t.call(n,r,e)};case 3:return function(r,e,o){return t.call(n,r,e,o)}}return function(){return t.apply(n,arguments)}}},function(t,n){t.exports=function(t){if(void 0==t)throw TypeError("Can't call method on  "+t);return t}},function(t,n,r){var e=r(28),o=Math.min;t.exports=function(t){return t>0?o(e(t),9007199254740991):0}},function(t,n,r){"use strict";n.__esModule=!0,n.default=function(t,n){if(t&&n){var r=Array.isArray(n)?n:n.split(","),e=t.name||"",o=t.type||"",i=o.replace(/\/.*$/,"");return r.some(function(t){var n=t.trim();return"."===n.charAt(0)?e.toLowerCase().endsWith(n.toLowerCase()):n.endsWith("/*")?i===n.replace(/\/.*$/,""):o===n})}return!0},r(14),r(34)},function(t,n,r){r(15),t.exports=r(2).Array.some},function(t,n,r){"use strict";var e=r(7),o=r(25)(3);e(e.P+e.F*!r(33)([].some,!0),"Array",{some:function(t){return o(this,t,arguments[1])}})},function(t,n,r){var e=r(17),o=r(18),i=r(20),u=Object.defineProperty;n.f=r(3)?Object.defineProperty:function(t,n,r){if(e(t),n=i(n,!0),e(r),o)try{return u(t,n,r)}catch(t){}if("get"in r||"set"in r)throw TypeError("Accessors not supported!");return"value"in r&&(t[n]=r.value),t}},function(t,n,r){var e=r(1);t.exports=function(t){if(!e(t))throw TypeError(t+" is not an object!");return t}},function(t,n,r){t.exports=!r(3)&&!r(4)(function(){return 7!=Object.defineProperty(r(19)("div"),"a",{get:function(){return 7}}).a})},function(t,n,r){var e=r(1),o=r(0).document,i=e(o)&&e(o.createElement);t.exports=function(t){return i?o.createElement(t):{}}},function(t,n,r){var e=r(1);t.exports=function(t,n){if(!e(t))return t;var r,o;if(n&&"function"==typeof(r=t.toString)&&!e(o=r.call(t)))return o;if("function"==typeof(r=t.valueOf)&&!e(o=r.call(t)))return o;if(!n&&"function"==typeof(r=t.toString)&&!e(o=r.call(t)))return o;throw TypeError("Can't convert object to primitive value")}},function(t,n){t.exports=function(t,n){return{enumerable:!(1&t),configurable:!(2&t),writable:!(4&t),value:n}}},function(t,n,r){var e=r(0),o=r(8),i=r(23),u=r(9)("src"),c=Function.toString,f=(""+c).split("toString");r(2).inspectSource=function(t){return c.call(t)},(t.exports=function(t,n,r,c){var a="function"==typeof r;a&&(i(r,"name")||o(r,"name",n)),t[n]!==r&&(a&&(i(r,u)||o(r,u,t[n]?""+t[n]:f.join(String(n)))),t===e?t[n]=r:c?t[n]?t[n]=r:o(t,n,r):(delete t[n],o(t,n,r)))})(Function.prototype,"toString",function(){return"function"==typeof this&&this[u]||c.call(this)})},function(t,n){var r={}.hasOwnProperty;t.exports=function(t,n){return r.call(t,n)}},function(t,n){t.exports=function(t){if("function"!=typeof t)throw TypeError(t+" is not a function!");return t}},function(t,n,r){var e=r(10),o=r(26),i=r(27),u=r(12),c=r(29);t.exports=function(t,n){var r=1==t,f=2==t,a=3==t,s=4==t,p=6==t,l=5==t||p,v=n||c;return function(n,c,y){for(var h,d,x=i(n),g=o(x),m=e(c,y,3),b=u(g.length),_=0,w=r?v(n,b):f?v(n,0):void 0;b>_;_++)if((l||_ in g)&&(h=g[_],d=m(h,_,x),t))if(r)w[_]=d;else if(d)switch(t){case 3:return!0;case 5:return h;case 6:return _;case 2:w.push(h)}else if(s)return!1;return p?-1:a||s?s:w}}},function(t,n,r){var e=r(5);t.exports=Object("z").propertyIsEnumerable(0)?Object:function(t){return"String"==e(t)?t.split(""):Object(t)}},function(t,n,r){var e=r(11);t.exports=function(t){return Object(e(t))}},function(t,n){var r=Math.ceil,e=Math.floor;t.exports=function(t){return isNaN(t=+t)?0:(t>0?e:r)(t)}},function(t,n,r){var e=r(30);t.exports=function(t,n){return new(e(t))(n)}},function(t,n,r){var e=r(1),o=r(31),i=r(6)("species");t.exports=function(t){var n;return o(t)&&(n=t.constructor,"function"!=typeof n||n!==Array&&!o(n.prototype)||(n=void 0),e(n)&&null===(n=n[i])&&(n=void 0)),void 0===n?Array:n}},function(t,n,r){var e=r(5);t.exports=Array.isArray||function(t){return"Array"==e(t)}},function(t,n,r){var e=r(0),o=e["__core-js_shared__"]||(e["__core-js_shared__"]={});t.exports=function(t){return o[t]||(o[t]={})}},function(t,n,r){"use strict";var e=r(4);t.exports=function(t,n){return!!t&&e(function(){n?t.call(null,function(){},1):t.call(null)})}},function(t,n,r){r(35),t.exports=r(2).String.endsWith},function(t,n,r){"use strict";var e=r(7),o=r(12),i=r(36),u="".endsWith;e(e.P+e.F*r(38)("endsWith"),"String",{endsWith:function(t){var n=i(this,t,"endsWith"),r=arguments.length>1?arguments[1]:void 0,e=o(n.length),c=void 0===r?e:Math.min(o(r),e),f=String(t);return u?u.call(n,f,c):n.slice(c-f.length,c)===f}})},function(t,n,r){var e=r(37),o=r(11);t.exports=function(t,n,r){if(e(n))throw TypeError("String#"+r+" doesn't accept regex!");return String(o(t))}},function(t,n,r){var e=r(1),o=r(5),i=r(6)("match");t.exports=function(t){var n;return e(t)&&(void 0!==(n=t[i])?!!n:"RegExp"==o(t))}},function(t,n,r){var e=r(6)("match");t.exports=function(t){var n=/./;try{"/./"[t](n)}catch(r){try{return n[e]=!1,!"/./"[t](n)}catch(t){}}return!0}}]);
+
+/***/ }),
+
 /***/ "./node_modules/axios/index.js":
 /*!*************************************!*\
   !*** ./node_modules/axios/index.js ***!
@@ -12931,6 +12942,461 @@ module.exports = {
 }));
 //# sourceMappingURL=bootstrap.js.map
 
+
+/***/ }),
+
+/***/ "./node_modules/file-selector/dist/es5/file-selector.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/file-selector/dist/es5/file-selector.js ***!
+  \**************************************************************/
+/*! exports provided: fromEvent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fromEvent", function() { return fromEvent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _file__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./file */ "./node_modules/file-selector/dist/es5/file.js");
+
+
+var FILES_TO_IGNORE = [
+    // Thumbnail cache files for macOS and Windows
+    '.DS_Store',
+    'Thumbs.db' // Windows
+];
+/**
+ * Convert a DragEvent's DataTrasfer object to a list of File objects
+ * NOTE: If some of the items are folders,
+ * everything will be flattened and placed in the same list but the paths will be kept as a {path} property.
+ * @param evt
+ */
+function fromEvent(evt) {
+    return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
+        return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+            return [2 /*return*/, isDragEvt(evt) && evt.dataTransfer
+                    ? getDataTransferFiles(evt.dataTransfer, evt.type)
+                    : getInputFiles(evt)];
+        });
+    });
+}
+function isDragEvt(value) {
+    return !!value.dataTransfer;
+}
+function getInputFiles(evt) {
+    var files = isInput(evt.target)
+        ? evt.target.files
+            ? fromList(evt.target.files)
+            : []
+        : [];
+    return files.map(function (file) { return Object(_file__WEBPACK_IMPORTED_MODULE_1__["toFileWithPath"])(file); });
+}
+function isInput(value) {
+    return value !== null;
+}
+function getDataTransferFiles(dt, type) {
+    return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
+        var items, files;
+        return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    if (!dt.items) return [3 /*break*/, 2];
+                    items = fromList(dt.items)
+                        .filter(function (item) { return item.kind === 'file'; });
+                    // According to https://html.spec.whatwg.org/multipage/dnd.html#dndevents,
+                    // only 'dragstart' and 'drop' has access to the data (source node)
+                    if (type !== 'drop') {
+                        return [2 /*return*/, items];
+                    }
+                    return [4 /*yield*/, Promise.all(items.map(toFilePromises))];
+                case 1:
+                    files = _a.sent();
+                    return [2 /*return*/, noIgnoredFiles(flatten(files))];
+                case 2: return [2 /*return*/, noIgnoredFiles(fromList(dt.files)
+                        .map(function (file) { return Object(_file__WEBPACK_IMPORTED_MODULE_1__["toFileWithPath"])(file); }))];
+            }
+        });
+    });
+}
+function noIgnoredFiles(files) {
+    return files.filter(function (file) { return FILES_TO_IGNORE.indexOf(file.name) === -1; });
+}
+// IE11 does not support Array.from()
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/from#Browser_compatibility
+// https://developer.mozilla.org/en-US/docs/Web/API/FileList
+// https://developer.mozilla.org/en-US/docs/Web/API/DataTransferItemList
+function fromList(items) {
+    var files = [];
+    // tslint:disable: prefer-for-of
+    for (var i = 0; i < items.length; i++) {
+        var file = items[i];
+        files.push(file);
+    }
+    return files;
+}
+// https://developer.mozilla.org/en-US/docs/Web/API/DataTransferItem
+function toFilePromises(item) {
+    if (typeof item.webkitGetAsEntry !== 'function') {
+        return fromDataTransferItem(item);
+    }
+    var entry = item.webkitGetAsEntry();
+    // Safari supports dropping an image node from a different window and can be retrieved using
+    // the DataTransferItem.getAsFile() API
+    // NOTE: FileSystemEntry.file() throws if trying to get the file
+    if (entry && entry.isDirectory) {
+        return fromDirEntry(entry);
+    }
+    return fromDataTransferItem(item);
+}
+function flatten(items) {
+    return items.reduce(function (acc, files) { return tslib__WEBPACK_IMPORTED_MODULE_0__["__spread"](acc, (Array.isArray(files) ? flatten(files) : [files])); }, []);
+}
+function fromDataTransferItem(item) {
+    var file = item.getAsFile();
+    if (!file) {
+        return Promise.reject(item + " is not a File");
+    }
+    var fwp = Object(_file__WEBPACK_IMPORTED_MODULE_1__["toFileWithPath"])(file);
+    return Promise.resolve(fwp);
+}
+// https://developer.mozilla.org/en-US/docs/Web/API/FileSystemEntry
+function fromEntry(entry) {
+    return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
+        return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+            return [2 /*return*/, entry.isDirectory ? fromDirEntry(entry) : fromFileEntry(entry)];
+        });
+    });
+}
+// https://developer.mozilla.org/en-US/docs/Web/API/FileSystemDirectoryEntry
+function fromDirEntry(entry) {
+    var reader = entry.createReader();
+    return new Promise(function (resolve, reject) {
+        var entries = [];
+        function readEntries() {
+            var _this = this;
+            // https://developer.mozilla.org/en-US/docs/Web/API/FileSystemDirectoryEntry/createReader
+            // https://developer.mozilla.org/en-US/docs/Web/API/FileSystemDirectoryReader/readEntries
+            reader.readEntries(function (batch) { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
+                var files, err_1, items;
+                return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            if (!!batch.length) return [3 /*break*/, 5];
+                            _a.label = 1;
+                        case 1:
+                            _a.trys.push([1, 3, , 4]);
+                            return [4 /*yield*/, Promise.all(entries)];
+                        case 2:
+                            files = _a.sent();
+                            resolve(files);
+                            return [3 /*break*/, 4];
+                        case 3:
+                            err_1 = _a.sent();
+                            reject(err_1);
+                            return [3 /*break*/, 4];
+                        case 4: return [3 /*break*/, 6];
+                        case 5:
+                            items = Promise.all(batch.map(fromEntry));
+                            entries.push(items);
+                            // Continue reading
+                            readEntries();
+                            _a.label = 6;
+                        case 6: return [2 /*return*/];
+                    }
+                });
+            }); }, function (err) {
+                reject(err);
+            });
+        }
+        readEntries();
+    });
+}
+// https://developer.mozilla.org/en-US/docs/Web/API/FileSystemFileEntry
+function fromFileEntry(entry) {
+    return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
+        return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+            return [2 /*return*/, new Promise(function (resolve, reject) {
+                    entry.file(function (file) {
+                        var fwp = Object(_file__WEBPACK_IMPORTED_MODULE_1__["toFileWithPath"])(file, entry.fullPath);
+                        resolve(fwp);
+                    }, function (err) {
+                        reject(err);
+                    });
+                })];
+        });
+    });
+}
+//# sourceMappingURL=file-selector.js.map
+
+/***/ }),
+
+/***/ "./node_modules/file-selector/dist/es5/file.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/file-selector/dist/es5/file.js ***!
+  \*****************************************************/
+/*! exports provided: COMMON_MIME_TYPES, toFileWithPath */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "COMMON_MIME_TYPES", function() { return COMMON_MIME_TYPES; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toFileWithPath", function() { return toFileWithPath; });
+var COMMON_MIME_TYPES = new Map([
+    ['avi', 'video/avi'],
+    ['gif', 'image/gif'],
+    ['ico', 'image/x-icon'],
+    ['jpeg', 'image/jpeg'],
+    ['jpg', 'image/jpeg'],
+    ['mkv', 'video/x-matroska'],
+    ['mov', 'video/quicktime'],
+    ['mp4', 'video/mp4'],
+    ['pdf', 'application/pdf'],
+    ['png', 'image/png'],
+    ['zip', 'application/zip'],
+    ['doc', 'application/msword'],
+    ['docx', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
+]);
+function toFileWithPath(file, path) {
+    var f = withMimeType(file);
+    if (typeof f.path !== 'string') { // on electron, path is already set to the absolute path
+        var webkitRelativePath = file.webkitRelativePath;
+        Object.defineProperty(f, 'path', {
+            value: typeof path === 'string'
+                ? path
+                // If <input webkitdirectory> is set,
+                // the File will have a {webkitRelativePath} property
+                // https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/webkitdirectory
+                : typeof webkitRelativePath === 'string' && webkitRelativePath.length > 0
+                    ? webkitRelativePath
+                    : file.name,
+            writable: false,
+            configurable: false,
+            enumerable: true
+        });
+    }
+    return f;
+}
+function withMimeType(file) {
+    var name = file.name;
+    var hasExtension = name && name.lastIndexOf('.') !== -1;
+    if (hasExtension && !file.type) {
+        var ext = name.split('.')
+            .pop().toLowerCase();
+        var type = COMMON_MIME_TYPES.get(ext);
+        if (type) {
+            Object.defineProperty(file, 'type', {
+                value: type,
+                writable: false,
+                configurable: false,
+                enumerable: true
+            });
+        }
+    }
+    return file;
+}
+//# sourceMappingURL=file.js.map
+
+/***/ }),
+
+/***/ "./node_modules/file-selector/dist/es5/index.js":
+/*!******************************************************!*\
+  !*** ./node_modules/file-selector/dist/es5/index.js ***!
+  \******************************************************/
+/*! exports provided: fromEvent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _file_selector__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./file-selector */ "./node_modules/file-selector/dist/es5/file-selector.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "fromEvent", function() { return _file_selector__WEBPACK_IMPORTED_MODULE_0__["fromEvent"]; });
+
+
+//# sourceMappingURL=index.js.map
+
+/***/ }),
+
+/***/ "./node_modules/filesize/lib/filesize.js":
+/*!***********************************************!*\
+  !*** ./node_modules/filesize/lib/filesize.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(global) {
+
+/**
+ * filesize
+ *
+ * @copyright 2019 Jason Mulligan <jason.mulligan@avoidwork.com>
+ * @license BSD-3-Clause
+ * @version 4.1.2
+ */
+(function (global) {
+	var b = /^(b|B)$/,
+	    symbol = {
+		iec: {
+			bits: ["b", "Kib", "Mib", "Gib", "Tib", "Pib", "Eib", "Zib", "Yib"],
+			bytes: ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"]
+		},
+		jedec: {
+			bits: ["b", "Kb", "Mb", "Gb", "Tb", "Pb", "Eb", "Zb", "Yb"],
+			bytes: ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
+		}
+	},
+	    fullform = {
+		iec: ["", "kibi", "mebi", "gibi", "tebi", "pebi", "exbi", "zebi", "yobi"],
+		jedec: ["", "kilo", "mega", "giga", "tera", "peta", "exa", "zetta", "yotta"]
+	};
+
+	/**
+  * filesize
+  *
+  * @method filesize
+  * @param  {Mixed}   arg        String, Int or Float to transform
+  * @param  {Object}  descriptor [Optional] Flags
+  * @return {String}             Readable file size String
+  */
+	function filesize(arg) {
+		var descriptor = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+		var result = [],
+		    val = 0,
+		    e = void 0,
+		    base = void 0,
+		    bits = void 0,
+		    ceil = void 0,
+		    full = void 0,
+		    fullforms = void 0,
+		    locale = void 0,
+		    neg = void 0,
+		    num = void 0,
+		    output = void 0,
+		    round = void 0,
+		    unix = void 0,
+		    separator = void 0,
+		    spacer = void 0,
+		    standard = void 0,
+		    symbols = void 0;
+
+		if (isNaN(arg)) {
+			throw new TypeError("Invalid number");
+		}
+
+		bits = descriptor.bits === true;
+		unix = descriptor.unix === true;
+		base = descriptor.base || 2;
+		round = descriptor.round !== void 0 ? descriptor.round : unix ? 1 : 2;
+		locale = descriptor.locale !== void 0 ? descriptor.locale : "";
+		separator = descriptor.separator !== void 0 ? descriptor.separator : "";
+		spacer = descriptor.spacer !== void 0 ? descriptor.spacer : unix ? "" : " ";
+		symbols = descriptor.symbols || {};
+		standard = base === 2 ? descriptor.standard || "jedec" : "jedec";
+		output = descriptor.output || "string";
+		full = descriptor.fullform === true;
+		fullforms = descriptor.fullforms instanceof Array ? descriptor.fullforms : [];
+		e = descriptor.exponent !== void 0 ? descriptor.exponent : -1;
+		num = Number(arg);
+		neg = num < 0;
+		ceil = base > 2 ? 1000 : 1024;
+
+		// Flipping a negative number to determine the size
+		if (neg) {
+			num = -num;
+		}
+
+		// Determining the exponent
+		if (e === -1 || isNaN(e)) {
+			e = Math.floor(Math.log(num) / Math.log(ceil));
+
+			if (e < 0) {
+				e = 0;
+			}
+		}
+
+		// Exceeding supported length, time to reduce & multiply
+		if (e > 8) {
+			e = 8;
+		}
+
+		if (output === "exponent") {
+			return e;
+		}
+
+		// Zero is now a special case because bytes divide by 1
+		if (num === 0) {
+			result[0] = 0;
+			result[1] = unix ? "" : symbol[standard][bits ? "bits" : "bytes"][e];
+		} else {
+			val = num / (base === 2 ? Math.pow(2, e * 10) : Math.pow(1000, e));
+
+			if (bits) {
+				val = val * 8;
+
+				if (val >= ceil && e < 8) {
+					val = val / ceil;
+					e++;
+				}
+			}
+
+			result[0] = Number(val.toFixed(e > 0 ? round : 0));
+			result[1] = base === 10 && e === 1 ? bits ? "kb" : "kB" : symbol[standard][bits ? "bits" : "bytes"][e];
+
+			if (unix) {
+				result[1] = standard === "jedec" ? result[1].charAt(0) : e > 0 ? result[1].replace(/B$/, "") : result[1];
+
+				if (b.test(result[1])) {
+					result[0] = Math.floor(result[0]);
+					result[1] = "";
+				}
+			}
+		}
+
+		// Decorating a 'diff'
+		if (neg) {
+			result[0] = -result[0];
+		}
+
+		// Applying custom symbol
+		result[1] = symbols[result[1]] || result[1];
+
+		if (locale === true) {
+			result[0] = result[0].toLocaleString();
+		} else if (locale.length > 0) {
+			result[0] = result[0].toLocaleString(locale);
+		} else if (separator.length > 0) {
+			result[0] = result[0].toString().replace(".", separator);
+		}
+
+		// Returning Array, Object, or String (default)
+		if (output === "array") {
+			return result;
+		}
+
+		if (full) {
+			result[1] = fullforms[e] ? fullforms[e] : fullform[standard][e] + (bits ? "bit" : "byte") + (result[0] === 1 ? "" : "s");
+		}
+
+		if (output === "object") {
+			return { value: result[0], symbol: result[1] };
+		}
+
+		return result.join(spacer);
+	}
+
+	// Partial application for functional programming
+	filesize.partial = function (opt) {
+		return function (arg) {
+			return filesize(arg, opt);
+		};
+	};
+
+	// CommonJS, AMD, script tag
+	if (true) {
+		module.exports = filesize;
+	} else {}
+})(typeof window !== "undefined" ? window : global);
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
 
 /***/ }),
 
@@ -45785,6 +46251,158 @@ module.exports = ReactPropTypesSecret;
 
 /***/ }),
 
+/***/ "./node_modules/react-content-loader/dist/react-content-loader.es.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/react-content-loader/dist/react-content-loader.es.js ***!
+  \***************************************************************************/
+/*! exports provided: default, Facebook, Instagram, Code, List, BulletList */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Facebook", function() { return FacebookStyle; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Instagram", function() { return InstagramStyle; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Code", function() { return CodeStyle; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "List", function() { return ListStyle; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BulletList", function() { return BulletListStyle; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this file except in compliance with the License. You may obtain a copy of the
+License at http://www.apache.org/licenses/LICENSE-2.0
+
+THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+MERCHANTABLITY OR NON-INFRINGEMENT.
+
+See the Apache Version 2.0 License for specific language governing permissions
+and limitations under the License.
+***************************************************************************** */
+
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+
+function __rest(s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
+            t[p[i]] = s[p[i]];
+    return t;
+}
+
+var uid = (function () {
+    return Math.random()
+        .toString(36)
+        .substring(2);
+});
+
+var Svg = (function (_a) {
+    var rtl = _a.rtl, speed = _a.speed, interval = _a.interval, style = _a.style, width = _a.width, height = _a.height, baseUrl = _a.baseUrl, gradientRatio = _a.gradientRatio, animate = _a.animate, ariaLabel = _a.ariaLabel, children = _a.children, className = _a.className, uniquekey = _a.uniquekey, primaryColor = _a.primaryColor, primaryOpacity = _a.primaryOpacity, secondaryColor = _a.secondaryColor, secondaryOpacity = _a.secondaryOpacity, preserveAspectRatio = _a.preserveAspectRatio, props = __rest(_a, ["rtl", "speed", "interval", "style", "width", "height", "baseUrl", "gradientRatio", "animate", "ariaLabel", "children", "className", "uniquekey", "primaryColor", "primaryOpacity", "secondaryColor", "secondaryOpacity", "preserveAspectRatio"]);
+    var idClip = uniquekey ? uniquekey + "-idClip" : uid();
+    var idGradient = uniquekey ? uniquekey + "-idGradient" : uid();
+    var rtlStyle = rtl ? { transform: 'scaleX(-1)' } : {};
+    var keyTimes = "0; " + interval + "; 1";
+    var dur = speed + "s";
+    return (Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("svg", __assign({ role: "img", style: __assign({}, style, rtlStyle), className: className, "aria-labelledby": ariaLabel ? ariaLabel : null, viewBox: "0 0 " + width + " " + height, preserveAspectRatio: preserveAspectRatio }, props),
+        ariaLabel ? Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("title", null, ariaLabel) : null,
+        Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("rect", { x: "0", y: "0", width: width, height: height, clipPath: "url(" + baseUrl + "#" + idClip + ")", style: { fill: "url(" + baseUrl + "#" + idGradient + ")" } }),
+        Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("defs", null,
+            Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("clipPath", { id: idClip }, children),
+            Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("linearGradient", { id: idGradient },
+                Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("stop", { offset: "0%", stopColor: primaryColor, stopOpacity: primaryOpacity }, animate && (Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("animate", { attributeName: "offset", values: -gradientRatio + "; " + -gradientRatio + "; 1", keyTimes: keyTimes, dur: dur, repeatCount: "indefinite" }))),
+                Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("stop", { offset: "50%", stopColor: secondaryColor, stopOpacity: secondaryOpacity }, animate && (Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("animate", { attributeName: "offset", values: -gradientRatio / 2 + "; " + -gradientRatio / 2 + "; " + (1 +
+                        gradientRatio / 2), keyTimes: keyTimes, dur: dur, repeatCount: "indefinite" }))),
+                Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("stop", { offset: "100%", stopColor: primaryColor, stopOpacity: primaryOpacity }, animate && (Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("animate", { attributeName: "offset", values: "0; 0; " + (1 + gradientRatio), keyTimes: keyTimes, dur: dur, repeatCount: "indefinite" })))))));
+});
+
+var defaultProps = {
+    animate: true,
+    ariaLabel: 'Loading interface...',
+    baseUrl: '',
+    gradientRatio: 2,
+    height: 130,
+    interval: 0.25,
+    preserveAspectRatio: 'none',
+    primaryColor: '#f0f0f0',
+    primaryOpacity: 1,
+    rtl: false,
+    secondaryColor: '#e0e0e0',
+    secondaryOpacity: 1,
+    speed: 2,
+    style: {},
+    width: 400,
+};
+var InitialComponent = function (props) { return (Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("rect", { x: "0", y: "0", rx: "5", ry: "5", width: props.width, height: props.height })); };
+var ContentLoader = function (props) {
+    var mergedProps = __assign({}, defaultProps, props);
+    var children = props.children ? (props.children) : (Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])(InitialComponent, __assign({}, mergedProps)));
+    return Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])(Svg, __assign({}, mergedProps), children);
+};
+
+var FacebookStyle = (function (props) { return (Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])(ContentLoader, __assign({}, props),
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("rect", { x: "70", y: "15", rx: "4", ry: "4", width: "117", height: "6.4" }),
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("rect", { x: "70", y: "35", rx: "3", ry: "3", width: "85", height: "6.4" }),
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("rect", { x: "0", y: "80", rx: "3", ry: "3", width: "350", height: "6.4" }),
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("rect", { x: "0", y: "100", rx: "3", ry: "3", width: "380", height: "6.4" }),
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("rect", { x: "0", y: "120", rx: "3", ry: "3", width: "201", height: "6.4" }),
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("circle", { cx: "30", cy: "30", r: "30" }))); });
+
+var InstagramStyle = (function (props) { return (Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])(ContentLoader, __assign({}, props, { height: 480 }),
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("circle", { cx: "30", cy: "30", r: "30" }),
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("rect", { x: "75", y: "13", rx: "4", ry: "4", width: "100", height: "13" }),
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("rect", { x: "75", y: "37", rx: "4", ry: "4", width: "50", height: "8" }),
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("rect", { x: "0", y: "70", rx: "5", ry: "5", width: "400", height: "400" }))); });
+
+var CodeStyle = (function (props) { return (Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])(ContentLoader, __assign({}, props),
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("rect", { x: "0", y: "0", rx: "3", ry: "3", width: "70", height: "10" }),
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("rect", { x: "80", y: "0", rx: "3", ry: "3", width: "100", height: "10" }),
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("rect", { x: "190", y: "0", rx: "3", ry: "3", width: "10", height: "10" }),
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("rect", { x: "15", y: "20", rx: "3", ry: "3", width: "130", height: "10" }),
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("rect", { x: "155", y: "20", rx: "3", ry: "3", width: "130", height: "10" }),
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("rect", { x: "15", y: "40", rx: "3", ry: "3", width: "90", height: "10" }),
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("rect", { x: "115", y: "40", rx: "3", ry: "3", width: "60", height: "10" }),
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("rect", { x: "185", y: "40", rx: "3", ry: "3", width: "60", height: "10" }),
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("rect", { x: "0", y: "60", rx: "3", ry: "3", width: "30", height: "10" }))); });
+
+var ListStyle = (function (props) { return (Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])(ContentLoader, __assign({}, props),
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("rect", { x: "0", y: "0", rx: "3", ry: "3", width: "250", height: "10" }),
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("rect", { x: "20", y: "20", rx: "3", ry: "3", width: "220", height: "10" }),
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("rect", { x: "20", y: "40", rx: "3", ry: "3", width: "170", height: "10" }),
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("rect", { x: "0", y: "60", rx: "3", ry: "3", width: "250", height: "10" }),
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("rect", { x: "20", y: "80", rx: "3", ry: "3", width: "200", height: "10" }),
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("rect", { x: "20", y: "100", rx: "3", ry: "3", width: "80", height: "10" }))); });
+
+var BulletListStyle = (function (props) { return (Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])(ContentLoader, __assign({}, props),
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("circle", { cx: "10", cy: "20", r: "8" }),
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("rect", { x: "25", y: "15", rx: "5", ry: "5", width: "220", height: "10" }),
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("circle", { cx: "10", cy: "50", r: "8" }),
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("rect", { x: "25", y: "45", rx: "5", ry: "5", width: "220", height: "10" }),
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("circle", { cx: "10", cy: "80", r: "8" }),
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("rect", { x: "25", y: "75", rx: "5", ry: "5", width: "220", height: "10" }),
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("circle", { cx: "10", cy: "110", r: "8" }),
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("rect", { x: "25", y: "105", rx: "5", ry: "5", width: "220", height: "10" }))); });
+
+/* harmony default export */ __webpack_exports__["default"] = (ContentLoader);
+
+
+
+/***/ }),
+
 /***/ "./node_modules/react-dom/cjs/react-dom.development.js":
 /*!*************************************************************!*\
   !*** ./node_modules/react-dom/cjs/react-dom.development.js ***!
@@ -67120,6 +67738,937 @@ if (false) {} else {
 
 /***/ }),
 
+/***/ "./node_modules/react-dropzone/dist/es/index.js":
+/*!******************************************************!*\
+  !*** ./node_modules/react-dropzone/dist/es/index.js ***!
+  \******************************************************/
+/*! exports provided: default, useDropzone */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useDropzone", function() { return useDropzone; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var file_selector__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! file-selector */ "./node_modules/file-selector/dist/es5/index.js");
+/* harmony import */ var _utils_index__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils/index */ "./node_modules/react-dropzone/dist/es/utils/index.js");
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
+/* eslint prefer-template: 0 */
+
+
+
+
+/**
+ * Convenience wrapper component for the `useDropzone` hook
+ *
+ * ```jsx
+ * <Dropzone>
+ *   {({getRootProps, getInputProps}) => (
+ *     <div {...getRootProps()}>
+ *       <input {...getInputProps()} />
+ *       <p>Drag 'n' drop some files here, or click to select files</p>
+ *     </div>
+ *   )}
+ * </Dropzone>
+ * ```
+ */
+
+var Dropzone = Object(react__WEBPACK_IMPORTED_MODULE_0__["forwardRef"])(function (_ref, ref) {
+  var children = _ref.children,
+      params = _objectWithoutProperties(_ref, ["children"]);
+
+  var _useDropzone = useDropzone(params),
+      open = _useDropzone.open,
+      props = _objectWithoutProperties(_useDropzone, ["open"]);
+
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    if (typeof ref === 'function') {
+      ref({
+        open: open
+      });
+    } else if (_typeof(ref) === 'object' && ref !== null) {
+      ref.current = {
+        open: open
+      };
+    }
+
+    return function () {
+      if (typeof ref === 'function') {
+        ref(null);
+      } else if (_typeof(ref) === 'object' && ref !== null) {
+        ref.current = null;
+      }
+    };
+  }, [ref]); // TODO: Figure out why react-styleguidist cannot create docs if we don't return a jsx element
+
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, children(_objectSpread({}, props, {
+    open: open
+  })));
+});
+Dropzone.displayName = 'Dropzone';
+Dropzone.propTypes = {
+  /**
+   * Render function that exposes the dropzone state and prop getter fns
+   *
+   * @param {object} params
+   * @param {Function} params.getRootProps Returns the props you should apply to the root drop container you render
+   * @param {Function} params.getInputProps Returns the props you should apply to hidden file input you render
+   * @param {Function} params.open Open the native file selection dialog
+   * @param {boolean} params.isFocused Dropzone area is in focus
+   * @param {boolean} params.isFileDialogActive File dialog is opened
+   * @param {boolean} params.isDragActive Active drag is in progress
+   * @param {boolean} params.isDragAccept Dragged files are accepted
+   * @param {boolean} params.isDragReject Some dragged files are rejected
+   * @param {File[]} params.draggedFiles Files in active drag
+   * @param {File[]} params.acceptedFiles Accepted files
+   * @param {File[]} params.rejectedFiles Rejected files
+   */
+  children: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.func,
+
+  /**
+   * Set accepted file types.
+   * See https://github.com/okonet/attr-accept for more information.
+   * Keep in mind that mime type determination is not reliable across platforms. CSV files,
+   * for example, are reported as text/plain under macOS but as application/vnd.ms-excel under
+   * Windows. In some cases there might not be a mime type set at all.
+   * See: https://github.com/react-dropzone/react-dropzone/issues/276
+   */
+  accept: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string)]),
+
+  /**
+   * Allow drag 'n' drop (or selection from the file dialog) of multiple files
+   */
+  multiple: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.bool,
+
+  /**
+   * If false, allow dropped items to take over the current browser window
+   */
+  preventDropOnDocument: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.bool,
+
+  /**
+   * If true, disables click to open the native file selection dialog
+   */
+  noClick: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.bool,
+
+  /**
+   * If true, disables SPACE/ENTER to open the native file selection dialog.
+   * Note that it also stops tracking the focus state.
+   */
+  noKeyboard: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.bool,
+
+  /**
+   * If true, disables drag 'n' drop
+   */
+  noDrag: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.bool,
+
+  /**
+   * If true, stops drag event propagation to parents
+   */
+  noDragEventsBubbling: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.bool,
+
+  /**
+   * Minimum file size (in bytes)
+   */
+  minSize: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.number,
+
+  /**
+   * Maximum file size (in bytes)
+   */
+  maxSize: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.number,
+
+  /**
+   * Enable/disable the dropzone
+   */
+  disabled: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.bool,
+
+  /**
+   * Use this to provide a custom file aggregator
+   *
+   * @param {(DragEvent|Event)} event A drag event or input change event (if files were selected via the file dialog)
+   */
+  getFilesFromEvent: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.func,
+
+  /**
+   * Cb for when closing the file dialog with no selection
+   */
+  onFileDialogCancel: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.func,
+
+  /**
+   * Cb for when the `dragenter` event occurs.
+   *
+   * @param {DragEvent} event
+   */
+  onDragEnter: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.func,
+
+  /**
+   * Cb for when the `dragleave` event occurs
+   *
+   * @param {DragEvent} event
+   */
+  onDragLeave: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.func,
+
+  /**
+   * Cb for when the `dragover` event occurs
+   *
+   * @param {DragEvent} event
+   */
+  onDragOver: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.func,
+
+  /**
+   * Cb for when the `drop` event occurs.
+   * Note that this callback is invoked after the `getFilesFromEvent` callback is done.
+   *
+   * Files are accepted or rejected based on the `accept`, `multiple`, `minSize` and `maxSize` props.
+   * `accept` must be a valid [MIME type](http://www.iana.org/assignments/media-types/media-types.xhtml) according to [input element specification](https://www.w3.org/wiki/HTML/Elements/input/file) or a valid file extension.
+   * If `multiple` is set to false and additional files are droppped,
+   * all files besides the first will be rejected.
+   * Any file which does not have a size in the [`minSize`, `maxSize`] range, will be rejected as well.
+   *
+   * Note that the `onDrop` callback will always be invoked regardless if the dropped files were accepted or rejected.
+   * If you'd like to react to a specific scenario, use the `onDropAccepted`/`onDropRejected` props.
+   *
+   * `onDrop` will provide you with an array of [File](https://developer.mozilla.org/en-US/docs/Web/API/File) objects which you can then process and send to a server.
+   * For example, with [SuperAgent](https://github.com/visionmedia/superagent) as a http/ajax library:
+   *
+   * ```js
+   * function onDrop(acceptedFiles) {
+   *   const req = request.post('/upload')
+   *   acceptedFiles.forEach(file => {
+   *     req.attach(file.name, file)
+   *   })
+   *   req.end(callback)
+   * }
+   * ```
+   *
+   * @param {File[]} acceptedFiles
+   * @param {File[]} rejectedFiles
+   * @param {(DragEvent|Event)} event A drag event or input change event (if files were selected via the file dialog)
+   */
+  onDrop: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.func,
+
+  /**
+   * Cb for when the `drop` event occurs.
+   * Note that if no files are accepted, this callback is not invoked.
+   *
+   * @param {File[]} files
+   * @param {(DragEvent|Event)} event
+   */
+  onDropAccepted: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.func,
+
+  /**
+   * Cb for when the `drop` event occurs.
+   * Note that if no files are rejected, this callback is not invoked.
+   *
+   * @param {object[]} files
+   * @param {(DragEvent|Event)} event
+   */
+  onDropRejected: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.func
+};
+/* harmony default export */ __webpack_exports__["default"] = (Dropzone);
+/**
+ * A function that is invoked for the `dragenter`,
+ * `dragover` and `dragleave` events.
+ * It is not invoked if the items are not files (such as link, text, etc.).
+ *
+ * @callback dragCb
+ * @param {DragEvent} event
+ */
+
+/**
+ * A function that is invoked for the `drop` or input change event.
+ * It is not invoked if the items are not files (such as link, text, etc.).
+ *
+ * @callback dropCb
+ * @param {File[]} acceptedFiles List of accepted files
+ * @param {File[]} rejectedFiles List of rejected files
+ * @param {(DragEvent|Event)} event A drag event or input change event (if files were selected via the file dialog)
+ */
+
+/**
+ * A function that is invoked for the `drop` or input change event.
+ * It is not invoked if the items are files (such as link, text, etc.).
+ *
+ * @callback dropAcceptedCb
+ * @param {File[]} files List of accepted files that meet the given criteria
+ * (`accept`, `multiple`, `minSize`, `maxSize`)
+ * @param {(DragEvent|Event)} event A drag event or input change event (if files were selected via the file dialog)
+ */
+
+/**
+ * A function that is invoked for the `drop` or input change event.
+ *
+ * @callback dropRejectedCb
+ * @param {File[]} files List of rejected files that do not meet the given criteria
+ * (`accept`, `multiple`, `minSize`, `maxSize`)
+ * @param {(DragEvent|Event)} event A drag event or input change event (if files were selected via the file dialog)
+ */
+
+/**
+ * A function that is used aggregate files,
+ * in a asynchronous fashion, from drag or input change events.
+ *
+ * @callback getFilesFromEvent
+ * @param {(DragEvent|Event)} event A drag event or input change event (if files were selected via the file dialog)
+ * @returns {(File[]|Promise<File[]>)}
+ */
+
+/**
+ * An object with the current dropzone state and some helper functions.
+ *
+ * @typedef {object} DropzoneState
+ * @property {Function} getRootProps Returns the props you should apply to the root drop container you render
+ * @property {Function} getInputProps Returns the props you should apply to hidden file input you render
+ * @property {Function} open Open the native file selection dialog
+ * @property {boolean} isFocused Dropzone area is in focus
+ * @property {boolean} isFileDialogActive File dialog is opened
+ * @property {boolean} isDragActive Active drag is in progress
+ * @property {boolean} isDragAccept Dragged files are accepted
+ * @property {boolean} isDragReject Some dragged files are rejected
+ * @property {File[]} draggedFiles Files in active drag
+ * @property {File[]} acceptedFiles Accepted files
+ * @property {File[]} rejectedFiles Rejected files
+ */
+
+var initialState = {
+  isFocused: false,
+  isFileDialogActive: false,
+  isDragActive: false,
+  isDragAccept: false,
+  isDragReject: false,
+  draggedFiles: [],
+  acceptedFiles: [],
+  rejectedFiles: []
+  /**
+   * A React hook that creates a drag 'n' drop area.
+   *
+   * ```jsx
+   * function MyDropzone(props) {
+   *   const {getRootProps, getInputProps} = useDropzone({
+   *     onDrop: acceptedFiles => {
+   *       // do something with the File objects, e.g. upload to some server
+   *     }
+   *   });
+   *   return (
+   *     <div {...getRootProps()}>
+   *       <input {...getInputProps()} />
+   *       <p>Drag and drop some files here, or click to select files</p>
+   *     </div>
+   *   )
+   * }
+   * ```
+   *
+   * @function useDropzone
+   *
+   * @param {object} props
+   * @param {string|string[]} [props.accept] Set accepted file types.
+   * See https://github.com/okonet/attr-accept for more information.
+   * Keep in mind that mime type determination is not reliable across platforms. CSV files,
+   * for example, are reported as text/plain under macOS but as application/vnd.ms-excel under
+   * Windows. In some cases there might not be a mime type set at all.
+   * See: https://github.com/react-dropzone/react-dropzone/issues/276
+   * @param {boolean} [props.multiple=true] Allow drag 'n' drop (or selection from the file dialog) of multiple files
+   * @param {boolean} [props.preventDropOnDocument=true] If false, allow dropped items to take over the current browser window
+   * @param {boolean} [props.noClick=false] If true, disables click to open the native file selection dialog
+   * @param {boolean} [props.noKeyboard=false] If true, disables SPACE/ENTER to open the native file selection dialog.
+   * Note that it also stops tracking the focus state.
+   * @param {boolean} [props.noDrag=false] If true, disables drag 'n' drop
+   * @param {boolean} [props.noDragEventsBubbling=false] If true, stops drag event propagation to parents
+   * @param {number} [props.minSize=0] Minimum file size (in bytes)
+   * @param {number} [props.maxSize=Infinity] Maximum file size (in bytes)
+   * @param {boolean} [props.disabled=false] Enable/disable the dropzone
+   * @param {getFilesFromEvent} [props.getFilesFromEvent] Use this to provide a custom file aggregator
+   * @param {Function} [props.onFileDialogCancel] Cb for when closing the file dialog with no selection
+   * @param {dragCb} [props.onDragEnter] Cb for when the `dragenter` event occurs.
+   * @param {dragCb} [props.onDragLeave] Cb for when the `dragleave` event occurs
+   * @param {dragCb} [props.onDragOver] Cb for when the `dragover` event occurs
+   * @param {dropCb} [props.onDrop] Cb for when the `drop` event occurs.
+   * Note that this callback is invoked after the `getFilesFromEvent` callback is done.
+   *
+   * Files are accepted or rejected based on the `accept`, `multiple`, `minSize` and `maxSize` props.
+   * `accept` must be a valid [MIME type](http://www.iana.org/assignments/media-types/media-types.xhtml) according to [input element specification](https://www.w3.org/wiki/HTML/Elements/input/file) or a valid file extension.
+   * If `multiple` is set to false and additional files are droppped,
+   * all files besides the first will be rejected.
+   * Any file which does not have a size in the [`minSize`, `maxSize`] range, will be rejected as well.
+   *
+   * Note that the `onDrop` callback will always be invoked regardless if the dropped files were accepted or rejected.
+   * If you'd like to react to a specific scenario, use the `onDropAccepted`/`onDropRejected` props.
+   *
+   * `onDrop` will provide you with an array of [File](https://developer.mozilla.org/en-US/docs/Web/API/File) objects which you can then process and send to a server.
+   * For example, with [SuperAgent](https://github.com/visionmedia/superagent) as a http/ajax library:
+   *
+   * ```js
+   * function onDrop(acceptedFiles) {
+   *   const req = request.post('/upload')
+   *   acceptedFiles.forEach(file => {
+   *     req.attach(file.name, file)
+   *   })
+   *   req.end(callback)
+   * }
+   * ```
+   * @param {dropAcceptedCb} [props.onDropAccepted]
+   * @param {dropRejectedCb} [props.onDropRejected]
+   *
+   * @returns {DropzoneState}
+   */
+
+};
+function useDropzone() {
+  var _ref2 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+      accept = _ref2.accept,
+      _ref2$disabled = _ref2.disabled,
+      disabled = _ref2$disabled === void 0 ? false : _ref2$disabled,
+      _ref2$getFilesFromEve = _ref2.getFilesFromEvent,
+      getFilesFromEvent = _ref2$getFilesFromEve === void 0 ? file_selector__WEBPACK_IMPORTED_MODULE_2__["fromEvent"] : _ref2$getFilesFromEve,
+      _ref2$maxSize = _ref2.maxSize,
+      maxSize = _ref2$maxSize === void 0 ? Infinity : _ref2$maxSize,
+      _ref2$minSize = _ref2.minSize,
+      minSize = _ref2$minSize === void 0 ? 0 : _ref2$minSize,
+      _ref2$multiple = _ref2.multiple,
+      multiple = _ref2$multiple === void 0 ? true : _ref2$multiple,
+      onDragEnter = _ref2.onDragEnter,
+      onDragLeave = _ref2.onDragLeave,
+      onDragOver = _ref2.onDragOver,
+      onDrop = _ref2.onDrop,
+      onDropAccepted = _ref2.onDropAccepted,
+      onDropRejected = _ref2.onDropRejected,
+      onFileDialogCancel = _ref2.onFileDialogCancel,
+      _ref2$preventDropOnDo = _ref2.preventDropOnDocument,
+      preventDropOnDocument = _ref2$preventDropOnDo === void 0 ? true : _ref2$preventDropOnDo,
+      _ref2$noClick = _ref2.noClick,
+      noClick = _ref2$noClick === void 0 ? false : _ref2$noClick,
+      _ref2$noKeyboard = _ref2.noKeyboard,
+      noKeyboard = _ref2$noKeyboard === void 0 ? false : _ref2$noKeyboard,
+      _ref2$noDrag = _ref2.noDrag,
+      noDrag = _ref2$noDrag === void 0 ? false : _ref2$noDrag,
+      _ref2$noDragEventsBub = _ref2.noDragEventsBubbling,
+      noDragEventsBubbling = _ref2$noDragEventsBub === void 0 ? false : _ref2$noDragEventsBub;
+
+  var rootRef = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
+  var inputRef = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
+
+  var _useReducer = Object(react__WEBPACK_IMPORTED_MODULE_0__["useReducer"])(reducer, initialState),
+      _useReducer2 = _slicedToArray(_useReducer, 2),
+      state = _useReducer2[0],
+      dispatch = _useReducer2[1];
+
+  var isFocused = state.isFocused,
+      isFileDialogActive = state.isFileDialogActive,
+      draggedFiles = state.draggedFiles; // Fn for opening the file dialog programmatically
+
+  var openFileDialog = function openFileDialog() {
+    if (inputRef.current) {
+      dispatch({
+        type: 'openDialog'
+      });
+      inputRef.current.value = null;
+      inputRef.current.click();
+    }
+  }; // Update file dialog active state when the window is focused on
+
+
+  var onWindowFocus = function onWindowFocus() {
+    // Execute the timeout only if the file dialog is opened in the browser
+    if (isFileDialogActive) {
+      setTimeout(function () {
+        if (inputRef.current) {
+          var files = inputRef.current.files;
+
+          if (!files.length) {
+            dispatch({
+              type: 'closeDialog'
+            });
+
+            if (typeof onFileDialogCancel === 'function') {
+              onFileDialogCancel();
+            }
+          }
+        }
+      }, 300);
+    }
+  };
+
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    window.addEventListener('focus', onWindowFocus, false);
+    return function () {
+      window.removeEventListener('focus', onWindowFocus, false);
+    };
+  }, [inputRef, isFileDialogActive, onFileDialogCancel]); // Cb to open the file dialog when SPACE/ENTER occurs on the dropzone
+
+  var onKeyDownCb = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (event) {
+    // Ignore keyboard events bubbling up the DOM tree
+    if (!rootRef.current || !rootRef.current.isEqualNode(event.target)) {
+      return;
+    }
+
+    if (event.keyCode === 32 || event.keyCode === 13) {
+      event.preventDefault();
+      openFileDialog();
+    }
+  }, [rootRef, inputRef]); // Update focus state for the dropzone
+
+  var onFocusCb = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function () {
+    dispatch({
+      type: 'focus'
+    });
+  }, []);
+  var onBlurCb = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function () {
+    dispatch({
+      type: 'blur'
+    });
+  }, []); // Cb to open the file dialog when click occurs on the dropzone
+
+  var onClickCb = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (event) {
+    // Prevent click events from propagating to the <input> when the click event
+    // originated from a <label> that wraps the dropzone
+    event.preventDefault();
+
+    if (noClick) {
+      return;
+    } // In IE11/Edge the file-browser dialog is blocking, therefore, use setTimeout()
+    // to ensure React can handle state changes
+    // See: https://github.com/react-dropzone/react-dropzone/issues/450
+
+
+    if (Object(_utils_index__WEBPACK_IMPORTED_MODULE_3__["isIeOrEdge"])()) {
+      setTimeout(openFileDialog, 0);
+    } else {
+      openFileDialog();
+    }
+  }, [inputRef, noClick]);
+
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
+      _useState2 = _slicedToArray(_useState, 2),
+      dragTargets = _useState2[0],
+      setDragTargets = _useState2[1];
+
+  var onDocumentDrop = function onDocumentDrop(event) {
+    if (rootRef.current && rootRef.current.contains(event.target)) {
+      // If we intercepted an event for our instance, let it propagate down to the instance's onDrop handler
+      return;
+    }
+
+    event.preventDefault();
+    setDragTargets([]);
+  };
+
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    if (preventDropOnDocument) {
+      document.addEventListener('dragover', _utils_index__WEBPACK_IMPORTED_MODULE_3__["onDocumentDragOver"], false);
+      document.addEventListener('drop', onDocumentDrop, false);
+    }
+
+    return function () {
+      if (preventDropOnDocument) {
+        document.removeEventListener('dragover', _utils_index__WEBPACK_IMPORTED_MODULE_3__["onDocumentDragOver"]);
+        document.removeEventListener('drop', onDocumentDrop);
+      }
+    };
+  }, [rootRef, preventDropOnDocument]);
+  var onDragEnterCb = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (event) {
+    event.preventDefault(); // Persist here because we need the event later after getFilesFromEvent() is done
+
+    event.persist();
+    stopPropagation(event); // Count the dropzone and any children that are entered.
+
+    if (dragTargets.indexOf(event.target) === -1) {
+      setDragTargets([].concat(_toConsumableArray(dragTargets), [event.target]));
+    }
+
+    if (Object(_utils_index__WEBPACK_IMPORTED_MODULE_3__["isEvtWithFiles"])(event)) {
+      Promise.resolve(getFilesFromEvent(event)).then(function (draggedFiles) {
+        if (Object(_utils_index__WEBPACK_IMPORTED_MODULE_3__["isPropagationStopped"])(event) && !noDragEventsBubbling) {
+          return;
+        }
+
+        dispatch({
+          draggedFiles: draggedFiles,
+          isDragActive: true,
+          type: 'setDraggedFiles'
+        });
+
+        if (onDragEnter) {
+          onDragEnter(event);
+        }
+      });
+    }
+  }, [dragTargets, getFilesFromEvent, onDragEnter, noDragEventsBubbling]);
+  var onDragOverCb = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (event) {
+    event.preventDefault();
+    event.persist();
+    stopPropagation(event);
+
+    if (event.dataTransfer) {
+      try {
+        event.dataTransfer.dropEffect = 'copy';
+      } catch (_unused) {}
+      /* eslint-disable-line no-empty */
+
+    }
+
+    if (Object(_utils_index__WEBPACK_IMPORTED_MODULE_3__["isEvtWithFiles"])(event) && onDragOver) {
+      onDragOver(event);
+    }
+
+    return false;
+  }, [onDragOver, noDragEventsBubbling]);
+  var onDragLeaveCb = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (event) {
+    event.preventDefault();
+    event.persist();
+    stopPropagation(event); // Only deactivate once the dropzone and all children have been left
+
+    var targets = _toConsumableArray(dragTargets.filter(function (target) {
+      return target !== event.target && rootRef.current && rootRef.current.contains(target);
+    }));
+
+    setDragTargets(targets);
+
+    if (targets.length > 0) {
+      return;
+    }
+
+    dispatch({
+      isDragActive: false,
+      type: 'setDraggedFiles',
+      draggedFiles: []
+    });
+
+    if (Object(_utils_index__WEBPACK_IMPORTED_MODULE_3__["isEvtWithFiles"])(event) && onDragLeave) {
+      onDragLeave(event);
+    }
+  }, [rootRef, dragTargets, onDragLeave, noDragEventsBubbling]);
+  var onDropCb = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (event) {
+    event.preventDefault(); // Persist here because we need the event later after getFilesFromEvent() is done
+
+    event.persist();
+    stopPropagation(event);
+    setDragTargets([]);
+    dispatch({
+      type: 'reset'
+    });
+
+    if (Object(_utils_index__WEBPACK_IMPORTED_MODULE_3__["isEvtWithFiles"])(event)) {
+      Promise.resolve(getFilesFromEvent(event)).then(function (files) {
+        if (Object(_utils_index__WEBPACK_IMPORTED_MODULE_3__["isPropagationStopped"])(event) && !noDragEventsBubbling) {
+          return;
+        }
+
+        var acceptedFiles = [];
+        var rejectedFiles = [];
+        files.forEach(function (file) {
+          if (Object(_utils_index__WEBPACK_IMPORTED_MODULE_3__["fileAccepted"])(file, accept) && Object(_utils_index__WEBPACK_IMPORTED_MODULE_3__["fileMatchSize"])(file, maxSize, minSize)) {
+            acceptedFiles.push(file);
+          } else {
+            rejectedFiles.push(file);
+          }
+        });
+
+        if (!multiple && acceptedFiles.length > 1) {
+          rejectedFiles.push.apply(rejectedFiles, _toConsumableArray(acceptedFiles.splice(0))); // Reject everything and empty accepted files
+        }
+
+        dispatch({
+          acceptedFiles: acceptedFiles,
+          rejectedFiles: rejectedFiles,
+          type: 'setFiles'
+        });
+
+        if (onDrop) {
+          onDrop(acceptedFiles, rejectedFiles, event);
+        }
+
+        if (rejectedFiles.length > 0 && onDropRejected) {
+          onDropRejected(rejectedFiles, event);
+        }
+
+        if (acceptedFiles.length > 0 && onDropAccepted) {
+          onDropAccepted(acceptedFiles, event);
+        }
+      });
+    }
+  }, [multiple, accept, minSize, maxSize, getFilesFromEvent, onDrop, onDropAccepted, onDropRejected, noDragEventsBubbling]);
+
+  var composeHandler = function composeHandler(fn) {
+    return disabled ? null : fn;
+  };
+
+  var composeKeyboardHandler = function composeKeyboardHandler(fn) {
+    return noKeyboard ? null : composeHandler(fn);
+  };
+
+  var composeDragHandler = function composeDragHandler(fn) {
+    return noDrag ? null : composeHandler(fn);
+  };
+
+  var stopPropagation = function stopPropagation(event) {
+    if (noDragEventsBubbling) {
+      event.stopPropagation();
+    }
+  };
+
+  var getRootProps = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    return function () {
+      var _ref3 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+          _ref3$refKey = _ref3.refKey,
+          refKey = _ref3$refKey === void 0 ? 'ref' : _ref3$refKey,
+          onKeyDown = _ref3.onKeyDown,
+          onFocus = _ref3.onFocus,
+          onBlur = _ref3.onBlur,
+          onClick = _ref3.onClick,
+          onDragEnter = _ref3.onDragEnter,
+          onDragOver = _ref3.onDragOver,
+          onDragLeave = _ref3.onDragLeave,
+          onDrop = _ref3.onDrop,
+          rest = _objectWithoutProperties(_ref3, ["refKey", "onKeyDown", "onFocus", "onBlur", "onClick", "onDragEnter", "onDragOver", "onDragLeave", "onDrop"]);
+
+      return _objectSpread(_defineProperty({
+        onKeyDown: composeKeyboardHandler(Object(_utils_index__WEBPACK_IMPORTED_MODULE_3__["composeEventHandlers"])(onKeyDown, onKeyDownCb)),
+        onFocus: composeKeyboardHandler(Object(_utils_index__WEBPACK_IMPORTED_MODULE_3__["composeEventHandlers"])(onFocus, onFocusCb)),
+        onBlur: composeKeyboardHandler(Object(_utils_index__WEBPACK_IMPORTED_MODULE_3__["composeEventHandlers"])(onBlur, onBlurCb)),
+        onClick: composeHandler(Object(_utils_index__WEBPACK_IMPORTED_MODULE_3__["composeEventHandlers"])(onClick, onClickCb)),
+        onDragEnter: composeDragHandler(Object(_utils_index__WEBPACK_IMPORTED_MODULE_3__["composeEventHandlers"])(onDragEnter, onDragEnterCb)),
+        onDragOver: composeDragHandler(Object(_utils_index__WEBPACK_IMPORTED_MODULE_3__["composeEventHandlers"])(onDragOver, onDragOverCb)),
+        onDragLeave: composeDragHandler(Object(_utils_index__WEBPACK_IMPORTED_MODULE_3__["composeEventHandlers"])(onDragLeave, onDragLeaveCb)),
+        onDrop: composeDragHandler(Object(_utils_index__WEBPACK_IMPORTED_MODULE_3__["composeEventHandlers"])(onDrop, onDropCb))
+      }, refKey, rootRef), !disabled && !noKeyboard ? {
+        tabIndex: 0
+      } : {}, rest);
+    };
+  }, [rootRef, onKeyDownCb, onFocusCb, onBlurCb, onClickCb, onDragEnterCb, onDragOverCb, onDragLeaveCb, onDropCb, noKeyboard, noDrag, disabled]);
+  var onInputElementClick = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (event) {
+    event.stopPropagation();
+  }, []);
+  var getInputProps = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    return function () {
+      var _ref4 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+          _ref4$refKey = _ref4.refKey,
+          refKey = _ref4$refKey === void 0 ? 'ref' : _ref4$refKey,
+          onChange = _ref4.onChange,
+          onClick = _ref4.onClick,
+          rest = _objectWithoutProperties(_ref4, ["refKey", "onChange", "onClick"]);
+
+      var inputProps = _defineProperty({
+        accept: accept,
+        multiple: multiple,
+        type: 'file',
+        style: {
+          display: 'none'
+        },
+        onChange: composeHandler(Object(_utils_index__WEBPACK_IMPORTED_MODULE_3__["composeEventHandlers"])(onChange, onDropCb)),
+        onClick: composeHandler(Object(_utils_index__WEBPACK_IMPORTED_MODULE_3__["composeEventHandlers"])(onClick, onInputElementClick)),
+        autoComplete: 'off',
+        tabIndex: -1
+      }, refKey, inputRef);
+
+      return _objectSpread({}, inputProps, rest);
+    };
+  }, [inputRef, accept, multiple, onDropCb, disabled]);
+  var fileCount = draggedFiles.length;
+  var isMultipleAllowed = multiple || fileCount <= 1;
+  var isDragAccept = fileCount > 0 && Object(_utils_index__WEBPACK_IMPORTED_MODULE_3__["allFilesAccepted"])(draggedFiles, accept);
+  var isDragReject = fileCount > 0 && (!isDragAccept || !isMultipleAllowed);
+  return _objectSpread({}, state, {
+    isDragAccept: isDragAccept,
+    isDragReject: isDragReject,
+    isFocused: isFocused && !disabled,
+    getRootProps: getRootProps,
+    getInputProps: getInputProps,
+    rootRef: rootRef,
+    inputRef: inputRef,
+    open: composeHandler(openFileDialog)
+  });
+}
+
+function reducer(state, action) {
+  /* istanbul ignore next */
+  switch (action.type) {
+    case 'focus':
+      return _objectSpread({}, state, {
+        isFocused: true
+      });
+
+    case 'blur':
+      return _objectSpread({}, state, {
+        isFocused: false
+      });
+
+    case 'openDialog':
+      return _objectSpread({}, state, {
+        isFileDialogActive: true
+      });
+
+    case 'closeDialog':
+      return _objectSpread({}, state, {
+        isFileDialogActive: false
+      });
+
+    case 'setDraggedFiles':
+      /* eslint no-case-declarations: 0 */
+      var isDragActive = action.isDragActive,
+          draggedFiles = action.draggedFiles;
+      return _objectSpread({}, state, {
+        draggedFiles: draggedFiles,
+        isDragActive: isDragActive
+      });
+
+    case 'setFiles':
+      return _objectSpread({}, state, {
+        acceptedFiles: action.acceptedFiles,
+        rejectedFiles: action.rejectedFiles
+      });
+
+    case 'reset':
+      return _objectSpread({}, state, {
+        isFileDialogActive: false,
+        isDragActive: false,
+        draggedFiles: []
+      });
+
+    default:
+      return state;
+  }
+}
+
+/***/ }),
+
+/***/ "./node_modules/react-dropzone/dist/es/utils/index.js":
+/*!************************************************************!*\
+  !*** ./node_modules/react-dropzone/dist/es/utils/index.js ***!
+  \************************************************************/
+/*! exports provided: fileAccepted, fileMatchSize, allFilesAccepted, isPropagationStopped, isEvtWithFiles, isKindFile, onDocumentDragOver, isIeOrEdge, composeEventHandlers */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fileAccepted", function() { return fileAccepted; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fileMatchSize", function() { return fileMatchSize; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "allFilesAccepted", function() { return allFilesAccepted; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isPropagationStopped", function() { return isPropagationStopped; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isEvtWithFiles", function() { return isEvtWithFiles; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isKindFile", function() { return isKindFile; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onDocumentDragOver", function() { return onDocumentDragOver; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isIeOrEdge", function() { return isIeOrEdge; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "composeEventHandlers", function() { return composeEventHandlers; });
+/* harmony import */ var attr_accept__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! attr-accept */ "./node_modules/attr-accept/dist/index.js");
+/* harmony import */ var attr_accept__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(attr_accept__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+ // Firefox versions prior to 53 return a bogus MIME type for every file drag, so dragovers with
+// that MIME type will always be accepted
+
+function fileAccepted(file, accept) {
+  return file.type === 'application/x-moz-file' || attr_accept__WEBPACK_IMPORTED_MODULE_0___default()(file, accept);
+}
+function fileMatchSize(file, maxSize, minSize) {
+  return file.size <= maxSize && file.size >= minSize;
+}
+function allFilesAccepted(files, accept) {
+  return files.every(function (file) {
+    return fileAccepted(file, accept);
+  });
+} // React's synthetic events has event.isPropagationStopped,
+// but to remain compatibility with other libs (Preact) fall back
+// to check event.cancelBubble
+
+function isPropagationStopped(event) {
+  if (typeof event.isPropagationStopped === 'function') {
+    return event.isPropagationStopped();
+  } else if (typeof event.cancelBubble !== 'undefined') {
+    return event.cancelBubble;
+  }
+
+  return false;
+}
+function isEvtWithFiles(event) {
+  if (!event.dataTransfer) {
+    return !!event.target && !!event.target.files;
+  } // https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/types
+  // https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/Recommended_drag_types#file
+
+
+  return Array.prototype.some.call(event.dataTransfer.types, function (type) {
+    return type === 'Files' || type === 'application/x-moz-file';
+  });
+}
+function isKindFile(item) {
+  return _typeof(item) === 'object' && item !== null && item.kind === 'file';
+} // allow the entire document to be a drag target
+
+function onDocumentDragOver(event) {
+  event.preventDefault();
+}
+
+function isIe(userAgent) {
+  return userAgent.indexOf('MSIE') !== -1 || userAgent.indexOf('Trident/') !== -1;
+}
+
+function isEdge(userAgent) {
+  return userAgent.indexOf('Edge/') !== -1;
+}
+
+function isIeOrEdge() {
+  var userAgent = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : window.navigator.userAgent;
+  return isIe(userAgent) || isEdge(userAgent);
+}
+/**
+ * This is intended to be used to compose event handlers
+ * They are executed in order until one of them calls `event.isPropagationStopped()`.
+ * Note that the check is done on the first invoke too,
+ * meaning that if propagation was stopped before invoking the fns,
+ * no handlers will be executed.
+ *
+ * @param {Function} fns the event hanlder functions
+ * @return {Function} the event handler to add to an element
+ */
+
+function composeEventHandlers() {
+  for (var _len = arguments.length, fns = new Array(_len), _key = 0; _key < _len; _key++) {
+    fns[_key] = arguments[_key];
+  }
+
+  return function (event) {
+    for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+      args[_key2 - 1] = arguments[_key2];
+    }
+
+    return fns.some(function (fn) {
+      if (!isPropagationStopped(event) && fn) {
+        fn.apply(void 0, [event].concat(args));
+      }
+
+      return isPropagationStopped(event);
+    });
+  };
+}
+
+/***/ }),
+
 /***/ "./node_modules/react-is/cjs/react-is.development.js":
 /*!***********************************************************!*\
   !*** ./node_modules/react-is/cjs/react-is.development.js ***!
@@ -74578,6 +76127,115 @@ exports.failSignup = (message) => ({
 
 /***/ }),
 
+/***/ "./resources/js/actions/current-space.ts":
+/*!***********************************************!*\
+  !*** ./resources/js/actions/current-space.ts ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const redux_types = __importStar(__webpack_require__(/*! ../redux-types/current-space */ "./resources/js/redux-types/current-space.ts"));
+/**
+ * Action Creators
+ */
+exports.startRequest = () => ({
+    type: redux_types.START_REQUEST,
+});
+exports.receiveRequest = (space) => ({
+    type: redux_types.RECEIVE_REQUEST,
+    space,
+});
+exports.failRequest = (message) => ({
+    type: redux_types.FAIL_REQUEST,
+    message,
+});
+exports.resetData = () => ({
+    type: redux_types.RESET_DATA,
+});
+exports.updateSpaceDescription = (spaceDescription) => ({
+    type: redux_types.UPDATE_SPACE_DESCRIPTION,
+    spaceDescription,
+});
+exports.startUpdateOH = () => ({
+    type: redux_types.START_UPDATE_OH,
+});
+exports.succeedUpdateOH = (operatingHours) => ({
+    type: redux_types.SUCCEED_UPDATE_OH,
+    operatingHours,
+});
+exports.failUpdateOH = (message) => ({
+    type: redux_types.FAIL_UPDATE_OH,
+    message,
+});
+exports.setBusyLevel = (busyLevel) => ({
+    type: redux_types.SET_BUSY_LEVEL,
+    busyLevel,
+});
+exports.startUpdateAT = () => ({
+    type: redux_types.START_UPDATE_AT,
+});
+exports.succeedUpdateAT = (amenityTags) => ({
+    type: redux_types.SUCCEED_UPDATE_AT,
+    amenityTags,
+});
+exports.failUpdateAT = (message) => ({
+    type: redux_types.FAIL_UPDATE_AT,
+    message,
+});
+exports.startUpdateImages = () => ({
+    type: redux_types.START_UPDATE_IMAGES,
+});
+exports.succeedUpdateImages = (images) => ({
+    type: redux_types.SUCCEED_UPDATE_IMAGES,
+    images,
+});
+exports.failUpdateImages = (message) => ({
+    type: redux_types.FAIL_UPDATE_IMAGES,
+    message,
+});
+
+
+/***/ }),
+
+/***/ "./resources/js/actions/selected-amenities.ts":
+/*!****************************************************!*\
+  !*** ./resources/js/actions/selected-amenities.ts ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const redux_types = __importStar(__webpack_require__(/*! ../redux-types/selected-amenities */ "./resources/js/redux-types/selected-amenities.ts"));
+/**
+ * Action Creators
+ */
+exports.setSelectedAmenities = (selectedAmenities) => ({
+    type: redux_types.SET_SELECTED_AMENITIES,
+    selectedAmenities,
+});
+
+
+/***/ }),
+
 /***/ "./resources/js/actions/space-history.ts":
 /*!***********************************************!*\
   !*** ./resources/js/actions/space-history.ts ***!
@@ -74644,6 +76302,53 @@ exports.failRequest = (message) => ({
 });
 exports.resetData = () => ({
     type: redux_types.RESET_DATA,
+});
+
+
+/***/ }),
+
+/***/ "./resources/js/actions/upload-images.ts":
+/*!***********************************************!*\
+  !*** ./resources/js/actions/upload-images.ts ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const redux_types = __importStar(__webpack_require__(/*! ../redux-types/upload-images */ "./resources/js/redux-types/upload-images.ts"));
+/**
+ * Action Creators
+ */
+exports.resetUploadImages = () => ({
+    type: redux_types.RESET_UPLOAD_IMAGES,
+});
+exports.addUploadImage = (key, image) => ({
+    type: redux_types.ADD_UPLOAD_IMAGE,
+    key,
+    image,
+});
+exports.updateUploadProgress = (key, progress) => ({
+    type: redux_types.UPDATE_UPLOAD_PROGRESS,
+    key,
+    progress,
+});
+exports.setImageData = (key, dataURL) => ({
+    type: redux_types.SET_IMAGE_DATA,
+    key,
+    dataURL,
+});
+exports.deleteUploadImage = (key) => ({
+    type: redux_types.DELETE_UPLOAD_IMAGE,
+    key,
 });
 
 
@@ -74770,6 +76475,843 @@ if (token) {
 
 /***/ }),
 
+/***/ "./resources/js/components/amenity-tags/amenities-edit-modal.tsx":
+/*!***********************************************************************!*\
+  !*** ./resources/js/components/amenity-tags/amenities-edit-modal.tsx ***!
+  \***********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const space_1 = __webpack_require__(/*! ../../model/space */ "./resources/js/model/space.ts");
+/**
+ *
+ *
+ * AmenitiesEditModal component
+ *
+ *
+ */
+exports.AmenitiesEditModalID = 'amenities-edit-modal';
+const COL_PER_ROW = 4;
+const tags = Object.keys(space_1.amenities);
+class _AmenitiesEditModal extends react_1.default.Component {
+    constructor() {
+        super(...arguments);
+        this._amenityTableStructure = [];
+        this._saveAmenityTags = (event) => {
+            event.preventDefault();
+            if (this.props.currentSpaceID) {
+                let tags = [];
+                this.props.selectedAmenities.forEach((tag) => {
+                    tags.push(tag);
+                });
+                this.props.updateAmenityTags(this.props.currentSpaceID, tags);
+            }
+        };
+        this._toggleSelected = (tag) => {
+            if (this.props.selectedAmenities.has(tag)) {
+                this.props.selectedAmenities.delete(tag);
+            }
+            else {
+                this.props.selectedAmenities.add(tag);
+            }
+            this.props.setSelectedAmenities(new Set(this.props.selectedAmenities));
+        };
+        this._renderTable = () => {
+            const renderColumn = (col) => (react_1.default.createElement("td", { key: col.key },
+                react_1.default.createElement("button", { type: "button", className: `amenity ${this.props.selectedAmenities.has(col.key)
+                        ? 'selected'
+                        : ''}`, onClick: () => {
+                        this._toggleSelected(col.key);
+                    } },
+                    react_1.default.createElement("p", { className: "h1" },
+                        react_1.default.createElement("i", { className: col.value.faicon })),
+                    react_1.default.createElement("p", { className: "h6" }, col.value.name))));
+            return (react_1.default.createElement("table", { id: "amenity-table" },
+                react_1.default.createElement("tbody", null, this._amenityTableStructure.map((row, index) => (react_1.default.createElement("tr", { key: index }, row.map((col) => renderColumn(col))))))));
+        };
+    }
+    componentWillMount() {
+        let row;
+        let col;
+        tags.map((tag, index) => {
+            col = index % COL_PER_ROW;
+            if (col == 0) {
+                row = [];
+            }
+            row.push({
+                key: tag,
+                value: space_1.interpretAmenity(tag, 'ko'),
+            });
+            if (col == COL_PER_ROW - 1 || index == tags.length - 1) {
+                this._amenityTableStructure.push(row);
+            }
+        });
+    }
+    render() {
+        return (react_1.default.createElement("div", { id: exports.AmenitiesEditModalID, className: "modal fade", tabIndex: -1, role: "dialog", "aria-hidden": "true" },
+            react_1.default.createElement("div", { className: "modal-dialog", role: "document" },
+                react_1.default.createElement("div", { className: "modal-content" },
+                    react_1.default.createElement("div", { className: "modal-header" },
+                        react_1.default.createElement("p", { className: "modal-title h5" }, "\uD3B8\uC758\uC2DC\uC124 \uC124\uC815")),
+                    react_1.default.createElement("div", { className: "modal-body" }, this._renderTable()),
+                    react_1.default.createElement("div", { className: "modal-footer" },
+                        react_1.default.createElement("button", { type: "button", className: "btn btn-secondary", "data-dismiss": "modal" }, "\uB2EB\uAE30"),
+                        react_1.default.createElement("button", { type: "submit", className: "btn btn-primary", "data-dismiss": "modal", onClick: this._saveAmenityTags }, "\uC800\uC7A5"))))));
+    }
+}
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const selected_amenities_1 = __webpack_require__(/*! ../../actions/selected-amenities */ "./resources/js/actions/selected-amenities.ts");
+const current_space_1 = __webpack_require__(/*! ../../thunk-action/current-space */ "./resources/js/thunk-action/current-space.ts");
+const mapStateToProps = (state) => ({
+    currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
+    selectedAmenities: state.selectedAmenities.selectedAmenities,
+});
+const mapDispatchToProps = {
+    setSelectedAmenities: selected_amenities_1.setSelectedAmenities,
+    updateAmenityTags: current_space_1.updateAmenityTags,
+};
+const AmenitiesEditModal = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_AmenitiesEditModal);
+exports.default = AmenitiesEditModal;
+
+
+/***/ }),
+
+/***/ "./resources/js/components/amenity-tags/index.tsx":
+/*!********************************************************!*\
+  !*** ./resources/js/components/amenity-tags/index.tsx ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ *
+ *
+ * AmenityTags component
+ *
+ *
+ */
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const space_1 = __webpack_require__(/*! ../../model/space */ "./resources/js/model/space.ts");
+const amenities_edit_modal_1 = __importStar(__webpack_require__(/*! ./amenities-edit-modal */ "./resources/js/components/amenity-tags/amenities-edit-modal.tsx"));
+const os_page_status_1 = __importDefault(__webpack_require__(/*! ../os-page-status */ "./resources/js/components/os-page-status.tsx"));
+class _AmenityTags extends react_1.default.Component {
+    constructor() {
+        super(...arguments);
+        this._renderEmpty = () => {
+            return (react_1.default.createElement("div", { id: "empty" },
+                react_1.default.createElement("p", { className: "h6" }, "\uB4F1\uB85D\uB41C \uD3B8\uC758\uC2DC\uC124\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.")));
+        };
+        this._renderAmenity = (tag) => {
+            let amenity = space_1.interpretAmenity(tag, 'ko');
+            return (react_1.default.createElement("div", { key: tag, className: "amenity" },
+                react_1.default.createElement("a", { "data-toggle": "tooltip", "data-placement": "top", title: amenity.name },
+                    react_1.default.createElement("p", { className: "h1", "data-toggle": "tooltip" },
+                        react_1.default.createElement("i", { className: amenity.faicon })))));
+        };
+        this._renderAmenities = () => {
+            if (this.props.updatingAmentiyTags.status === 'requesting') {
+                return react_1.default.createElement(os_page_status_1.default, { status: "loading" });
+            }
+            else if (this.props.amenityTags &&
+                this.props.amenityTags.length > 0) {
+                return this.props.amenityTags.map((tag) => this._renderAmenity(tag));
+            }
+            else {
+                return this._renderEmpty();
+            }
+        };
+        this._resetSelectedAmenities = () => {
+            this.props.setSelectedAmenities(new Set(this.props.amenityTags));
+        };
+    }
+    render_temp() {
+        return (react_1.default.createElement("div", { id: "amenity-tags" },
+            react_1.default.createElement("div", { className: "header" },
+                react_1.default.createElement("p", { className: "h5" }, "\uD3B8\uC758\uC2DC\uC124"),
+                react_1.default.createElement("button", { "data-toggle": "modal", "data-target": `#${amenities_edit_modal_1.AmenitiesEditModalID}`, onClick: this._resetSelectedAmenities },
+                    react_1.default.createElement("p", { className: "h6 os-grey-1" },
+                        react_1.default.createElement("i", { className: "material-icons" }, "add"),
+                        "\uCD94\uAC00")),
+                react_1.default.createElement(amenities_edit_modal_1.default, null)),
+            react_1.default.createElement("div", { className: "body" },
+                react_1.default.createElement("div", { id: "amenities" }, this._renderAmenities())),
+            react_1.default.createElement("div", { className: "footer" },
+                react_1.default.createElement("p", { className: "h6 os-grey-1" },
+                    react_1.default.createElement("i", { className: "material-icons" }, "info"),
+                    "\uB9C8\uC6B0\uC2A4\uB97C \uC544\uC774\uCF58 \uC704\uC5D0 \uC62C\uB9AC\uC2DC\uBA74 \uC124\uBA85\uC744 \uBCFC \uC218 \uC788\uC2B5\uB2C8\uB2E4."))));
+    }
+    render() {
+        return (react_1.default.createElement("div", { id: "amenity-tags", className: "category" },
+            react_1.default.createElement("div", { className: "header" },
+                react_1.default.createElement("p", { className: "h5" }, "\uD3B8\uC758\uC2DC\uC124"),
+                react_1.default.createElement(os_edit_button_1.default, { modalID: amenities_edit_modal_1.AmenitiesEditModalID, onClick: this._resetSelectedAmenities })),
+            react_1.default.createElement("div", { className: "body" },
+                react_1.default.createElement("div", { id: "amenities" }, this._renderAmenities())),
+            react_1.default.createElement(amenities_edit_modal_1.default, null)));
+    }
+}
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const selected_amenities_1 = __webpack_require__(/*! ../../actions/selected-amenities */ "./resources/js/actions/selected-amenities.ts");
+const os_edit_button_1 = __importDefault(__webpack_require__(/*! ../os-edit-button */ "./resources/js/components/os-edit-button.tsx"));
+const mapStateToProps = (state) => ({
+    amenityTags: state.currentSpace.data && state.currentSpace.data.amenityTags,
+    updatingAmentiyTags: state.currentSpace.updatingATStatus,
+});
+const mapDispatchToProps = {
+    setSelectedAmenities: selected_amenities_1.setSelectedAmenities,
+};
+const AmenityTags = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_AmenityTags);
+exports.default = AmenityTags;
+
+
+/***/ }),
+
+/***/ "./resources/js/components/general-info/index.tsx":
+/*!********************************************************!*\
+  !*** ./resources/js/components/general-info/index.tsx ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ *
+ *
+ * GeneralInfo component
+ *
+ *
+ */
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const space_1 = __webpack_require__(/*! ../../model/space */ "./resources/js/model/space.ts");
+const operating_hour_edit_modal_1 = __importStar(__webpack_require__(/*! ./operating-hour-edit-modal */ "./resources/js/components/general-info/operating-hour-edit-modal.tsx"));
+const os_edit_button_1 = __importDefault(__webpack_require__(/*! ../os-edit-button */ "./resources/js/components/os-edit-button.tsx"));
+const os_rate_display_1 = __importDefault(__webpack_require__(/*! ../os-rate-display */ "./resources/js/components/os-rate-display.tsx"));
+class _GeneralInfo extends react_1.default.Component {
+    constructor() {
+        super(...arguments);
+        this._renderTitle = () => {
+            let typesText = '';
+            if (this.props.types)
+                this.props.types.map((type, index) => {
+                    if (index > 0) {
+                        typesText += ' | ';
+                    }
+                    typesText += space_1.interpretSpaceType(type, 'ko');
+                });
+            return (react_1.default.createElement("div", { id: "space-name-row" },
+                react_1.default.createElement("div", { id: "space-name" },
+                    react_1.default.createElement("p", { className: "h2" }, this.props.spaceNames
+                        ? this.props.spaceNames['ko']
+                        : '(매장이름)'),
+                    react_1.default.createElement("p", { id: "type", className: "h4" }, typesText !== '' ? typesText : '(카테고리)')),
+                react_1.default.createElement(os_edit_button_1.default, null)));
+        };
+        this._renderRate = () => {
+            return (react_1.default.createElement("div", { id: "rate-row" },
+                react_1.default.createElement(os_rate_display_1.default, null)));
+        };
+        this._renderLocationText = () => {
+            return (react_1.default.createElement("div", { id: "location-row" },
+                react_1.default.createElement("p", { id: "icon", className: "h6" },
+                    react_1.default.createElement("i", { className: "material-icons" }, "location_on")),
+                react_1.default.createElement("p", { className: "h6" }, this.props.locationText
+                    ? this.props.locationText
+                    : '(위치 정보가 없습니다.)')));
+        };
+        this._renderOperatingHours = () => {
+            let displayTexts;
+            if (this.props.updatingOHStatus.status === 'requesting') {
+                displayTexts = react_1.default.createElement("p", { className: "h6" }, "(\uC5C5\uB370\uC774\uD2B8 \uC911...)");
+            }
+            else if (!this.props.operatingHours ||
+                this.props.operatingHours.length <= 0) {
+                displayTexts = react_1.default.createElement("p", { className: "h6" }, "(\uC6B4\uC601\uC2DC\uAC04 \uC815\uBCF4\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.)");
+            }
+            else {
+                displayTexts = this.props.operatingHours.map((workingHour) => (react_1.default.createElement("p", { key: workingHour, className: "h6" }, workingHour)));
+            }
+            return (react_1.default.createElement("div", { id: "operating-hours-row" },
+                react_1.default.createElement("div", { id: "operating-hours" },
+                    react_1.default.createElement("p", { id: "icon", className: "h6" },
+                        react_1.default.createElement("i", { className: "material-icons" }, "access_time")),
+                    react_1.default.createElement("div", { id: "value" }, displayTexts)),
+                react_1.default.createElement(os_edit_button_1.default, { modalID: operating_hour_edit_modal_1.OperatingHourEditModalID }),
+                react_1.default.createElement(operating_hour_edit_modal_1.default, null)));
+        };
+    }
+    render() {
+        return (react_1.default.createElement("div", { id: "general-info" },
+            this._renderTitle(),
+            this._renderRate(),
+            this._renderLocationText(),
+            this._renderOperatingHours()));
+    }
+}
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const mapStateToProps = (state) => ({
+    spaceNames: state.currentSpace.data && state.currentSpace.data.spaceNames,
+    types: state.currentSpace.data && state.currentSpace.data.types,
+    locationText: state.currentSpace.data && state.currentSpace.data.locationText,
+    operatingHours: state.currentSpace.data && state.currentSpace.data.operatingHours,
+    updatingOHStatus: state.currentSpace.updatingOHStatus,
+});
+const GeneralInfo = react_redux_1.connect(mapStateToProps)(_GeneralInfo);
+exports.default = GeneralInfo;
+
+
+/***/ }),
+
+/***/ "./resources/js/components/general-info/operating-hour-edit-modal.tsx":
+/*!****************************************************************************!*\
+  !*** ./resources/js/components/general-info/operating-hour-edit-modal.tsx ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const DayInterpret = __importStar(__webpack_require__(/*! ../../config/weekdays.json */ "./resources/js/config/weekdays.json"));
+/**
+ *
+ *
+ * OperatingHourEditModal component
+ *
+ *
+ */
+exports.OperatingHourEditModalID = 'operating-hour-edit-modal';
+class _OperatingHourEditModal extends react_1.default.Component {
+    constructor() {
+        super(...arguments);
+        this.state = {
+            MON: { off: true, startTime: '00:00', endTime: '00:00' },
+            TUE: { off: true, startTime: '00:00', endTime: '00:00' },
+            WED: { off: true, startTime: '00:00', endTime: '00:00' },
+            THU: { off: true, startTime: '00:00', endTime: '00:00' },
+            FRI: { off: true, startTime: '00:00', endTime: '00:00' },
+            SAT: { off: true, startTime: '00:00', endTime: '00:00' },
+            SUN: { off: true, startTime: '00:00', endTime: '00:00' },
+        };
+        this._saveOperatingHour = (event) => {
+            event.preventDefault();
+            if (this.props.currentSpaceID) {
+                let map = {};
+                let priority = [];
+                Object.keys(this.state).map((day) => {
+                    if (this.state[day].off) {
+                        return;
+                    }
+                    let timeKey = `${this.state[day].startTime} - ${this.state[day].endTime}`;
+                    if (map[timeKey]) {
+                        map[timeKey].push(day);
+                    }
+                    else {
+                        map[timeKey] = [day];
+                        priority.push(timeKey);
+                    }
+                });
+                let temp = '';
+                let result = priority.map((timeKey) => {
+                    temp = `${timeKey} / `;
+                    map[timeKey].map((day, index) => {
+                        if (index > 0) {
+                            temp += ', ';
+                        }
+                        temp += DayInterpret[day]['ko'];
+                    });
+                    return temp;
+                });
+                this.props.updateOperatingHours(this.props.currentSpaceID, result);
+            }
+        };
+        this._renderRow = (day) => {
+            const operatingTime = this.state[day];
+            const changeState = (key, value) => {
+                this.setState({
+                    ...this.state,
+                    [day]: {
+                        ...operatingTime,
+                        [key]: value,
+                    },
+                });
+            };
+            return (react_1.default.createElement("div", { key: day, className: `table-row ${operatingTime.off ? 'day-off' : 'day-on'}` },
+                react_1.default.createElement("div", { className: "table-col table-col-day", onClick: () => {
+                        changeState('off', !operatingTime.off);
+                    } },
+                    react_1.default.createElement("p", { className: "h6" }, DayInterpret[day]['ko'])),
+                operatingTime.off && (react_1.default.createElement("div", { className: "table-col day-off" },
+                    react_1.default.createElement("p", { className: "h6" }, "\uD734\uBB34"))),
+                !operatingTime.off && (react_1.default.createElement("div", { className: "table-col" },
+                    react_1.default.createElement("input", { type: "time", value: operatingTime.startTime, required: true, onChange: (e) => {
+                            changeState('startTime', e.target.value);
+                        } }))),
+                !operatingTime.off && (react_1.default.createElement("div", { className: "table-col" },
+                    react_1.default.createElement("input", { type: "time", value: operatingTime.endTime, required: true, onChange: (e) => {
+                            changeState('endTime', e.target.value);
+                        } })))));
+        };
+        this._renderTable = () => {
+            return (react_1.default.createElement("div", { id: "table" }, Object.keys(this.state).map((day) => this._renderRow(day))));
+        };
+    }
+    render() {
+        return (react_1.default.createElement("div", { id: exports.OperatingHourEditModalID, className: "modal fade", tabIndex: -1, role: "dialog", "aria-hidden": "true" },
+            react_1.default.createElement("div", { className: "modal-dialog", role: "document" },
+                react_1.default.createElement("form", null,
+                    react_1.default.createElement("div", { className: "modal-content" },
+                        react_1.default.createElement("div", { className: "modal-header" },
+                            react_1.default.createElement("p", { className: "modal-title h5" }, "\uC6B4\uC601\uC2DC\uAC04 \uC218\uC815")),
+                        react_1.default.createElement("div", { className: "modal-body" },
+                            this._renderTable(),
+                            react_1.default.createElement("p", { className: "h6" },
+                                react_1.default.createElement("i", { className: "material-icons" }, "info"),
+                                "\uC694\uC77C\uC744 \uD074\uB9AD\uD558\uC5EC \uD734\uBB34\uC5EC\uBD80\uB97C \uBCC0\uACBD\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4.")),
+                        react_1.default.createElement("div", { className: "modal-footer" },
+                            react_1.default.createElement("button", { type: "button", className: "btn btn-secondary", "data-dismiss": "modal" }, "\uB2EB\uAE30"),
+                            react_1.default.createElement("button", { type: "submit", className: "btn btn-primary", "data-dismiss": "modal", onClick: this._saveOperatingHour }, "\uC800\uC7A5")))))));
+    }
+}
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const current_space_1 = __webpack_require__(/*! ../../thunk-action/current-space */ "./resources/js/thunk-action/current-space.ts");
+const mapStateToProps = (state) => ({
+    currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
+});
+const mapDispatchToProps = {
+    updateOperatingHours: current_space_1.updateOperatingHours,
+};
+const OperatingHourEditModal = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_OperatingHourEditModal);
+exports.default = OperatingHourEditModal;
+
+
+/***/ }),
+
+/***/ "./resources/js/components/images-editor/image-upload-modal.tsx":
+/*!**********************************************************************!*\
+  !*** ./resources/js/components/images-editor/image-upload-modal.tsx ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ *
+ *
+ * ImageUploadModal component
+ *
+ *
+ */
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const react_dropzone_1 = __importDefault(__webpack_require__(/*! react-dropzone */ "./node_modules/react-dropzone/dist/es/index.js"));
+const react_content_loader_1 = __importDefault(__webpack_require__(/*! react-content-loader */ "./node_modules/react-content-loader/dist/react-content-loader.es.js"));
+const filesize_1 = __importDefault(__webpack_require__(/*! filesize */ "./node_modules/filesize/lib/filesize.js"));
+const allowed_file_mime_1 = __webpack_require__(/*! ../../config/allowed-file-mime */ "./resources/js/config/allowed-file-mime/index.ts");
+exports.ImageUploadModalID = 'image-upload-modal';
+class _ImageUploadModal extends react_1.default.Component {
+    constructor() {
+        super(...arguments);
+        this._onFileDrop = (acceptedFiles) => {
+            acceptedFiles.forEach((file) => {
+                if (allowed_file_mime_1.AllowedFileMime.MIMES.indexOf(file.type) != -1) {
+                    const imageKey = Date.now();
+                    this.props.addUploadImage(imageKey, {
+                        key: imageKey,
+                        name: file.name,
+                        file: file,
+                        size: file.size,
+                        progress: 0,
+                    });
+                    const reader = new FileReader();
+                    reader.onprogress = (ev) => {
+                        if (ev.lengthComputable) {
+                            this.props.updateUploadProgress(imageKey, Math.floor((ev.loaded / ev.total) * 100));
+                        }
+                    };
+                    reader.onload = () => {
+                        if (reader.result !== null &&
+                            typeof reader.result == 'string') {
+                            this.props.setImageData(imageKey, reader.result);
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                }
+                else {
+                    alert(`"${file.name}": 허용되지 않는 파일형식입니다.`);
+                }
+            });
+        };
+        this._onSubmit = (ev) => {
+            ev.preventDefault();
+            this.props.currentSpaceID &&
+                this.props.currentImages &&
+                this.props.updateImages(this.props.currentSpaceID, this.props.currentImages, this.props.uploadImages);
+        };
+        this._renderSelectedImages = () => {
+            const placeholder = (react_1.default.createElement(react_content_loader_1.default, { width: 90, height: 90, speed: 2, primaryColor: "#f3f3f3", secondaryColor: "#ecebeb" },
+                react_1.default.createElement("rect", { x: "5", y: "5", rx: "10", ry: "10", width: "80", height: "80" })));
+            return Object.values(this.props.uploadImages).map((image) => (react_1.default.createElement("div", { key: image.key, className: "upload-image-row" },
+                react_1.default.createElement("div", { className: "upload-image" }, image.dataURL ? (react_1.default.createElement("img", { src: image.dataURL })) : (placeholder)),
+                react_1.default.createElement("div", { className: "upload-image-content" },
+                    react_1.default.createElement("p", { className: "image-name h5" }, image.name),
+                    react_1.default.createElement("p", { className: "image-size h6" }, filesize_1.default(image.size)),
+                    react_1.default.createElement("div", { className: "progress" },
+                        react_1.default.createElement("div", { className: `progress-bar ${image.dataURL ? 'bg-success' : 'bg-primary'}`, role: "progressbar", style: { width: `${image.progress}%` } }, `${image.dataURL ? '완료!' : '업로드 중...'}`))),
+                react_1.default.createElement("button", { className: "delete-image-button", type: "button", onClick: () => {
+                        this.props.deleteUploadImage(image.key);
+                    } },
+                    react_1.default.createElement("i", { className: "material-icons" }, "cancel")))));
+        };
+        this._renderDropzone = () => (react_1.default.createElement(react_dropzone_1.default, { onDrop: this._onFileDrop }, ({ getRootProps, getInputProps }) => (react_1.default.createElement("div", { id: "image-uploader" },
+            this.props.imagesCount > 0 && (react_1.default.createElement("div", { id: "upload-images" }, this._renderSelectedImages())),
+            react_1.default.createElement("section", { id: "image-drop-area" },
+                react_1.default.createElement("div", Object.assign({}, getRootProps()),
+                    react_1.default.createElement("input", Object.assign({}, getInputProps())),
+                    react_1.default.createElement("div", { id: "uploading-info" },
+                        react_1.default.createElement("p", { id: "upload-icon" },
+                            react_1.default.createElement("i", { className: "material-icons" }, "move_to_inbox")),
+                        react_1.default.createElement("p", { className: "h5" }, "\uC774\uACF3\uC744 \uD074\uB9AD\uD574 \uD30C\uC77C\uC744 \uCD94\uAC00\uD558\uAC70\uB098 \uC5C5\uB85C\uB4DC\uD560 \uD30C\uC77C\uC744 \uC774\uACF3\uC73C\uB85C \uB04C\uC5B4\uB2E4 \uB193\uC73C\uC138\uC694."))))))));
+    }
+    render() {
+        return (react_1.default.createElement("div", { id: exports.ImageUploadModalID, className: "modal fade", tabIndex: -1, role: "dialog", "aria-hidden": "true" },
+            react_1.default.createElement("div", { className: "modal-dialog", role: "document" },
+                react_1.default.createElement("div", { className: "modal-content" },
+                    react_1.default.createElement("div", { className: "modal-header" },
+                        react_1.default.createElement("p", { className: "modal-title h5" }, "\uC0AC\uC9C4 \uC5C5\uB85C\uB4DC")),
+                    react_1.default.createElement("div", { className: "modal-body" },
+                        this._renderDropzone(),
+                        react_1.default.createElement("p", { className: "h6" },
+                            react_1.default.createElement("i", { className: "material-icons" }, "info"),
+                            "\uC5C5\uB85C\uB4DC \uAC00\uB2A5\uD55C \uD30C\uC77C\uD615\uC2DD:",
+                            allowed_file_mime_1.AllowedFileMime.FORMATS.map((format) => ` ${format}`))),
+                    react_1.default.createElement("div", { className: "modal-footer" },
+                        react_1.default.createElement("button", { type: "button", className: "btn btn-secondary", "data-dismiss": "modal" }, "\uB2EB\uAE30"),
+                        react_1.default.createElement("button", { type: "submit", className: "btn btn-primary", "data-dismiss": "modal", onClick: this._onSubmit }, "\uC5C5\uB85C\uB4DC"))))));
+    }
+}
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const upload_images_1 = __webpack_require__(/*! ../../actions/upload-images */ "./resources/js/actions/upload-images.ts");
+const current_space_1 = __webpack_require__(/*! ../../thunk-action/current-space */ "./resources/js/thunk-action/current-space.ts");
+const mapStateToProps = (state) => ({
+    currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
+    imagesCount: state.selectedImages.imagesCount,
+    uploadImages: state.selectedImages.uploadImages,
+    currentImages: state.currentSpace.data && state.currentSpace.data.images,
+});
+const mapDispatchToProps = {
+    addUploadImage: upload_images_1.addUploadImage,
+    updateUploadProgress: upload_images_1.updateUploadProgress,
+    setImageData: upload_images_1.setImageData,
+    deleteUploadImage: upload_images_1.deleteUploadImage,
+    updateImages: current_space_1.updateImages,
+};
+const ImageUploadModal = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_ImageUploadModal);
+exports.default = ImageUploadModal;
+
+
+/***/ }),
+
+/***/ "./resources/js/components/images-editor/index.tsx":
+/*!*********************************************************!*\
+  !*** ./resources/js/components/images-editor/index.tsx ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ *
+ *
+ * ImagesEditor component
+ *
+ *
+ */
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const image_upload_modal_1 = __importStar(__webpack_require__(/*! ./image-upload-modal */ "./resources/js/components/images-editor/image-upload-modal.tsx"));
+const os_page_status_1 = __importDefault(__webpack_require__(/*! ../os-page-status */ "./resources/js/components/os-page-status.tsx"));
+const os_edit_button_1 = __importDefault(__webpack_require__(/*! ../os-edit-button */ "./resources/js/components/os-edit-button.tsx"));
+class _ImagesEditor extends react_1.default.Component {
+    _renderImages() {
+        if (this.props.updatingImagesStatus.status === 'requesting') {
+            return react_1.default.createElement(os_page_status_1.default, { status: "loading" });
+        }
+        else if (!this.props.images || this.props.images.length === 0) {
+            return (react_1.default.createElement("div", { id: "empty" },
+                react_1.default.createElement("p", { className: "h6" }, "\uB4F1\uB85D\uB41C \uC0AC\uC9C4\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.")));
+        }
+        else {
+            return this.props.images.map((image) => (react_1.default.createElement("img", { key: image, src: image, className: "rounded" })));
+        }
+    }
+    render() {
+        return (react_1.default.createElement("div", { id: "images-editor" },
+            react_1.default.createElement("div", { id: "header" },
+                react_1.default.createElement("p", { className: "h4" }, "\uC0AC\uC9C4"),
+                react_1.default.createElement(os_edit_button_1.default, { modalID: image_upload_modal_1.ImageUploadModalID })),
+            react_1.default.createElement("div", { id: "body" }, this._renderImages()),
+            react_1.default.createElement("div", { id: "footer" },
+                react_1.default.createElement("p", { className: "h6" },
+                    react_1.default.createElement("i", { className: "material-icons" }, "info"),
+                    "\uC0AC\uC9C4 \uC0AD\uC81C \uAE30\uB2A5\uC740 \uCD94\uD6C4\uC5D0 \uC5C5\uB370\uC774\uD2B8\uB420 \uC608\uC815\uC785\uB2C8\uB2E4.")),
+            react_1.default.createElement(image_upload_modal_1.default, null)));
+    }
+}
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const mapStateToProps = (state) => ({
+    images: state.currentSpace.data && state.currentSpace.data.images,
+    updatingImagesStatus: state.currentSpace.updatingImagesStatus,
+});
+const ImagesEditor = react_redux_1.connect(mapStateToProps)(_ImagesEditor);
+exports.default = ImagesEditor;
+
+
+/***/ }),
+
+/***/ "./resources/js/components/loaction-map.tsx":
+/*!**************************************************!*\
+  !*** ./resources/js/components/loaction-map.tsx ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ *
+ *
+ * LoactionMap component
+ *
+ *
+ */
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const os_google_map_1 = __importDefault(__webpack_require__(/*! ./os-google-map */ "./resources/js/components/os-google-map.tsx"));
+const os_page_status_1 = __importDefault(__webpack_require__(/*! ./os-page-status */ "./resources/js/components/os-page-status.tsx"));
+class _LoactionMap extends react_1.default.Component {
+    constructor() {
+        super(...arguments);
+        this._renderMap = () => {
+            if (this.props.location) {
+                return (react_1.default.createElement(os_google_map_1.default, { id: "map", center: {
+                        lat: this.props.location.lat,
+                        lng: this.props.location.lng,
+                    }, zoom: 17 }));
+            }
+            else {
+                return (react_1.default.createElement("div", { id: "no-info" },
+                    react_1.default.createElement(os_page_status_1.default, { status: "information", info: "\uC704\uCE58\uC815\uBCF4\uAC00 \uC874\uC7AC\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4." })));
+            }
+        };
+    }
+    render() {
+        return (react_1.default.createElement("div", { id: "location-map", className: "category" },
+            react_1.default.createElement("div", { className: "header" },
+                react_1.default.createElement("p", { className: "h5" }, "\uC704\uCE58")),
+            react_1.default.createElement("div", { className: "body" }, this._renderMap())));
+    }
+}
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const mapStateToProps = (state) => ({
+    location: state.currentSpace.data && state.currentSpace.data.location,
+});
+const mapDispatchToProps = {};
+const LoactionMap = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_LoactionMap);
+exports.default = LoactionMap;
+
+
+/***/ }),
+
+/***/ "./resources/js/components/os-edit-button.tsx":
+/*!****************************************************!*\
+  !*** ./resources/js/components/os-edit-button.tsx ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+/**
+ *
+ *
+ * OSEditButton component
+ *
+ *
+ */
+class OSEditButton extends react_1.default.Component {
+    render() {
+        return (react_1.default.createElement("a", { id: "os-edit-button", "data-toggle": this.props.modalID ? 'modal' : null, "data-target": this.props.modalID ? `#${this.props.modalID}` : null, onClick: this.props.onClick },
+            react_1.default.createElement("p", { className: "h6" }, "Edit")));
+    }
+}
+exports.default = OSEditButton;
+
+
+/***/ }),
+
+/***/ "./resources/js/components/os-google-map.tsx":
+/*!***************************************************!*\
+  !*** ./resources/js/components/os-google-map.tsx ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+class OSGoogleMap extends react_1.default.Component {
+    componentDidMount() {
+        this._map = new google.maps.Map(document.getElementById(this.props.id), {
+            center: this.props.center,
+            zoom: this.props.zoom,
+            // default setting
+            clickableIcons: false,
+            mapTypeControl: false,
+            fullscreenControl: false,
+            streetViewControl: false,
+        });
+        // Display temporary marker
+        let marker = new google.maps.Marker({
+            position: this.props.center,
+            map: this._map,
+        });
+    }
+    componentDidUpdate(prevProps) {
+        if (this._map) {
+            // center changed
+            if (prevProps.center !== this.props.center) {
+                this._map.setCenter(this.props.center);
+            }
+        }
+    }
+    render() {
+        return react_1.default.createElement("div", { id: this.props.id });
+    }
+}
+exports.default = OSGoogleMap;
+
+
+/***/ }),
+
 /***/ "./resources/js/components/os-page-status.tsx":
 /*!****************************************************!*\
   !*** ./resources/js/components/os-page-status.tsx ***!
@@ -74804,6 +77346,255 @@ const OSPageStatus = (props) => {
     return react_1.default.createElement("div", { id: "os-page-status" }, statusDisplay());
 };
 exports.default = OSPageStatus;
+
+
+/***/ }),
+
+/***/ "./resources/js/components/os-rate-display.tsx":
+/*!*****************************************************!*\
+  !*** ./resources/js/components/os-rate-display.tsx ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+/**
+ *
+ *
+ * OSRateDisplay component
+ *
+ *
+ */
+class _OSRateDisplay extends react_1.default.Component {
+    constructor() {
+        super(...arguments);
+        this._renderStar = (index, percentage) => (react_1.default.createElement("div", { key: index, className: "star" },
+            react_1.default.createElement("i", { className: "far fa-star" }),
+            react_1.default.createElement("div", { className: "fill", style: { width: `${percentage * 100}%` } },
+                react_1.default.createElement("i", { className: "fas fa-star" }))));
+        this._renderStars = () => {
+            let p, rtn = [];
+            for (let i = 0; i < 5; i++) {
+                p = this.props.rate - i;
+                p = p > 1 ? 1 : p < 0 ? 0 : p;
+                rtn.push(this._renderStar(i, p));
+            }
+            return rtn;
+        };
+        this._renderRate = () => {
+            return react_1.default.createElement("p", { id: "rate" }, this.props.rate.toFixed(2));
+        };
+    }
+    render() {
+        return (react_1.default.createElement("div", { id: "os-rate-display" },
+            this._renderRate(),
+            react_1.default.createElement("div", { id: "stars" }, this._renderStars())));
+    }
+}
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const mapStateToProps = (state) => ({
+    rate: (state.currentSpace.data && state.currentSpace.data.rank) || 0,
+});
+const mapDispatchToProps = {};
+const OSRateDisplay = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_OSRateDisplay);
+exports.default = OSRateDisplay;
+
+
+/***/ }),
+
+/***/ "./resources/js/components/space-description.tsx":
+/*!*******************************************************!*\
+  !*** ./resources/js/components/space-description.tsx ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ *
+ *
+ * SpaceDescription component
+ *
+ *
+ */
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const os_edit_button_1 = __importDefault(__webpack_require__(/*! ./os-edit-button */ "./resources/js/components/os-edit-button.tsx"));
+class _SpaceDescription extends react_1.default.Component {
+    constructor() {
+        super(...arguments);
+        this.state = {
+            mode: 'display',
+            textValue: '',
+        };
+        this._swtichMode = (m) => {
+            this.setState({ mode: m, textValue: this.props.spaceDescription });
+        };
+        this._onTextChange = (ev) => {
+            this.setState({
+                ...this.state,
+                textValue: ev.target.value,
+            });
+        };
+        this._save = () => {
+            this.props.updateSpaceDescription(this.state.textValue);
+            this._swtichMode('display');
+        };
+        this._renderDisplayMode = () => this.props.spaceDescription ? (react_1.default.createElement("p", { id: "description-text", className: "h6" }, this.props.spaceDescription)) : (react_1.default.createElement("p", { id: "no-intro", className: "h6" }, "\uB4F1\uB85D\uB41C \uC18C\uAC1C\uAE00\uC774 \uC5C6\uC2B5\uB2C8\uB2E4."));
+        this._renderEditMode = () => (react_1.default.createElement("div", { id: "editor" },
+            react_1.default.createElement("textarea", { className: "form-control", rows: 5, value: this.state.textValue, onChange: this._onTextChange }),
+            react_1.default.createElement("div", { id: "buttons" },
+                react_1.default.createElement("button", { type: "button", className: "btn btn-secondary", onClick: () => {
+                        this._swtichMode('display');
+                    } }, "\uCDE8\uC18C"),
+                react_1.default.createElement("button", { type: "button", className: "btn btn-primary", onClick: () => {
+                        this._save();
+                    } }, "\uC800\uC7A5"))));
+    }
+    render() {
+        return (react_1.default.createElement("div", { id: "space-description", className: "category" },
+            react_1.default.createElement("div", { className: "header" },
+                react_1.default.createElement("p", { className: "h5" }, "\uC18C\uAC1C"),
+                this.state.mode === 'display' && (react_1.default.createElement(os_edit_button_1.default, { onClick: () => {
+                        this._swtichMode('edit');
+                    } }))),
+            react_1.default.createElement("div", { id: "description", className: "body" }, this.state.mode === 'display'
+                ? this._renderDisplayMode()
+                : this._renderEditMode())));
+    }
+}
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const current_space_1 = __webpack_require__(/*! ../actions/current-space */ "./resources/js/actions/current-space.ts");
+const mapStateToProps = (state) => ({
+    spaceDescription: state.currentSpace.data && state.currentSpace.data.spaceDescription,
+});
+const mapDispatchToProps = {
+    updateSpaceDescription: current_space_1.updateSpaceDescription,
+};
+const SpaceDescription = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_SpaceDescription);
+exports.default = SpaceDescription;
+
+
+/***/ }),
+
+/***/ "./resources/js/components/space-list.tsx":
+/*!************************************************!*\
+  !*** ./resources/js/components/space-list.tsx ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ *
+ *
+ * SpaceList component
+ *
+ *
+ */
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const os_edit_button_1 = __importDefault(__webpack_require__(/*! ./os-edit-button */ "./resources/js/components/os-edit-button.tsx"));
+const data = [
+    { id: 'asdfasdfasdf', names: { en: 'space 1', ko: '스페이스 1' } },
+    { id: 'asdfasdf', names: { en: 'space 2', ko: '스페이스 2' } },
+];
+class _SpaceList extends react_1.default.Component {
+    constructor() {
+        super(...arguments);
+        this._onSpaceClick = (spaceID) => this.props.requestSpace(spaceID);
+        this._renderTabs = () => {
+            return (react_1.default.createElement("div", { id: "tabs" }, data.map((spaceHeader) => (react_1.default.createElement("a", { key: spaceHeader.id, className: `space-tab ${spaceHeader.id === this.props.currentSpaceID
+                    ? 'active-space'
+                    : ''}` },
+                react_1.default.createElement("p", { className: "h4" }, spaceHeader.names['ko']))))));
+        };
+    }
+    render() {
+        return (react_1.default.createElement("div", { id: "space-list" },
+            react_1.default.createElement("p", { className: "h2" }, "Space"),
+            react_1.default.createElement("div", { id: "tab-list" }, this._renderTabs()),
+            react_1.default.createElement(os_edit_button_1.default, null)));
+    }
+}
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const current_space_1 = __webpack_require__(/*! ../thunk-action/current-space */ "./resources/js/thunk-action/current-space.ts");
+const mapStateToProps = (state) => ({
+    currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
+});
+const mapDispatchToProps = {
+    requestSpace: current_space_1.requestSpace,
+};
+const SpaceList = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_SpaceList);
+exports.default = SpaceList;
+
+
+/***/ }),
+
+/***/ "./resources/js/config/allowed-file-mime/config.json":
+/*!***********************************************************!*\
+  !*** ./resources/js/config/allowed-file-mime/config.json ***!
+  \***********************************************************/
+/*! exports provided: image, default */
+/***/ (function(module) {
+
+module.exports = {"image":{".jpg/.jpeg":"image/jpeg",".png":"image/png"}};
+
+/***/ }),
+
+/***/ "./resources/js/config/allowed-file-mime/index.ts":
+/*!********************************************************!*\
+  !*** ./resources/js/config/allowed-file-mime/index.ts ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const config_json_1 = __importDefault(__webpack_require__(/*! ./config.json */ "./resources/js/config/allowed-file-mime/config.json"));
+exports.AllowedFileMime = {
+    FORMATS: Object.keys(config_json_1.default.image),
+    MIMES: Object.values(config_json_1.default.image),
+};
 
 
 /***/ }),
@@ -74875,6 +77666,28 @@ exports.default = axios_1.default;
 
 /***/ }),
 
+/***/ "./resources/js/config/space.json":
+/*!****************************************!*\
+  !*** ./resources/js/config/space.json ***!
+  \****************************************/
+/*! exports provided: busy_level, space_type, amenity, default */
+/***/ (function(module) {
+
+module.exports = {"busy_level":{"1":{"en":"Normal","ko":"보통"},"2":{"en":"Busy","ko":"바쁨"},"3":{"en":"Very Busy","ko":"매우 바쁨"}},"space_type":{"0":{"en":"library","ko":"도서관"},"1":{"en":"startup","ko":"창업공간"},"2":{"en":"museum","ko":"박물관"},"3":{"en":"bookstore","ko":"서점"},"4":{"en":"experience","ko":"체험공간"},"5":{"en":"nature","ko":"공원"},"6":{"en":"youth","ko":"청년공간"},"7":{"en":"lounge","ko":"라운지"},"8":{"en":"starbucks","ko":"스타벅스"},"9":{"en":"cafe","ko":"카페"}},"amenity":{"apple-pay":{"name":{"en":"Apple Pay","ko":"애플페이"},"faicon":"fab fa-cc-apple-pay"},"shower":{"name":{"en":"Shower","ko":"샤워시설"},"faicon":"fas fa-shower"},"sleep-area":{"name":{"en":"Sleep Area","ko":"수면실"},"faicon":"fas fa-bed"},"amazon-pay":{"name":{"en":"Amazon Pay","ko":"아마존페이"},"faicon":"fab fa-cc-amazon-pay"},"paypal":{"name":{"en":"PayPal","ko":"페이팔"},"faicon":"fab fa-cc-paypal"},"mastercard":{"name":{"en":"Mastercard","ko":"마스터카드"},"faicon":"fab fa-cc-mastercard"},"visa":{"name":{"en":"Visa","ko":"비자"},"faicon":"fab fa-cc-visa"},"classroom":{"name":{"en":"Classroom","ko":"강의실"},"faicon":"fas fa-chalkboard"},"coffee":{"name":{"en":"Coffee","ko":"커피"},"faicon":"fas fa-coffee"},"sofa":{"name":{"en":"Sofa","ko":"소파"},"faicon":"fas fa-couch"},"pet":{"name":{"en":"Pet","ko":"동물출입"},"faicon":"fas fa-dog"},"gym":{"name":{"en":"Gym","ko":"헬스장"},"faicon":"fas fa-dumbbell"},"bar":{"name":{"en":"Bar","ko":"바"},"faicon":"fas fa-glass-cheers"},"snack":{"name":{"en":"Snack","ko":"먹거리"},"faicon":"fas fa-hamburger"},"science-lab":{"name":{"en":"Science Lab","ko":"실험실"},"faicon":"fas fa-microscope"},"private-area":{"name":{"en":"Private Area","ko":"개인공간"},"faicon":"fas fa-person-booth"},"plug":{"name":{"en":"Plug","ko":"플러그"},"faicon":"fas fa-plug"},"toilet":{"name":{"en":"Toilet","ko":"화장실"},"faicon":"fas fa-restroom"},"smoking-area":{"name":{"en":"Smoking Area","ko":"흡연실"},"faicon":"fas fa-smoking"},"no-smoking":{"name":{"en":"No Smoking","ko":"금연"},"faicon":"fas fa-smoking-ban"},"dining-area":{"name":{"en":"Dining Area","ko":"식당"},"faicon":"fas fa-utensils"},"quiet-zone":{"name":{"en":"Quiet Zone","ko":"정숙공간"},"faicon":"fas fa-volume-mute"},"disabled-facility":{"name":{"en":"Disabled Facilities","ko":"장애인시설"},"faicon":"fas fa-wheelchair"},"wifi":{"name":{"en":"Wi-Fi","ko":"와이파이"},"faicon":"fas fa-wifi"},"game-zone":{"name":{"en":"Game Zone","ko":"게임존"},"faicon":"fas fa-gamepad"},"parking":{"name":{"en":"Parking","ko":"주차"},"faicon":"fas fa-parking"}}};
+
+/***/ }),
+
+/***/ "./resources/js/config/weekdays.json":
+/*!*******************************************!*\
+  !*** ./resources/js/config/weekdays.json ***!
+  \*******************************************/
+/*! exports provided: MON, TUE, WED, THU, FRI, SAT, SUN, default */
+/***/ (function(module) {
+
+module.exports = {"MON":{"en":"Mon","ko":"월"},"TUE":{"en":"Tue","ko":"화"},"WED":{"en":"Wed","ko":"수"},"THU":{"en":"Thu","ko":"목"},"FRI":{"en":"Fri","ko":"금"},"SAT":{"en":"Sat","ko":"토"},"SUN":{"en":"Sun","ko":"일"}};
+
+/***/ }),
+
 /***/ "./resources/js/model/organizer.ts":
 /*!*****************************************!*\
   !*** ./resources/js/model/organizer.ts ***!
@@ -74899,6 +77712,73 @@ exports.rawOrganizer2Organizer = (rawOrganizer) => {
         name: rawOrganizer.name,
         owningSpaces: rawOrganizer.owning_spaces,
         authority: rawOrganizer.authority === 'admin' ? 'Admin' : 'Organizer',
+    };
+};
+
+
+/***/ }),
+
+/***/ "./resources/js/model/space.ts":
+/*!*************************************!*\
+  !*** ./resources/js/model/space.ts ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Busy Level
+ */
+const space_json_1 = __webpack_require__(/*! ../config/space.json */ "./resources/js/config/space.json");
+const busyLevels = space_json_1.busy_level;
+exports.interpretBusyLevel = (level, locale = 'en') => {
+    return busyLevels[level][locale] || busyLevels[level]['en'];
+};
+/**
+ * Space Type
+ */
+const space_json_2 = __webpack_require__(/*! ../config/space.json */ "./resources/js/config/space.json");
+const spaceTypes = space_json_2.space_type;
+exports.interpretSpaceType = (type, locale = 'en') => {
+    return spaceTypes[type][locale] || spaceTypes[type]['en'];
+};
+/**
+ * Amenity
+ */
+const space_json_3 = __webpack_require__(/*! ../config/space.json */ "./resources/js/config/space.json");
+exports.amenities = space_json_3.amenity;
+exports.interpretAmenity = (tag, locale = 'en') => {
+    return {
+        name: exports.amenities[tag].name[locale] || exports.amenities[tag].name['en'],
+        faicon: exports.amenities[tag].faicon,
+    };
+};
+/**
+ *
+ *
+ * Interpret ```RawSpaces``` data to a list of ```Space```
+ *
+ *
+ */
+exports.rawSpaces2SpaceList = (sid, rawSpace) => {
+    return {
+        id: sid,
+        spaceNames: rawSpace.space_names,
+        types: [rawSpace.type.toString()],
+        locationText: rawSpace.location_text,
+        location: {
+            lat: rawSpace.latitude,
+            lng: rawSpace.longitude,
+        },
+        operatingHours: rawSpace.operating_hours.split('\n'),
+        amenityTags: Object.keys(rawSpace.amenity_tags),
+        spaceDescription: '',
+        images: rawSpace.images ? rawSpace.images : [],
+        rank: rawSpace.rank,
+        busyLevel: '1',
+        paid: rawSpace.paid,
     };
 };
 
@@ -75291,13 +78171,13 @@ function Reducer(state = initialState, action) {
             };
         case redux_types.RESET_DATA:
             return initialState;
-        case redux_types.UPDATE_SPACE_INTRODUCE:
+        case redux_types.UPDATE_SPACE_DESCRIPTION:
             if (state.data)
                 return {
                     ...state,
                     data: {
                         ...state.data,
-                        spaceIntroduce: action.spaceIntroduce,
+                        spaceDescription: action.spaceDescription,
                     },
                 };
             else
@@ -75729,7 +78609,7 @@ exports.FAIL_REQUEST = 'current-space/FAIL_REQUEST';
 exports.RESET_DATA = 'current-space/RESET_DATA';
 // Space introduce
 // prettier-ignore
-exports.UPDATE_SPACE_INTRODUCE = 'current-space/UPDATE_SPACE_INTRODUCE';
+exports.UPDATE_SPACE_DESCRIPTION = 'current-space/UPDATE_SPACE_DESCRIPTION';
 // Operating hour
 // prettier-ignore
 exports.START_UPDATE_OH = 'current-space/START_UPDATE_OH';
@@ -75863,8 +78743,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const react_router_1 = __webpack_require__(/*! react-router */ "./node_modules/react-router/esm/react-router.js");
 /**
  *
  *
@@ -75872,10 +78750,39 @@ const react_router_1 = __webpack_require__(/*! react-router */ "./node_modules/r
  *
  *
  */
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const react_router_1 = __webpack_require__(/*! react-router */ "./node_modules/react-router/esm/react-router.js");
+const space_list_1 = __importDefault(__webpack_require__(/*! ../components/space-list */ "./resources/js/components/space-list.tsx"));
+const general_info_1 = __importDefault(__webpack_require__(/*! ../components/general-info */ "./resources/js/components/general-info/index.tsx"));
+const space_description_1 = __importDefault(__webpack_require__(/*! ../components/space-description */ "./resources/js/components/space-description.tsx"));
+const amenity_tags_1 = __importDefault(__webpack_require__(/*! ../components/amenity-tags */ "./resources/js/components/amenity-tags/index.tsx"));
+const loaction_map_1 = __importDefault(__webpack_require__(/*! ../components/loaction-map */ "./resources/js/components/loaction-map.tsx"));
+const images_editor_1 = __importDefault(__webpack_require__(/*! ../components/images-editor */ "./resources/js/components/images-editor/index.tsx"));
 class _OSHomeScreen extends react_1.default.Component {
     render() {
-        if (this.props.loginStatus.status === 'succeed')
-            return react_1.default.createElement("div", { id: "home-container", className: "container-fluid" });
+        //
+        // if login is succeed and current user is assigned
+        //
+        if (this.props.loginStatus.status === 'succeed' &&
+            this.props.currentUser)
+            return (react_1.default.createElement("div", { id: "home-container", className: "container-fluid" },
+                react_1.default.createElement("div", { id: "home-header" },
+                    react_1.default.createElement("div", { id: "title-div" }),
+                    react_1.default.createElement("div", { id: "profile-div" })),
+                react_1.default.createElement("div", { id: "home-body" },
+                    react_1.default.createElement("div", { id: "space-menu" },
+                        react_1.default.createElement(space_list_1.default, null)),
+                    react_1.default.createElement("div", { id: "workspace" },
+                        react_1.default.createElement("div", { id: "left" },
+                            react_1.default.createElement(general_info_1.default, null),
+                            react_1.default.createElement(space_description_1.default, null),
+                            react_1.default.createElement(amenity_tags_1.default, null),
+                            react_1.default.createElement(loaction_map_1.default, null)),
+                        react_1.default.createElement("div", { id: "right" },
+                            react_1.default.createElement(images_editor_1.default, null))))));
+        //
+        // otherwise
+        //
         else
             return react_1.default.createElement(react_router_1.Redirect, { to: "/" });
     }
@@ -75890,6 +78797,7 @@ class _OSHomeScreen extends react_1.default.Component {
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 const mapStateToProps = (state) => ({
     loginStatus: state.auth.loginStatus,
+    currentUser: state.auth.currentUser,
 });
 const OSHomeScreen = react_redux_1.connect(mapStateToProps)(_OSHomeScreen);
 exports.default = OSHomeScreen;
@@ -75995,6 +78903,150 @@ exports.requestSignup = (userEmail, userName, userPassword) => async (dispatch) 
     }
     catch (error) {
         dispatch(authActions.failSignup(error));
+    }
+};
+
+
+/***/ }),
+
+/***/ "./resources/js/thunk-action/current-space.ts":
+/*!****************************************************!*\
+  !*** ./resources/js/thunk-action/current-space.ts ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const osdb_axios_1 = __importDefault(__webpack_require__(/*! ../config/osdb-axios */ "./resources/js/config/osdb-axios.ts"));
+const firebase_1 = __importDefault(__webpack_require__(/*! ../config/firebase */ "./resources/js/config/firebase.ts"));
+const space_1 = __webpack_require__(/*! ../model/space */ "./resources/js/model/space.ts");
+const currentSpaceActions = __importStar(__webpack_require__(/*! ../actions/current-space */ "./resources/js/actions/current-space.ts"));
+const space_history_1 = __webpack_require__(/*! ../actions/space-history */ "./resources/js/actions/space-history.ts");
+/**
+ *
+ *
+ * Request space data from the server
+ *
+ *
+ */
+exports.requestSpace = (spaceID, pushHistory = false) => async (dispatch) => {
+    dispatch(currentSpaceActions.startRequest());
+    try {
+        const { data } = await osdb_axios_1.default.get(`/ospace/${spaceID}`);
+        const space = space_1.rawSpaces2SpaceList(spaceID, data);
+        dispatch(currentSpaceActions.receiveRequest(space));
+        if (pushHistory) {
+            dispatch(space_history_1.pushIntoSpaceHistory({
+                id: spaceID,
+                names: space.spaceNames,
+            }));
+        }
+    }
+    catch (error) {
+        dispatch(currentSpaceActions.failRequest(error));
+    }
+};
+/**
+ *
+ *
+ * Update operating hours of the space on server
+ *
+ *
+ */
+exports.updateOperatingHours = (spaceID, operatingHours) => async (dispatch) => {
+    dispatch(currentSpaceActions.startUpdateOH());
+    try {
+        const { data } = await osdb_axios_1.default.post(`/ospace/${spaceID}`, {
+            operating_hours: operatingHours.join('\n'),
+        });
+        if (data.updated_space_id === spaceID) {
+            dispatch(currentSpaceActions.succeedUpdateOH(operatingHours));
+        }
+        else {
+            dispatch(currentSpaceActions.failUpdateOH('업데이트에 실패했습니다.'));
+        }
+    }
+    catch (error) {
+        dispatch(currentSpaceActions.failUpdateOH(error));
+    }
+};
+/**
+ *
+ *
+ * Update amenity tags of the space on server
+ *
+ *
+ */
+exports.updateAmenityTags = (spaceID, amenityTags) => async (dispatch) => {
+    dispatch(currentSpaceActions.startUpdateAT());
+    try {
+        let amenities = {};
+        amenityTags.forEach((tag) => {
+            amenities[tag] = {};
+        });
+        const { data } = await osdb_axios_1.default.post(`/ospace/${spaceID}`, {
+            amenity_tags: amenities,
+        });
+        if (data.updated_space_id === spaceID) {
+            dispatch(currentSpaceActions.succeedUpdateAT(amenityTags));
+        }
+        else {
+            dispatch(currentSpaceActions.failUpdateAT('업데이트에 실패했습니다.'));
+        }
+    }
+    catch (error) {
+        dispatch(currentSpaceActions.failUpdateAT(error));
+    }
+};
+/**
+ *
+ *
+ * Update space images of the space on server
+ *
+ *
+ */
+exports.updateImages = (spaceID, spaceImages, uploadings) => async (dispatch) => {
+    dispatch(currentSpaceActions.startUpdateImages());
+    const uploadingImages = Object.values(uploadings);
+    try {
+        await Promise.all(uploadingImages.map((uploadImage) => {
+            if (uploadImage.progress >= 100) {
+                return firebase_1.default.storage()
+                    .ref(`${spaceID}/${uploadImage.key}`)
+                    .put(uploadImage.file)
+                    .then((uploadTask) => {
+                    uploadTask.ref
+                        .getDownloadURL()
+                        .then((url) => {
+                        spaceImages.push(url);
+                    });
+                });
+            }
+        }));
+        const { data } = await osdb_axios_1.default.post(`/ospace/${spaceID}`, {
+            images: spaceImages,
+        });
+        if (data.updated_space_id === spaceID) {
+            dispatch(currentSpaceActions.succeedUpdateImages(spaceImages));
+        }
+        else {
+            dispatch(currentSpaceActions.failUpdateImages('업데이트에 실패했습니다.'));
+        }
+    }
+    catch (error) {
+        dispatch(currentSpaceActions.failUpdateImages(error));
     }
 };
 
