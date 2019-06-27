@@ -1,16 +1,16 @@
 /**
  *
  *
- * OSHomeScreen props
+ * HomeScreen props
  *
  *
  */
-interface OSHomeContainerProps extends _ReduxProps {}
+interface HomeScreenProps extends _ReduxProps {}
 
 /**
  *
  *
- * OSHomeScreen component
+ * HomeScreen component
  *
  *
  */
@@ -25,7 +25,34 @@ import AmenityTags from '../components/amenity-tags';
 import LoactionMap from '../components/loaction-map';
 import ImagesEditor from '../components/images-editor';
 
-class _OSHomeScreen extends React.Component<OSHomeContainerProps> {
+class _HomeScreen extends React.Component<HomeScreenProps> {
+    private _renderWorkspace = () => {
+        if (this.props.currentSpace) {
+            return (
+                <div id="workspace">
+                    <div id="left">
+                        <GeneralInfo />
+                        <SpaceDescription />
+                        <AmenityTags />
+                        <LoactionMap />
+                    </div>
+                    <div id="right">
+                        <ImagesEditor />
+                    </div>
+                </div>
+            );
+        } else {
+            return (
+                <div id="workspace">
+                    <OSPageStatus
+                        status="information"
+                        info="스페이스를 선택해 주세요."
+                    />
+                </div>
+            );
+        }
+    };
+
     render() {
         //
         // if login is succeed and current user is assigned
@@ -42,19 +69,13 @@ class _OSHomeScreen extends React.Component<OSHomeContainerProps> {
                     </div>
                     <div id="home-body">
                         <div id="space-menu">
-                            <SpaceList />
+                            {this.props.currentUser.authority === 'Admin' ? (
+                                <SpaceList />
+                            ) : (
+                                <SpaceList />
+                            )}
                         </div>
-                        <div id="workspace">
-                            <div id="left">
-                                <GeneralInfo />
-                                <SpaceDescription />
-                                <AmenityTags />
-                                <LoactionMap />
-                            </div>
-                            <div id="right">
-                                <ImagesEditor />
-                            </div>
-                        </div>
+                        {this._renderWorkspace()}
                     </div>
                 </div>
             );
@@ -77,6 +98,8 @@ import RootState from '../redux-types';
 
 import { LoginStatus } from '../model/system';
 import Organizer from '../model/organizer';
+import Space from '../model/space';
+import OSPageStatus from '../components/os-page-status';
 
 interface _ReduxProps {
     /**
@@ -88,13 +111,19 @@ interface _ReduxProps {
      * Current user
      */
     currentUser?: Organizer;
+
+    /**
+     * Current space
+     */
+    currentSpace?: Space;
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
     loginStatus: state.auth.loginStatus,
     currentUser: state.auth.currentUser,
+    currentSpace: state.currentSpace.data,
 });
 
-const OSHomeScreen = connect(mapStateToProps)(_OSHomeScreen);
+const HomeScreen = connect(mapStateToProps)(_HomeScreen);
 
-export default OSHomeScreen;
+export default HomeScreen;

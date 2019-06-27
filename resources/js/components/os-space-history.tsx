@@ -1,5 +1,5 @@
 import React from 'react';
-import { SpaceHeader } from '../model/space-header';
+import { SpaceHeader } from '../model/space-list';
 
 /**
  *

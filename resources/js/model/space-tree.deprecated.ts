@@ -1,4 +1,24 @@
-import { RawSpaceHeader, SpaceHeader } from './space-header';
+/**
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ * DEPRECATED
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+
+import { RawSpaceHeader, SpaceHeader } from './space-list';
 
 /**
  * buildArray2Tree

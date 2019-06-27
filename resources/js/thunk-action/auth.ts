@@ -7,9 +7,9 @@ import OSFirebase from '../config/firebase';
 import { RawOrganizer, rawOrganizer2Organizer } from '../model/organizer';
 
 import * as authActions from '../actions/auth';
-import { resetData as resetSpaceTrees } from '../actions/space-trees';
+import { resetData as resetSpaceList } from '../actions/space-list';
 import { resetSpaceHistory } from '../actions/space-history';
-import { resetData as resetSpace } from '../actions/space-trees';
+import { resetData as resetSpace } from '../actions/current-space';
 
 /**
  *
@@ -67,7 +67,7 @@ export const requestLogout: ActionCreator<
     OSFirebase.auth()
         .signOut()
         .then(() => {
-            dispatch(resetSpaceTrees());
+            dispatch(resetSpaceList());
             dispatch(resetSpaceHistory());
             dispatch(resetSpace());
             dispatch(authActions.logout());

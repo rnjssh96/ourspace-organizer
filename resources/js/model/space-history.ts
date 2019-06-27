@@ -1,4 +1,4 @@
-import { SpaceHeader } from './space-header';
+import { SpaceHeader } from './space-list';
 
 /**
  * Space history

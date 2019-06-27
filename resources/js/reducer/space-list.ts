@@ -1,4 +1,4 @@
-import * as redux_types from '../redux-types/space-trees';
+import * as redux_types from '../redux-types/space-list';
 
 /**
  * Initial State

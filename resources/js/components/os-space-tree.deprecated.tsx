@@ -1,7 +1,27 @@
+/**
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ * DEPRECATED
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+
 import React from 'react';
 
-import { traverseSpaceTree, SpaceTree } from '../model/space-tree';
-import { SpaceHeader } from '../model/space-header';
+import { traverseSpaceTree, SpaceTree } from '../model/space-tree.deprecated';
+import { SpaceHeader } from '../model/space-list';
 
 /**
  *
@@ -98,7 +118,7 @@ class _OSSpaceTree extends React.Component<OSSpaceTreeProps> {
 import { connect } from 'react-redux';
 import RootState from '../redux-types';
 
-import SpaceTrees from '../model/space-tree';
+import SpaceTrees from '../model/space-tree.deprecated';
 
 import { requestSpace } from '../thunk-action/current-space';
 
@@ -122,7 +142,7 @@ interface _ReduxActionCreators {
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
-    spaceTrees: state.spaceTrees.data,
+    // spaceTrees: state.spaceList.data,
     currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
 });
 

@@ -1,13 +1,13 @@
 import { Action } from 'redux';
 
-import SpaceTrees from '../model/space-tree';
 import { RequestStatus } from '../model/system';
+import { SpaceHeader } from '../model/space-list';
 
 /**
  * State
  */
 export interface State {
-    data?: SpaceTrees;
+    data?: SpaceHeader[];
     requestingStatus: RequestStatus;
 }
 
@@ -15,13 +15,13 @@ export interface State {
  * Action Constants
  */
 // prettier-ignore
-export const START_REQUEST = 'space-trees/START_REQUEST';
+export const START_REQUEST = 'space-list/START_REQUEST';
 // prettier-ignore
-export const RECEIVE_REQUEST = 'space-trees/RECEIVE_REQUEST';
+export const RECEIVE_REQUEST = 'space-list/RECEIVE_REQUEST';
 // prettier-ignore
-export const FAIL_REQUEST = 'space-trees/FAIL_REQUEST';
+export const FAIL_REQUEST = 'space-list/FAIL_REQUEST';
 // prettier-ignore
-export const RESET_DATA = 'space-trees/RESET_DATA';
+export const RESET_DATA = 'space-list/RESET_DATA';
 
 /**
  * Action Interfacess
@@ -29,7 +29,7 @@ export const RESET_DATA = 'space-trees/RESET_DATA';
 export interface StartRequestAction extends Action<typeof START_REQUEST> {}
 
 export interface ReceiveRequestAction extends Action<typeof RECEIVE_REQUEST> {
-    data: SpaceTrees;
+    data: SpaceHeader[];
 }
 
 export interface FailRequestAction extends Action<typeof FAIL_REQUEST> {

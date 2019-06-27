@@ -1,8 +1,8 @@
 import { ActionCreator } from 'redux';
 
-import * as redux_types from '../redux-types/space-trees';
+import * as redux_types from '../redux-types/space-list';
 
-import SpaceTrees from '../model/space-tree';
+import { SpaceHeader } from '../model/space-list';
 
 /**
  * Action Creators
@@ -14,7 +14,7 @@ export const startRequest: ActionCreator<
 });
 
 export const receiveRequest: ActionCreator<redux_types.ReceiveRequestAction> = (
-    data: SpaceTrees,
+    data: SpaceHeader[],
 ) => ({
     type: redux_types.RECEIVE_REQUEST,
     data,

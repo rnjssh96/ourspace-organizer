@@ -1,7 +1,7 @@
 import { Action } from 'redux';
 
 import SpaceHistory from '../model/space-history';
-import { SpaceHeader } from '../model/space-header';
+import { SpaceHeader } from '../model/space-list';
 
 /**
  * State

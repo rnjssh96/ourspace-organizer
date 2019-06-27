@@ -76268,10 +76268,10 @@ exports.pushIntoSpaceHistory = (spaceHeader) => ({
 
 /***/ }),
 
-/***/ "./resources/js/actions/space-trees.ts":
-/*!*********************************************!*\
-  !*** ./resources/js/actions/space-trees.ts ***!
-  \*********************************************/
+/***/ "./resources/js/actions/space-list.ts":
+/*!********************************************!*\
+  !*** ./resources/js/actions/space-list.ts ***!
+  \********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -76285,7 +76285,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const redux_types = __importStar(__webpack_require__(/*! ../redux-types/space-trees */ "./resources/js/redux-types/space-trees.ts"));
+const redux_types = __importStar(__webpack_require__(/*! ../redux-types/space-list */ "./resources/js/redux-types/space-list.ts"));
 /**
  * Action Creators
  */
@@ -77523,20 +77523,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 const os_edit_button_1 = __importDefault(__webpack_require__(/*! ./os-edit-button */ "./resources/js/components/os-edit-button.tsx"));
-const data = [
-    { id: 'asdfasdfasdf', names: { en: 'space 1', ko: '스페이스 1' } },
-    { id: 'asdfasdf', names: { en: 'space 2', ko: '스페이스 2' } },
-];
 class _SpaceList extends react_1.default.Component {
     constructor() {
         super(...arguments);
         this._onSpaceClick = (spaceID) => this.props.requestSpace(spaceID);
         this._renderTabs = () => {
-            return (react_1.default.createElement("div", { id: "tabs" }, data.map((spaceHeader) => (react_1.default.createElement("a", { key: spaceHeader.id, className: `space-tab ${spaceHeader.id === this.props.currentSpaceID
-                    ? 'active-space'
-                    : ''}` },
-                react_1.default.createElement("p", { className: "h4" }, spaceHeader.names['ko']))))));
+            if (this.props.spaceList) {
+                return (react_1.default.createElement("div", { id: "tabs" }, this.props.spaceList.map((spaceHeader) => (react_1.default.createElement("a", { key: spaceHeader.id, className: `space-tab ${spaceHeader.id === this.props.currentSpaceID
+                        ? 'active-space'
+                        : ''}`, onClick: () => {
+                        this._onSpaceClick(spaceHeader.id);
+                    } },
+                    react_1.default.createElement("p", { className: "h4" }, spaceHeader.names['ko']))))));
+            }
         };
+    }
+    componentDidMount() {
+        if (this.props.currentUser) {
+            this.props.requestSpaceList(this.props.currentUser.owningSpaces);
+        }
     }
     render() {
         return (react_1.default.createElement("div", { id: "space-list" },
@@ -77553,11 +77558,15 @@ class _SpaceList extends react_1.default.Component {
  *
  */
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const space_list_1 = __webpack_require__(/*! ../thunk-action/space-list */ "./resources/js/thunk-action/space-list.ts");
 const current_space_1 = __webpack_require__(/*! ../thunk-action/current-space */ "./resources/js/thunk-action/current-space.ts");
 const mapStateToProps = (state) => ({
+    currentUser: state.auth.currentUser,
     currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
+    spaceList: state.spaceList.data,
 });
 const mapDispatchToProps = {
+    requestSpaceList: space_list_1.requestSpaceList,
     requestSpace: current_space_1.requestSpace,
 };
 const SpaceList = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_SpaceList);
@@ -78283,7 +78292,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const redux_1 = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
 const auth_1 = __importDefault(__webpack_require__(/*! ./auth */ "./resources/js/reducer/auth.ts"));
-const space_trees_1 = __importDefault(__webpack_require__(/*! ./space-trees */ "./resources/js/reducer/space-trees.ts"));
+const space_list_1 = __importDefault(__webpack_require__(/*! ./space-list */ "./resources/js/reducer/space-list.ts"));
 const space_history_1 = __importDefault(__webpack_require__(/*! ./space-history */ "./resources/js/reducer/space-history.ts"));
 const current_space_1 = __importDefault(__webpack_require__(/*! ./current-space */ "./resources/js/reducer/current-space.ts"));
 const selected_amenities_1 = __importDefault(__webpack_require__(/*! ./selected-amenities */ "./resources/js/reducer/selected-amenities.ts"));
@@ -78293,7 +78302,7 @@ const upload_images_1 = __importDefault(__webpack_require__(/*! ./upload-images 
  */
 const RootReducer = redux_1.combineReducers({
     auth: auth_1.default,
-    spaceTrees: space_trees_1.default,
+    spaceList: space_list_1.default,
     spaceHistory: space_history_1.default,
     currentSpace: current_space_1.default,
     selectedAmenities: selected_amenities_1.default,
@@ -78411,10 +78420,10 @@ exports.default = Reducer;
 
 /***/ }),
 
-/***/ "./resources/js/reducer/space-trees.ts":
-/*!*********************************************!*\
-  !*** ./resources/js/reducer/space-trees.ts ***!
-  \*********************************************/
+/***/ "./resources/js/reducer/space-list.ts":
+/*!********************************************!*\
+  !*** ./resources/js/reducer/space-list.ts ***!
+  \********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -78428,7 +78437,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const redux_types = __importStar(__webpack_require__(/*! ../redux-types/space-trees */ "./resources/js/redux-types/space-trees.ts"));
+const redux_types = __importStar(__webpack_require__(/*! ../redux-types/space-list */ "./resources/js/redux-types/space-list.ts"));
 /**
  * Initial State
  */
@@ -78678,10 +78687,10 @@ exports.PUSH_INTO_SPACE_HISTORY = 'space-history/PUSH_INTO_SPACE_HISTORY';
 
 /***/ }),
 
-/***/ "./resources/js/redux-types/space-trees.ts":
-/*!*************************************************!*\
-  !*** ./resources/js/redux-types/space-trees.ts ***!
-  \*************************************************/
+/***/ "./resources/js/redux-types/space-list.ts":
+/*!************************************************!*\
+  !*** ./resources/js/redux-types/space-list.ts ***!
+  \************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -78692,13 +78701,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * Action Constants
  */
 // prettier-ignore
-exports.START_REQUEST = 'space-trees/START_REQUEST';
+exports.START_REQUEST = 'space-list/START_REQUEST';
 // prettier-ignore
-exports.RECEIVE_REQUEST = 'space-trees/RECEIVE_REQUEST';
+exports.RECEIVE_REQUEST = 'space-list/RECEIVE_REQUEST';
 // prettier-ignore
-exports.FAIL_REQUEST = 'space-trees/FAIL_REQUEST';
+exports.FAIL_REQUEST = 'space-list/FAIL_REQUEST';
 // prettier-ignore
-exports.RESET_DATA = 'space-trees/RESET_DATA';
+exports.RESET_DATA = 'space-list/RESET_DATA';
 
 
 /***/ }),
@@ -78746,7 +78755,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /**
  *
  *
- * OSHomeScreen component
+ * HomeScreen component
  *
  *
  */
@@ -78758,7 +78767,26 @@ const space_description_1 = __importDefault(__webpack_require__(/*! ../component
 const amenity_tags_1 = __importDefault(__webpack_require__(/*! ../components/amenity-tags */ "./resources/js/components/amenity-tags/index.tsx"));
 const loaction_map_1 = __importDefault(__webpack_require__(/*! ../components/loaction-map */ "./resources/js/components/loaction-map.tsx"));
 const images_editor_1 = __importDefault(__webpack_require__(/*! ../components/images-editor */ "./resources/js/components/images-editor/index.tsx"));
-class _OSHomeScreen extends react_1.default.Component {
+class _HomeScreen extends react_1.default.Component {
+    constructor() {
+        super(...arguments);
+        this._renderWorkspace = () => {
+            if (this.props.currentSpace) {
+                return (react_1.default.createElement("div", { id: "workspace" },
+                    react_1.default.createElement("div", { id: "left" },
+                        react_1.default.createElement(general_info_1.default, null),
+                        react_1.default.createElement(space_description_1.default, null),
+                        react_1.default.createElement(amenity_tags_1.default, null),
+                        react_1.default.createElement(loaction_map_1.default, null)),
+                    react_1.default.createElement("div", { id: "right" },
+                        react_1.default.createElement(images_editor_1.default, null))));
+            }
+            else {
+                return (react_1.default.createElement("div", { id: "workspace" },
+                    react_1.default.createElement(os_page_status_1.default, { status: "information", info: "\uC2A4\uD398\uC774\uC2A4\uB97C \uC120\uD0DD\uD574 \uC8FC\uC138\uC694." })));
+            }
+        };
+    }
     render() {
         //
         // if login is succeed and current user is assigned
@@ -78770,16 +78798,8 @@ class _OSHomeScreen extends react_1.default.Component {
                     react_1.default.createElement("div", { id: "title-div" }),
                     react_1.default.createElement("div", { id: "profile-div" })),
                 react_1.default.createElement("div", { id: "home-body" },
-                    react_1.default.createElement("div", { id: "space-menu" },
-                        react_1.default.createElement(space_list_1.default, null)),
-                    react_1.default.createElement("div", { id: "workspace" },
-                        react_1.default.createElement("div", { id: "left" },
-                            react_1.default.createElement(general_info_1.default, null),
-                            react_1.default.createElement(space_description_1.default, null),
-                            react_1.default.createElement(amenity_tags_1.default, null),
-                            react_1.default.createElement(loaction_map_1.default, null)),
-                        react_1.default.createElement("div", { id: "right" },
-                            react_1.default.createElement(images_editor_1.default, null))))));
+                    react_1.default.createElement("div", { id: "space-menu" }, this.props.currentUser.authority === 'Admin' ? (react_1.default.createElement(space_list_1.default, null)) : (react_1.default.createElement(space_list_1.default, null))),
+                    this._renderWorkspace())));
         //
         // otherwise
         //
@@ -78795,12 +78815,14 @@ class _OSHomeScreen extends react_1.default.Component {
  *
  */
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const os_page_status_1 = __importDefault(__webpack_require__(/*! ../components/os-page-status */ "./resources/js/components/os-page-status.tsx"));
 const mapStateToProps = (state) => ({
     loginStatus: state.auth.loginStatus,
     currentUser: state.auth.currentUser,
+    currentSpace: state.currentSpace.data,
 });
-const OSHomeScreen = react_redux_1.connect(mapStateToProps)(_OSHomeScreen);
-exports.default = OSHomeScreen;
+const HomeScreen = react_redux_1.connect(mapStateToProps)(_HomeScreen);
+exports.default = HomeScreen;
 
 
 /***/ }),
@@ -78829,9 +78851,9 @@ const osdb_axios_1 = __importDefault(__webpack_require__(/*! ../config/osdb-axio
 const firebase_1 = __importDefault(__webpack_require__(/*! ../config/firebase */ "./resources/js/config/firebase.ts"));
 const organizer_1 = __webpack_require__(/*! ../model/organizer */ "./resources/js/model/organizer.ts");
 const authActions = __importStar(__webpack_require__(/*! ../actions/auth */ "./resources/js/actions/auth.ts"));
-const space_trees_1 = __webpack_require__(/*! ../actions/space-trees */ "./resources/js/actions/space-trees.ts");
+const space_list_1 = __webpack_require__(/*! ../actions/space-list */ "./resources/js/actions/space-list.ts");
 const space_history_1 = __webpack_require__(/*! ../actions/space-history */ "./resources/js/actions/space-history.ts");
-const space_trees_2 = __webpack_require__(/*! ../actions/space-trees */ "./resources/js/actions/space-trees.ts");
+const current_space_1 = __webpack_require__(/*! ../actions/current-space */ "./resources/js/actions/current-space.ts");
 /**
  *
  *
@@ -78873,9 +78895,9 @@ exports.requestLogout = () => async (dispatch) => {
     firebase_1.default.auth()
         .signOut()
         .then(() => {
-        dispatch(space_trees_1.resetData());
+        dispatch(space_list_1.resetData());
         dispatch(space_history_1.resetSpaceHistory());
-        dispatch(space_trees_2.resetData());
+        dispatch(current_space_1.resetData());
         dispatch(authActions.logout());
     });
 };
@@ -79047,6 +79069,55 @@ exports.updateImages = (spaceID, spaceImages, uploadings) => async (dispatch) =>
     }
     catch (error) {
         dispatch(currentSpaceActions.failUpdateImages(error));
+    }
+};
+
+
+/***/ }),
+
+/***/ "./resources/js/thunk-action/space-list.ts":
+/*!*************************************************!*\
+  !*** ./resources/js/thunk-action/space-list.ts ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const osdb_axios_1 = __importDefault(__webpack_require__(/*! ../config/osdb-axios */ "./resources/js/config/osdb-axios.ts"));
+const spaceListActions = __importStar(__webpack_require__(/*! ../actions/space-list */ "./resources/js/actions/space-list.ts"));
+/**
+ *
+ *
+ * Request space list data from the server
+ *
+ *
+ */
+exports.requestSpaceList = (sids) => async (dispatch) => {
+    dispatch(spaceListActions.startRequest());
+    try {
+        const responses = await Promise.all(sids.map((sid) => osdb_axios_1.default.get(`/ospace/${sid}`).then((response) => {
+            return { sid: sid, response: response };
+        })));
+        const spaceList = responses.map(({ sid, response, }) => ({
+            id: sid,
+            names: response.data.space_names,
+        }));
+        dispatch(spaceListActions.receiveRequest(spaceList));
+    }
+    catch (error) {
+        dispatch(spaceListActions.failRequest(error));
     }
 };
 

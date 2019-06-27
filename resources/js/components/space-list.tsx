@@ -17,36 +17,42 @@ interface SpaceListProps extends _ReduxProps, _ReduxActionCreators {}
 
 import React from 'react';
 
-import { SpaceHeader } from '../model/space-header';
+import { SpaceHeader } from '../model/space-list';
 
 import OSEditButton from './os-edit-button';
 
-const data: SpaceHeader[] = [
-    { id: 'asdfasdfasdf', names: { en: 'space 1', ko: '스페이스 1' } },
-    { id: 'asdfasdf', names: { en: 'space 2', ko: '스페이스 2' } },
-];
-
 class _SpaceList extends React.Component<SpaceListProps> {
+    componentDidMount() {
+        if (this.props.currentUser) {
+            this.props.requestSpaceList(this.props.currentUser.owningSpaces);
+        }
+    }
+
     private _onSpaceClick = (spaceID: string) =>
         this.props.requestSpace(spaceID);
 
     private _renderTabs = () => {
-        return (
-            <div id="tabs">
-                {data.map((spaceHeader: SpaceHeader) => (
-                    <a
-                        key={spaceHeader.id}
-                        className={`space-tab ${
-                            spaceHeader.id === this.props.currentSpaceID
-                                ? 'active-space'
-                                : ''
-                        }`}
-                    >
-                        <p className="h4">{spaceHeader.names['ko']}</p>
-                    </a>
-                ))}
-            </div>
-        );
+        if (this.props.spaceList) {
+            return (
+                <div id="tabs">
+                    {this.props.spaceList.map((spaceHeader: SpaceHeader) => (
+                        <a
+                            key={spaceHeader.id}
+                            className={`space-tab ${
+                                spaceHeader.id === this.props.currentSpaceID
+                                    ? 'active-space'
+                                    : ''
+                            }`}
+                            onClick={() => {
+                                this._onSpaceClick(spaceHeader.id);
+                            }}
+                        >
+                            <p className="h4">{spaceHeader.names['ko']}</p>
+                        </a>
+                    ))}
+                </div>
+            );
+        }
     };
 
     render() {
@@ -70,16 +76,35 @@ class _SpaceList extends React.Component<SpaceListProps> {
 import { connect } from 'react-redux';
 import RootState from '../redux-types';
 
+import { SpaceID } from '../model/space';
+
+import { requestSpaceList } from '../thunk-action/space-list';
 import { requestSpace } from '../thunk-action/current-space';
+import Organizer from '../model/organizer';
 
 interface _ReduxProps {
+    /**
+     * Current user
+     */
+    currentUser?: Organizer;
+
     /**
      * Current space ID
      */
     currentSpaceID?: string;
+
+    /**
+     * Space list
+     */
+    spaceList?: SpaceHeader[];
 }
 
 interface _ReduxActionCreators {
+    /**
+     * Request space list from the server
+     */
+    requestSpaceList: (spaceIDs: SpaceID[]) => void;
+
     /**
      * Request space from the server
      */
@@ -87,10 +112,13 @@ interface _ReduxActionCreators {
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
+    currentUser: state.auth.currentUser,
     currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
+    spaceList: state.spaceList.data,
 });
 
 const mapDispatchToProps = {
+    requestSpaceList,
     requestSpace,
 };
 

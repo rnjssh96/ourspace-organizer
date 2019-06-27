@@ -11078,7 +11078,7 @@ button {
 }
 
 #location-map #map {
-  height: 100%;
+  height: 20rem;
 }
 
 #location-map #no-info {
