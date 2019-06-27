@@ -18,12 +18,33 @@
             // size
             flex: 4;
 
+            // flex
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            // padding
+            padding-left: 2rem;
+
+            & > p {
+                // text color
+                color: $white;
+
+                &:first-child {
+                    // margin
+                    margin-bottom: 0.5rem;
+                }
+            }
+
             background-color: green;
         }
 
         #profile-div {
             // size
             flex: 1;
+
+            // padding
+            padding-right: 2rem;
 
             background-color: pink;
         }

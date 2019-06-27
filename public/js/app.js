@@ -78775,6 +78775,14 @@ const images_editor_1 = __importDefault(__webpack_require__(/*! ../components/im
 class _HomeScreen extends react_1.default.Component {
     constructor() {
         super(...arguments);
+        this._renderTitle = () => {
+            if (this.props.currentUser) {
+                return (react_1.default.createElement("div", { id: "title-div" },
+                    react_1.default.createElement("p", { className: "h1" },
+                        react_1.default.createElement("b", null, `${this.props.currentUser.name} 님,`)),
+                    react_1.default.createElement("p", { className: "h2" }, `현재 ${this.props.currentUser.owningSpaces.length} 개의 공간을 가지고 계십니다.`)));
+            }
+        };
         this._renderWorkspace = () => {
             if (this.props.currentSpace) {
                 return (react_1.default.createElement("div", { id: "workspace" },
@@ -78800,7 +78808,7 @@ class _HomeScreen extends react_1.default.Component {
             this.props.currentUser)
             return (react_1.default.createElement("div", { id: "home-container", className: "container-fluid" },
                 react_1.default.createElement("div", { id: "home-header" },
-                    react_1.default.createElement("div", { id: "title-div" }),
+                    this._renderTitle(),
                     react_1.default.createElement("div", { id: "profile-div" })),
                 react_1.default.createElement("div", { id: "home-body" },
                     react_1.default.createElement("div", { id: "space-menu" }, this.props.currentUser.authority === 'Admin' ? (react_1.default.createElement(space_list_1.default, null)) : (react_1.default.createElement(space_list_1.default, null))),

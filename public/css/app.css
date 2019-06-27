@@ -10802,11 +10802,24 @@ button {
 
 #home-container #home-header #title-div {
   flex: 4;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 2rem;
   background-color: green;
+}
+
+#home-container #home-header #title-div > p {
+  color: #ffffff;
+}
+
+#home-container #home-header #title-div > p:first-child {
+  margin-bottom: 0.5rem;
 }
 
 #home-container #home-header #profile-div {
   flex: 1;
+  padding-right: 2rem;
   background-color: pink;
 }
 
