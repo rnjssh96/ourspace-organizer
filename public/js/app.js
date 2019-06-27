@@ -77289,11 +77289,6 @@ class OSGoogleMap extends react_1.default.Component {
             fullscreenControl: false,
             streetViewControl: false,
         });
-        // Display temporary marker
-        let marker = new google.maps.Marker({
-            position: this.props.center,
-            map: this._map,
-        });
     }
     componentDidUpdate(prevProps) {
         if (this._map) {
@@ -77301,6 +77296,11 @@ class OSGoogleMap extends react_1.default.Component {
             if (prevProps.center !== this.props.center) {
                 this._map.setCenter(this.props.center);
             }
+            // Display temporary marker
+            new google.maps.Marker({
+                position: this.props.center,
+                map: this._map,
+            });
         }
     }
     render() {
