@@ -79110,6 +79110,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const osdb_axios_1 = __importDefault(__webpack_require__(/*! ../config/osdb-axios */ "./resources/js/config/osdb-axios.ts"));
 const spaceListActions = __importStar(__webpack_require__(/*! ../actions/space-list */ "./resources/js/actions/space-list.ts"));
+const current_space_1 = __webpack_require__(/*! ./current-space */ "./resources/js/thunk-action/current-space.ts");
 /**
  *
  *
@@ -79128,6 +79129,10 @@ exports.requestSpaceList = (sids) => async (dispatch) => {
             names: response.data.space_names,
         }));
         dispatch(spaceListActions.receiveRequest(spaceList));
+        // Set initial space
+        if (spaceList.length > 0) {
+            dispatch(current_space_1.requestSpace(spaceList[0].id));
+        }
     }
     catch (error) {
         dispatch(spaceListActions.failRequest(error));

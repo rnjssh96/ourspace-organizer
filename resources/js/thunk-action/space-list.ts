@@ -9,6 +9,8 @@ import { SpaceHeader } from '../model/space-list';
 
 import * as spaceListActions from '../actions/space-list';
 
+import { requestSpace } from './current-space';
+
 /**
  *
  *
@@ -46,6 +48,11 @@ export const requestSpaceList: ActionCreator<
             }),
         );
         dispatch(spaceListActions.receiveRequest(spaceList));
+
+        // Set initial space
+        if (spaceList.length > 0) {
+            dispatch(requestSpace(spaceList[0].id));
+        }
     } catch (error) {
         dispatch(spaceListActions.failRequest(error));
     }
