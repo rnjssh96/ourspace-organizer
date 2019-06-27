@@ -60,7 +60,7 @@ class _SpaceList extends React.Component<SpaceListProps> {
             <div id="space-list">
                 <p className="h2">Space</p>
                 <div id="tab-list">{this._renderTabs()}</div>
-                <OSEditButton />
+                {/* <OSEditButton /> // for editing spaces */}
             </div>
         );
     }

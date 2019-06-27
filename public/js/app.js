@@ -77527,7 +77527,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
  *
  */
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const os_edit_button_1 = __importDefault(__webpack_require__(/*! ./os-edit-button */ "./resources/js/components/os-edit-button.tsx"));
 class _SpaceList extends react_1.default.Component {
     constructor() {
         super(...arguments);
@@ -77551,8 +77550,7 @@ class _SpaceList extends react_1.default.Component {
     render() {
         return (react_1.default.createElement("div", { id: "space-list" },
             react_1.default.createElement("p", { className: "h2" }, "Space"),
-            react_1.default.createElement("div", { id: "tab-list" }, this._renderTabs()),
-            react_1.default.createElement(os_edit_button_1.default, null)));
+            react_1.default.createElement("div", { id: "tab-list" }, this._renderTabs())));
     }
 }
 /**
