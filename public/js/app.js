@@ -77341,6 +77341,7 @@ class OSGoogleMap extends react_1.default.Component {
             mapTypeControl: false,
             fullscreenControl: false,
             streetViewControl: false,
+            scrollwheel: false,
         });
         // Display temporary marker
         this._marker = new google.maps.Marker({

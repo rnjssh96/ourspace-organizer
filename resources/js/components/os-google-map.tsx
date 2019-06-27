@@ -28,6 +28,7 @@ export default class OSGoogleMap extends React.Component<OSGoogleMapProps> {
                 mapTypeControl: false, // disable map type control
                 fullscreenControl: false, // disable full screen control
                 streetViewControl: false, // disable street view control
+                scrollwheel: false, // disable scroll zoom control
             },
         );
 
