@@ -4,14 +4,9 @@
         color: $grey-1;
 
         // padding
-        padding-top: 1rem;
-        padding-bottom: 1rem;
+        padding: 1rem;
 
         & > #description-text {
-            // padding
-            padding-left: 1.5rem;
-            padding-right: 1.5rem;
-
             // space between lines
             line-height: 2;
 

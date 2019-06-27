@@ -24,6 +24,7 @@ import OperatingHourEditModal, {
 
 import OSEditButton from '../os-edit-button';
 import OSRateDisplay from '../os-rate-display';
+import OSPageStatus from '../os-page-status';
 
 class _GeneralInfo extends React.Component<GeneralInfoProps> {
     private _renderTitle = () => {
@@ -79,9 +80,7 @@ class _GeneralInfo extends React.Component<GeneralInfoProps> {
     private _renderOperatingHours = () => {
         let displayTexts;
 
-        if (this.props.updatingOHStatus.status === 'requesting') {
-            displayTexts = <p className="h6">(업데이트 중...)</p>;
-        } else if (
+        if (
             !this.props.operatingHours ||
             this.props.operatingHours.length <= 0
         ) {
@@ -111,14 +110,22 @@ class _GeneralInfo extends React.Component<GeneralInfoProps> {
     };
 
     render() {
-        return (
-            <div id="general-info">
-                {this._renderTitle()}
-                {this._renderRate()}
-                {this._renderLocationText()}
-                {this._renderOperatingHours()}
-            </div>
-        );
+        if (this.props.updatingGIStatus.status === 'requesting') {
+            return (
+                <div id="general-info">
+                    <OSPageStatus status="loading" />
+                </div>
+            );
+        } else {
+            return (
+                <div id="general-info">
+                    {this._renderTitle()}
+                    {this._renderRate()}
+                    {this._renderLocationText()}
+                    {this._renderOperatingHours()}
+                </div>
+            );
+        }
     }
 }
 
@@ -157,9 +164,9 @@ interface _ReduxProps {
     operatingHours?: string[];
 
     /**
-     * Updating operating hour status
+     * Updating general information status
      */
-    updatingOHStatus: RequestStatus;
+    updatingGIStatus: RequestStatus;
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
@@ -169,7 +176,7 @@ const mapStateToProps = (state: RootState): _ReduxProps => ({
         state.currentSpace.data && state.currentSpace.data.locationText,
     operatingHours:
         state.currentSpace.data && state.currentSpace.data.operatingHours,
-    updatingOHStatus: state.currentSpace.updatingOHStatus,
+    updatingGIStatus: state.currentSpace.updatingGIStatus,
 });
 
 const GeneralInfo = connect(mapStateToProps)(_GeneralInfo);

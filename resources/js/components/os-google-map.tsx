@@ -15,6 +15,7 @@ interface OSGoogleMapProps {
 
 export default class OSGoogleMap extends React.Component<OSGoogleMapProps> {
     private _map?: google.maps.Map;
+    private _marker?: google.maps.Marker;
 
     componentDidMount() {
         this._map = new google.maps.Map(
@@ -31,7 +32,7 @@ export default class OSGoogleMap extends React.Component<OSGoogleMapProps> {
         );
 
         // Display temporary marker
-        new google.maps.Marker({
+        this._marker = new google.maps.Marker({
             position: this.props.center,
             map: this._map,
         });
@@ -45,10 +46,14 @@ export default class OSGoogleMap extends React.Component<OSGoogleMapProps> {
             }
 
             // Display temporary marker
-            new google.maps.Marker({
-                position: this.props.center,
-                map: this._map,
-            });
+            if (this._marker) {
+                this._marker.setPosition(this.props.center);
+            } else {
+                this._marker = new google.maps.Marker({
+                    position: this.props.center,
+                    map: this._map,
+                });
+            }
         }
     }
 

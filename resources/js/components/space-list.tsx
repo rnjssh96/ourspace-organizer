@@ -44,7 +44,11 @@ class _SpaceList extends React.Component<SpaceListProps> {
                                     : ''
                             }`}
                             onClick={() => {
-                                this._onSpaceClick(spaceHeader.id);
+                                if (
+                                    spaceHeader.id !== this.props.currentSpaceID
+                                ) {
+                                    this._onSpaceClick(spaceHeader.id);
+                                }
                             }}
                         >
                             <p className="h4">{spaceHeader.names['ko']}</p>

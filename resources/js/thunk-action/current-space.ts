@@ -9,9 +9,8 @@ import {
     rawSpaces2SpaceList,
     SpaceID,
     AmenityTag,
+    SpaceGeneralInfo,
 } from '../model/space';
-
-import { UploadImagesMap, UploadImage } from '../redux-types/upload-images';
 
 import * as currentSpaceActions from '../actions/current-space';
 import { pushIntoSpaceHistory } from '../actions/space-history';
@@ -49,32 +48,77 @@ export const requestSpace: ActionCreator<
 /**
  *
  *
- * Update operating hours of the space on server
+ * Update general information of the space on server
  *
  *
  */
-export const updateOperatingHours: ActionCreator<
+export const updateGeneralInfo: ActionCreator<
     ThunkAction<void, any, null, Action<any>>
-> = (spaceID: string, operatingHours: string[]) => async (
+> = (spaceID: string, info: SpaceGeneralInfo) => async (
     dispatch: ThunkDispatch<any, null, Action<any>>,
 ) => {
-    dispatch(currentSpaceActions.startUpdateOH());
+    let sendData: { [key: string]: any } = {};
+    info.spaceNames && (sendData['space_names'] = info.spaceNames);
+    info.types && (sendData['type'] = info.types.join());
+    info.locationText && (sendData['location_text'] = info.locationText);
+    info.location &&
+        (sendData['latitude'] = info.location.lat) &&
+        (sendData['latitude'] = info.location.lng);
+    info.operatingHours &&
+        (sendData['operating_hours'] = info.operatingHours.join());
+
+    if (sendData !== {}) {
+        dispatch(currentSpaceActions.startUpdateGI());
+        try {
+            const { data } = await OSDBAxios.post<{
+                updated_space_id: SpaceID;
+            }>(`/ospace/${spaceID}`, sendData);
+            if (data.updated_space_id === spaceID) {
+                dispatch(currentSpaceActions.succeedUpdateGI(info));
+            } else {
+                dispatch(
+                    currentSpaceActions.failUpdateGI(
+                        '업데이트에 실패했습니다.',
+                    ),
+                );
+            }
+        } catch (error) {
+            dispatch(currentSpaceActions.failUpdateGI(error));
+        }
+    }
+};
+
+/**
+ *
+ *
+ * Update space description of the space on server
+ *
+ *
+ */
+export const updateSpaceDescription: ActionCreator<
+    ThunkAction<void, any, null, Action<any>>
+> = (spaceID: string, spaceDescription: string) => async (
+    dispatch: ThunkDispatch<any, null, Action<any>>,
+) => {
+    dispatch(currentSpaceActions.startUpdateSD());
     try {
         const { data } = await OSDBAxios.post<{ updated_space_id: SpaceID }>(
             `/ospace/${spaceID}`,
             {
-                operating_hours: operatingHours.join('\n'),
+                captions: {
+                    description: spaceDescription,
+                },
             },
         );
         if (data.updated_space_id === spaceID) {
-            dispatch(currentSpaceActions.succeedUpdateOH(operatingHours));
+            dispatch(currentSpaceActions.succeedUpdateSD(spaceDescription));
         } else {
             dispatch(
-                currentSpaceActions.failUpdateOH('업데이트에 실패했습니다.'),
+                currentSpaceActions.failUpdateSD('업데이트에 실패했습니다.'),
             );
         }
     } catch (error) {
-        dispatch(currentSpaceActions.failUpdateOH(error));
+        dispatch(currentSpaceActions.failUpdateSD(error));
     }
 };
 
@@ -121,6 +165,9 @@ export const updateAmenityTags: ActionCreator<
  *
  *
  */
+import { UploadImagesMap, UploadImage } from '../redux-types/upload-images';
+import { async } from 'q';
+
 export const updateImages: ActionCreator<
     ThunkAction<void, any, null, Action<any>>
 > = (
@@ -132,7 +179,7 @@ export const updateImages: ActionCreator<
 
     const uploadingImages = Object.values(uploadings);
     try {
-        await Promise.all(
+        let tasks = await Promise.all(
             uploadingImages.map((uploadImage: UploadImage) => {
                 if (uploadImage.progress >= 100) {
                     return OSFirebase.storage()
@@ -141,14 +188,17 @@ export const updateImages: ActionCreator<
                         .then(
                             (
                                 uploadTask: OSFirebase.storage.UploadTaskSnapshot,
-                            ) => {
-                                uploadTask.ref
-                                    .getDownloadURL()
-                                    .then((url: string) => {
-                                        spaceImages.push(url);
-                                    });
-                            },
+                            ) => uploadTask,
                         );
+                }
+            }),
+        );
+        await Promise.all(
+            tasks.map((task: any) => {
+                if (task) {
+                    return task.ref.getDownloadURL().then((url: string) => {
+                        spaceImages.push(url);
+                    });
                 }
             }),
         );

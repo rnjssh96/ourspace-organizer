@@ -7,12 +7,15 @@
 
     #home-header {
         // size
-        height: 25%;
+        height: 23%;
         width: 100%;
 
         // flex
         display: flex;
         flex-direction: row;
+
+        // background
+        background-color: $grey-2;
 
         #title-div {
             // size
@@ -35,8 +38,6 @@
                     margin-bottom: 0.5rem;
                 }
             }
-
-            background-color: green;
         }
 
         #profile-div {
@@ -52,7 +53,7 @@
 
     #home-body {
         // size
-        height: 75%;
+        height: 77%;
         width: 100%;
 
         // flex

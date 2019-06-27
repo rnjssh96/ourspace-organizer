@@ -10794,10 +10794,11 @@ button {
 }
 
 #home-container #home-header {
-  height: 25%;
+  height: 23%;
   width: 100%;
   display: flex;
   flex-direction: row;
+  background-color: #b6b6b6;
 }
 
 #home-container #home-header #title-div {
@@ -10806,7 +10807,6 @@ button {
   flex-direction: column;
   justify-content: center;
   padding-left: 2rem;
-  background-color: green;
 }
 
 #home-container #home-header #title-div > p {
@@ -10824,7 +10824,7 @@ button {
 }
 
 #home-container #home-body {
-  height: 75%;
+  height: 77%;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -11030,13 +11030,10 @@ button {
 
 #space-description > #description {
   color: #6f6f6f;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+  padding: 1rem;
 }
 
 #space-description > #description > #description-text {
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
   line-height: 2;
   white-space: pre-wrap;
 }

@@ -5,7 +5,7 @@
  *
  *
  */
-interface ImagesEditorProps extends _ReduxProps {}
+interface ImagesEditorProps extends _ReduxProps, _ReduxActionCreators {}
 
 /**
  *
@@ -22,6 +22,10 @@ import OSPageStatus from '../os-page-status';
 import OSEditButton from '../os-edit-button';
 
 class _ImagesEditor extends React.Component<ImagesEditorProps> {
+    private _resetUploadImages = () => {
+        this.props.resetUploadImages();
+    };
+
     private _renderImages() {
         if (this.props.updatingImagesStatus.status === 'requesting') {
             return <OSPageStatus status="loading" />;
@@ -43,7 +47,10 @@ class _ImagesEditor extends React.Component<ImagesEditorProps> {
             <div id="images-editor">
                 <div id="header">
                     <p className="h4">사진</p>
-                    <OSEditButton modalID={ImageUploadModalID} />
+                    <OSEditButton
+                        modalID={ImageUploadModalID}
+                        onClick={this._resetUploadImages}
+                    />
                 </div>
                 <div id="body">{this._renderImages()}</div>
                 <div id="footer">
@@ -70,6 +77,8 @@ import RootState from '../../redux-types';
 
 import { RequestStatus } from '../../model/system';
 
+import { resetUploadImages } from '../../actions/upload-images';
+
 interface _ReduxProps {
     /**
      * Images of the space
@@ -82,11 +91,25 @@ interface _ReduxProps {
     updatingImagesStatus: RequestStatus;
 }
 
+interface _ReduxActionCreators {
+    /**
+     * Reset upload image
+     */
+    resetUploadImages: typeof resetUploadImages;
+}
+
 const mapStateToProps = (state: RootState): _ReduxProps => ({
     images: state.currentSpace.data && state.currentSpace.data.images,
     updatingImagesStatus: state.currentSpace.updatingImagesStatus,
 });
 
-const ImagesEditor = connect(mapStateToProps)(_ImagesEditor);
+const mapDispatchToProps = {
+    resetUploadImages,
+};
+
+const ImagesEditor = connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(_ImagesEditor);
 
 export default ImagesEditor;

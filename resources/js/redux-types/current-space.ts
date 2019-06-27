@@ -1,6 +1,6 @@
 import { Action } from 'redux';
 
-import Space, { BusyLevel, AmenityTag } from '../model/space';
+import Space, { BusyLevel, AmenityTag, SpaceGeneralInfo } from '../model/space';
 import { RequestStatus } from '../model/system';
 
 /**
@@ -9,7 +9,8 @@ import { RequestStatus } from '../model/system';
 export interface State {
     data?: Space;
     requestingStatus: RequestStatus;
-    updatingOHStatus: RequestStatus;
+    updatingGIStatus: RequestStatus;
+    updatingSDStatus: RequestStatus;
     updatingATStatus: RequestStatus;
     updatingImagesStatus: RequestStatus;
 }
@@ -17,8 +18,12 @@ export interface State {
 /**
  * Action Constants
  */
-// Current space data
 
+//
+//
+// Data
+//
+//
 // prettier-ignore
 export const START_REQUEST = 'current-space/START_REQUEST';
 // prettier-ignore
@@ -28,25 +33,35 @@ export const FAIL_REQUEST = 'current-space/FAIL_REQUEST';
 // prettier-ignore
 export const RESET_DATA = 'current-space/RESET_DATA';
 
-// Space introduce
-
+//
+//
+// General information
+//
+//
 // prettier-ignore
-export const UPDATE_SPACE_DESCRIPTION = 'current-space/UPDATE_SPACE_DESCRIPTION';
-
-// Operating hour
-
+export const START_UPDATE_GI = 'current-space/START_UPDATE_GI';
 // prettier-ignore
-export const START_UPDATE_OH = 'current-space/START_UPDATE_OH';
+export const SUCCEED_UPDATE_GI = 'current-space/SUCCEED_UPDATE_GI';
 // prettier-ignore
-export const SUCCEED_UPDATE_OH = 'current-space/SUCCEED_UPDATE_OH';
-// prettier-ignore
-export const FAIL_UPDATE_OH = 'current-space/FAIL_UPDATE_OH';
+export const FAIL_UPDATE_GI = 'current-space/FAIL_UPDATE_GI';
 
-// Busy level
+//
+//
+// Space description
+//
+//
 // prettier-ignore
-export const SET_BUSY_LEVEL = 'current-space/SET_BUSY_LEVEL';
+export const START_UPDATE_SD = 'current-space/START_UPDATE_SD';
+// prettier-ignore
+export const SUCCEED_UPDATE_SD = 'current-space/SUCCEED_UPDATE_SD';
+// prettier-ignore
+export const FAIL_UPDATE_SD = 'current-space/FAIL_UPDATE_SD';
 
+//
+//
 // Amenity tags
+//
+//
 // prettier-ignore
 export const START_UPDATE_AT = 'current-space/START_UPDATE_AT';
 // prettier-ignore
@@ -54,7 +69,11 @@ export const SUCCEED_UPDATE_AT = 'current-space/SUCCEED_UPDATE_AT';
 // prettier-ignore
 export const FAIL_UPDATE_AT = 'current-space/FAIL_UPDATE_AT';
 
+//
+//
 // Images
+//
+//
 // prettier-ignore
 export const START_UPDATE_IMAGES = 'current-space/START_UPDATE_IMAGES';
 // prettier-ignore
@@ -62,10 +81,23 @@ export const SUCCEED_UPDATE_IMAGES = 'current-space/SUCCEED_UPDATE_IMAGES';
 // prettier-ignore
 export const FAIL_UPDATE_IMAGES = 'current-space/FAIL_UPDATE_IMAGES';
 
+//
+//
+// Busy level
+//
+//
+// prettier-ignore
+export const SET_BUSY_LEVEL = 'current-space/SET_BUSY_LEVEL';
+
 /**
  * Action Interfaces
  */
-// Current space data
+
+//
+//
+// Data
+//
+//
 export interface StartRequestAction extends Action<typeof START_REQUEST> {}
 
 export interface ReceiveRequestAction extends Action<typeof RECEIVE_REQUEST> {
@@ -78,30 +110,43 @@ export interface FailRequestAction extends Action<typeof FAIL_REQUEST> {
 
 export interface ResetDataAction extends Action<typeof RESET_DATA> {}
 
-// Space introduce
-export interface UpdateSpaceDescriptionAction
-    extends Action<typeof UPDATE_SPACE_DESCRIPTION> {
-    spaceDescription: string;
+//
+//
+// General information
+//
+//
+export interface StartUpdateGIAction extends Action<typeof START_UPDATE_GI> {}
+
+export interface SucceedUpdateGIAction
+    extends Action<typeof SUCCEED_UPDATE_GI> {
+    generalInfo: SpaceGeneralInfo;
 }
 
-// Operating hour
-export interface StartUpdateOHAction extends Action<typeof START_UPDATE_OH> {}
-
-export interface SucceedUpdateOHAction
-    extends Action<typeof SUCCEED_UPDATE_OH> {
-    operatingHours: string[];
-}
-
-export interface FailUpdateOHAction extends Action<typeof FAIL_UPDATE_OH> {
+export interface FailUpdateGIAction extends Action<typeof FAIL_UPDATE_GI> {
     message: string;
 }
 
-// Busy level
-export interface SetBusyLevelAction extends Action<typeof SET_BUSY_LEVEL> {
-    busyLevel: BusyLevel;
+//
+//
+// Space description
+//
+//
+export interface StartUpdateSDAction extends Action<typeof START_UPDATE_SD> {}
+
+export interface SucceedUpdateSDAction
+    extends Action<typeof SUCCEED_UPDATE_SD> {
+    spaceDescription: string;
 }
 
+export interface FailUpdateSDAction extends Action<typeof FAIL_UPDATE_SD> {
+    message: string;
+}
+
+//
+//
 // Amenity tags
+//
+//
 export interface StartUpdateATAction extends Action<typeof START_UPDATE_AT> {}
 
 export interface SucceedUpdateATAction
@@ -113,7 +158,11 @@ export interface FailUpdateATAction extends Action<typeof FAIL_UPDATE_AT> {
     message: string;
 }
 
+//
+//
 // Images
+//
+//
 export interface StartUpdateImagesAction
     extends Action<typeof START_UPDATE_IMAGES> {}
 
@@ -127,28 +176,63 @@ export interface FailUpdateImagesAction
     message: string;
 }
 
+//
+//
+// Busy level
+//
+//
+export interface SetBusyLevelAction extends Action<typeof SET_BUSY_LEVEL> {
+    busyLevel: BusyLevel;
+}
+
 /**
  * Action Types
  */
 export type Actions =
-    // Current space data
+    //
+    //
+    // Data
+    //
+    //
     | StartRequestAction
     | ReceiveRequestAction
     | FailRequestAction
     | ResetDataAction
+    //
+    //
+    // General information
+    //
+    //
+    | StartUpdateGIAction
+    | SucceedUpdateGIAction
+    | FailUpdateGIAction
+    //
+    //
     // Space introduce
-    | UpdateSpaceDescriptionAction
-    // Operating hour
-    | StartUpdateOHAction
-    | SucceedUpdateOHAction
-    | FailUpdateOHAction
-    // Busy level
-    | SetBusyLevelAction
+    //
+    //
+    | StartUpdateSDAction
+    | SucceedUpdateSDAction
+    | FailUpdateSDAction
+    //
+    //
     // Amenity tags
+    //
+    //
     | StartUpdateATAction
     | SucceedUpdateATAction
     | FailUpdateATAction
+    //
+    //
     // Images
+    //
+    //
     | StartUpdateImagesAction
     | SucceedUpdateImagesAction
-    | FailUpdateImagesAction;
+    | FailUpdateImagesAction
+    //
+    //
+    // Busy level
+    //
+    //
+    | SetBusyLevelAction;

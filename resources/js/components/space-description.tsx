@@ -17,6 +17,7 @@ interface SpaceDescriptionProps extends _ReduxProps, _ReduxActionCreators {}
 import React from 'react';
 
 import OSEditButton from './os-edit-button';
+import OSPageStatus from './os-page-status';
 
 type Mode = 'display' | 'edit';
 
@@ -38,8 +39,13 @@ class _SpaceDescription extends React.Component<SpaceDescriptionProps> {
     };
 
     private _save = () => {
-        this.props.updateSpaceDescription(this.state.textValue);
-        this._swtichMode('display');
+        if (this.props.currentSpaceID) {
+            this.props.updateSpaceDescription(
+                this.props.currentSpaceID,
+                this.state.textValue,
+            );
+            this._swtichMode('display');
+        }
     };
 
     private _renderDisplayMode = () =>
@@ -85,25 +91,33 @@ class _SpaceDescription extends React.Component<SpaceDescriptionProps> {
     );
 
     render() {
-        return (
-            <div id="space-description" className="category">
-                <div className="header">
-                    <p className="h5">소개</p>
-                    {this.state.mode === 'display' && (
-                        <OSEditButton
-                            onClick={() => {
-                                this._swtichMode('edit');
-                            }}
-                        />
-                    )}
+        if (this.props.updatingSDStatus.status === 'requesting') {
+            return (
+                <div id="space-description" className="category">
+                    <OSPageStatus status="loading" />
                 </div>
-                <div id="description" className="body">
-                    {this.state.mode === 'display'
-                        ? this._renderDisplayMode()
-                        : this._renderEditMode()}
+            );
+        } else {
+            return (
+                <div id="space-description" className="category">
+                    <div className="header">
+                        <p className="h5">소개</p>
+                        {this.state.mode === 'display' && (
+                            <OSEditButton
+                                onClick={() => {
+                                    this._swtichMode('edit');
+                                }}
+                            />
+                        )}
+                    </div>
+                    <div id="description" className="body">
+                        {this.state.mode === 'display'
+                            ? this._renderDisplayMode()
+                            : this._renderEditMode()}
+                    </div>
                 </div>
-            </div>
-        );
+            );
+        }
     }
 }
 
@@ -117,25 +131,39 @@ class _SpaceDescription extends React.Component<SpaceDescriptionProps> {
 import { connect } from 'react-redux';
 import RootState from '../redux-types';
 
-import { updateSpaceDescription } from '../actions/current-space';
+import { RequestStatus } from '../model/system';
+
+import { updateSpaceDescription } from '../thunk-action/current-space';
 
 interface _ReduxProps {
+    /**
+     * Current space ID
+     */
+    currentSpaceID?: string;
+
     /**
      * Description of the space
      */
     spaceDescription?: string;
+
+    /**
+     * Updating space description status
+     */
+    updatingSDStatus: RequestStatus;
 }
 
 interface _ReduxActionCreators {
     /**
      * Update introduction of the space
      */
-    updateSpaceDescription: typeof updateSpaceDescription;
+    updateSpaceDescription: (spaceID: string, spaceDescription: string) => void;
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
+    currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
     spaceDescription:
         state.currentSpace.data && state.currentSpace.data.spaceDescription,
+    updatingSDStatus: state.currentSpace.updatingSDStatus,
 });
 
 const mapDispatchToProps = {

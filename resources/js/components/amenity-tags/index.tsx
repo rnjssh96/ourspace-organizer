@@ -25,6 +25,10 @@ import AmenitiesEditModal, {
 import OSPageStatus from '../os-page-status';
 
 class _AmenityTags extends React.Component<AmenityTagsProps> {
+    private _resetSelectedAmenities = () => {
+        this.props.setSelectedAmenities(new Set(this.props.amenityTags));
+    };
+
     private _renderEmpty = () => {
         return (
             <div id="empty">
@@ -63,10 +67,6 @@ class _AmenityTags extends React.Component<AmenityTagsProps> {
         } else {
             return this._renderEmpty();
         }
-    };
-
-    private _resetSelectedAmenities = () => {
-        this.props.setSelectedAmenities(new Set(this.props.amenityTags));
     };
 
     render_temp() {

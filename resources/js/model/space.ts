@@ -90,7 +90,16 @@ export interface LatLng {
  *
  *
  */
-export default interface Space {
+export interface SpaceGeneralInfo {
+    id?: SpaceID;
+    spaceNames?: SpaceNames;
+    types?: SpaceType[];
+    locationText?: string;
+    location?: LatLng;
+    operatingHours?: string[];
+}
+
+export default interface Space extends SpaceGeneralInfo {
     id: SpaceID;
     spaceNames: SpaceNames;
     types: SpaceType[];
@@ -116,6 +125,7 @@ export interface RawSpace {
     parent_space_id: string;
     space_names: SpaceNames;
     images: string[];
+    captions: { description: string };
     amenity_tags: { [tag in AmenityTag]: {} };
     longitude: number;
     latitude: number;
@@ -149,7 +159,7 @@ export const rawSpaces2SpaceList = (
         },
         operatingHours: rawSpace.operating_hours.split('\n'),
         amenityTags: Object.keys(rawSpace.amenity_tags) as AmenityTag[],
-        spaceDescription: '',
+        spaceDescription: rawSpace.captions.description,
         images: rawSpace.images ? rawSpace.images : [],
         rank: rawSpace.rank,
         busyLevel: '1',

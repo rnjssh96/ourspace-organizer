@@ -2,11 +2,17 @@ import { ActionCreator } from 'redux';
 
 import * as redux_types from '../redux-types/current-space';
 
-import Space, { BusyLevel, AmenityTag } from '../model/space';
+import Space, { BusyLevel, AmenityTag, SpaceGeneralInfo } from '../model/space';
 
 /**
  * Action Creators
  */
+
+//
+//
+// Data
+//
+//
 export const startRequest: ActionCreator<
     redux_types.StartRequestAction
 > = () => ({
@@ -31,40 +37,61 @@ export const resetData: ActionCreator<redux_types.ResetDataAction> = () => ({
     type: redux_types.RESET_DATA,
 });
 
-export const updateSpaceDescription: ActionCreator<
-    redux_types.UpdateSpaceDescriptionAction
-> = (spaceDescription: string) => ({
-    type: redux_types.UPDATE_SPACE_DESCRIPTION,
-    spaceDescription,
-});
-
-export const startUpdateOH: ActionCreator<
-    redux_types.StartUpdateOHAction
+//
+//
+// General information
+//
+//
+export const startUpdateGI: ActionCreator<
+    redux_types.StartUpdateGIAction
 > = () => ({
-    type: redux_types.START_UPDATE_OH,
+    type: redux_types.START_UPDATE_GI,
 });
 
-export const succeedUpdateOH: ActionCreator<
-    redux_types.SucceedUpdateOHAction
-> = (operatingHours: string[]) => ({
-    type: redux_types.SUCCEED_UPDATE_OH,
-    operatingHours,
+export const succeedUpdateGI: ActionCreator<
+    redux_types.SucceedUpdateGIAction
+> = (generalInfo: SpaceGeneralInfo) => ({
+    type: redux_types.SUCCEED_UPDATE_GI,
+    generalInfo,
 });
 
-export const failUpdateOH: ActionCreator<redux_types.FailUpdateOHAction> = (
+export const failUpdateGI: ActionCreator<redux_types.FailUpdateGIAction> = (
     message: string,
 ) => ({
-    type: redux_types.FAIL_UPDATE_OH,
+    type: redux_types.FAIL_UPDATE_GI,
     message,
 });
 
-export const setBusyLevel: ActionCreator<redux_types.SetBusyLevelAction> = (
-    busyLevel: BusyLevel,
-) => ({
-    type: redux_types.SET_BUSY_LEVEL,
-    busyLevel,
+//
+//
+// Space description
+//
+//
+export const startUpdateSD: ActionCreator<
+    redux_types.StartUpdateSDAction
+> = () => ({
+    type: redux_types.START_UPDATE_SD,
 });
 
+export const succeedUpdateSD: ActionCreator<
+    redux_types.SucceedUpdateSDAction
+> = (spaceDescription: string) => ({
+    type: redux_types.SUCCEED_UPDATE_SD,
+    spaceDescription,
+});
+
+export const failUpdateSD: ActionCreator<redux_types.FailUpdateSDAction> = (
+    message: string,
+) => ({
+    type: redux_types.FAIL_UPDATE_SD,
+    message,
+});
+
+//
+//
+// Amenity tags
+//
+//
 export const startUpdateAT: ActionCreator<
     redux_types.StartUpdateATAction
 > = () => ({
@@ -85,6 +112,11 @@ export const failUpdateAT: ActionCreator<redux_types.FailUpdateATAction> = (
     message,
 });
 
+//
+//
+// Images
+//
+//
 export const startUpdateImages: ActionCreator<
     redux_types.StartUpdateImagesAction
 > = () => ({
@@ -103,4 +135,16 @@ export const failUpdateImages: ActionCreator<
 > = (message: string) => ({
     type: redux_types.FAIL_UPDATE_IMAGES,
     message,
+});
+
+//
+//
+// Busy level
+//
+//
+export const setBusyLevel: ActionCreator<redux_types.SetBusyLevelAction> = (
+    busyLevel: BusyLevel,
+) => ({
+    type: redux_types.SET_BUSY_LEVEL,
+    busyLevel,
 });

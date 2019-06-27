@@ -5,7 +5,8 @@ import * as redux_types from '../redux-types/current-space';
  */
 const initialState: redux_types.State = {
     requestingStatus: { status: 'ready' },
-    updatingOHStatus: { status: 'ready' },
+    updatingGIStatus: { status: 'ready' },
+    updatingSDStatus: { status: 'ready' },
     updatingATStatus: { status: 'ready' },
     updatingImagesStatus: { status: 'ready' },
 };
@@ -18,6 +19,11 @@ export default function Reducer(
     action: redux_types.Actions,
 ): redux_types.State {
     switch (action.type) {
+        //
+        //
+        // Data
+        //
+        //
         case redux_types.START_REQUEST:
             return {
                 ...state,
@@ -40,7 +46,47 @@ export default function Reducer(
         case redux_types.RESET_DATA:
             return initialState;
 
-        case redux_types.UPDATE_SPACE_DESCRIPTION:
+        //
+        //
+        // General information
+        //
+        //
+        case redux_types.START_UPDATE_GI:
+            return {
+                ...state,
+                updatingGIStatus: { status: 'requesting' },
+            };
+
+        case redux_types.SUCCEED_UPDATE_GI:
+            if (state.data)
+                return {
+                    ...state,
+                    data: {
+                        ...state.data,
+                        ...action.generalInfo,
+                    },
+                    updatingGIStatus: { status: 'succeed' },
+                };
+            else return state;
+
+        case redux_types.FAIL_UPDATE_GI:
+            return {
+                ...state,
+                updatingGIStatus: { status: 'failed', message: action.message },
+            };
+
+        //
+        //
+        // Space description
+        //
+        //
+        case redux_types.START_UPDATE_SD:
+            return {
+                ...state,
+                updatingSDStatus: { status: 'requesting' },
+            };
+
+        case redux_types.SUCCEED_UPDATE_SD:
             if (state.data)
                 return {
                     ...state,
@@ -48,44 +94,21 @@ export default function Reducer(
                         ...state.data,
                         spaceDescription: action.spaceDescription,
                     },
+                    updatingSDStatus: { status: 'succeed' },
                 };
             else return state;
 
-        case redux_types.START_UPDATE_OH:
+        case redux_types.FAIL_UPDATE_SD:
             return {
                 ...state,
-                updatingOHStatus: { status: 'requesting' },
+                updatingSDStatus: { status: 'failed', message: action.message },
             };
 
-        case redux_types.SUCCEED_UPDATE_OH:
-            if (state.data)
-                return {
-                    ...state,
-                    data: {
-                        ...state.data,
-                        operatingHours: action.operatingHours,
-                    },
-                    updatingOHStatus: { status: 'succeed' },
-                };
-            else return state;
-
-        case redux_types.FAIL_UPDATE_OH:
-            return {
-                ...state,
-                updatingOHStatus: { status: 'failed', message: action.message },
-            };
-
-        case redux_types.SET_BUSY_LEVEL:
-            if (state.data)
-                return {
-                    ...state,
-                    data: {
-                        ...state.data,
-                        busyLevel: action.busyLevel,
-                    },
-                };
-            else return state;
-
+        //
+        //
+        // Amenity tags
+        //
+        //
         case redux_types.START_UPDATE_AT:
             return {
                 ...state,
@@ -110,6 +133,11 @@ export default function Reducer(
                 updatingATStatus: { status: 'failed', message: action.message },
             };
 
+        //
+        //
+        // Images
+        //
+        //
         case redux_types.START_UPDATE_IMAGES:
             return {
                 ...state,
@@ -133,6 +161,22 @@ export default function Reducer(
                 ...state,
                 updatingATStatus: { status: 'failed', message: action.message },
             };
+
+        //
+        //
+        // Busy level
+        //
+        //
+        case redux_types.SET_BUSY_LEVEL:
+            if (state.data)
+                return {
+                    ...state,
+                    data: {
+                        ...state.data,
+                        busyLevel: action.busyLevel,
+                    },
+                };
+            else return state;
 
         default:
             return state;

@@ -76148,6 +76148,11 @@ const redux_types = __importStar(__webpack_require__(/*! ../redux-types/current-
 /**
  * Action Creators
  */
+//
+//
+// Data
+//
+//
 exports.startRequest = () => ({
     type: redux_types.START_REQUEST,
 });
@@ -76162,25 +76167,43 @@ exports.failRequest = (message) => ({
 exports.resetData = () => ({
     type: redux_types.RESET_DATA,
 });
-exports.updateSpaceDescription = (spaceDescription) => ({
-    type: redux_types.UPDATE_SPACE_DESCRIPTION,
-    spaceDescription,
+//
+//
+// General information
+//
+//
+exports.startUpdateGI = () => ({
+    type: redux_types.START_UPDATE_GI,
 });
-exports.startUpdateOH = () => ({
-    type: redux_types.START_UPDATE_OH,
+exports.succeedUpdateGI = (generalInfo) => ({
+    type: redux_types.SUCCEED_UPDATE_GI,
+    generalInfo,
 });
-exports.succeedUpdateOH = (operatingHours) => ({
-    type: redux_types.SUCCEED_UPDATE_OH,
-    operatingHours,
-});
-exports.failUpdateOH = (message) => ({
-    type: redux_types.FAIL_UPDATE_OH,
+exports.failUpdateGI = (message) => ({
+    type: redux_types.FAIL_UPDATE_GI,
     message,
 });
-exports.setBusyLevel = (busyLevel) => ({
-    type: redux_types.SET_BUSY_LEVEL,
-    busyLevel,
+//
+//
+// Space description
+//
+//
+exports.startUpdateSD = () => ({
+    type: redux_types.START_UPDATE_SD,
 });
+exports.succeedUpdateSD = (spaceDescription) => ({
+    type: redux_types.SUCCEED_UPDATE_SD,
+    spaceDescription,
+});
+exports.failUpdateSD = (message) => ({
+    type: redux_types.FAIL_UPDATE_SD,
+    message,
+});
+//
+//
+// Amenity tags
+//
+//
 exports.startUpdateAT = () => ({
     type: redux_types.START_UPDATE_AT,
 });
@@ -76192,6 +76215,11 @@ exports.failUpdateAT = (message) => ({
     type: redux_types.FAIL_UPDATE_AT,
     message,
 });
+//
+//
+// Images
+//
+//
 exports.startUpdateImages = () => ({
     type: redux_types.START_UPDATE_IMAGES,
 });
@@ -76202,6 +76230,15 @@ exports.succeedUpdateImages = (images) => ({
 exports.failUpdateImages = (message) => ({
     type: redux_types.FAIL_UPDATE_IMAGES,
     message,
+});
+//
+//
+// Busy level
+//
+//
+exports.setBusyLevel = (busyLevel) => ({
+    type: redux_types.SET_BUSY_LEVEL,
+    busyLevel,
 });
 
 
@@ -76624,6 +76661,9 @@ const os_page_status_1 = __importDefault(__webpack_require__(/*! ../os-page-stat
 class _AmenityTags extends react_1.default.Component {
     constructor() {
         super(...arguments);
+        this._resetSelectedAmenities = () => {
+            this.props.setSelectedAmenities(new Set(this.props.amenityTags));
+        };
         this._renderEmpty = () => {
             return (react_1.default.createElement("div", { id: "empty" },
                 react_1.default.createElement("p", { className: "h6" }, "\uB4F1\uB85D\uB41C \uD3B8\uC758\uC2DC\uC124\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.")));
@@ -76646,9 +76686,6 @@ class _AmenityTags extends react_1.default.Component {
             else {
                 return this._renderEmpty();
             }
-        };
-        this._resetSelectedAmenities = () => {
-            this.props.setSelectedAmenities(new Set(this.props.amenityTags));
         };
     }
     render_temp() {
@@ -76732,6 +76769,7 @@ const space_1 = __webpack_require__(/*! ../../model/space */ "./resources/js/mod
 const operating_hour_edit_modal_1 = __importStar(__webpack_require__(/*! ./operating-hour-edit-modal */ "./resources/js/components/general-info/operating-hour-edit-modal.tsx"));
 const os_edit_button_1 = __importDefault(__webpack_require__(/*! ../os-edit-button */ "./resources/js/components/os-edit-button.tsx"));
 const os_rate_display_1 = __importDefault(__webpack_require__(/*! ../os-rate-display */ "./resources/js/components/os-rate-display.tsx"));
+const os_page_status_1 = __importDefault(__webpack_require__(/*! ../os-page-status */ "./resources/js/components/os-page-status.tsx"));
 class _GeneralInfo extends react_1.default.Component {
     constructor() {
         super(...arguments);
@@ -76766,10 +76804,7 @@ class _GeneralInfo extends react_1.default.Component {
         };
         this._renderOperatingHours = () => {
             let displayTexts;
-            if (this.props.updatingOHStatus.status === 'requesting') {
-                displayTexts = react_1.default.createElement("p", { className: "h6" }, "(\uC5C5\uB370\uC774\uD2B8 \uC911...)");
-            }
-            else if (!this.props.operatingHours ||
+            if (!this.props.operatingHours ||
                 this.props.operatingHours.length <= 0) {
                 displayTexts = react_1.default.createElement("p", { className: "h6" }, "(\uC6B4\uC601\uC2DC\uAC04 \uC815\uBCF4\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.)");
             }
@@ -76786,11 +76821,17 @@ class _GeneralInfo extends react_1.default.Component {
         };
     }
     render() {
-        return (react_1.default.createElement("div", { id: "general-info" },
-            this._renderTitle(),
-            this._renderRate(),
-            this._renderLocationText(),
-            this._renderOperatingHours()));
+        if (this.props.updatingGIStatus.status === 'requesting') {
+            return (react_1.default.createElement("div", { id: "general-info" },
+                react_1.default.createElement(os_page_status_1.default, { status: "loading" })));
+        }
+        else {
+            return (react_1.default.createElement("div", { id: "general-info" },
+                this._renderTitle(),
+                this._renderRate(),
+                this._renderLocationText(),
+                this._renderOperatingHours()));
+        }
     }
 }
 /**
@@ -76806,7 +76847,7 @@ const mapStateToProps = (state) => ({
     types: state.currentSpace.data && state.currentSpace.data.types,
     locationText: state.currentSpace.data && state.currentSpace.data.locationText,
     operatingHours: state.currentSpace.data && state.currentSpace.data.operatingHours,
-    updatingOHStatus: state.currentSpace.updatingOHStatus,
+    updatingGIStatus: state.currentSpace.updatingGIStatus,
 });
 const GeneralInfo = react_redux_1.connect(mapStateToProps)(_GeneralInfo);
 exports.default = GeneralInfo;
@@ -76885,7 +76926,9 @@ class _OperatingHourEditModal extends react_1.default.Component {
                     });
                     return temp;
                 });
-                this.props.updateOperatingHours(this.props.currentSpaceID, result);
+                this.props.updateGeneralInfo(this.props.currentSpaceID, {
+                    operatingHours: result,
+                });
             }
         };
         this._renderRow = (day) => {
@@ -76949,7 +76992,7 @@ const mapStateToProps = (state) => ({
     currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
 });
 const mapDispatchToProps = {
-    updateOperatingHours: current_space_1.updateOperatingHours,
+    updateGeneralInfo: current_space_1.updateGeneralInfo,
 };
 const OperatingHourEditModal = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_OperatingHourEditModal);
 exports.default = OperatingHourEditModal;
@@ -77125,6 +77168,12 @@ const image_upload_modal_1 = __importStar(__webpack_require__(/*! ./image-upload
 const os_page_status_1 = __importDefault(__webpack_require__(/*! ../os-page-status */ "./resources/js/components/os-page-status.tsx"));
 const os_edit_button_1 = __importDefault(__webpack_require__(/*! ../os-edit-button */ "./resources/js/components/os-edit-button.tsx"));
 class _ImagesEditor extends react_1.default.Component {
+    constructor() {
+        super(...arguments);
+        this._resetUploadImages = () => {
+            this.props.resetUploadImages();
+        };
+    }
     _renderImages() {
         if (this.props.updatingImagesStatus.status === 'requesting') {
             return react_1.default.createElement(os_page_status_1.default, { status: "loading" });
@@ -77141,7 +77190,7 @@ class _ImagesEditor extends react_1.default.Component {
         return (react_1.default.createElement("div", { id: "images-editor" },
             react_1.default.createElement("div", { id: "header" },
                 react_1.default.createElement("p", { className: "h4" }, "\uC0AC\uC9C4"),
-                react_1.default.createElement(os_edit_button_1.default, { modalID: image_upload_modal_1.ImageUploadModalID })),
+                react_1.default.createElement(os_edit_button_1.default, { modalID: image_upload_modal_1.ImageUploadModalID, onClick: this._resetUploadImages })),
             react_1.default.createElement("div", { id: "body" }, this._renderImages()),
             react_1.default.createElement("div", { id: "footer" },
                 react_1.default.createElement("p", { className: "h6" },
@@ -77158,11 +77207,15 @@ class _ImagesEditor extends react_1.default.Component {
  *
  */
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const upload_images_1 = __webpack_require__(/*! ../../actions/upload-images */ "./resources/js/actions/upload-images.ts");
 const mapStateToProps = (state) => ({
     images: state.currentSpace.data && state.currentSpace.data.images,
     updatingImagesStatus: state.currentSpace.updatingImagesStatus,
 });
-const ImagesEditor = react_redux_1.connect(mapStateToProps)(_ImagesEditor);
+const mapDispatchToProps = {
+    resetUploadImages: upload_images_1.resetUploadImages,
+};
+const ImagesEditor = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_ImagesEditor);
 exports.default = ImagesEditor;
 
 
@@ -77290,7 +77343,7 @@ class OSGoogleMap extends react_1.default.Component {
             streetViewControl: false,
         });
         // Display temporary marker
-        new google.maps.Marker({
+        this._marker = new google.maps.Marker({
             position: this.props.center,
             map: this._map,
         });
@@ -77302,10 +77355,15 @@ class OSGoogleMap extends react_1.default.Component {
                 this._map.setCenter(this.props.center);
             }
             // Display temporary marker
-            new google.maps.Marker({
-                position: this.props.center,
-                map: this._map,
-            });
+            if (this._marker) {
+                this._marker.setPosition(this.props.center);
+            }
+            else {
+                this._marker = new google.maps.Marker({
+                    position: this.props.center,
+                    map: this._map,
+                });
+            }
         }
     }
     render() {
@@ -77442,6 +77500,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 const os_edit_button_1 = __importDefault(__webpack_require__(/*! ./os-edit-button */ "./resources/js/components/os-edit-button.tsx"));
+const os_page_status_1 = __importDefault(__webpack_require__(/*! ./os-page-status */ "./resources/js/components/os-page-status.tsx"));
 class _SpaceDescription extends react_1.default.Component {
     constructor() {
         super(...arguments);
@@ -77459,8 +77518,10 @@ class _SpaceDescription extends react_1.default.Component {
             });
         };
         this._save = () => {
-            this.props.updateSpaceDescription(this.state.textValue);
-            this._swtichMode('display');
+            if (this.props.currentSpaceID) {
+                this.props.updateSpaceDescription(this.props.currentSpaceID, this.state.textValue);
+                this._swtichMode('display');
+            }
         };
         this._renderDisplayMode = () => this.props.spaceDescription ? (react_1.default.createElement("p", { id: "description-text", className: "h6" }, this.props.spaceDescription)) : (react_1.default.createElement("p", { id: "no-intro", className: "h6" }, "\uB4F1\uB85D\uB41C \uC18C\uAC1C\uAE00\uC774 \uC5C6\uC2B5\uB2C8\uB2E4."));
         this._renderEditMode = () => (react_1.default.createElement("div", { id: "editor" },
@@ -77474,15 +77535,21 @@ class _SpaceDescription extends react_1.default.Component {
                     } }, "\uC800\uC7A5"))));
     }
     render() {
-        return (react_1.default.createElement("div", { id: "space-description", className: "category" },
-            react_1.default.createElement("div", { className: "header" },
-                react_1.default.createElement("p", { className: "h5" }, "\uC18C\uAC1C"),
-                this.state.mode === 'display' && (react_1.default.createElement(os_edit_button_1.default, { onClick: () => {
-                        this._swtichMode('edit');
-                    } }))),
-            react_1.default.createElement("div", { id: "description", className: "body" }, this.state.mode === 'display'
-                ? this._renderDisplayMode()
-                : this._renderEditMode())));
+        if (this.props.updatingSDStatus.status === 'requesting') {
+            return (react_1.default.createElement("div", { id: "space-description", className: "category" },
+                react_1.default.createElement(os_page_status_1.default, { status: "loading" })));
+        }
+        else {
+            return (react_1.default.createElement("div", { id: "space-description", className: "category" },
+                react_1.default.createElement("div", { className: "header" },
+                    react_1.default.createElement("p", { className: "h5" }, "\uC18C\uAC1C"),
+                    this.state.mode === 'display' && (react_1.default.createElement(os_edit_button_1.default, { onClick: () => {
+                            this._swtichMode('edit');
+                        } }))),
+                react_1.default.createElement("div", { id: "description", className: "body" }, this.state.mode === 'display'
+                    ? this._renderDisplayMode()
+                    : this._renderEditMode())));
+        }
     }
 }
 /**
@@ -77493,9 +77560,11 @@ class _SpaceDescription extends react_1.default.Component {
  *
  */
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-const current_space_1 = __webpack_require__(/*! ../actions/current-space */ "./resources/js/actions/current-space.ts");
+const current_space_1 = __webpack_require__(/*! ../thunk-action/current-space */ "./resources/js/thunk-action/current-space.ts");
 const mapStateToProps = (state) => ({
+    currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
     spaceDescription: state.currentSpace.data && state.currentSpace.data.spaceDescription,
+    updatingSDStatus: state.currentSpace.updatingSDStatus,
 });
 const mapDispatchToProps = {
     updateSpaceDescription: current_space_1.updateSpaceDescription,
@@ -77536,7 +77605,9 @@ class _SpaceList extends react_1.default.Component {
                 return (react_1.default.createElement("div", { id: "tabs" }, this.props.spaceList.map((spaceHeader) => (react_1.default.createElement("a", { key: spaceHeader.id, className: `space-tab ${spaceHeader.id === this.props.currentSpaceID
                         ? 'active-space'
                         : ''}`, onClick: () => {
-                        this._onSpaceClick(spaceHeader.id);
+                        if (spaceHeader.id !== this.props.currentSpaceID) {
+                            this._onSpaceClick(spaceHeader.id);
+                        }
                     } },
                     react_1.default.createElement("p", { className: "h4" }, spaceHeader.names['ko']))))));
             }
@@ -77786,7 +77857,7 @@ exports.rawSpaces2SpaceList = (sid, rawSpace) => {
         },
         operatingHours: rawSpace.operating_hours.split('\n'),
         amenityTags: Object.keys(rawSpace.amenity_tags),
-        spaceDescription: '',
+        spaceDescription: rawSpace.captions.description,
         images: rawSpace.images ? rawSpace.images : [],
         rank: rawSpace.rank,
         busyLevel: '1',
@@ -78156,7 +78227,8 @@ const redux_types = __importStar(__webpack_require__(/*! ../redux-types/current-
  */
 const initialState = {
     requestingStatus: { status: 'ready' },
-    updatingOHStatus: { status: 'ready' },
+    updatingGIStatus: { status: 'ready' },
+    updatingSDStatus: { status: 'ready' },
     updatingATStatus: { status: 'ready' },
     updatingImagesStatus: { status: 'ready' },
 };
@@ -78165,6 +78237,11 @@ const initialState = {
  */
 function Reducer(state = initialState, action) {
     switch (action.type) {
+        //
+        //
+        // Data
+        //
+        //
         case redux_types.START_REQUEST:
             return {
                 ...state,
@@ -78183,7 +78260,44 @@ function Reducer(state = initialState, action) {
             };
         case redux_types.RESET_DATA:
             return initialState;
-        case redux_types.UPDATE_SPACE_DESCRIPTION:
+        //
+        //
+        // General information
+        //
+        //
+        case redux_types.START_UPDATE_GI:
+            return {
+                ...state,
+                updatingGIStatus: { status: 'requesting' },
+            };
+        case redux_types.SUCCEED_UPDATE_GI:
+            if (state.data)
+                return {
+                    ...state,
+                    data: {
+                        ...state.data,
+                        ...action.generalInfo,
+                    },
+                    updatingGIStatus: { status: 'succeed' },
+                };
+            else
+                return state;
+        case redux_types.FAIL_UPDATE_GI:
+            return {
+                ...state,
+                updatingGIStatus: { status: 'failed', message: action.message },
+            };
+        //
+        //
+        // Space description
+        //
+        //
+        case redux_types.START_UPDATE_SD:
+            return {
+                ...state,
+                updatingSDStatus: { status: 'requesting' },
+            };
+        case redux_types.SUCCEED_UPDATE_SD:
             if (state.data)
                 return {
                     ...state,
@@ -78191,42 +78305,20 @@ function Reducer(state = initialState, action) {
                         ...state.data,
                         spaceDescription: action.spaceDescription,
                     },
+                    updatingSDStatus: { status: 'succeed' },
                 };
             else
                 return state;
-        case redux_types.START_UPDATE_OH:
+        case redux_types.FAIL_UPDATE_SD:
             return {
                 ...state,
-                updatingOHStatus: { status: 'requesting' },
+                updatingSDStatus: { status: 'failed', message: action.message },
             };
-        case redux_types.SUCCEED_UPDATE_OH:
-            if (state.data)
-                return {
-                    ...state,
-                    data: {
-                        ...state.data,
-                        operatingHours: action.operatingHours,
-                    },
-                    updatingOHStatus: { status: 'succeed' },
-                };
-            else
-                return state;
-        case redux_types.FAIL_UPDATE_OH:
-            return {
-                ...state,
-                updatingOHStatus: { status: 'failed', message: action.message },
-            };
-        case redux_types.SET_BUSY_LEVEL:
-            if (state.data)
-                return {
-                    ...state,
-                    data: {
-                        ...state.data,
-                        busyLevel: action.busyLevel,
-                    },
-                };
-            else
-                return state;
+        //
+        //
+        // Amenity tags
+        //
+        //
         case redux_types.START_UPDATE_AT:
             return {
                 ...state,
@@ -78249,6 +78341,11 @@ function Reducer(state = initialState, action) {
                 ...state,
                 updatingATStatus: { status: 'failed', message: action.message },
             };
+        //
+        //
+        // Images
+        //
+        //
         case redux_types.START_UPDATE_IMAGES:
             return {
                 ...state,
@@ -78271,6 +78368,22 @@ function Reducer(state = initialState, action) {
                 ...state,
                 updatingATStatus: { status: 'failed', message: action.message },
             };
+        //
+        //
+        // Busy level
+        //
+        //
+        case redux_types.SET_BUSY_LEVEL:
+            if (state.data)
+                return {
+                    ...state,
+                    data: {
+                        ...state.data,
+                        busyLevel: action.busyLevel,
+                    },
+                };
+            else
+                return state;
         default:
             return state;
     }
@@ -78610,7 +78723,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * Action Constants
  */
-// Current space data
+//
+//
+// Data
+//
+//
 // prettier-ignore
 exports.START_REQUEST = 'current-space/START_REQUEST';
 // prettier-ignore
@@ -78619,33 +78736,57 @@ exports.RECEIVE_REQUEST = 'current-space/RECEIVE_REQUEST';
 exports.FAIL_REQUEST = 'current-space/FAIL_REQUEST';
 // prettier-ignore
 exports.RESET_DATA = 'current-space/RESET_DATA';
-// Space introduce
+//
+//
+// General information
+//
+//
 // prettier-ignore
-exports.UPDATE_SPACE_DESCRIPTION = 'current-space/UPDATE_SPACE_DESCRIPTION';
-// Operating hour
+exports.START_UPDATE_GI = 'current-space/START_UPDATE_GI';
 // prettier-ignore
-exports.START_UPDATE_OH = 'current-space/START_UPDATE_OH';
+exports.SUCCEED_UPDATE_GI = 'current-space/SUCCEED_UPDATE_GI';
 // prettier-ignore
-exports.SUCCEED_UPDATE_OH = 'current-space/SUCCEED_UPDATE_OH';
+exports.FAIL_UPDATE_GI = 'current-space/FAIL_UPDATE_GI';
+//
+//
+// Space description
+//
+//
 // prettier-ignore
-exports.FAIL_UPDATE_OH = 'current-space/FAIL_UPDATE_OH';
-// Busy level
+exports.START_UPDATE_SD = 'current-space/START_UPDATE_SD';
 // prettier-ignore
-exports.SET_BUSY_LEVEL = 'current-space/SET_BUSY_LEVEL';
+exports.SUCCEED_UPDATE_SD = 'current-space/SUCCEED_UPDATE_SD';
+// prettier-ignore
+exports.FAIL_UPDATE_SD = 'current-space/FAIL_UPDATE_SD';
+//
+//
 // Amenity tags
+//
+//
 // prettier-ignore
 exports.START_UPDATE_AT = 'current-space/START_UPDATE_AT';
 // prettier-ignore
 exports.SUCCEED_UPDATE_AT = 'current-space/SUCCEED_UPDATE_AT';
 // prettier-ignore
 exports.FAIL_UPDATE_AT = 'current-space/FAIL_UPDATE_AT';
+//
+//
 // Images
+//
+//
 // prettier-ignore
 exports.START_UPDATE_IMAGES = 'current-space/START_UPDATE_IMAGES';
 // prettier-ignore
 exports.SUCCEED_UPDATE_IMAGES = 'current-space/SUCCEED_UPDATE_IMAGES';
 // prettier-ignore
 exports.FAIL_UPDATE_IMAGES = 'current-space/FAIL_UPDATE_IMAGES';
+//
+//
+// Busy level
+//
+//
+// prettier-ignore
+exports.SET_BUSY_LEVEL = 'current-space/SET_BUSY_LEVEL';
 
 
 /***/ }),
@@ -78994,25 +79135,60 @@ exports.requestSpace = (spaceID, pushHistory = false) => async (dispatch) => {
 /**
  *
  *
- * Update operating hours of the space on server
+ * Update general information of the space on server
  *
  *
  */
-exports.updateOperatingHours = (spaceID, operatingHours) => async (dispatch) => {
-    dispatch(currentSpaceActions.startUpdateOH());
+exports.updateGeneralInfo = (spaceID, info) => async (dispatch) => {
+    let sendData = {};
+    info.spaceNames && (sendData['space_names'] = info.spaceNames);
+    info.types && (sendData['type'] = info.types.join());
+    info.locationText && (sendData['location_text'] = info.locationText);
+    info.location &&
+        (sendData['latitude'] = info.location.lat) &&
+        (sendData['latitude'] = info.location.lng);
+    info.operatingHours &&
+        (sendData['operating_hours'] = info.operatingHours.join());
+    if (sendData !== {}) {
+        dispatch(currentSpaceActions.startUpdateGI());
+        try {
+            const { data } = await osdb_axios_1.default.post(`/ospace/${spaceID}`, sendData);
+            if (data.updated_space_id === spaceID) {
+                dispatch(currentSpaceActions.succeedUpdateGI(info));
+            }
+            else {
+                dispatch(currentSpaceActions.failUpdateGI('업데이트에 실패했습니다.'));
+            }
+        }
+        catch (error) {
+            dispatch(currentSpaceActions.failUpdateGI(error));
+        }
+    }
+};
+/**
+ *
+ *
+ * Update space description of the space on server
+ *
+ *
+ */
+exports.updateSpaceDescription = (spaceID, spaceDescription) => async (dispatch) => {
+    dispatch(currentSpaceActions.startUpdateSD());
     try {
         const { data } = await osdb_axios_1.default.post(`/ospace/${spaceID}`, {
-            operating_hours: operatingHours.join('\n'),
+            captions: {
+                description: spaceDescription,
+            },
         });
         if (data.updated_space_id === spaceID) {
-            dispatch(currentSpaceActions.succeedUpdateOH(operatingHours));
+            dispatch(currentSpaceActions.succeedUpdateSD(spaceDescription));
         }
         else {
-            dispatch(currentSpaceActions.failUpdateOH('업데이트에 실패했습니다.'));
+            dispatch(currentSpaceActions.failUpdateSD('업데이트에 실패했습니다.'));
         }
     }
     catch (error) {
-        dispatch(currentSpaceActions.failUpdateOH(error));
+        dispatch(currentSpaceActions.failUpdateSD(error));
     }
 };
 /**
@@ -79043,28 +79219,22 @@ exports.updateAmenityTags = (spaceID, amenityTags) => async (dispatch) => {
         dispatch(currentSpaceActions.failUpdateAT(error));
     }
 };
-/**
- *
- *
- * Update space images of the space on server
- *
- *
- */
 exports.updateImages = (spaceID, spaceImages, uploadings) => async (dispatch) => {
     dispatch(currentSpaceActions.startUpdateImages());
     const uploadingImages = Object.values(uploadings);
     try {
-        await Promise.all(uploadingImages.map((uploadImage) => {
+        let tasks = await Promise.all(uploadingImages.map((uploadImage) => {
             if (uploadImage.progress >= 100) {
                 return firebase_1.default.storage()
                     .ref(`${spaceID}/${uploadImage.key}`)
                     .put(uploadImage.file)
-                    .then((uploadTask) => {
-                    uploadTask.ref
-                        .getDownloadURL()
-                        .then((url) => {
-                        spaceImages.push(url);
-                    });
+                    .then((uploadTask) => uploadTask);
+            }
+        }));
+        await Promise.all(tasks.map((task) => {
+            if (task) {
+                return task.ref.getDownloadURL().then((url) => {
+                    spaceImages.push(url);
                 });
             }
         }));
