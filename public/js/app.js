@@ -77289,6 +77289,11 @@ class OSGoogleMap extends react_1.default.Component {
             fullscreenControl: false,
             streetViewControl: false,
         });
+        // Display temporary marker
+        new google.maps.Marker({
+            position: this.props.center,
+            map: this._map,
+        });
     }
     componentDidUpdate(prevProps) {
         if (this._map) {

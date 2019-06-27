@@ -29,6 +29,12 @@ export default class OSGoogleMap extends React.Component<OSGoogleMapProps> {
                 streetViewControl: false, // disable street view control
             },
         );
+
+        // Display temporary marker
+        new google.maps.Marker({
+            position: this.props.center,
+            map: this._map,
+        });
     }
 
     componentDidUpdate(prevProps: OSGoogleMapProps) {
