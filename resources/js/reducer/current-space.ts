@@ -4,6 +4,20 @@ import * as redux_types from '../redux-types/current-space';
  * Initial State
  */
 const initialState: redux_types.State = {
+    data: {
+        id: 'TESTSPACE',
+        spaceNames: { en: '', ko: 'TESTSPACE' },
+        types: [],
+        locationText: '',
+        location: { lat: 0, lng: 0 },
+        openingHours: [],
+        amenityTags: [],
+        spaceDescription: '',
+        images: [],
+        rank: 0,
+        busyLevel: '1',
+        paid: false,
+    },
     requestingStatus: { status: 'ready' },
     updatingGIStatus: { status: 'ready' },
     updatingSDStatus: { status: 'ready' },

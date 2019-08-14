@@ -78,7 +78,7 @@ class _OperatingHourEditModal extends React.Component<
             });
 
             this.props.updateGeneralInfo(this.props.currentSpaceID, {
-                operatingHours: result,
+                openingHours: result,
             });
         }
     };

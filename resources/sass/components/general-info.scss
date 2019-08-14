@@ -3,6 +3,7 @@
         // flex
         display: flex;
         flex-direction: row;
+        justify-content: space-between;
         align-items: flex-end;
 
         & > #space-name {
@@ -11,45 +12,14 @@
             flex-direction: row;
             align-items: flex-end;
 
-            // margin
-            margin-right: 1rem;
-
             & > #type {
                 // text color
                 color: $grey-1;
 
                 // margin
                 margin-left: 0.5rem;
+                margin-right: 1rem;
             }
-        }
-    }
-
-    & > #rate-row {
-        // flex
-        display: flex;
-        flex-direction: row;
-
-        // margin
-        margin-top: 1rem;
-    }
-
-    & > #location-row {
-        // flex
-        display: flex;
-        flex-direction: row;
-        align-items: flex-start;
-
-        // margin
-        margin-top: 1rem;
-
-        p {
-            // text color
-            color: $grey-1;
-        }
-
-        & > #icon {
-            // margin
-            margin-right: 0.5rem;
         }
     }
 

@@ -1,4 +1,13 @@
 #location-map {
+    #address-text {
+        // text color
+        color: $grey-1;
+
+        // margin
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
     #map {
         // size
         height: 20rem;

@@ -8,7 +8,7 @@ export type UserID = string;
 /**
  * Organizer auth types
  */
-export type OrganizerAuthority = 'Organizer' | 'Admin';
+export type OrganizerAuthority = 'organizer' | 'admin';
 
 /**
  *
@@ -36,7 +36,7 @@ export interface RawOrganizer {
     uid: string;
     name: string;
     email: string;
-    authority: 'organizer' | 'admin';
+    authority: OrganizerAuthority;
     owning_spaces: string[];
     approved: boolean;
 }
@@ -56,6 +56,6 @@ export const rawOrganizer2Organizer = (
         email: rawOrganizer.email,
         name: rawOrganizer.name,
         owningSpaces: rawOrganizer.owning_spaces as SpaceID[],
-        authority: rawOrganizer.authority === 'admin' ? 'Admin' : 'Organizer',
+        authority: rawOrganizer.authority,
     };
 };

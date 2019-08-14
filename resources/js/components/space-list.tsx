@@ -17,9 +17,7 @@ interface SpaceListProps extends _ReduxProps, _ReduxActionCreators {}
 
 import React from 'react';
 
-import { SpaceHeader } from '../model/space-list';
-
-import OSEditButton from './os-edit-button';
+import { SpaceHeader } from '../model/space-header';
 
 class _SpaceList extends React.Component<SpaceListProps> {
     componentDidMount() {
@@ -64,7 +62,6 @@ class _SpaceList extends React.Component<SpaceListProps> {
             <div id="space-list">
                 <p className="h2">Space</p>
                 <div id="tab-list">{this._renderTabs()}</div>
-                {/* <OSEditButton /> // for editing spaces */}
             </div>
         );
     }
@@ -81,10 +78,10 @@ import { connect } from 'react-redux';
 import RootState from '../redux-types';
 
 import { SpaceID } from '../model/space';
+import Organizer from '../model/organizer';
 
 import { requestSpaceList } from '../thunk-action/space-list';
 import { requestSpace } from '../thunk-action/current-space';
-import Organizer from '../model/organizer';
 
 interface _ReduxProps {
     /**

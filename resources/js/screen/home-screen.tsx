@@ -18,12 +18,14 @@ import React from 'react';
 import { Redirect } from 'react-router';
 
 import SpaceList from '../components/space-list';
-
 import GeneralInfo from '../components/general-info';
 import SpaceDescription from '../components/space-description';
 import AmenityTags from '../components/amenity-tags';
 import LoactionMap from '../components/loaction-map';
 import ImagesEditor from '../components/images-editor';
+import OSPageStatus from '../components/os-page-status';
+import SpaceSearch from '../components/space-search';
+import OpeningHours from '../components/opening-hours';
 
 class _HomeScreen extends React.Component<HomeScreenProps> {
     private _renderTitle = () => {
@@ -48,6 +50,7 @@ class _HomeScreen extends React.Component<HomeScreenProps> {
                     <div id="left">
                         <GeneralInfo />
                         <SpaceDescription />
+                        <OpeningHours />
                         <AmenityTags />
                         <LoactionMap />
                     </div>
@@ -84,8 +87,8 @@ class _HomeScreen extends React.Component<HomeScreenProps> {
                     </div>
                     <div id="home-body">
                         <div id="space-menu">
-                            {this.props.currentUser.authority === 'Admin' ? (
-                                <SpaceList />
+                            {this.props.currentUser.authority === 'admin' ? (
+                                <SpaceSearch />
                             ) : (
                                 <SpaceList />
                             )}
@@ -114,7 +117,6 @@ import RootState from '../redux-types';
 import { LoginStatus } from '../model/system';
 import Organizer from '../model/organizer';
 import Space from '../model/space';
-import OSPageStatus from '../components/os-page-status';
 
 interface _ReduxProps {
     /**

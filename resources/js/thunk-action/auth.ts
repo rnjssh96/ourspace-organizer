@@ -24,7 +24,6 @@ export const requestLogin: ActionCreator<
     dispatch: ThunkDispatch<any, null, Action<any>>,
 ) => {
     dispatch(authActions.requestLogin());
-
     try {
         await OSFirebase.auth().signInWithEmailAndPassword(
             userEmail,
@@ -33,12 +32,21 @@ export const requestLogin: ActionCreator<
         let currentUser = await OSFirebase.auth().currentUser;
         if (currentUser !== null) {
             try {
-                const { data } = await OSDBAxios.get<RawOrganizer>(
-                    `organizers/${currentUser.uid}`,
-                );
+                // const { data } = await OSDBAxios.get<RawOrganizer>(
+                //     `organizers/${currentUser.uid}`,
+                // );
 
-                const organizer = rawOrganizer2Organizer(data);
-                dispatch(authActions.succeedLogin(organizer));
+                // const organizer = rawOrganizer2Organizer(data);
+                // dispatch(authActions.succeedLogin(organizer));
+                dispatch(
+                    authActions.succeedLogin({
+                        uid: 'TESTUID',
+                        email: 'testuser@debug.test',
+                        name: 'debugmodeusesr',
+                        owningSpaces: [],
+                        authority: 'admin',
+                    }),
+                );
             } catch (error) {
                 dispatch(
                     authActions.failLogin(
@@ -50,7 +58,18 @@ export const requestLogin: ActionCreator<
             dispatch(authActions.failLogin('로그인에 실패하였습니다.'));
         }
     } catch (error) {
-        dispatch(authActions.failLogin(error));
+        switch (error.code) {
+            case 'auth/user-not-found':
+                dispatch(authActions.failLogin('사용자가 존재하지 않습니다.'));
+                break;
+            case 'auth/wrong-password':
+                dispatch(
+                    authActions.failLogin('비밀번호가 일치하지 않습니다.'),
+                );
+                break;
+            default:
+                dispatch(authActions.failLogin(error.message));
+        }
     }
 };
 
@@ -105,6 +124,6 @@ export const requestSignup: ActionCreator<
             }
         }
     } catch (error) {
-        dispatch(authActions.failSignup(error));
+        dispatch(authActions.failSignup(error.message));
     }
 };

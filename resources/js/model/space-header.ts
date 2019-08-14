@@ -21,6 +21,5 @@ export interface SpaceHeader {
  */
 export interface RawSpaceHeader {
     id: string;
-    pid: string;
     names: SpaceNames;
 }

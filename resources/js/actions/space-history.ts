@@ -2,7 +2,7 @@ import { ActionCreator } from 'redux';
 
 import * as redux_types from '../redux-types/space-history';
 
-import { SpaceHeader } from '../model/space-list';
+import { SpaceHeader } from '../model/space-header';
 
 /**
  * Action Creators

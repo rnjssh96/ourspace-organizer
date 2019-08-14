@@ -96,7 +96,7 @@ export interface SpaceGeneralInfo {
     types?: SpaceType[];
     locationText?: string;
     location?: LatLng;
-    operatingHours?: string[];
+    openingHours?: string[];
 }
 
 export default interface Space extends SpaceGeneralInfo {
@@ -105,7 +105,7 @@ export default interface Space extends SpaceGeneralInfo {
     types: SpaceType[];
     locationText: string;
     location: LatLng;
-    operatingHours: string[];
+    openingHours: string[];
     amenityTags: AmenityTag[];
     spaceDescription: string;
     images: string[];
@@ -122,7 +122,6 @@ export default interface Space extends SpaceGeneralInfo {
  *
  */
 export interface RawSpace {
-    parent_space_id: string;
     space_names: SpaceNames;
     images: string[];
     captions: { description: string };
@@ -130,7 +129,7 @@ export interface RawSpace {
     longitude: number;
     latitude: number;
     location_text: string;
-    operating_hours: string;
+    opening_hours: string;
     paid: boolean;
     type: number;
     rank: number;
@@ -157,7 +156,7 @@ export const rawSpaces2SpaceList = (
             lat: rawSpace.latitude,
             lng: rawSpace.longitude,
         },
-        operatingHours: rawSpace.operating_hours.split('\n'),
+        openingHours: rawSpace.opening_hours.split('\n'),
         amenityTags: Object.keys(rawSpace.amenity_tags) as AmenityTag[],
         spaceDescription: rawSpace.captions.description,
         images: rawSpace.images ? rawSpace.images : [],

@@ -18,8 +18,16 @@ import React from 'react';
 
 import OSGoogleMap from './os-google-map';
 import OSPageStatus from './os-page-status';
+import OSEditButton from './os-edit-button';
 
 class _LoactionMap extends React.Component<LoactionMapProps> {
+    private _renderAddress = () => (
+        <p className="h5" id="address-text">
+            {this.props.locationText
+                ? this.props.locationText
+                : '등록된 주소가 없습니다.'}
+        </p>
+    );
     private _renderMap = () => {
         if (this.props.location) {
             return (
@@ -49,7 +57,9 @@ class _LoactionMap extends React.Component<LoactionMapProps> {
             <div id="location-map" className="category">
                 <div className="header">
                     <p className="h5">위치</p>
+                    <OSEditButton onClick={() => {}} />
                 </div>
+                {this._renderAddress()}
                 <div className="body">{this._renderMap()}</div>
             </div>
         );
@@ -73,10 +83,17 @@ interface _ReduxProps {
      * Geographical coordinate of the space location
      */
     location?: LatLng;
+
+    /**
+     * Location address
+     */
+    locationText?: string;
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
     location: state.currentSpace.data && state.currentSpace.data.location,
+    locationText:
+        state.currentSpace.data && state.currentSpace.data.locationText,
 });
 
 const mapDispatchToProps = {};

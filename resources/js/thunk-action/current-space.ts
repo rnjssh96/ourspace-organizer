@@ -41,7 +41,7 @@ export const requestSpace: ActionCreator<
             );
         }
     } catch (error) {
-        dispatch(currentSpaceActions.failRequest(error));
+        dispatch(currentSpaceActions.failRequest(error.message));
     }
 };
 
@@ -64,8 +64,8 @@ export const updateGeneralInfo: ActionCreator<
     info.location &&
         (sendData['latitude'] = info.location.lat) &&
         (sendData['latitude'] = info.location.lng);
-    info.operatingHours &&
-        (sendData['operating_hours'] = info.operatingHours.join());
+    info.openingHours &&
+        (sendData['operating_hours'] = info.openingHours.join());
 
     if (sendData !== {}) {
         dispatch(currentSpaceActions.startUpdateGI());
@@ -83,7 +83,7 @@ export const updateGeneralInfo: ActionCreator<
                 );
             }
         } catch (error) {
-            dispatch(currentSpaceActions.failUpdateGI(error));
+            dispatch(currentSpaceActions.failUpdateGI(error.message));
         }
     }
 };
@@ -118,7 +118,7 @@ export const updateSpaceDescription: ActionCreator<
             );
         }
     } catch (error) {
-        dispatch(currentSpaceActions.failUpdateSD(error));
+        dispatch(currentSpaceActions.failUpdateSD(error.message));
     }
 };
 
@@ -154,7 +154,7 @@ export const updateAmenityTags: ActionCreator<
             );
         }
     } catch (error) {
-        dispatch(currentSpaceActions.failUpdateAT(error));
+        dispatch(currentSpaceActions.failUpdateAT(error.message));
     }
 };
 
@@ -218,6 +218,6 @@ export const updateImages: ActionCreator<
             );
         }
     } catch (error) {
-        dispatch(currentSpaceActions.failUpdateImages(error));
+        dispatch(currentSpaceActions.failUpdateImages(error.message));
     }
 };

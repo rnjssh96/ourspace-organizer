@@ -10836,7 +10836,7 @@ button {
 }
 
 #home-container #home-body #workspace {
-  flex: 1;
+  height: 100%;
   display: flex;
   flex-direction: row;
   border-top: 1px solid #b6b6b6;
@@ -10915,9 +10915,53 @@ button {
   color: #1f1f1f;
 }
 
+#space-search {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+}
+
+#space-search #space-search-group {
+  position: relative;
+  direction: rtl;
+}
+
+#space-search #space-search-group #space-search-input {
+  direction: ltr;
+}
+
+#space-search #space-search-group #space-search-result {
+  max-height: 50vh;
+  width: 30vw;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  margin-top: 5px;
+  border-radius: 5px;
+  border: 1px solid #b6b6b6;
+  background: #ffffff;
+  box-shadow: 10px 11px 10px -15px rgba(0, 0, 0, 0.75);
+}
+
+#space-search #space-search-group #space-search-result > a {
+  padding: 1rem;
+  border-radius: 5px;
+}
+
+#space-search #space-search-group #space-search-result > a:hover {
+  background: #f5f5f5;
+}
+
+#space-search #space-search-group #space-search-result > a > p {
+  margin: 0;
+}
+
 #general-info > #space-name-row {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   align-items: flex-end;
 }
 
@@ -10925,33 +10969,12 @@ button {
   display: flex;
   flex-direction: row;
   align-items: flex-end;
-  margin-right: 1rem;
 }
 
 #general-info > #space-name-row > #space-name > #type {
   color: #6f6f6f;
   margin-left: 0.5rem;
-}
-
-#general-info > #rate-row {
-  display: flex;
-  flex-direction: row;
-  margin-top: 1rem;
-}
-
-#general-info > #location-row {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  margin-top: 1rem;
-}
-
-#general-info > #location-row p {
-  color: #6f6f6f;
-}
-
-#general-info > #location-row > #icon {
-  margin-right: 0.5rem;
+  margin-right: 1rem;
 }
 
 #general-info > #operating-hours-row {
@@ -11089,6 +11112,12 @@ button {
   padding-right: 1.5rem;
 }
 
+#location-map #address-text {
+  color: #6f6f6f;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
 #location-map #map {
   height: 20rem;
 }
@@ -11127,7 +11156,7 @@ button {
 }
 
 #os-rate-display > #rate {
-  font-size: 1rem;
+  font-size: 1.5rem;
   margin-right: 0.5rem;
   margin-bottom: 0;
 }
@@ -11139,7 +11168,7 @@ button {
 
 #os-rate-display > #stars > .star {
   position: relative;
-  font-size: 1rem;
+  font-size: 1.5rem;
 }
 
 #os-rate-display > #stars > .star:not(:first-child) {
