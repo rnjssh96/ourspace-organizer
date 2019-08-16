@@ -66,7 +66,7 @@ class _OperatingHourEditModal extends React.Component<
             });
 
             let temp = '';
-            let result = priority.map((timeKey: string) => {
+            priority.map((timeKey: string) => {
                 temp = `${timeKey} / `;
                 map[timeKey].map((day: Day, index: number) => {
                     if (index > 0) {

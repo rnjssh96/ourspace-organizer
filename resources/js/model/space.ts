@@ -1,4 +1,4 @@
-import { Locale } from './system.js';
+import { Locale, DataStatus } from './system.js';
 import { UserID } from './organizer.js';
 
 /**
@@ -18,16 +18,14 @@ import { space_type } from '../config/space.json';
 
 export type SpaceType = keyof typeof space_type;
 
-const spaceTypes: {
-    [type in SpaceType]: { [locale in Locale]: string }
+export const spaceTypes: {
+    [code in SpaceType]: { [locale in Locale]: string }
 } = space_type;
 
 export const interpretSpaceType = (
     type: SpaceType,
     locale: Locale = 'en',
-): string => {
-    return spaceTypes[type][locale] || spaceTypes[type]['en'];
-};
+): string => spaceTypes[type][locale];
 
 /**
  * Opening Hours
@@ -63,6 +61,36 @@ export interface OpeningHour {
 }
 
 /**
+ * Space Tag
+ */
+import { space_tag } from '../config/space.json';
+
+export type SpaceTag = keyof typeof space_tag;
+
+const spaceTags: {
+    [code in SpaceTag]: { [locale in Locale]: string }
+} = space_tag;
+
+export const interpretSpaceTag = (
+    tag: SpaceTag,
+    locale: Locale = 'en',
+): string => spaceTags[tag][locale];
+
+/**
+ * Purpose
+ */
+import { purpose } from '../config/space.json';
+
+export type Purpose = keyof typeof purpose;
+
+const purposes: { [code in Purpose]: { [locale in Locale]: string } } = purpose;
+
+export const interpretPurpose = (
+    purpose: Purpose,
+    locale: Locale = 'en',
+): string => purposes[purpose][locale];
+
+/**
  *
  *
  * Full data of space
@@ -86,8 +114,8 @@ export default interface Space {
         wifi: number;
         plug: number;
     };
-    tags: string[];
-    purposes: number[];
+    tags: SpaceTag[];
+    purposes: Purpose[];
 }
 
 /**
@@ -98,40 +126,42 @@ export default interface Space {
  *
  */
 export interface RawSpace {
-    [id: string]: {
-        space_names: SpaceNames;
-        description: string;
-        images: SpaceImage[];
-        location_text: string;
-        latitude: number;
-        longitude: number;
-        likes: UserID[];
-        operating_hours: { [day in DAYS_IN_WEEK]: string };
-        organizers: UserID[];
-        tags: string[];
-        cost: {
-            type: string;
-            price: string;
-        }[];
-        type: number;
-        property_vector: {
-            parking: number;
-            wifi: number;
-            plug: number;
-        };
-        purposes: number[];
-        // not used
-        image_owners: any;
-        metadata: any;
-        operating_notes: any;
-        special_notes: any;
+    space_names: SpaceNames;
+    description: string;
+    images: SpaceImage[];
+    location_text: string;
+    latitude: number;
+    longitude: number;
+    likes: UserID[];
+    operating_hours: { [day in DAYS_IN_WEEK]: string };
+    organizers: UserID[];
+    tags: string[];
+    cost: {
+        type: string;
+        price: string;
+    }[];
+    type: number;
+    property_vector: {
+        parking: number;
+        wifi: number;
+        plug: number;
     };
+    purposes: number[];
+    // not used
+    image_owners: any;
+    metadata: any;
+    operating_notes: any;
+    special_notes: any;
+}
+
+export interface RawSpaceWithID {
+    [id: string]: RawSpace;
 }
 
 /**
  *
  *
- * Interpret ```RawSpaces``` data to a list of ```Space```
+ * Decode ```RawSpaces``` data to a list of ```Space```
  *
  *
  */
@@ -139,25 +169,25 @@ export const rawSpaces2SpaceList = (
     spaceID: SpaceID,
     rawSpace: RawSpace,
 ): Space => {
-    let monOH = rawSpace[spaceID].operating_hours.mon.split('\\');
-    let tueOH = rawSpace[spaceID].operating_hours.tue.split('\\');
-    let wedOH = rawSpace[spaceID].operating_hours.wed.split('\\');
-    let thuOH = rawSpace[spaceID].operating_hours.thu.split('\\');
-    let friOH = rawSpace[spaceID].operating_hours.fri.split('\\');
-    let satOH = rawSpace[spaceID].operating_hours.sat.split('\\');
-    let sunOH = rawSpace[spaceID].operating_hours.sun.split('\\');
+    let monOH = rawSpace.operating_hours.mon.split('\\');
+    let tueOH = rawSpace.operating_hours.tue.split('\\');
+    let wedOH = rawSpace.operating_hours.wed.split('\\');
+    let thuOH = rawSpace.operating_hours.thu.split('\\');
+    let friOH = rawSpace.operating_hours.fri.split('\\');
+    let satOH = rawSpace.operating_hours.sat.split('\\');
+    let sunOH = rawSpace.operating_hours.sun.split('\\');
 
     return {
         id: spaceID,
-        spaceNames: rawSpace[spaceID].space_names,
-        spaceType: rawSpace[spaceID].type.toString() as SpaceType,
-        spaceDescription: rawSpace[spaceID].description,
+        spaceNames: rawSpace.space_names,
+        spaceType: rawSpace.type.toString() as SpaceType,
+        spaceDescription: rawSpace.description,
         rating: 0,
-        images: rawSpace[spaceID].images,
-        spaceAddress: rawSpace[spaceID].location_text,
+        images: rawSpace.images,
+        spaceAddress: rawSpace.location_text,
         location: {
-            lat: rawSpace[spaceID].latitude,
-            lng: rawSpace[spaceID].longitude,
+            lat: rawSpace.latitude,
+            lng: rawSpace.longitude,
         },
         openingHours: {
             mon: { open: monOH[0], close: monOH[1] },
@@ -168,14 +198,49 @@ export const rawSpaces2SpaceList = (
             sat: { open: satOH[0], close: satOH[1] },
             sun: { open: sunOH[0], close: sunOH[1] },
         },
-        organizers: rawSpace[spaceID].organizers,
-        serviceFee: rawSpace[spaceID].cost[0].price == '0' ? 0 : 3,
+        organizers: rawSpace.organizers,
+        serviceFee: rawSpace.cost[0].price == '0' ? 0 : 3,
         spaceDetail: {
-            parking: rawSpace[spaceID].property_vector.parking,
-            wifi: rawSpace[spaceID].property_vector.wifi,
-            plug: rawSpace[spaceID].property_vector.plug,
+            parking: rawSpace.property_vector.parking,
+            wifi: rawSpace.property_vector.wifi,
+            plug: rawSpace.property_vector.plug,
         },
-        tags: rawSpace[spaceID].tags,
-        purposes: rawSpace[spaceID].purposes,
+        tags: rawSpace.tags as SpaceTag[],
+        purposes: rawSpace.purposes.map(
+            purpose => purpose.toString() as Purpose,
+        ),
     };
+};
+
+/**
+ *
+ *
+ * Space data set possible status
+ *
+ *
+ */
+export type SpaceRequestUnit = 'all' | 'title' | 'description';
+
+export interface SpaceDataStatus extends DataStatus {
+    requestUnit?: SpaceRequestUnit;
+}
+
+/**
+ *
+ *
+ * Data of space for post update
+ *
+ *
+ */
+export interface SpaceUpdate {
+    spaceNames?: SpaceNames;
+    spaceType?: SpaceType;
+}
+
+export const encodeSpaceUpdate = (spaceUpdate: SpaceUpdate) => {
+    let encoded: { [key: string]: any } = {};
+    spaceUpdate.spaceNames && (encoded['space_names'] = spaceUpdate.spaceNames);
+    spaceUpdate.spaceType &&
+        (encoded['type'] = parseInt(spaceUpdate.spaceType));
+    return encoded;
 };

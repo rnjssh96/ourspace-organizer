@@ -10,7 +10,7 @@
             // flex
             display: flex;
             flex-direction: row;
-            align-items: flex-end;
+            align-items: center;
 
             & > #type {
                 // text color
@@ -19,6 +19,25 @@
                 // margin
                 margin-left: 0.5rem;
                 margin-right: 1rem;
+            }
+        }
+    }
+
+    .modal-body {
+        // padding
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+
+        & > .input-group,
+        & > .form-group {
+            // margin
+            margin-top: 0.5rem;
+        }
+
+        & > p {
+            &:not(:first-child) {
+                // margin
+                margin-top: 1rem;
             }
         }
     }

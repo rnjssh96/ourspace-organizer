@@ -49,7 +49,7 @@ export const requestSpaceList: ActionCreator<
                 response: AxiosResponse<RawSpace>;
             }): SpaceHeader => ({
                 id: spaceID,
-                spaceNames: response.data[spaceID].space_names,
+                spaceNames: response.data.space_names,
             }),
         );
         dispatch(spaceListActions.finishRequest(spaceList));

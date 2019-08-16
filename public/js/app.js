@@ -76153,8 +76153,9 @@ const redux_types = __importStar(__webpack_require__(/*! ../redux-types/current-
 // Data
 //
 //
-exports.startRequest = () => ({
+exports.startRequest = (requestUnit) => ({
     type: redux_types.START_REQUEST,
+    requestUnit,
 });
 exports.finishRequest = (space) => ({
     type: redux_types.FINISH_REQUEST,
@@ -76482,23 +76483,82 @@ const os_rate_display_1 = __importDefault(__webpack_require__(/*! ./os-rate-disp
 class _GeneralInfo extends react_1.default.Component {
     constructor() {
         super(...arguments);
+        this.editModalID = 'general-info-edit-modal';
+        this.state = {
+            names: this.props.spaceNames,
+            type: this.props.type,
+        };
+        this._updateGeneralInfo = () => {
+            if (this.props.currentSpaceID) {
+                this.props.updateSpace(this.props.currentSpaceID, 'title', {
+                    spaceNames: this.state.names,
+                    spaceType: this.state.type,
+                });
+            }
+        };
         this._renderTitle = () => {
-            const typeText = this.props.type
-                ? space_1.interpretSpaceType(this.props.type, 'ko')
-                : '(카테고리)';
+            const typeText = space_1.interpretSpaceType(this.props.type, 'ko');
             return (react_1.default.createElement("div", { id: "space-name-row" },
                 react_1.default.createElement("div", { id: "space-name" },
-                    react_1.default.createElement("p", { className: "h2" }, this.props.spaceNames
-                        ? this.props.spaceNames['ko']
-                        : '(매장이름)'),
+                    react_1.default.createElement("p", { className: "h2" }, this.props.spaceNames['ko']),
                     react_1.default.createElement("p", { id: "type", className: "h4" }, typeText),
-                    react_1.default.createElement(os_edit_button_1.default, null)),
+                    react_1.default.createElement(os_edit_button_1.default, { modalID: this.editModalID, onClick: () => {
+                            this.setState({
+                                names: this.props.spaceNames,
+                                type: this.props.type,
+                            });
+                        } })),
                 react_1.default.createElement("div", { id: "rate" },
                     react_1.default.createElement(os_rate_display_1.default, null))));
         };
+        this._renderModalBody = () => (react_1.default.createElement("div", { className: "modal-body" },
+            react_1.default.createElement("p", { className: "h5" }, "\uC774\uB984"),
+            react_1.default.createElement("div", { className: "input-group" },
+                react_1.default.createElement("div", { className: "input-group-prepend" },
+                    react_1.default.createElement("span", { className: "input-group-text" }, "\uC601\uC5B4")),
+                react_1.default.createElement("input", { className: "form-control", type: "text", value: this.state.names.en, onChange: (event) => {
+                        this.setState({
+                            ...this.state,
+                            names: {
+                                ...this.state.names,
+                                en: event.target.value,
+                            },
+                        });
+                    }, placeholder: "\uC601\uC5B4" })),
+            react_1.default.createElement("div", { className: "input-group" },
+                react_1.default.createElement("div", { className: "input-group-prepend" },
+                    react_1.default.createElement("span", { className: "input-group-text" }, "\uD55C\uAD6D\uC5B4")),
+                react_1.default.createElement("input", { className: "form-control", type: "text", value: this.state.names.ko, onChange: (event) => {
+                        this.setState({
+                            ...this.state,
+                            names: {
+                                ...this.state.names,
+                                ko: event.target.value,
+                            },
+                        });
+                    }, placeholder: "\uD55C\uAD6D\uC5B4" })),
+            react_1.default.createElement("p", { className: "h5" }, "\uCE74\uD14C\uACE0\uB9AC"),
+            react_1.default.createElement("div", { className: "form-group" },
+                react_1.default.createElement("select", { className: "form-control", value: space_1.spaceTypes[this.state.type].ko, onChange: (event) => {
+                        this.setState({
+                            ...this.state,
+                            type: event.target.selectedIndex.toString(),
+                        });
+                    } }, Object.keys(space_1.spaceTypes).map((type) => (react_1.default.createElement("option", { key: type }, space_1.spaceTypes[type].ko)))))));
+        this._renderEditModal = () => (react_1.default.createElement("div", { id: this.editModalID, className: "modal fade", tabIndex: -1, role: "dialog", "aria-hidden": "true" },
+            react_1.default.createElement("div", { className: "modal-dialog", role: "document" },
+                react_1.default.createElement("div", { className: "modal-content" },
+                    react_1.default.createElement("div", { className: "modal-header" },
+                        react_1.default.createElement("p", { className: "modal-title h5" }, "\uACF5\uAC04 \uC218\uC815")),
+                    this._renderModalBody(),
+                    react_1.default.createElement("div", { className: "modal-footer" },
+                        react_1.default.createElement("button", { type: "button", className: "btn btn-secondary", "data-dismiss": "modal" }, "\uB2EB\uAE30"),
+                        react_1.default.createElement("button", { type: "button", className: "btn btn-primary", "data-dismiss": "modal", onClick: this._updateGeneralInfo }, "\uC800\uC7A5"))))));
     }
     render() {
-        return react_1.default.createElement("div", { id: "general-info" }, this._renderTitle());
+        return (react_1.default.createElement("div", { id: "general-info" },
+            this._renderTitle(),
+            this._renderEditModal()));
     }
 }
 /**
@@ -76509,11 +76569,16 @@ class _GeneralInfo extends react_1.default.Component {
  *
  */
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const current_space_1 = __webpack_require__(/*! ../thunk-action/current-space */ "./resources/js/thunk-action/current-space.ts");
 const mapStateToProps = (state) => ({
-    spaceNames: state.currentSpace.data && state.currentSpace.data.spaceNames,
-    type: state.currentSpace.data && state.currentSpace.data.spaceType,
+    currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
+    spaceNames: state.currentSpace.data
+        ? state.currentSpace.data.spaceNames
+        : { en: '', ko: '' },
+    type: state.currentSpace.data ? state.currentSpace.data.spaceType : '0',
 });
-const GeneralInfo = react_redux_1.connect(mapStateToProps)(_GeneralInfo);
+const mapDispatchToProps = { updateSpace: current_space_1.updateSpace };
+const GeneralInfo = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_GeneralInfo);
 exports.default = GeneralInfo;
 
 
@@ -77119,7 +77184,7 @@ class _SpaceDescription extends react_1.default.Component {
     }
     render() {
         if (this.props.dataStatus.status === 'processing' &&
-            this.props.dataStatus.processingUnit == 'description') {
+            this.props.dataStatus.requestUnit == 'description') {
             return (react_1.default.createElement("div", { id: "space-description", className: "category" },
                 react_1.default.createElement(os_page_status_1.default, { status: "loading" })));
         }
@@ -77430,10 +77495,10 @@ exports.default = axios_1.default;
 /*!****************************************!*\
   !*** ./resources/js/config/space.json ***!
   \****************************************/
-/*! exports provided: space_type, default */
+/*! exports provided: space_type, space_tag, purpose, default */
 /***/ (function(module) {
 
-module.exports = {"space_type":{"0":{"en":"library","ko":"도서관"},"1":{"en":"startup","ko":"창업공간"},"2":{"en":"museum","ko":"박물관"},"3":{"en":"bookstore","ko":"서점"},"4":{"en":"experience","ko":"체험공간"},"5":{"en":"nature","ko":"공원"},"6":{"en":"youth","ko":"청년공간"},"7":{"en":"lounge","ko":"라운지"},"8":{"en":"starbucks","ko":"스타벅스"},"9":{"en":"cafe","ko":"카페"}}};
+module.exports = {"space_type":{"0":{"en":"Uncategorized","ko":"미분류"},"1":{"en":"Startup Space","ko":"창업공간"},"2":{"en":"Museum","ko":"박물관"},"3":{"en":"Bookstore","ko":"서점"},"4":{"en":"Activity","ko":"체험공간"},"5":{"en":"Nature","ko":"자연"},"6":{"en":"Youth","ko":"청년공간"},"7":{"en":"Lounge","ko":"라운지"},"8":{"en":"Cafe","ko":"카페"},"9":{"en":"Study Cafe","ko":"스터디카페"},"10":{"en":"Library","ko":"도서관"},"11":{"en":"Book Cafe","ko":"북카페"},"12":{"en":"Share Office","ko":"공유오피스"},"13":{"en":"Multicultural space","ko":"복합문화공간"},"14":{"en":"Art Gallery","ko":"미술관"},"15":{"en":"Historic Site","ko":"유적지"},"16":{"en":"Flagship Store","ko":"플래그십스토어"},"17":{"en":"Meetin Space","ko":"모임공간"}},"space_tag":{"0":{"en":"","ko":"화려한"},"1":{"en":"","ko":"소박한"},"2":{"en":"","ko":"고급스러운"},"3":{"en":"","ko":"편안한"},"4":{"en":"","ko":"한국적인"},"5":{"en":"","ko":"이국적인"},"6":{"en":"","ko":"아기자기한"},"7":{"en":"","ko":"미니멀"},"8":{"en":"","ko":"모던한"},"9":{"en":"","ko":"빈티지"},"10":{"en":"","ko":"레트로"},"11":{"en":"","ko":"엔틱한"},"12":{"en":"","ko":"감성적인"},"13":{"en":"","ko":"개성있는"},"14":{"en":"","ko":"밝은"},"15":{"en":"","ko":"어두운"},"16":{"en":"","ko":"정돈된"},"17":{"en":"","ko":"자유분방한"},"18":{"en":"","ko":"따뜻한"},"19":{"en":"","ko":"시원한"}},"purpose":{"0":{"en":"","ko":"공부"},"1":{"en":"","ko":"액티비티"},"2":{"en":"","ko":"데이트"},"3":{"en":"","ko":"일"},"4":{"en":"","ko":"독서"},"5":{"en":"","ko":"수다"},"6":{"en":"","ko":"미팅"},"7":{"en":"","ko":"창업"},"8":{"en":"","ko":"산책"},"9":{"en":"","ko":"소비"}}};
 
 /***/ }),
 
@@ -77499,36 +77564,46 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * Space Type
  */
 const space_json_1 = __webpack_require__(/*! ../config/space.json */ "./resources/js/config/space.json");
-const spaceTypes = space_json_1.space_type;
-exports.interpretSpaceType = (type, locale = 'en') => {
-    return spaceTypes[type][locale] || spaceTypes[type]['en'];
-};
+exports.spaceTypes = space_json_1.space_type;
+exports.interpretSpaceType = (type, locale = 'en') => exports.spaceTypes[type][locale];
+/**
+ * Space Tag
+ */
+const space_json_2 = __webpack_require__(/*! ../config/space.json */ "./resources/js/config/space.json");
+const spaceTags = space_json_2.space_tag;
+exports.interpretSpaceTag = (tag, locale = 'en') => spaceTags[tag][locale];
+/**
+ * Purpose
+ */
+const space_json_3 = __webpack_require__(/*! ../config/space.json */ "./resources/js/config/space.json");
+const purposes = space_json_3.purpose;
+exports.interpretPurpose = (purpose, locale = 'en') => purposes[purpose][locale];
 /**
  *
  *
- * Interpret ```RawSpaces``` data to a list of ```Space```
+ * Decode ```RawSpaces``` data to a list of ```Space```
  *
  *
  */
 exports.rawSpaces2SpaceList = (spaceID, rawSpace) => {
-    let monOH = rawSpace[spaceID].operating_hours.mon.split('\\');
-    let tueOH = rawSpace[spaceID].operating_hours.tue.split('\\');
-    let wedOH = rawSpace[spaceID].operating_hours.wed.split('\\');
-    let thuOH = rawSpace[spaceID].operating_hours.thu.split('\\');
-    let friOH = rawSpace[spaceID].operating_hours.fri.split('\\');
-    let satOH = rawSpace[spaceID].operating_hours.sat.split('\\');
-    let sunOH = rawSpace[spaceID].operating_hours.sun.split('\\');
+    let monOH = rawSpace.operating_hours.mon.split('\\');
+    let tueOH = rawSpace.operating_hours.tue.split('\\');
+    let wedOH = rawSpace.operating_hours.wed.split('\\');
+    let thuOH = rawSpace.operating_hours.thu.split('\\');
+    let friOH = rawSpace.operating_hours.fri.split('\\');
+    let satOH = rawSpace.operating_hours.sat.split('\\');
+    let sunOH = rawSpace.operating_hours.sun.split('\\');
     return {
         id: spaceID,
-        spaceNames: rawSpace[spaceID].space_names,
-        spaceType: rawSpace[spaceID].type.toString(),
-        spaceDescription: rawSpace[spaceID].description,
+        spaceNames: rawSpace.space_names,
+        spaceType: rawSpace.type.toString(),
+        spaceDescription: rawSpace.description,
         rating: 0,
-        images: rawSpace[spaceID].images,
-        spaceAddress: rawSpace[spaceID].location_text,
+        images: rawSpace.images,
+        spaceAddress: rawSpace.location_text,
         location: {
-            lat: rawSpace[spaceID].latitude,
-            lng: rawSpace[spaceID].longitude,
+            lat: rawSpace.latitude,
+            lng: rawSpace.longitude,
         },
         openingHours: {
             mon: { open: monOH[0], close: monOH[1] },
@@ -77539,16 +77614,23 @@ exports.rawSpaces2SpaceList = (spaceID, rawSpace) => {
             sat: { open: satOH[0], close: satOH[1] },
             sun: { open: sunOH[0], close: sunOH[1] },
         },
-        organizers: rawSpace[spaceID].organizers,
-        serviceFee: rawSpace[spaceID].cost[0].price == '0' ? 0 : 3,
+        organizers: rawSpace.organizers,
+        serviceFee: rawSpace.cost[0].price == '0' ? 0 : 3,
         spaceDetail: {
-            parking: rawSpace[spaceID].property_vector.parking,
-            wifi: rawSpace[spaceID].property_vector.wifi,
-            plug: rawSpace[spaceID].property_vector.plug,
+            parking: rawSpace.property_vector.parking,
+            wifi: rawSpace.property_vector.wifi,
+            plug: rawSpace.property_vector.plug,
         },
-        tags: rawSpace[spaceID].tags,
-        purposes: rawSpace[spaceID].purposes,
+        tags: rawSpace.tags,
+        purposes: rawSpace.purposes.map(purpose => purpose.toString()),
     };
+};
+exports.encodeSpaceUpdate = (spaceUpdate) => {
+    let encoded = {};
+    spaceUpdate.spaceNames && (encoded['space_names'] = spaceUpdate.spaceNames);
+    spaceUpdate.spaceType &&
+        (encoded['type'] = parseInt(spaceUpdate.spaceType));
+    return encoded;
 };
 
 
@@ -77928,7 +78010,10 @@ function Reducer(state = initialState, action) {
         case redux_types.START_REQUEST:
             return {
                 ...state,
-                dataStatus: { status: 'processing' },
+                dataStatus: {
+                    status: 'processing',
+                    requestUnit: action.requestUnit,
+                },
             };
         case redux_types.FINISH_REQUEST:
             return {
@@ -78682,10 +78767,10 @@ const space_history_1 = __webpack_require__(/*! ../actions/space-history */ "./r
  *
  */
 exports.requestSpace = (spaceID, pushHistory = false) => async (dispatch) => {
-    dispatch(currentSpaceActions.startRequest());
+    dispatch(currentSpaceActions.startRequest('all'));
     try {
         const { data } = await osdb_axios_1.default.get(`/organizer/space/single/${spaceID}`);
-        const space = space_1.rawSpaces2SpaceList(spaceID, data);
+        const space = space_1.rawSpaces2SpaceList(spaceID, data[spaceID]);
         dispatch(currentSpaceActions.finishRequest(space));
         if (pushHistory) {
             dispatch(space_history_1.pushIntoSpaceHistory({
@@ -78693,6 +78778,23 @@ exports.requestSpace = (spaceID, pushHistory = false) => async (dispatch) => {
                 names: space.spaceNames,
             }));
         }
+    }
+    catch (error) {
+        dispatch(currentSpaceActions.failRequest(error.message));
+    }
+};
+/**
+ *
+ *
+ * Update space data on the server
+ *
+ *
+ */
+exports.updateSpace = (spaceID, requestUnit, spaceUpdate) => async (dispatch) => {
+    dispatch(currentSpaceActions.startRequest(requestUnit));
+    try {
+        const { data } = await osdb_axios_1.default.patch(`/organizer/space/${spaceID}`, space_1.encodeSpaceUpdate(spaceUpdate));
+        dispatch(currentSpaceActions.finishRequest(space_1.rawSpaces2SpaceList(spaceID, data)));
     }
     catch (error) {
         dispatch(currentSpaceActions.failRequest(error.message));
@@ -78775,7 +78877,7 @@ exports.requestSpaceList = (spaceIDs) => async (dispatch) => {
         })));
         const spaceList = responses.map(({ spaceID, response, }) => ({
             id: spaceID,
-            spaceNames: response.data[spaceID].space_names,
+            spaceNames: response.data.space_names,
         }));
         dispatch(spaceListActions.finishRequest(spaceList));
         // Set initial space

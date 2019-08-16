@@ -26,10 +26,3 @@ export interface DataStatus {
     status: 'ready' | 'processing' | 'failed';
     message?: string;
 }
-
-/**
- * Space data set possible status
- */
-export interface SpaceDataStatus extends DataStatus {
-    processingUnit?: 'all' | 'description';
-}

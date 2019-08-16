@@ -24,7 +24,10 @@ export default function Reducer(
         case redux_types.START_REQUEST:
             return {
                 ...state,
-                dataStatus: { status: 'processing' },
+                dataStatus: {
+                    status: 'processing',
+                    requestUnit: action.requestUnit,
+                },
             };
 
         case redux_types.FINISH_REQUEST:

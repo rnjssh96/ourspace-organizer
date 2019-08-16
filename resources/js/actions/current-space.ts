@@ -2,7 +2,7 @@ import { ActionCreator } from 'redux';
 
 import * as redux_types from '../redux-types/current-space';
 
-import Space, { SpaceImage } from '../model/space';
+import Space, { SpaceImage, SpaceRequestUnit } from '../model/space';
 
 /**
  * Action Creators
@@ -13,10 +13,11 @@ import Space, { SpaceImage } from '../model/space';
 // Data
 //
 //
-export const startRequest: ActionCreator<
-    redux_types.StartRequestAction
-> = () => ({
+export const startRequest: ActionCreator<redux_types.StartRequestAction> = (
+    requestUnit: SpaceRequestUnit,
+) => ({
     type: redux_types.START_REQUEST,
+    requestUnit,
 });
 
 export const finishRequest: ActionCreator<redux_types.FinishRequestAction> = (

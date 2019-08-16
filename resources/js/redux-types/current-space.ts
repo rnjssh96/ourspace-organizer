@@ -1,7 +1,11 @@
 import { Action } from 'redux';
 
-import Space, { SpaceImage } from '../model/space';
-import { DataStatus, SpaceDataStatus } from '../model/system';
+import Space, {
+    SpaceImage,
+    SpaceDataStatus,
+    SpaceRequestUnit,
+} from '../model/space';
+import { DataStatus } from '../model/system';
 
 /**
  * State
@@ -51,7 +55,9 @@ export const FAIL_IMAGES_UPDATE = 'current-space/FAIL_IMAGES_UPDATE';
 // Data
 //
 //
-export interface StartRequestAction extends Action<typeof START_REQUEST> {}
+export interface StartRequestAction extends Action<typeof START_REQUEST> {
+    requestUnit: SpaceRequestUnit;
+}
 
 export interface FinishRequestAction extends Action<typeof FINISH_REQUEST> {
     space: Space;

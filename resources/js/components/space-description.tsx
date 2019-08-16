@@ -93,7 +93,7 @@ class _SpaceDescription extends React.Component<SpaceDescriptionProps> {
     render() {
         if (
             this.props.dataStatus.status === 'processing' &&
-            this.props.dataStatus.processingUnit == 'description'
+            this.props.dataStatus.requestUnit == 'description'
         ) {
             return (
                 <div id="space-description" className="category">
@@ -134,7 +134,7 @@ class _SpaceDescription extends React.Component<SpaceDescriptionProps> {
 import { connect } from 'react-redux';
 import RootState from '../redux-types';
 
-import { SpaceDataStatus } from '../model/system';
+import { SpaceDataStatus } from '../model/space';
 
 interface _ReduxProps {
     /**

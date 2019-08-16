@@ -4,7 +4,15 @@ import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import OSDBAxios from '../config/osdb-axios';
 import OSFirebase from '../config/firebase';
 
-import { RawSpace, rawSpaces2SpaceList, SpaceID } from '../model/space';
+import {
+    RawSpace,
+    rawSpaces2SpaceList,
+    SpaceID,
+    SpaceUpdate,
+    encodeSpaceUpdate,
+    SpaceRequestUnit,
+    RawSpaceWithID,
+} from '../model/space';
 
 import * as currentSpaceActions from '../actions/current-space';
 import { pushIntoSpaceHistory } from '../actions/space-history';
@@ -18,15 +26,15 @@ import { pushIntoSpaceHistory } from '../actions/space-history';
  */
 export const requestSpace: ActionCreator<
     ThunkAction<void, any, null, Action<any>>
-> = (spaceID: string, pushHistory: boolean = false) => async (
+> = (spaceID: SpaceID, pushHistory: boolean = false) => async (
     dispatch: ThunkDispatch<any, null, Action<any>>,
 ) => {
-    dispatch(currentSpaceActions.startRequest());
+    dispatch(currentSpaceActions.startRequest('all'));
     try {
-        const { data } = await OSDBAxios.get<RawSpace>(
+        const { data } = await OSDBAxios.get<RawSpaceWithID>(
             `/organizer/space/single/${spaceID}`,
         );
-        const space = rawSpaces2SpaceList(spaceID, data);
+        const space = rawSpaces2SpaceList(spaceID, data[spaceID]);
         dispatch(currentSpaceActions.finishRequest(space));
         if (pushHistory) {
             dispatch(
@@ -36,6 +44,36 @@ export const requestSpace: ActionCreator<
                 }),
             );
         }
+    } catch (error) {
+        dispatch(currentSpaceActions.failRequest(error.message));
+    }
+};
+
+/**
+ *
+ *
+ * Update space data on the server
+ *
+ *
+ */
+export const updateSpace: ActionCreator<
+    ThunkAction<void, any, null, Action<any>>
+> = (
+    spaceID: SpaceID,
+    requestUnit: SpaceRequestUnit,
+    spaceUpdate: SpaceUpdate,
+) => async (dispatch: ThunkDispatch<any, null, Action<any>>) => {
+    dispatch(currentSpaceActions.startRequest(requestUnit));
+    try {
+        const { data } = await OSDBAxios.patch<RawSpace>(
+            `/organizer/space/${spaceID}`,
+            encodeSpaceUpdate(spaceUpdate),
+        );
+        dispatch(
+            currentSpaceActions.finishRequest(
+                rawSpaces2SpaceList(spaceID, data),
+            ),
+        );
     } catch (error) {
         dispatch(currentSpaceActions.failRequest(error.message));
     }

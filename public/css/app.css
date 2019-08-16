@@ -10970,13 +10970,27 @@ button {
 #general-info > #space-name-row > #space-name {
   display: flex;
   flex-direction: row;
-  align-items: flex-end;
+  align-items: center;
 }
 
 #general-info > #space-name-row > #space-name > #type {
   color: #6f6f6f;
   margin-left: 0.5rem;
   margin-right: 1rem;
+}
+
+#general-info .modal-body {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+#general-info .modal-body > .input-group,
+#general-info .modal-body > .form-group {
+  margin-top: 0.5rem;
+}
+
+#general-info .modal-body > p:not(:first-child) {
+  margin-top: 1rem;
 }
 
 #images-editor {
