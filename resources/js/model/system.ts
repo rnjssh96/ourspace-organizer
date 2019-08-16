@@ -20,9 +20,16 @@ export interface SignupStatus {
 }
 
 /**
- * API request possible status
+ * Data set possible status
  */
-export interface RequestStatus {
-    status: 'ready' | 'requesting' | 'succeed' | 'failed';
+export interface DataStatus {
+    status: 'ready' | 'processing' | 'failed';
     message?: string;
+}
+
+/**
+ * Space data set possible status
+ */
+export interface SpaceDataStatus extends DataStatus {
+    processingUnit?: 'all' | 'description';
 }

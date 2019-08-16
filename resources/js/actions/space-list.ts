@@ -13,10 +13,10 @@ export const startRequest: ActionCreator<
     type: redux_types.START_REQUEST,
 });
 
-export const receiveRequest: ActionCreator<redux_types.ReceiveRequestAction> = (
+export const finishRequest: ActionCreator<redux_types.FinishRequestAction> = (
     data: SpaceHeader[],
 ) => ({
-    type: redux_types.RECEIVE_REQUEST,
+    type: redux_types.FINISH_REQUEST,
     data,
 });
 

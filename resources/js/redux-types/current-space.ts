@@ -1,16 +1,15 @@
 import { Action } from 'redux';
 
 import Space, { SpaceImage } from '../model/space';
-import { RequestStatus } from '../model/system';
+import { DataStatus, SpaceDataStatus } from '../model/system';
 
 /**
  * State
  */
 export interface State {
     data?: Space;
-    requestingStatus: RequestStatus;
-    updatingSDStatus: RequestStatus;
-    updatingImagesStatus: RequestStatus;
+    dataStatus: SpaceDataStatus;
+    imagesStatus: DataStatus;
 }
 
 /**
@@ -25,7 +24,7 @@ export interface State {
 // prettier-ignore
 export const START_REQUEST = 'current-space/START_REQUEST';
 // prettier-ignore
-export const RECEIVE_REQUEST = 'current-space/RECEIVE_REQUEST';
+export const FINISH_REQUEST = 'current-space/FINISH_REQUEST';
 // prettier-ignore
 export const FAIL_REQUEST = 'current-space/FAIL_REQUEST';
 // prettier-ignore
@@ -33,27 +32,15 @@ export const RESET_DATA = 'current-space/RESET_DATA';
 
 //
 //
-// Space description
-//
-//
-// prettier-ignore
-export const START_UPDATE_SD = 'current-space/START_UPDATE_SD';
-// prettier-ignore
-export const SUCCEED_UPDATE_SD = 'current-space/SUCCEED_UPDATE_SD';
-// prettier-ignore
-export const FAIL_UPDATE_SD = 'current-space/FAIL_UPDATE_SD';
-
-//
-//
 // Images
 //
 //
 // prettier-ignore
-export const START_UPDATE_IMAGES = 'current-space/START_UPDATE_IMAGES';
+export const START_IMAGES_UPDATE = 'current-space/START_IMAGES_UPDATE';
 // prettier-ignore
-export const SUCCEED_UPDATE_IMAGES = 'current-space/SUCCEED_UPDATE_IMAGES';
+export const FINISH_IMAGES_UPDATE = 'current-space/FINISH_IMAGES_UPDATE';
 // prettier-ignore
-export const FAIL_UPDATE_IMAGES = 'current-space/FAIL_UPDATE_IMAGES';
+export const FAIL_IMAGES_UPDATE = 'current-space/FAIL_IMAGES_UPDATE';
 
 /**
  * Action Interfaces
@@ -66,7 +53,7 @@ export const FAIL_UPDATE_IMAGES = 'current-space/FAIL_UPDATE_IMAGES';
 //
 export interface StartRequestAction extends Action<typeof START_REQUEST> {}
 
-export interface ReceiveRequestAction extends Action<typeof RECEIVE_REQUEST> {
+export interface FinishRequestAction extends Action<typeof FINISH_REQUEST> {
     space: Space;
 }
 
@@ -78,35 +65,19 @@ export interface ResetDataAction extends Action<typeof RESET_DATA> {}
 
 //
 //
-// Space description
-//
-//
-export interface StartUpdateSDAction extends Action<typeof START_UPDATE_SD> {}
-
-export interface SucceedUpdateSDAction
-    extends Action<typeof SUCCEED_UPDATE_SD> {
-    spaceDescription: string;
-}
-
-export interface FailUpdateSDAction extends Action<typeof FAIL_UPDATE_SD> {
-    message: string;
-}
-
-//
-//
 // Images
 //
 //
-export interface StartUpdateImagesAction
-    extends Action<typeof START_UPDATE_IMAGES> {}
+export interface StartImagesUpdateAction
+    extends Action<typeof START_IMAGES_UPDATE> {}
 
-export interface SucceedUpdateImagesAction
-    extends Action<typeof SUCCEED_UPDATE_IMAGES> {
+export interface FinishImagesUpdateAction
+    extends Action<typeof FINISH_IMAGES_UPDATE> {
     images: SpaceImage[];
 }
 
-export interface FailUpdateImagesAction
-    extends Action<typeof FAIL_UPDATE_IMAGES> {
+export interface FailImagesUpdateAction
+    extends Action<typeof FAIL_IMAGES_UPDATE> {
     message: string;
 }
 
@@ -120,22 +91,14 @@ export type Actions =
     //
     //
     | StartRequestAction
-    | ReceiveRequestAction
+    | FinishRequestAction
     | FailRequestAction
     | ResetDataAction
-    //
-    //
-    // Space introduce
-    //
-    //
-    | StartUpdateSDAction
-    | SucceedUpdateSDAction
-    | FailUpdateSDAction
     //
     //
     // Images
     //
     //
-    | StartUpdateImagesAction
-    | SucceedUpdateImagesAction
-    | FailUpdateImagesAction;
+    | StartImagesUpdateAction
+    | FinishImagesUpdateAction
+    | FailImagesUpdateAction;

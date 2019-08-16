@@ -27,7 +27,7 @@ export const requestSpace: ActionCreator<
             `/organizer/space/single/${spaceID}`,
         );
         const space = rawSpaces2SpaceList(spaceID, data);
-        dispatch(currentSpaceActions.receiveRequest(space));
+        dispatch(currentSpaceActions.finishRequest(space));
         if (pushHistory) {
             dispatch(
                 pushIntoSpaceHistory({
@@ -38,40 +38,6 @@ export const requestSpace: ActionCreator<
         }
     } catch (error) {
         dispatch(currentSpaceActions.failRequest(error.message));
-    }
-};
-
-/**
- *
- *
- * Update space description of the space on server
- *
- *
- */
-export const updateSpaceDescription: ActionCreator<
-    ThunkAction<void, any, null, Action<any>>
-> = (spaceID: string, spaceDescription: string) => async (
-    dispatch: ThunkDispatch<any, null, Action<any>>,
-) => {
-    dispatch(currentSpaceActions.startUpdateSD());
-    try {
-        const { data } = await OSDBAxios.post<{ updated_space_id: SpaceID }>(
-            `/ospace/${spaceID}`,
-            {
-                captions: {
-                    description: spaceDescription,
-                },
-            },
-        );
-        if (data.updated_space_id === spaceID) {
-            dispatch(currentSpaceActions.succeedUpdateSD(spaceDescription));
-        } else {
-            dispatch(
-                currentSpaceActions.failUpdateSD('업데이트에 실패했습니다.'),
-            );
-        }
-    } catch (error) {
-        dispatch(currentSpaceActions.failUpdateSD(error.message));
     }
 };
 
@@ -125,15 +91,15 @@ export const updateImages: ActionCreator<
             },
         );
         if (data.updated_space_id === spaceID) {
-            dispatch(currentSpaceActions.succeedUpdateImages(spaceImages));
+            dispatch(currentSpaceActions.finishImagesUpdate(spaceImages));
         } else {
             dispatch(
-                currentSpaceActions.failUpdateImages(
+                currentSpaceActions.failImagesUpdate(
                     '업데이트에 실패했습니다.',
                 ),
             );
         }
     } catch (error) {
-        dispatch(currentSpaceActions.failUpdateImages(error.message));
+        dispatch(currentSpaceActions.failImagesUpdate(error.message));
     }
 };

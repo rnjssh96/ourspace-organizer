@@ -1,6 +1,6 @@
 import { Action } from 'redux';
 
-import { RequestStatus } from '../model/system';
+import { DataStatus } from '../model/system';
 import { SpaceHeader } from '../model/space-header';
 
 /**
@@ -8,7 +8,7 @@ import { SpaceHeader } from '../model/space-header';
  */
 export interface State {
     data?: SpaceHeader[];
-    requestingStatus: RequestStatus;
+    dataStatus: DataStatus;
 }
 
 /**
@@ -17,7 +17,7 @@ export interface State {
 // prettier-ignore
 export const START_REQUEST = 'space-list/START_REQUEST';
 // prettier-ignore
-export const RECEIVE_REQUEST = 'space-list/RECEIVE_REQUEST';
+export const FINISH_REQUEST = 'space-list/FINISH_REQUEST';
 // prettier-ignore
 export const FAIL_REQUEST = 'space-list/FAIL_REQUEST';
 // prettier-ignore
@@ -28,7 +28,7 @@ export const RESET_DATA = 'space-list/RESET_DATA';
  */
 export interface StartRequestAction extends Action<typeof START_REQUEST> {}
 
-export interface ReceiveRequestAction extends Action<typeof RECEIVE_REQUEST> {
+export interface FinishRequestAction extends Action<typeof FINISH_REQUEST> {
     data: SpaceHeader[];
 }
 
@@ -43,6 +43,6 @@ export interface ResetDataAction extends Action<typeof RESET_DATA> {}
  */
 export type Actions =
     | StartRequestAction
-    | ReceiveRequestAction
+    | FinishRequestAction
     | FailRequestAction
     | ResetDataAction;

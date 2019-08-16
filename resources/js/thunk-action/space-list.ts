@@ -52,7 +52,7 @@ export const requestSpaceList: ActionCreator<
                 spaceNames: response.data[spaceID].space_names,
             }),
         );
-        dispatch(spaceListActions.receiveRequest(spaceList));
+        dispatch(spaceListActions.finishRequest(spaceList));
 
         // Set initial space
         if (spaceList.length > 0) {
@@ -83,7 +83,7 @@ export const requestWholeSpaceList: ActionCreator<
         const spaceList: SpaceHeader[] = rawSpaceHeaderMap2SpaceHeaderList(
             data,
         );
-        dispatch(spaceListActions.receiveRequest(spaceList));
+        dispatch(spaceListActions.finishRequest(spaceList));
     } catch (error) {
         dispatch(spaceListActions.failRequest(error.message));
     }

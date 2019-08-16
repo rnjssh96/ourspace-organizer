@@ -27,7 +27,7 @@ class _ImagesEditor extends React.Component<ImagesEditorProps> {
     };
 
     private _renderImages() {
-        if (this.props.updatingImagesStatus.status === 'requesting') {
+        if (this.props.imagesStatus.status === 'processing') {
             return <OSPageStatus status="loading" />;
         } else if (!this.props.images || this.props.images.length === 0) {
             return (
@@ -84,7 +84,7 @@ import { connect } from 'react-redux';
 import RootState from '../../redux-types';
 
 import { SpaceImage } from '../../model/space';
-import { RequestStatus } from '../../model/system';
+import { DataStatus } from '../../model/system';
 
 import { resetUploadImages } from '../../actions/upload-images';
 
@@ -95,9 +95,9 @@ interface _ReduxProps {
     images?: SpaceImage[];
 
     /**
-     * Updating image status
+     * images data status
      */
-    updatingImagesStatus: RequestStatus;
+    imagesStatus: DataStatus;
 }
 
 interface _ReduxActionCreators {
@@ -109,7 +109,7 @@ interface _ReduxActionCreators {
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
     images: state.currentSpace.data && state.currentSpace.data.images,
-    updatingImagesStatus: state.currentSpace.updatingImagesStatus,
+    imagesStatus: state.currentSpace.imagesStatus,
 });
 
 const mapDispatchToProps = {

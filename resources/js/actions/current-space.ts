@@ -19,10 +19,10 @@ export const startRequest: ActionCreator<
     type: redux_types.START_REQUEST,
 });
 
-export const receiveRequest: ActionCreator<redux_types.ReceiveRequestAction> = (
+export const finishRequest: ActionCreator<redux_types.FinishRequestAction> = (
     space: Space,
 ) => ({
-    type: redux_types.RECEIVE_REQUEST,
+    type: redux_types.FINISH_REQUEST,
     space,
 });
 
@@ -39,50 +39,25 @@ export const resetData: ActionCreator<redux_types.ResetDataAction> = () => ({
 
 //
 //
-// Space description
-//
-//
-export const startUpdateSD: ActionCreator<
-    redux_types.StartUpdateSDAction
-> = () => ({
-    type: redux_types.START_UPDATE_SD,
-});
-
-export const succeedUpdateSD: ActionCreator<
-    redux_types.SucceedUpdateSDAction
-> = (spaceDescription: string) => ({
-    type: redux_types.SUCCEED_UPDATE_SD,
-    spaceDescription,
-});
-
-export const failUpdateSD: ActionCreator<redux_types.FailUpdateSDAction> = (
-    message: string,
-) => ({
-    type: redux_types.FAIL_UPDATE_SD,
-    message,
-});
-
-//
-//
 // Images
 //
 //
 export const startUpdateImages: ActionCreator<
-    redux_types.StartUpdateImagesAction
+    redux_types.StartImagesUpdateAction
 > = () => ({
-    type: redux_types.START_UPDATE_IMAGES,
+    type: redux_types.START_IMAGES_UPDATE,
 });
 
-export const succeedUpdateImages: ActionCreator<
-    redux_types.SucceedUpdateImagesAction
+export const finishImagesUpdate: ActionCreator<
+    redux_types.FinishImagesUpdateAction
 > = (images: SpaceImage[]) => ({
-    type: redux_types.SUCCEED_UPDATE_IMAGES,
+    type: redux_types.FINISH_IMAGES_UPDATE,
     images,
 });
 
-export const failUpdateImages: ActionCreator<
-    redux_types.FailUpdateImagesAction
+export const failImagesUpdate: ActionCreator<
+    redux_types.FailImagesUpdateAction
 > = (message: string) => ({
-    type: redux_types.FAIL_UPDATE_IMAGES,
+    type: redux_types.FAIL_IMAGES_UPDATE,
     message,
 });

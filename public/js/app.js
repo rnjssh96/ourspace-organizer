@@ -76156,8 +76156,8 @@ const redux_types = __importStar(__webpack_require__(/*! ../redux-types/current-
 exports.startRequest = () => ({
     type: redux_types.START_REQUEST,
 });
-exports.receiveRequest = (space) => ({
-    type: redux_types.RECEIVE_REQUEST,
+exports.finishRequest = (space) => ({
+    type: redux_types.FINISH_REQUEST,
     space,
 });
 exports.failRequest = (message) => ({
@@ -76169,34 +76169,18 @@ exports.resetData = () => ({
 });
 //
 //
-// Space description
-//
-//
-exports.startUpdateSD = () => ({
-    type: redux_types.START_UPDATE_SD,
-});
-exports.succeedUpdateSD = (spaceDescription) => ({
-    type: redux_types.SUCCEED_UPDATE_SD,
-    spaceDescription,
-});
-exports.failUpdateSD = (message) => ({
-    type: redux_types.FAIL_UPDATE_SD,
-    message,
-});
-//
-//
 // Images
 //
 //
 exports.startUpdateImages = () => ({
-    type: redux_types.START_UPDATE_IMAGES,
+    type: redux_types.START_IMAGES_UPDATE,
 });
-exports.succeedUpdateImages = (images) => ({
-    type: redux_types.SUCCEED_UPDATE_IMAGES,
+exports.finishImagesUpdate = (images) => ({
+    type: redux_types.FINISH_IMAGES_UPDATE,
     images,
 });
-exports.failUpdateImages = (message) => ({
-    type: redux_types.FAIL_UPDATE_IMAGES,
+exports.failImagesUpdate = (message) => ({
+    type: redux_types.FAIL_IMAGES_UPDATE,
     message,
 });
 
@@ -76259,8 +76243,8 @@ const redux_types = __importStar(__webpack_require__(/*! ../redux-types/space-li
 exports.startRequest = () => ({
     type: redux_types.START_REQUEST,
 });
-exports.receiveRequest = (data) => ({
-    type: redux_types.RECEIVE_REQUEST,
+exports.finishRequest = (data) => ({
+    type: redux_types.FINISH_REQUEST,
     data,
 });
 exports.failRequest = (message) => ({
@@ -76710,7 +76694,7 @@ class _ImagesEditor extends react_1.default.Component {
         };
     }
     _renderImages() {
-        if (this.props.updatingImagesStatus.status === 'requesting') {
+        if (this.props.imagesStatus.status === 'processing') {
             return react_1.default.createElement(os_page_status_1.default, { status: "loading" });
         }
         else if (!this.props.images || this.props.images.length === 0) {
@@ -76749,7 +76733,7 @@ const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/rea
 const upload_images_1 = __webpack_require__(/*! ../../actions/upload-images */ "./resources/js/actions/upload-images.ts");
 const mapStateToProps = (state) => ({
     images: state.currentSpace.data && state.currentSpace.data.images,
-    updatingImagesStatus: state.currentSpace.updatingImagesStatus,
+    imagesStatus: state.currentSpace.imagesStatus,
 });
 const mapDispatchToProps = {
     resetUploadImages: upload_images_1.resetUploadImages,
@@ -77115,7 +77099,10 @@ class _SpaceDescription extends react_1.default.Component {
         };
         this._save = () => {
             if (this.props.currentSpaceID) {
-                this.props.updateSpaceDescription(this.props.currentSpaceID, this.state.textValue);
+                // this.props.updateSpaceDescription(
+                //     this.props.currentSpaceID,
+                //     this.state.textValue,
+                // );
                 this._swtichMode('display');
             }
         };
@@ -77131,7 +77118,8 @@ class _SpaceDescription extends react_1.default.Component {
                     } }, "\uC800\uC7A5"))));
     }
     render() {
-        if (this.props.updatingSDStatus.status === 'requesting') {
+        if (this.props.dataStatus.status === 'processing' &&
+            this.props.dataStatus.processingUnit == 'description') {
             return (react_1.default.createElement("div", { id: "space-description", className: "category" },
                 react_1.default.createElement(os_page_status_1.default, { status: "loading" })));
         }
@@ -77156,15 +77144,12 @@ class _SpaceDescription extends react_1.default.Component {
  *
  */
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-const current_space_1 = __webpack_require__(/*! ../thunk-action/current-space */ "./resources/js/thunk-action/current-space.ts");
 const mapStateToProps = (state) => ({
     currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
     spaceDescription: state.currentSpace.data && state.currentSpace.data.spaceDescription,
-    updatingSDStatus: state.currentSpace.updatingSDStatus,
+    dataStatus: state.currentSpace.dataStatus,
 });
-const mapDispatchToProps = {
-    updateSpaceDescription: current_space_1.updateSpaceDescription,
-};
+const mapDispatchToProps = {};
 const SpaceDescription = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_SpaceDescription);
 exports.default = SpaceDescription;
 
@@ -77927,9 +77912,8 @@ const redux_types = __importStar(__webpack_require__(/*! ../redux-types/current-
  * Initial State
  */
 const initialState = {
-    requestingStatus: { status: 'ready' },
-    updatingSDStatus: { status: 'ready' },
-    updatingImagesStatus: { status: 'ready' },
+    dataStatus: { status: 'ready' },
+    imagesStatus: { status: 'ready' },
 };
 /**
  * Reducer
@@ -77944,59 +77928,32 @@ function Reducer(state = initialState, action) {
         case redux_types.START_REQUEST:
             return {
                 ...state,
-                requestingStatus: { status: 'requesting' },
+                dataStatus: { status: 'processing' },
             };
-        case redux_types.RECEIVE_REQUEST:
+        case redux_types.FINISH_REQUEST:
             return {
                 ...state,
                 data: action.space,
-                requestingStatus: { status: 'succeed' },
+                dataStatus: { status: 'ready' },
             };
         case redux_types.FAIL_REQUEST:
             return {
                 ...state,
-                requestingStatus: { status: 'failed', message: action.message },
+                dataStatus: { status: 'failed', message: action.message },
             };
         case redux_types.RESET_DATA:
             return initialState;
         //
         //
-        // Space description
-        //
-        //
-        case redux_types.START_UPDATE_SD:
-            return {
-                ...state,
-                updatingSDStatus: { status: 'requesting' },
-            };
-        case redux_types.SUCCEED_UPDATE_SD:
-            if (state.data)
-                return {
-                    ...state,
-                    data: {
-                        ...state.data,
-                        spaceDescription: action.spaceDescription,
-                    },
-                    updatingSDStatus: { status: 'succeed' },
-                };
-            else
-                return state;
-        case redux_types.FAIL_UPDATE_SD:
-            return {
-                ...state,
-                updatingSDStatus: { status: 'failed', message: action.message },
-            };
-        //
-        //
         // Images
         //
         //
-        case redux_types.START_UPDATE_IMAGES:
+        case redux_types.START_IMAGES_UPDATE:
             return {
                 ...state,
-                updatingImagesStatus: { status: 'requesting' },
+                imagesStatus: { status: 'processing' },
             };
-        case redux_types.SUCCEED_UPDATE_IMAGES:
+        case redux_types.FINISH_IMAGES_UPDATE:
             if (state.data)
                 return {
                     ...state,
@@ -78004,14 +77961,14 @@ function Reducer(state = initialState, action) {
                         ...state.data,
                         images: action.images,
                     },
-                    updatingImagesStatus: { status: 'succeed' },
+                    imagesStatus: { status: 'ready' },
                 };
             else
                 return state;
-        case redux_types.FAIL_UPDATE_IMAGES:
+        case redux_types.FAIL_IMAGES_UPDATE:
             return {
                 ...state,
-                updatingImagesStatus: {
+                imagesStatus: {
                     status: 'failed',
                     message: action.message,
                 },
@@ -78150,7 +78107,7 @@ const redux_types = __importStar(__webpack_require__(/*! ../redux-types/space-li
  * Initial State
  */
 const initialState = {
-    requestingStatus: { status: 'ready' },
+    dataStatus: { status: 'ready' },
 };
 /**
  * Reducer
@@ -78160,18 +78117,18 @@ function Reducer(state = initialState, action) {
         case redux_types.START_REQUEST:
             return {
                 ...state,
-                requestingStatus: { status: 'requesting' },
+                dataStatus: { status: 'processing' },
             };
-        case redux_types.RECEIVE_REQUEST:
+        case redux_types.FINISH_REQUEST:
             return {
                 ...state,
                 data: action.data,
-                requestingStatus: { status: 'succeed' },
+                dataStatus: { status: 'ready' },
             };
         case redux_types.FAIL_REQUEST:
             return {
                 ...state,
-                requestingStatus: {
+                dataStatus: {
                     status: 'failed',
                     message: action.message,
                 },
@@ -78366,33 +78323,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // prettier-ignore
 exports.START_REQUEST = 'current-space/START_REQUEST';
 // prettier-ignore
-exports.RECEIVE_REQUEST = 'current-space/RECEIVE_REQUEST';
+exports.FINISH_REQUEST = 'current-space/FINISH_REQUEST';
 // prettier-ignore
 exports.FAIL_REQUEST = 'current-space/FAIL_REQUEST';
 // prettier-ignore
 exports.RESET_DATA = 'current-space/RESET_DATA';
 //
 //
-// Space description
-//
-//
-// prettier-ignore
-exports.START_UPDATE_SD = 'current-space/START_UPDATE_SD';
-// prettier-ignore
-exports.SUCCEED_UPDATE_SD = 'current-space/SUCCEED_UPDATE_SD';
-// prettier-ignore
-exports.FAIL_UPDATE_SD = 'current-space/FAIL_UPDATE_SD';
-//
-//
 // Images
 //
 //
 // prettier-ignore
-exports.START_UPDATE_IMAGES = 'current-space/START_UPDATE_IMAGES';
+exports.START_IMAGES_UPDATE = 'current-space/START_IMAGES_UPDATE';
 // prettier-ignore
-exports.SUCCEED_UPDATE_IMAGES = 'current-space/SUCCEED_UPDATE_IMAGES';
+exports.FINISH_IMAGES_UPDATE = 'current-space/FINISH_IMAGES_UPDATE';
 // prettier-ignore
-exports.FAIL_UPDATE_IMAGES = 'current-space/FAIL_UPDATE_IMAGES';
+exports.FAIL_IMAGES_UPDATE = 'current-space/FAIL_IMAGES_UPDATE';
 
 
 /***/ }),
@@ -78434,7 +78380,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // prettier-ignore
 exports.START_REQUEST = 'space-list/START_REQUEST';
 // prettier-ignore
-exports.RECEIVE_REQUEST = 'space-list/RECEIVE_REQUEST';
+exports.FINISH_REQUEST = 'space-list/FINISH_REQUEST';
 // prettier-ignore
 exports.FAIL_REQUEST = 'space-list/FAIL_REQUEST';
 // prettier-ignore
@@ -78740,7 +78686,7 @@ exports.requestSpace = (spaceID, pushHistory = false) => async (dispatch) => {
     try {
         const { data } = await osdb_axios_1.default.get(`/organizer/space/single/${spaceID}`);
         const space = space_1.rawSpaces2SpaceList(spaceID, data);
-        dispatch(currentSpaceActions.receiveRequest(space));
+        dispatch(currentSpaceActions.finishRequest(space));
         if (pushHistory) {
             dispatch(space_history_1.pushIntoSpaceHistory({
                 id: spaceID,
@@ -78750,32 +78696,6 @@ exports.requestSpace = (spaceID, pushHistory = false) => async (dispatch) => {
     }
     catch (error) {
         dispatch(currentSpaceActions.failRequest(error.message));
-    }
-};
-/**
- *
- *
- * Update space description of the space on server
- *
- *
- */
-exports.updateSpaceDescription = (spaceID, spaceDescription) => async (dispatch) => {
-    dispatch(currentSpaceActions.startUpdateSD());
-    try {
-        const { data } = await osdb_axios_1.default.post(`/ospace/${spaceID}`, {
-            captions: {
-                description: spaceDescription,
-            },
-        });
-        if (data.updated_space_id === spaceID) {
-            dispatch(currentSpaceActions.succeedUpdateSD(spaceDescription));
-        }
-        else {
-            dispatch(currentSpaceActions.failUpdateSD('업데이트에 실패했습니다.'));
-        }
-    }
-    catch (error) {
-        dispatch(currentSpaceActions.failUpdateSD(error.message));
     }
 };
 exports.updateImages = (spaceID, spaceImages, uploadings) => async (dispatch) => {
@@ -78801,14 +78721,14 @@ exports.updateImages = (spaceID, spaceImages, uploadings) => async (dispatch) =>
             images: spaceImages,
         });
         if (data.updated_space_id === spaceID) {
-            dispatch(currentSpaceActions.succeedUpdateImages(spaceImages));
+            dispatch(currentSpaceActions.finishImagesUpdate(spaceImages));
         }
         else {
-            dispatch(currentSpaceActions.failUpdateImages('업데이트에 실패했습니다.'));
+            dispatch(currentSpaceActions.failImagesUpdate('업데이트에 실패했습니다.'));
         }
     }
     catch (error) {
-        dispatch(currentSpaceActions.failUpdateImages(error.message));
+        dispatch(currentSpaceActions.failImagesUpdate(error.message));
     }
 };
 
@@ -78857,7 +78777,7 @@ exports.requestSpaceList = (spaceIDs) => async (dispatch) => {
             id: spaceID,
             spaceNames: response.data[spaceID].space_names,
         }));
-        dispatch(spaceListActions.receiveRequest(spaceList));
+        dispatch(spaceListActions.finishRequest(spaceList));
         // Set initial space
         if (spaceList.length > 0) {
             dispatch(current_space_1.requestSpace(spaceList[0].id));
@@ -78879,7 +78799,7 @@ exports.requestWholeSpaceList = () => async (dispatch) => {
     try {
         const { data } = await osdb_axios_1.default.get(`organizer/space/all`);
         const spaceList = space_header_1.rawSpaceHeaderMap2SpaceHeaderList(data);
-        dispatch(spaceListActions.receiveRequest(spaceList));
+        dispatch(spaceListActions.finishRequest(spaceList));
     }
     catch (error) {
         dispatch(spaceListActions.failRequest(error.message));
