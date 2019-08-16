@@ -23,8 +23,8 @@ import OSEditButton from './os-edit-button';
 class _LoactionMap extends React.Component<LoactionMapProps> {
     private _renderAddress = () => (
         <p className="h5" id="address-text">
-            {this.props.locationText
-                ? this.props.locationText
+            {this.props.spaceAddress
+                ? this.props.spaceAddress
                 : '등록된 주소가 없습니다.'}
         </p>
     );
@@ -85,15 +85,15 @@ interface _ReduxProps {
     location?: LatLng;
 
     /**
-     * Location address
+     * Space address
      */
-    locationText?: string;
+    spaceAddress?: string;
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
     location: state.currentSpace.data && state.currentSpace.data.location,
-    locationText:
-        state.currentSpace.data && state.currentSpace.data.locationText,
+    spaceAddress:
+        state.currentSpace.data && state.currentSpace.data.spaceAddress,
 });
 
 const mapDispatchToProps = {};

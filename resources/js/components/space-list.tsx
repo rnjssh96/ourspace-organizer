@@ -49,7 +49,7 @@ class _SpaceList extends React.Component<SpaceListProps> {
                                 }
                             }}
                         >
-                            <p className="h4">{spaceHeader.names['ko']}</p>
+                            <p className="h4">{spaceHeader.spaceNames['ko']}</p>
                         </a>
                     ))}
                 </div>

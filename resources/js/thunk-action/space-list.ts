@@ -5,7 +5,11 @@ import { AxiosResponse } from 'axios';
 import OSDBAxios from '../config/osdb-axios';
 
 import { SpaceID, RawSpace } from '../model/space';
-import { SpaceHeader } from '../model/space-header';
+import {
+    SpaceHeader,
+    RawSpaceHeaderMap,
+    rawSpaceHeaderMap2SpaceHeaderList,
+} from '../model/space-header';
 
 import * as spaceListActions from '../actions/space-list';
 import * as spaceSearchActions from '../actions/space-search';
@@ -21,31 +25,31 @@ import { requestSpace } from './current-space';
  */
 export const requestSpaceList: ActionCreator<
     ThunkAction<void, any, null, Action<any>>
-> = (sids: SpaceID[]) => async (
+> = (spaceIDs: SpaceID[]) => async (
     dispatch: ThunkDispatch<any, null, Action<any>>,
 ) => {
     dispatch(spaceListActions.startRequest());
 
     try {
         const responses = await Promise.all(
-            sids.map((sid: string) =>
-                OSDBAxios.get<RawSpace>(`/ospace/${sid}`).then(
+            spaceIDs.map((id: string) =>
+                OSDBAxios.get<RawSpace>(`/ospace/${id}`).then(
                     (response: AxiosResponse<RawSpace>) => {
-                        return { sid: sid, response: response };
+                        return { spaceID: id, response: response };
                     },
                 ),
             ),
         );
         const spaceList: SpaceHeader[] = responses.map(
             ({
-                sid,
+                spaceID,
                 response,
             }: {
-                sid: string;
+                spaceID: string;
                 response: AxiosResponse<RawSpace>;
             }): SpaceHeader => ({
-                id: sid,
-                names: response.data.space_names,
+                id: spaceID,
+                spaceNames: response.data[spaceID].space_names,
             }),
         );
         dispatch(spaceListActions.receiveRequest(spaceList));
@@ -72,29 +76,13 @@ export const requestWholeSpaceList: ActionCreator<
     dispatch(spaceListActions.startRequest());
 
     try {
-        const spaceList: SpaceHeader[] = [
-            {
-                id: '1',
-                names: {
-                    en: '',
-                    ko: '폴바셋 교보문고점',
-                },
-            },
-            {
-                id: '12',
-                names: {
-                    en: '',
-                    ko: '아나바다 교보본점',
-                },
-            },
-            {
-                id: '13',
-                names: {
-                    en: '',
-                    ko: '알라딘문고 잠실점',
-                },
-            },
-        ];
+        const { data } = await OSDBAxios.get<RawSpaceHeaderMap>(
+            `organizer/space/all`,
+        );
+
+        const spaceList: SpaceHeader[] = rawSpaceHeaderMap2SpaceHeaderList(
+            data,
+        );
         dispatch(spaceListActions.receiveRequest(spaceList));
     } catch (error) {
         dispatch(spaceListActions.failRequest(error.message));
@@ -121,7 +109,7 @@ export const searchSpaceList: ActionCreator<
     const regex = new RegExp(query, 'i');
 
     const result = spaceList.filter((space: SpaceHeader) =>
-        regex.test(space.names.ko),
+        regex.test(space.spaceNames.ko),
     );
 
     dispatch(spaceSearchActions.finishSearch(result));

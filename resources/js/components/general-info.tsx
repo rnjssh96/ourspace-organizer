@@ -20,18 +20,12 @@ import { SpaceType, interpretSpaceType } from '../model/space';
 
 import OSEditButton from './os-edit-button';
 import OSRateDisplay from './os-rate-display';
-import OSPageStatus from './os-page-status';
 
 class _GeneralInfo extends React.Component<GeneralInfoProps> {
     private _renderTitle = () => {
-        let typesText: string = '';
-        if (this.props.types)
-            this.props.types.map((type: SpaceType, index: number) => {
-                if (index > 0) {
-                    typesText += ' | ';
-                }
-                typesText += interpretSpaceType(type, 'ko');
-            });
+        const typeText = this.props.type
+            ? interpretSpaceType(this.props.type, 'ko')
+            : '(카테고리)';
 
         return (
             <div id="space-name-row">
@@ -42,7 +36,7 @@ class _GeneralInfo extends React.Component<GeneralInfoProps> {
                             : '(매장이름)'}
                     </p>
                     <p id="type" className="h4">
-                        {typesText !== '' ? typesText : '(카테고리)'}
+                        {typeText}
                     </p>
                     <OSEditButton />
                 </div>
@@ -54,15 +48,7 @@ class _GeneralInfo extends React.Component<GeneralInfoProps> {
     };
 
     render() {
-        if (this.props.updatingGIStatus.status === 'requesting') {
-            return (
-                <div id="general-info">
-                    <OSPageStatus status="loading" />
-                </div>
-            );
-        } else {
-            return <div id="general-info">{this._renderTitle()}</div>;
-        }
+        return <div id="general-info">{this._renderTitle()}</div>;
     }
 }
 
@@ -77,7 +63,6 @@ import { connect } from 'react-redux';
 import RootState from '../redux-types';
 
 import { SpaceNames } from '../model/space';
-import { RequestStatus } from '../model/system';
 
 interface _ReduxProps {
     /**
@@ -88,18 +73,12 @@ interface _ReduxProps {
     /**
      * Types of the space
      */
-    types?: SpaceType[];
-
-    /**
-     * Updating general information status
-     */
-    updatingGIStatus: RequestStatus;
+    type?: SpaceType;
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
     spaceNames: state.currentSpace.data && state.currentSpace.data.spaceNames,
-    types: state.currentSpace.data && state.currentSpace.data.types,
-    updatingGIStatus: state.currentSpace.updatingGIStatus,
+    type: state.currentSpace.data && state.currentSpace.data.spaceType,
 });
 
 const GeneralInfo = connect(mapStateToProps)(_GeneralInfo);

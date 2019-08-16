@@ -76,10 +76,6 @@ class _OperatingHourEditModal extends React.Component<
                 });
                 return temp;
             });
-
-            this.props.updateGeneralInfo(this.props.currentSpaceID, {
-                openingHours: result,
-            });
         }
     };
 
@@ -211,10 +207,6 @@ class _OperatingHourEditModal extends React.Component<
 import { connect } from 'react-redux';
 import RootState from '../../redux-types';
 
-import { SpaceGeneralInfo } from '../../model/space.js';
-
-import { updateGeneralInfo } from '../../thunk-action/current-space';
-
 interface _ReduxProps {
     /**
      * Current space ID
@@ -222,20 +214,13 @@ interface _ReduxProps {
     currentSpaceID?: string;
 }
 
-interface _ReduxActionCreators {
-    /**
-     * Update general information of the space
-     */
-    updateGeneralInfo: (spaceID: string, info: SpaceGeneralInfo) => void;
-}
+interface _ReduxActionCreators {}
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
     currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
 });
 
-const mapDispatchToProps = {
-    updateGeneralInfo,
-};
+const mapDispatchToProps = {};
 
 const OperatingHourEditModal = connect(
     mapStateToProps,

@@ -2,7 +2,7 @@ import { ActionCreator } from 'redux';
 
 import * as redux_types from '../redux-types/current-space';
 
-import Space, { BusyLevel, AmenityTag, SpaceGeneralInfo } from '../model/space';
+import Space, { SpaceImage } from '../model/space';
 
 /**
  * Action Creators
@@ -39,31 +39,6 @@ export const resetData: ActionCreator<redux_types.ResetDataAction> = () => ({
 
 //
 //
-// General information
-//
-//
-export const startUpdateGI: ActionCreator<
-    redux_types.StartUpdateGIAction
-> = () => ({
-    type: redux_types.START_UPDATE_GI,
-});
-
-export const succeedUpdateGI: ActionCreator<
-    redux_types.SucceedUpdateGIAction
-> = (generalInfo: SpaceGeneralInfo) => ({
-    type: redux_types.SUCCEED_UPDATE_GI,
-    generalInfo,
-});
-
-export const failUpdateGI: ActionCreator<redux_types.FailUpdateGIAction> = (
-    message: string,
-) => ({
-    type: redux_types.FAIL_UPDATE_GI,
-    message,
-});
-
-//
-//
 // Space description
 //
 //
@@ -89,31 +64,6 @@ export const failUpdateSD: ActionCreator<redux_types.FailUpdateSDAction> = (
 
 //
 //
-// Amenity tags
-//
-//
-export const startUpdateAT: ActionCreator<
-    redux_types.StartUpdateATAction
-> = () => ({
-    type: redux_types.START_UPDATE_AT,
-});
-
-export const succeedUpdateAT: ActionCreator<
-    redux_types.SucceedUpdateATAction
-> = (amenityTags: AmenityTag[]) => ({
-    type: redux_types.SUCCEED_UPDATE_AT,
-    amenityTags,
-});
-
-export const failUpdateAT: ActionCreator<redux_types.FailUpdateATAction> = (
-    message: string,
-) => ({
-    type: redux_types.FAIL_UPDATE_AT,
-    message,
-});
-
-//
-//
 // Images
 //
 //
@@ -125,7 +75,7 @@ export const startUpdateImages: ActionCreator<
 
 export const succeedUpdateImages: ActionCreator<
     redux_types.SucceedUpdateImagesAction
-> = (images: string[]) => ({
+> = (images: SpaceImage[]) => ({
     type: redux_types.SUCCEED_UPDATE_IMAGES,
     images,
 });
@@ -135,16 +85,4 @@ export const failUpdateImages: ActionCreator<
 > = (message: string) => ({
     type: redux_types.FAIL_UPDATE_IMAGES,
     message,
-});
-
-//
-//
-// Busy level
-//
-//
-export const setBusyLevel: ActionCreator<redux_types.SetBusyLevelAction> = (
-    busyLevel: BusyLevel,
-) => ({
-    type: redux_types.SET_BUSY_LEVEL,
-    busyLevel,
 });

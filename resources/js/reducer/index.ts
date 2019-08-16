@@ -5,7 +5,6 @@ import SpaceListReducer from './space-list';
 import SpaceSearchReducer from './space-search';
 import SpaceHistoryReducer from './space-history';
 import CurrentSpaceReducer from './current-space';
-import SelectedAmenitiesReducer from './selected-amenities';
 import SelectedImagesReducer from './upload-images';
 
 /**
@@ -17,7 +16,6 @@ const RootReducer = combineReducers({
     spaceSearch: SpaceSearchReducer,
     spaceHistory: SpaceHistoryReducer,
     currentSpace: CurrentSpaceReducer,
-    selectedAmenities: SelectedAmenitiesReducer,
     selectedImages: SelectedImagesReducer,
 });
 

@@ -1,9 +1,4 @@
 {
-    "busy_level": {
-        "1": { "en": "Normal", "ko": "보통" },
-        "2": { "en": "Busy", "ko": "바쁨" },
-        "3": { "en": "Very Busy", "ko": "매우 바쁨" }
-    },
     "space_type": {
         "0": { "en": "library", "ko": "도서관" },
         "1": { "en": "startup", "ko": "창업공간" },
@@ -15,19 +10,5 @@
         "7": { "en": "lounge", "ko": "라운지" },
         "8": { "en": "starbucks", "ko": "스타벅스" },
         "9": { "en": "cafe", "ko": "카페" }
-    },
-    "amenity": {
-        "plug": {
-            "name": { "en": "Plug", "ko": "플러그" },
-            "faicon": "fas fa-plug"
-        },
-        "wifi": {
-            "name": { "en": "Wi-Fi", "ko": "와이파이" },
-            "faicon": "fas fa-wifi"
-        },
-        "parking": {
-            "name": { "en": "Parking", "ko": "주차" },
-            "faicon": "fas fa-parking"
-        }
     }
 }

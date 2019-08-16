@@ -18,9 +18,16 @@ interface SpaceSearchProps extends _ReduxProps, _ReduxActionCreators {}
 import React from 'react';
 
 class _SpaceSearch extends React.Component<SpaceSearchProps> {
-    public state: { searchInputOnFocus: boolean } = {
+    private searchGroup: HTMLDivElement | null = null;
+
+    public state: { searchQuery: string; searchInputOnFocus: boolean } = {
+        searchQuery: '',
         searchInputOnFocus: false,
     };
+
+    componentWillMount() {
+        document.addEventListener('mousedown', this._detectFocus, false);
+    }
 
     componentDidMount() {
         if (
@@ -31,7 +38,23 @@ class _SpaceSearch extends React.Component<SpaceSearchProps> {
         }
     }
 
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this._detectFocus, false);
+    }
+
+    private _detectFocus = (event: MouseEvent) => {
+        if (
+            this.searchGroup &&
+            this.searchGroup.contains(event.target as Node)
+        ) {
+            this.setState({ ...this.state, searchInputOnFocus: true });
+        } else {
+            this.setState({ ...this.state, searchInputOnFocus: false });
+        }
+    };
+
     private _searchSpace = (ev: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({ ...this.state, searchQuery: ev.target.value });
         if (this.props.wholeSpaceList) {
             this.props.searchSpaceList(
                 this.props.wholeSpaceList,
@@ -40,18 +63,27 @@ class _SpaceSearch extends React.Component<SpaceSearchProps> {
         }
     };
 
+    private _requestSpace = (spaceID: string) => {
+        this.props.requestSpace(spaceID);
+        this.setState({ searchQuery: '', searchInputOnFocus: false });
+        this.props.searchSpaceList([], '');
+    };
+
     private _renderSearchResult = () => {
         if (
-            this.props.searchResult.length == 0 ||
-            !this.state.searchInputOnFocus
+            this.props.searchResult.length > 0 &&
+            this.state.searchInputOnFocus
         ) {
-            return null;
-        } else {
             return (
                 <div id="space-search-result">
                     {this.props.searchResult.map((space: SpaceHeader) => (
-                        <a key={space.id}>
-                            <p className="h5">{space.names.ko}</p>
+                        <a
+                            key={space.id}
+                            onClick={() => {
+                                this._requestSpace(space.id);
+                            }}
+                        >
+                            <p className="h5">{space.spaceNames.ko}</p>
                         </a>
                     ))}
                 </div>
@@ -63,20 +95,19 @@ class _SpaceSearch extends React.Component<SpaceSearchProps> {
         return (
             <div id="space-search">
                 <p className="h2">Space</p>
-                <div id="space-search-group">
+                <div
+                    id="space-search-group"
+                    ref={node => (this.searchGroup = node)}
+                >
                     <input
                         id="space-search-input"
                         className="form-control"
                         type="search"
+                        value={this.state.searchQuery}
                         placeholder="Search"
                         aria-label="Search"
+                        autoComplete="off"
                         onChange={this._searchSpace}
-                        onFocus={() => {
-                            this.setState({ searchInputOnFocus: true });
-                        }}
-                        onBlur={() => {
-                            this.setState({ searchInputOnFocus: false });
-                        }}
                     />
                     {this._renderSearchResult()}
                 </div>
@@ -102,6 +133,7 @@ import {
     requestWholeSpaceList,
     searchSpaceList,
 } from '../thunk-action/space-list';
+import { requestSpace } from '../thunk-action/current-space';
 
 interface _ReduxProps {
     /**
@@ -130,6 +162,11 @@ interface _ReduxActionCreators {
      * Search space list from the whol space list
      */
     searchSpaceList: (spaceList: SpaceHeader[], qeury: String) => void;
+
+    /**
+     * Request space data from the server
+     */
+    requestSpace: (spaceID: string, pushHistory?: boolean) => void;
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
@@ -141,6 +178,7 @@ const mapStateToProps = (state: RootState): _ReduxProps => ({
 const mapDispatchToProps = {
     requestWholeSpaceList,
     searchSpaceList,
+    requestSpace,
 };
 
 const SpaceSearch = connect(

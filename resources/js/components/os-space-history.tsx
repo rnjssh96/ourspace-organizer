@@ -44,7 +44,7 @@ class _OSSpaceHistory extends React.Component<OSSpaceHistoryProps> {
                 <img src="./demo-images/about_img_01.jpg" className="rounded" />
                 <div className="space-item-body">
                     <p className="h5 os-text-ellipsis">
-                        {spaceHeader.names['ko']}
+                        {spaceHeader.spaceNames['ko']}
                     </p>
                     <p className="h6 os-grey-1">
                         <i className="material-icons">location_on</i>

@@ -36,8 +36,11 @@ class _ImagesEditor extends React.Component<ImagesEditorProps> {
                 </div>
             );
         } else {
-            return this.props.images.map((image: string) => (
-                <img key={image} src={image} className="rounded" />
+            return this.props.images.map((image: SpaceImage, idx: number) => (
+                <div key={idx} className="img-item">
+                    <img src={image.low} className="rounded" />
+                    <p className="h5">{image.owner}</p>
+                </div>
             ));
         }
     }
@@ -46,7 +49,12 @@ class _ImagesEditor extends React.Component<ImagesEditorProps> {
         return (
             <div id="images-editor">
                 <div id="header">
-                    <p className="h4">사진</p>
+                    <div id="title">
+                        <p className="h4">사진</p>
+                        <span className="h4 badge badge-pill badge-secondary">
+                            {this.props.images ? this.props.images.length : 0}
+                        </span>
+                    </div>
                     <OSEditButton
                         modalID={ImageUploadModalID}
                         onClick={this._resetUploadImages}
@@ -75,6 +83,7 @@ class _ImagesEditor extends React.Component<ImagesEditorProps> {
 import { connect } from 'react-redux';
 import RootState from '../../redux-types';
 
+import { SpaceImage } from '../../model/space';
 import { RequestStatus } from '../../model/system';
 
 import { resetUploadImages } from '../../actions/upload-images';
@@ -83,7 +92,7 @@ interface _ReduxProps {
     /**
      * Images of the space
      */
-    images?: string[];
+    images?: SpaceImage[];
 
     /**
      * Updating image status

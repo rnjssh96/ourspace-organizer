@@ -20,7 +20,6 @@ import { Redirect } from 'react-router';
 import SpaceList from '../components/space-list';
 import GeneralInfo from '../components/general-info';
 import SpaceDescription from '../components/space-description';
-import AmenityTags from '../components/amenity-tags';
 import LoactionMap from '../components/loaction-map';
 import ImagesEditor from '../components/images-editor';
 import OSPageStatus from '../components/os-page-status';
@@ -51,7 +50,6 @@ class _HomeScreen extends React.Component<HomeScreenProps> {
                         <GeneralInfo />
                         <SpaceDescription />
                         <OpeningHours />
-                        <AmenityTags />
                         <LoactionMap />
                     </div>
                     <div id="right">

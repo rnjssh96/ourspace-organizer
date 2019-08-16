@@ -32,21 +32,12 @@ export const requestLogin: ActionCreator<
         let currentUser = await OSFirebase.auth().currentUser;
         if (currentUser !== null) {
             try {
-                // const { data } = await OSDBAxios.get<RawOrganizer>(
-                //     `organizers/${currentUser.uid}`,
-                // );
-
-                // const organizer = rawOrganizer2Organizer(data);
-                // dispatch(authActions.succeedLogin(organizer));
-                dispatch(
-                    authActions.succeedLogin({
-                        uid: 'TESTUID',
-                        email: 'testuser@debug.test',
-                        name: 'debugmodeusesr',
-                        owningSpaces: [],
-                        authority: 'admin',
-                    }),
+                const { data } = await OSDBAxios.get<RawOrganizer>(
+                    `organizer/organizer/${currentUser.uid}`,
                 );
+
+                const organizer = rawOrganizer2Organizer(currentUser.uid, data);
+                dispatch(authActions.succeedLogin(organizer));
             } catch (error) {
                 dispatch(
                     authActions.failLogin(
@@ -94,7 +85,11 @@ export const requestLogout: ActionCreator<
 };
 
 /**
+ *
+ *
  * Signup
+ *
+ *
  */
 export const requestSignup: ActionCreator<
     ThunkAction<void, any, null, Action<any>>

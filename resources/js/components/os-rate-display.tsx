@@ -69,7 +69,7 @@ interface _ReduxProps {
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
-    rate: (state.currentSpace.data && state.currentSpace.data.rank) || 0,
+    rate: (state.currentSpace.data && state.currentSpace.data.rating) || 0,
 });
 
 const mapDispatchToProps = {};

@@ -22,40 +22,4 @@
             }
         }
     }
-
-    & > #operating-hours-row {
-        // flex
-        display: flex;
-        flex-direction: row;
-        align-items: flex-start;
-
-        // margin
-        margin-top: 1rem;
-
-        & > #operating-hours {
-            // flex
-            display: flex;
-            flex-direction: row;
-            align-items: flex-start;
-
-            // margin
-            margin-right: 1rem;
-
-            p {
-                // text color
-                color: $grey-1;
-            }
-
-            & > #icon {
-                // margin
-                margin-right: 0.5rem;
-            }
-
-            & > #value {
-                // flex
-                display: flex;
-                flex-direction: column;
-            }
-        }
-    }
 }

@@ -42,11 +42,13 @@ class _OpeningHours extends React.Component<OpeningHoursProps> {
 import { connect } from 'react-redux';
 import RootState from '../redux-types';
 
+import { OpeningHours } from '../model/space';
+
 interface _ReduxProps {
     /**
      * Operating hours and days
      */
-    openingHours?: string[];
+    openingHours?: OpeningHours;
 }
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({

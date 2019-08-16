@@ -4,24 +4,8 @@ import * as redux_types from '../redux-types/current-space';
  * Initial State
  */
 const initialState: redux_types.State = {
-    data: {
-        id: 'TESTSPACE',
-        spaceNames: { en: '', ko: 'TESTSPACE' },
-        types: [],
-        locationText: '',
-        location: { lat: 0, lng: 0 },
-        openingHours: [],
-        amenityTags: [],
-        spaceDescription: '',
-        images: [],
-        rank: 0,
-        busyLevel: '1',
-        paid: false,
-    },
     requestingStatus: { status: 'ready' },
-    updatingGIStatus: { status: 'ready' },
     updatingSDStatus: { status: 'ready' },
-    updatingATStatus: { status: 'ready' },
     updatingImagesStatus: { status: 'ready' },
 };
 
@@ -62,35 +46,6 @@ export default function Reducer(
 
         //
         //
-        // General information
-        //
-        //
-        case redux_types.START_UPDATE_GI:
-            return {
-                ...state,
-                updatingGIStatus: { status: 'requesting' },
-            };
-
-        case redux_types.SUCCEED_UPDATE_GI:
-            if (state.data)
-                return {
-                    ...state,
-                    data: {
-                        ...state.data,
-                        ...action.generalInfo,
-                    },
-                    updatingGIStatus: { status: 'succeed' },
-                };
-            else return state;
-
-        case redux_types.FAIL_UPDATE_GI:
-            return {
-                ...state,
-                updatingGIStatus: { status: 'failed', message: action.message },
-            };
-
-        //
-        //
         // Space description
         //
         //
@@ -120,35 +75,6 @@ export default function Reducer(
 
         //
         //
-        // Amenity tags
-        //
-        //
-        case redux_types.START_UPDATE_AT:
-            return {
-                ...state,
-                updatingATStatus: { status: 'requesting' },
-            };
-
-        case redux_types.SUCCEED_UPDATE_AT:
-            if (state.data)
-                return {
-                    ...state,
-                    data: {
-                        ...state.data,
-                        amenityTags: action.amenityTags,
-                    },
-                    updatingATStatus: { status: 'succeed' },
-                };
-            else return state;
-
-        case redux_types.FAIL_UPDATE_AT:
-            return {
-                ...state,
-                updatingATStatus: { status: 'failed', message: action.message },
-            };
-
-        //
-        //
         // Images
         //
         //
@@ -173,25 +99,15 @@ export default function Reducer(
         case redux_types.FAIL_UPDATE_IMAGES:
             return {
                 ...state,
-                updatingATStatus: { status: 'failed', message: action.message },
+                updatingImagesStatus: {
+                    status: 'failed',
+                    message: action.message,
+                },
             };
 
         //
+        // Default
         //
-        // Busy level
-        //
-        //
-        case redux_types.SET_BUSY_LEVEL:
-            if (state.data)
-                return {
-                    ...state,
-                    data: {
-                        ...state.data,
-                        busyLevel: action.busyLevel,
-                    },
-                };
-            else return state;
-
         default:
             return state;
     }

@@ -19,8 +19,8 @@ export type OrganizerAuthority = 'organizer' | 'admin';
  */
 export default interface Organizer {
     uid: UserID;
-    email: string;
     name: string;
+    email: string;
     owningSpaces: SpaceID[];
     authority: OrganizerAuthority;
 }
@@ -33,7 +33,6 @@ export default interface Organizer {
  *
  */
 export interface RawOrganizer {
-    uid: string;
     name: string;
     email: string;
     authority: OrganizerAuthority;
@@ -49,13 +48,14 @@ export interface RawOrganizer {
  *
  */
 export const rawOrganizer2Organizer = (
+    uid: string,
     rawOrganizer: RawOrganizer,
 ): Organizer => {
     return {
-        uid: rawOrganizer.uid,
-        email: rawOrganizer.email,
+        uid: uid,
         name: rawOrganizer.name,
-        owningSpaces: rawOrganizer.owning_spaces as SpaceID[],
+        email: rawOrganizer.email,
         authority: rawOrganizer.authority,
+        owningSpaces: rawOrganizer.owning_spaces as SpaceID[],
     };
 };

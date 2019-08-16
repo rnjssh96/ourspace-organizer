@@ -1,6 +1,6 @@
 import { Action } from 'redux';
 
-import Space, { BusyLevel, AmenityTag, SpaceGeneralInfo } from '../model/space';
+import Space, { SpaceImage } from '../model/space';
 import { RequestStatus } from '../model/system';
 
 /**
@@ -9,9 +9,7 @@ import { RequestStatus } from '../model/system';
 export interface State {
     data?: Space;
     requestingStatus: RequestStatus;
-    updatingGIStatus: RequestStatus;
     updatingSDStatus: RequestStatus;
-    updatingATStatus: RequestStatus;
     updatingImagesStatus: RequestStatus;
 }
 
@@ -35,18 +33,6 @@ export const RESET_DATA = 'current-space/RESET_DATA';
 
 //
 //
-// General information
-//
-//
-// prettier-ignore
-export const START_UPDATE_GI = 'current-space/START_UPDATE_GI';
-// prettier-ignore
-export const SUCCEED_UPDATE_GI = 'current-space/SUCCEED_UPDATE_GI';
-// prettier-ignore
-export const FAIL_UPDATE_GI = 'current-space/FAIL_UPDATE_GI';
-
-//
-//
 // Space description
 //
 //
@@ -59,18 +45,6 @@ export const FAIL_UPDATE_SD = 'current-space/FAIL_UPDATE_SD';
 
 //
 //
-// Amenity tags
-//
-//
-// prettier-ignore
-export const START_UPDATE_AT = 'current-space/START_UPDATE_AT';
-// prettier-ignore
-export const SUCCEED_UPDATE_AT = 'current-space/SUCCEED_UPDATE_AT';
-// prettier-ignore
-export const FAIL_UPDATE_AT = 'current-space/FAIL_UPDATE_AT';
-
-//
-//
 // Images
 //
 //
@@ -80,14 +54,6 @@ export const START_UPDATE_IMAGES = 'current-space/START_UPDATE_IMAGES';
 export const SUCCEED_UPDATE_IMAGES = 'current-space/SUCCEED_UPDATE_IMAGES';
 // prettier-ignore
 export const FAIL_UPDATE_IMAGES = 'current-space/FAIL_UPDATE_IMAGES';
-
-//
-//
-// Busy level
-//
-//
-// prettier-ignore
-export const SET_BUSY_LEVEL = 'current-space/SET_BUSY_LEVEL';
 
 /**
  * Action Interfaces
@@ -112,22 +78,6 @@ export interface ResetDataAction extends Action<typeof RESET_DATA> {}
 
 //
 //
-// General information
-//
-//
-export interface StartUpdateGIAction extends Action<typeof START_UPDATE_GI> {}
-
-export interface SucceedUpdateGIAction
-    extends Action<typeof SUCCEED_UPDATE_GI> {
-    generalInfo: SpaceGeneralInfo;
-}
-
-export interface FailUpdateGIAction extends Action<typeof FAIL_UPDATE_GI> {
-    message: string;
-}
-
-//
-//
 // Space description
 //
 //
@@ -144,22 +94,6 @@ export interface FailUpdateSDAction extends Action<typeof FAIL_UPDATE_SD> {
 
 //
 //
-// Amenity tags
-//
-//
-export interface StartUpdateATAction extends Action<typeof START_UPDATE_AT> {}
-
-export interface SucceedUpdateATAction
-    extends Action<typeof SUCCEED_UPDATE_AT> {
-    amenityTags: AmenityTag[];
-}
-
-export interface FailUpdateATAction extends Action<typeof FAIL_UPDATE_AT> {
-    message: string;
-}
-
-//
-//
 // Images
 //
 //
@@ -168,21 +102,12 @@ export interface StartUpdateImagesAction
 
 export interface SucceedUpdateImagesAction
     extends Action<typeof SUCCEED_UPDATE_IMAGES> {
-    images: string[];
+    images: SpaceImage[];
 }
 
 export interface FailUpdateImagesAction
     extends Action<typeof FAIL_UPDATE_IMAGES> {
     message: string;
-}
-
-//
-//
-// Busy level
-//
-//
-export interface SetBusyLevelAction extends Action<typeof SET_BUSY_LEVEL> {
-    busyLevel: BusyLevel;
 }
 
 /**
@@ -200,14 +125,6 @@ export type Actions =
     | ResetDataAction
     //
     //
-    // General information
-    //
-    //
-    | StartUpdateGIAction
-    | SucceedUpdateGIAction
-    | FailUpdateGIAction
-    //
-    //
     // Space introduce
     //
     //
@@ -216,23 +133,9 @@ export type Actions =
     | FailUpdateSDAction
     //
     //
-    // Amenity tags
-    //
-    //
-    | StartUpdateATAction
-    | SucceedUpdateATAction
-    | FailUpdateATAction
-    //
-    //
     // Images
     //
     //
     | StartUpdateImagesAction
     | SucceedUpdateImagesAction
-    | FailUpdateImagesAction
-    //
-    //
-    // Busy level
-    //
-    //
-    | SetBusyLevelAction;
+    | FailUpdateImagesAction;

@@ -76169,22 +76169,6 @@ exports.resetData = () => ({
 });
 //
 //
-// General information
-//
-//
-exports.startUpdateGI = () => ({
-    type: redux_types.START_UPDATE_GI,
-});
-exports.succeedUpdateGI = (generalInfo) => ({
-    type: redux_types.SUCCEED_UPDATE_GI,
-    generalInfo,
-});
-exports.failUpdateGI = (message) => ({
-    type: redux_types.FAIL_UPDATE_GI,
-    message,
-});
-//
-//
 // Space description
 //
 //
@@ -76197,22 +76181,6 @@ exports.succeedUpdateSD = (spaceDescription) => ({
 });
 exports.failUpdateSD = (message) => ({
     type: redux_types.FAIL_UPDATE_SD,
-    message,
-});
-//
-//
-// Amenity tags
-//
-//
-exports.startUpdateAT = () => ({
-    type: redux_types.START_UPDATE_AT,
-});
-exports.succeedUpdateAT = (amenityTags) => ({
-    type: redux_types.SUCCEED_UPDATE_AT,
-    amenityTags,
-});
-exports.failUpdateAT = (message) => ({
-    type: redux_types.FAIL_UPDATE_AT,
     message,
 });
 //
@@ -76230,44 +76198,6 @@ exports.succeedUpdateImages = (images) => ({
 exports.failUpdateImages = (message) => ({
     type: redux_types.FAIL_UPDATE_IMAGES,
     message,
-});
-//
-//
-// Busy level
-//
-//
-exports.setBusyLevel = (busyLevel) => ({
-    type: redux_types.SET_BUSY_LEVEL,
-    busyLevel,
-});
-
-
-/***/ }),
-
-/***/ "./resources/js/actions/selected-amenities.ts":
-/*!****************************************************!*\
-  !*** ./resources/js/actions/selected-amenities.ts ***!
-  \****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const redux_types = __importStar(__webpack_require__(/*! ../redux-types/selected-amenities */ "./resources/js/redux-types/selected-amenities.ts"));
-/**
- * Action Creators
- */
-exports.setSelectedAmenities = (selectedAmenities) => ({
-    type: redux_types.SET_SELECTED_AMENITIES,
-    selectedAmenities,
 });
 
 
@@ -76541,231 +76471,6 @@ if (token) {
 
 /***/ }),
 
-/***/ "./resources/js/components/amenity-tags/amenities-edit-modal.tsx":
-/*!***********************************************************************!*\
-  !*** ./resources/js/components/amenity-tags/amenities-edit-modal.tsx ***!
-  \***********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const space_1 = __webpack_require__(/*! ../../model/space */ "./resources/js/model/space.ts");
-/**
- *
- *
- * AmenitiesEditModal component
- *
- *
- */
-exports.AmenitiesEditModalID = 'amenities-edit-modal';
-const COL_PER_ROW = 4;
-const tags = Object.keys(space_1.amenities);
-class _AmenitiesEditModal extends react_1.default.Component {
-    constructor() {
-        super(...arguments);
-        this._amenityTableStructure = [];
-        this._saveAmenityTags = (event) => {
-            event.preventDefault();
-            if (this.props.currentSpaceID) {
-                let tags = [];
-                this.props.selectedAmenities.forEach((tag) => {
-                    tags.push(tag);
-                });
-                this.props.updateAmenityTags(this.props.currentSpaceID, tags);
-            }
-        };
-        this._toggleSelected = (tag) => {
-            if (this.props.selectedAmenities.has(tag)) {
-                this.props.selectedAmenities.delete(tag);
-            }
-            else {
-                this.props.selectedAmenities.add(tag);
-            }
-            this.props.setSelectedAmenities(new Set(this.props.selectedAmenities));
-        };
-        this._renderTable = () => {
-            const renderColumn = (col) => (react_1.default.createElement("td", { key: col.key },
-                react_1.default.createElement("button", { type: "button", className: `amenity ${this.props.selectedAmenities.has(col.key)
-                        ? 'selected'
-                        : ''}`, onClick: () => {
-                        this._toggleSelected(col.key);
-                    } },
-                    react_1.default.createElement("p", { className: "h1" },
-                        react_1.default.createElement("i", { className: col.value.faicon })),
-                    react_1.default.createElement("p", { className: "h6" }, col.value.name))));
-            return (react_1.default.createElement("table", { id: "amenity-table" },
-                react_1.default.createElement("tbody", null, this._amenityTableStructure.map((row, index) => (react_1.default.createElement("tr", { key: index }, row.map((col) => renderColumn(col))))))));
-        };
-    }
-    componentWillMount() {
-        let row;
-        let col;
-        tags.map((tag, index) => {
-            col = index % COL_PER_ROW;
-            if (col == 0) {
-                row = [];
-            }
-            row.push({
-                key: tag,
-                value: space_1.interpretAmenity(tag, 'ko'),
-            });
-            if (col == COL_PER_ROW - 1 || index == tags.length - 1) {
-                this._amenityTableStructure.push(row);
-            }
-        });
-    }
-    render() {
-        return (react_1.default.createElement("div", { id: exports.AmenitiesEditModalID, className: "modal fade", tabIndex: -1, role: "dialog", "aria-hidden": "true" },
-            react_1.default.createElement("div", { className: "modal-dialog", role: "document" },
-                react_1.default.createElement("div", { className: "modal-content" },
-                    react_1.default.createElement("div", { className: "modal-header" },
-                        react_1.default.createElement("p", { className: "modal-title h5" }, "\uD3B8\uC758\uC2DC\uC124 \uC124\uC815")),
-                    react_1.default.createElement("div", { className: "modal-body" }, this._renderTable()),
-                    react_1.default.createElement("div", { className: "modal-footer" },
-                        react_1.default.createElement("button", { type: "button", className: "btn btn-secondary", "data-dismiss": "modal" }, "\uB2EB\uAE30"),
-                        react_1.default.createElement("button", { type: "submit", className: "btn btn-primary", "data-dismiss": "modal", onClick: this._saveAmenityTags }, "\uC800\uC7A5"))))));
-    }
-}
-/**
- *
- *
- * Connect redux
- *
- *
- */
-const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-const selected_amenities_1 = __webpack_require__(/*! ../../actions/selected-amenities */ "./resources/js/actions/selected-amenities.ts");
-const current_space_1 = __webpack_require__(/*! ../../thunk-action/current-space */ "./resources/js/thunk-action/current-space.ts");
-const mapStateToProps = (state) => ({
-    currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
-    selectedAmenities: state.selectedAmenities.selectedAmenities,
-});
-const mapDispatchToProps = {
-    setSelectedAmenities: selected_amenities_1.setSelectedAmenities,
-    updateAmenityTags: current_space_1.updateAmenityTags,
-};
-const AmenitiesEditModal = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_AmenitiesEditModal);
-exports.default = AmenitiesEditModal;
-
-
-/***/ }),
-
-/***/ "./resources/js/components/amenity-tags/index.tsx":
-/*!********************************************************!*\
-  !*** ./resources/js/components/amenity-tags/index.tsx ***!
-  \********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-/**
- *
- *
- * AmenityTags component
- *
- *
- */
-const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-const space_1 = __webpack_require__(/*! ../../model/space */ "./resources/js/model/space.ts");
-const amenities_edit_modal_1 = __importStar(__webpack_require__(/*! ./amenities-edit-modal */ "./resources/js/components/amenity-tags/amenities-edit-modal.tsx"));
-const os_page_status_1 = __importDefault(__webpack_require__(/*! ../os-page-status */ "./resources/js/components/os-page-status.tsx"));
-class _AmenityTags extends react_1.default.Component {
-    constructor() {
-        super(...arguments);
-        this._resetSelectedAmenities = () => {
-            this.props.setSelectedAmenities(new Set(this.props.amenityTags));
-        };
-        this._renderEmpty = () => {
-            return (react_1.default.createElement("div", { id: "empty" },
-                react_1.default.createElement("p", { className: "h6" }, "\uB4F1\uB85D\uB41C \uD3B8\uC758\uC2DC\uC124\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.")));
-        };
-        this._renderAmenity = (tag) => {
-            let amenity = space_1.interpretAmenity(tag, 'ko');
-            return (react_1.default.createElement("div", { key: tag, className: "amenity" },
-                react_1.default.createElement("a", { "data-toggle": "tooltip", "data-placement": "top", title: amenity.name },
-                    react_1.default.createElement("p", { className: "h1", "data-toggle": "tooltip" },
-                        react_1.default.createElement("i", { className: amenity.faicon })))));
-        };
-        this._renderAmenities = () => {
-            if (this.props.updatingAmentiyTags.status === 'requesting') {
-                return react_1.default.createElement(os_page_status_1.default, { status: "loading" });
-            }
-            else if (this.props.amenityTags &&
-                this.props.amenityTags.length > 0) {
-                return this.props.amenityTags.map((tag) => this._renderAmenity(tag));
-            }
-            else {
-                return this._renderEmpty();
-            }
-        };
-    }
-    render_temp() {
-        return (react_1.default.createElement("div", { id: "amenity-tags" },
-            react_1.default.createElement("div", { className: "header" },
-                react_1.default.createElement("p", { className: "h5" }, "\uD3B8\uC758\uC2DC\uC124"),
-                react_1.default.createElement("button", { "data-toggle": "modal", "data-target": `#${amenities_edit_modal_1.AmenitiesEditModalID}`, onClick: this._resetSelectedAmenities },
-                    react_1.default.createElement("p", { className: "h6 os-grey-1" },
-                        react_1.default.createElement("i", { className: "material-icons" }, "add"),
-                        "\uCD94\uAC00")),
-                react_1.default.createElement(amenities_edit_modal_1.default, null)),
-            react_1.default.createElement("div", { className: "body" },
-                react_1.default.createElement("div", { id: "amenities" }, this._renderAmenities())),
-            react_1.default.createElement("div", { className: "footer" },
-                react_1.default.createElement("p", { className: "h6 os-grey-1" },
-                    react_1.default.createElement("i", { className: "material-icons" }, "info"),
-                    "\uB9C8\uC6B0\uC2A4\uB97C \uC544\uC774\uCF58 \uC704\uC5D0 \uC62C\uB9AC\uC2DC\uBA74 \uC124\uBA85\uC744 \uBCFC \uC218 \uC788\uC2B5\uB2C8\uB2E4."))));
-    }
-    render() {
-        return (react_1.default.createElement("div", { id: "amenity-tags", className: "category" },
-            react_1.default.createElement("div", { className: "header" },
-                react_1.default.createElement("p", { className: "h5" }, "\uD3B8\uC758\uC2DC\uC124"),
-                react_1.default.createElement(os_edit_button_1.default, { modalID: amenities_edit_modal_1.AmenitiesEditModalID, onClick: this._resetSelectedAmenities })),
-            react_1.default.createElement("div", { className: "body" },
-                react_1.default.createElement("div", { id: "amenities" }, this._renderAmenities())),
-            react_1.default.createElement(amenities_edit_modal_1.default, null)));
-    }
-}
-/**
- *
- *
- * Connect redux
- *
- *
- */
-const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-const selected_amenities_1 = __webpack_require__(/*! ../../actions/selected-amenities */ "./resources/js/actions/selected-amenities.ts");
-const os_edit_button_1 = __importDefault(__webpack_require__(/*! ../os-edit-button */ "./resources/js/components/os-edit-button.tsx"));
-const mapStateToProps = (state) => ({
-    amenityTags: state.currentSpace.data && state.currentSpace.data.amenityTags,
-    updatingAmentiyTags: state.currentSpace.updatingATStatus,
-});
-const mapDispatchToProps = {
-    setSelectedAmenities: selected_amenities_1.setSelectedAmenities,
-};
-const AmenityTags = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_AmenityTags);
-exports.default = AmenityTags;
-
-
-/***/ }),
-
 /***/ "./resources/js/components/general-info.tsx":
 /*!**************************************************!*\
   !*** ./resources/js/components/general-info.tsx ***!
@@ -76790,38 +76495,26 @@ const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules
 const space_1 = __webpack_require__(/*! ../model/space */ "./resources/js/model/space.ts");
 const os_edit_button_1 = __importDefault(__webpack_require__(/*! ./os-edit-button */ "./resources/js/components/os-edit-button.tsx"));
 const os_rate_display_1 = __importDefault(__webpack_require__(/*! ./os-rate-display */ "./resources/js/components/os-rate-display.tsx"));
-const os_page_status_1 = __importDefault(__webpack_require__(/*! ./os-page-status */ "./resources/js/components/os-page-status.tsx"));
 class _GeneralInfo extends react_1.default.Component {
     constructor() {
         super(...arguments);
         this._renderTitle = () => {
-            let typesText = '';
-            if (this.props.types)
-                this.props.types.map((type, index) => {
-                    if (index > 0) {
-                        typesText += ' | ';
-                    }
-                    typesText += space_1.interpretSpaceType(type, 'ko');
-                });
+            const typeText = this.props.type
+                ? space_1.interpretSpaceType(this.props.type, 'ko')
+                : '(카테고리)';
             return (react_1.default.createElement("div", { id: "space-name-row" },
                 react_1.default.createElement("div", { id: "space-name" },
                     react_1.default.createElement("p", { className: "h2" }, this.props.spaceNames
                         ? this.props.spaceNames['ko']
                         : '(매장이름)'),
-                    react_1.default.createElement("p", { id: "type", className: "h4" }, typesText !== '' ? typesText : '(카테고리)'),
+                    react_1.default.createElement("p", { id: "type", className: "h4" }, typeText),
                     react_1.default.createElement(os_edit_button_1.default, null)),
                 react_1.default.createElement("div", { id: "rate" },
                     react_1.default.createElement(os_rate_display_1.default, null))));
         };
     }
     render() {
-        if (this.props.updatingGIStatus.status === 'requesting') {
-            return (react_1.default.createElement("div", { id: "general-info" },
-                react_1.default.createElement(os_page_status_1.default, { status: "loading" })));
-        }
-        else {
-            return react_1.default.createElement("div", { id: "general-info" }, this._renderTitle());
-        }
+        return react_1.default.createElement("div", { id: "general-info" }, this._renderTitle());
     }
 }
 /**
@@ -76834,8 +76527,7 @@ class _GeneralInfo extends react_1.default.Component {
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 const mapStateToProps = (state) => ({
     spaceNames: state.currentSpace.data && state.currentSpace.data.spaceNames,
-    types: state.currentSpace.data && state.currentSpace.data.types,
-    updatingGIStatus: state.currentSpace.updatingGIStatus,
+    type: state.currentSpace.data && state.currentSpace.data.spaceType,
 });
 const GeneralInfo = react_redux_1.connect(mapStateToProps)(_GeneralInfo);
 exports.default = GeneralInfo;
@@ -77026,13 +76718,17 @@ class _ImagesEditor extends react_1.default.Component {
                 react_1.default.createElement("p", { className: "h6" }, "\uB4F1\uB85D\uB41C \uC0AC\uC9C4\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.")));
         }
         else {
-            return this.props.images.map((image) => (react_1.default.createElement("img", { key: image, src: image, className: "rounded" })));
+            return this.props.images.map((image, idx) => (react_1.default.createElement("div", { key: idx, className: "img-item" },
+                react_1.default.createElement("img", { src: image.low, className: "rounded" }),
+                react_1.default.createElement("p", { className: "h5" }, image.owner))));
         }
     }
     render() {
         return (react_1.default.createElement("div", { id: "images-editor" },
             react_1.default.createElement("div", { id: "header" },
-                react_1.default.createElement("p", { className: "h4" }, "\uC0AC\uC9C4"),
+                react_1.default.createElement("div", { id: "title" },
+                    react_1.default.createElement("p", { className: "h4" }, "\uC0AC\uC9C4"),
+                    react_1.default.createElement("span", { className: "h4 badge badge-pill badge-secondary" }, this.props.images ? this.props.images.length : 0)),
                 react_1.default.createElement(os_edit_button_1.default, { modalID: image_upload_modal_1.ImageUploadModalID, onClick: this._resetUploadImages })),
             react_1.default.createElement("div", { id: "body" }, this._renderImages()),
             react_1.default.createElement("div", { id: "footer" },
@@ -77091,8 +76787,8 @@ const os_edit_button_1 = __importDefault(__webpack_require__(/*! ./os-edit-butto
 class _LoactionMap extends react_1.default.Component {
     constructor() {
         super(...arguments);
-        this._renderAddress = () => (react_1.default.createElement("p", { className: "h5", id: "address-text" }, this.props.locationText
-            ? this.props.locationText
+        this._renderAddress = () => (react_1.default.createElement("p", { className: "h5", id: "address-text" }, this.props.spaceAddress
+            ? this.props.spaceAddress
             : '등록된 주소가 없습니다.'));
         this._renderMap = () => {
             if (this.props.location) {
@@ -77126,7 +76822,7 @@ class _LoactionMap extends react_1.default.Component {
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 const mapStateToProps = (state) => ({
     location: state.currentSpace.data && state.currentSpace.data.location,
-    locationText: state.currentSpace.data && state.currentSpace.data.locationText,
+    spaceAddress: state.currentSpace.data && state.currentSpace.data.spaceAddress,
 });
 const mapDispatchToProps = {};
 const LoactionMap = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_LoactionMap);
@@ -77369,7 +77065,7 @@ class _OSRateDisplay extends react_1.default.Component {
  */
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 const mapStateToProps = (state) => ({
-    rate: (state.currentSpace.data && state.currentSpace.data.rank) || 0,
+    rate: (state.currentSpace.data && state.currentSpace.data.rating) || 0,
 });
 const mapDispatchToProps = {};
 const OSRateDisplay = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_OSRateDisplay);
@@ -77509,7 +77205,7 @@ class _SpaceList extends react_1.default.Component {
                             this._onSpaceClick(spaceHeader.id);
                         }
                     } },
-                    react_1.default.createElement("p", { className: "h4" }, spaceHeader.names['ko']))))));
+                    react_1.default.createElement("p", { className: "h4" }, spaceHeader.spaceNames['ko']))))));
             }
         };
     }
@@ -77573,24 +77269,43 @@ const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules
 class _SpaceSearch extends react_1.default.Component {
     constructor() {
         super(...arguments);
+        this.searchGroup = null;
         this.state = {
+            searchQuery: '',
             searchInputOnFocus: false,
         };
+        this._detectFocus = (event) => {
+            if (this.searchGroup &&
+                this.searchGroup.contains(event.target)) {
+                this.setState({ ...this.state, searchInputOnFocus: true });
+            }
+            else {
+                this.setState({ ...this.state, searchInputOnFocus: false });
+            }
+        };
         this._searchSpace = (ev) => {
+            this.setState({ ...this.state, searchQuery: ev.target.value });
             if (this.props.wholeSpaceList) {
                 this.props.searchSpaceList(this.props.wholeSpaceList, ev.target.value);
             }
         };
+        this._requestSpace = (spaceID) => {
+            this.props.requestSpace(spaceID);
+            this.setState({ searchQuery: '', searchInputOnFocus: false });
+            this.props.searchSpaceList([], '');
+        };
         this._renderSearchResult = () => {
-            if (this.props.searchResult.length == 0 ||
-                !this.state.searchInputOnFocus) {
-                return null;
-            }
-            else {
-                return (react_1.default.createElement("div", { id: "space-search-result" }, this.props.searchResult.map((space) => (react_1.default.createElement("a", { key: space.id },
-                    react_1.default.createElement("p", { className: "h5" }, space.names.ko))))));
+            if (this.props.searchResult.length > 0 &&
+                this.state.searchInputOnFocus) {
+                return (react_1.default.createElement("div", { id: "space-search-result" }, this.props.searchResult.map((space) => (react_1.default.createElement("a", { key: space.id, onClick: () => {
+                        this._requestSpace(space.id);
+                    } },
+                    react_1.default.createElement("p", { className: "h5" }, space.spaceNames.ko))))));
             }
         };
+    }
+    componentWillMount() {
+        document.addEventListener('mousedown', this._detectFocus, false);
     }
     componentDidMount() {
         if (this.props.currentUser &&
@@ -77598,15 +77313,14 @@ class _SpaceSearch extends react_1.default.Component {
             this.props.requestWholeSpaceList();
         }
     }
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this._detectFocus, false);
+    }
     render() {
         return (react_1.default.createElement("div", { id: "space-search" },
             react_1.default.createElement("p", { className: "h2" }, "Space"),
-            react_1.default.createElement("div", { id: "space-search-group" },
-                react_1.default.createElement("input", { id: "space-search-input", className: "form-control", type: "search", placeholder: "Search", "aria-label": "Search", onChange: this._searchSpace, onFocus: () => {
-                        this.setState({ searchInputOnFocus: true });
-                    }, onBlur: () => {
-                        this.setState({ searchInputOnFocus: false });
-                    } }),
+            react_1.default.createElement("div", { id: "space-search-group", ref: node => (this.searchGroup = node) },
+                react_1.default.createElement("input", { id: "space-search-input", className: "form-control", type: "search", value: this.state.searchQuery, placeholder: "Search", "aria-label": "Search", autoComplete: "off", onChange: this._searchSpace }),
                 this._renderSearchResult())));
     }
 }
@@ -77619,6 +77333,7 @@ class _SpaceSearch extends react_1.default.Component {
  */
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 const space_list_1 = __webpack_require__(/*! ../thunk-action/space-list */ "./resources/js/thunk-action/space-list.ts");
+const current_space_1 = __webpack_require__(/*! ../thunk-action/current-space */ "./resources/js/thunk-action/current-space.ts");
 const mapStateToProps = (state) => ({
     currentUser: state.auth.currentUser,
     wholeSpaceList: state.spaceList.data,
@@ -77627,6 +77342,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
     requestWholeSpaceList: space_list_1.requestWholeSpaceList,
     searchSpaceList: space_list_1.searchSpaceList,
+    requestSpace: current_space_1.requestSpace,
 };
 const SpaceSearch = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_SpaceSearch);
 exports.default = SpaceSearch;
@@ -77729,10 +77445,58 @@ exports.default = axios_1.default;
 /*!****************************************!*\
   !*** ./resources/js/config/space.json ***!
   \****************************************/
-/*! exports provided: busy_level, space_type, amenity, default */
+/*! exports provided: space_type, default */
 /***/ (function(module) {
 
-module.exports = {"busy_level":{"1":{"en":"Normal","ko":"보통"},"2":{"en":"Busy","ko":"바쁨"},"3":{"en":"Very Busy","ko":"매우 바쁨"}},"space_type":{"0":{"en":"library","ko":"도서관"},"1":{"en":"startup","ko":"창업공간"},"2":{"en":"museum","ko":"박물관"},"3":{"en":"bookstore","ko":"서점"},"4":{"en":"experience","ko":"체험공간"},"5":{"en":"nature","ko":"공원"},"6":{"en":"youth","ko":"청년공간"},"7":{"en":"lounge","ko":"라운지"},"8":{"en":"starbucks","ko":"스타벅스"},"9":{"en":"cafe","ko":"카페"}},"amenity":{"plug":{"name":{"en":"Plug","ko":"플러그"},"faicon":"fas fa-plug"},"wifi":{"name":{"en":"Wi-Fi","ko":"와이파이"},"faicon":"fas fa-wifi"},"parking":{"name":{"en":"Parking","ko":"주차"},"faicon":"fas fa-parking"}}};
+module.exports = {"space_type":{"0":{"en":"library","ko":"도서관"},"1":{"en":"startup","ko":"창업공간"},"2":{"en":"museum","ko":"박물관"},"3":{"en":"bookstore","ko":"서점"},"4":{"en":"experience","ko":"체험공간"},"5":{"en":"nature","ko":"공원"},"6":{"en":"youth","ko":"청년공간"},"7":{"en":"lounge","ko":"라운지"},"8":{"en":"starbucks","ko":"스타벅스"},"9":{"en":"cafe","ko":"카페"}}};
+
+/***/ }),
+
+/***/ "./resources/js/model/organizer.ts":
+/*!*****************************************!*\
+  !*** ./resources/js/model/organizer.ts ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ *
+ *
+ * Interpret ```RawOrganizer``` data to a list of ```Organizer```
+ *
+ *
+ */
+exports.rawOrganizer2Organizer = (uid, rawOrganizer) => {
+    return {
+        uid: uid,
+        name: rawOrganizer.name,
+        email: rawOrganizer.email,
+        authority: rawOrganizer.authority,
+        owningSpaces: rawOrganizer.owning_spaces,
+    };
+};
+
+
+/***/ }),
+
+/***/ "./resources/js/model/space-header.ts":
+/*!********************************************!*\
+  !*** ./resources/js/model/space-header.ts ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.rawSpaceHeaderMap2SpaceHeaderList = (spaceMap) => Object.keys(spaceMap).map((uid) => ({
+    id: uid,
+    spaceNames: spaceMap[uid].space_names,
+}));
+
 
 /***/ }),
 
@@ -77747,31 +77511,12 @@ module.exports = {"busy_level":{"1":{"en":"Normal","ko":"보통"},"2":{"en":"Bus
 
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
- * Busy Level
- */
-const space_json_1 = __webpack_require__(/*! ../config/space.json */ "./resources/js/config/space.json");
-const busyLevels = space_json_1.busy_level;
-exports.interpretBusyLevel = (level, locale = 'en') => {
-    return busyLevels[level][locale] || busyLevels[level]['en'];
-};
-/**
  * Space Type
  */
-const space_json_2 = __webpack_require__(/*! ../config/space.json */ "./resources/js/config/space.json");
-const spaceTypes = space_json_2.space_type;
+const space_json_1 = __webpack_require__(/*! ../config/space.json */ "./resources/js/config/space.json");
+const spaceTypes = space_json_1.space_type;
 exports.interpretSpaceType = (type, locale = 'en') => {
     return spaceTypes[type][locale] || spaceTypes[type]['en'];
-};
-/**
- * Amenity
- */
-const space_json_3 = __webpack_require__(/*! ../config/space.json */ "./resources/js/config/space.json");
-exports.amenities = space_json_3.amenity;
-exports.interpretAmenity = (tag, locale = 'en') => {
-    return {
-        name: exports.amenities[tag].name[locale] || exports.amenities[tag].name['en'],
-        faicon: exports.amenities[tag].faicon,
-    };
 };
 /**
  *
@@ -77780,23 +77525,44 @@ exports.interpretAmenity = (tag, locale = 'en') => {
  *
  *
  */
-exports.rawSpaces2SpaceList = (sid, rawSpace) => {
+exports.rawSpaces2SpaceList = (spaceID, rawSpace) => {
+    let monOH = rawSpace[spaceID].operating_hours.mon.split('\\');
+    let tueOH = rawSpace[spaceID].operating_hours.tue.split('\\');
+    let wedOH = rawSpace[spaceID].operating_hours.wed.split('\\');
+    let thuOH = rawSpace[spaceID].operating_hours.thu.split('\\');
+    let friOH = rawSpace[spaceID].operating_hours.fri.split('\\');
+    let satOH = rawSpace[spaceID].operating_hours.sat.split('\\');
+    let sunOH = rawSpace[spaceID].operating_hours.sun.split('\\');
     return {
-        id: sid,
-        spaceNames: rawSpace.space_names,
-        types: [rawSpace.type.toString()],
-        locationText: rawSpace.location_text,
+        id: spaceID,
+        spaceNames: rawSpace[spaceID].space_names,
+        spaceType: rawSpace[spaceID].type.toString(),
+        spaceDescription: rawSpace[spaceID].description,
+        rating: 0,
+        images: rawSpace[spaceID].images,
+        spaceAddress: rawSpace[spaceID].location_text,
         location: {
-            lat: rawSpace.latitude,
-            lng: rawSpace.longitude,
+            lat: rawSpace[spaceID].latitude,
+            lng: rawSpace[spaceID].longitude,
         },
-        openingHours: rawSpace.opening_hours.split('\n'),
-        amenityTags: Object.keys(rawSpace.amenity_tags),
-        spaceDescription: rawSpace.captions.description,
-        images: rawSpace.images ? rawSpace.images : [],
-        rank: rawSpace.rank,
-        busyLevel: '1',
-        paid: rawSpace.paid,
+        openingHours: {
+            mon: { open: monOH[0], close: monOH[1] },
+            tue: { open: tueOH[0], close: tueOH[1] },
+            wed: { open: wedOH[0], close: wedOH[1] },
+            thu: { open: thuOH[0], close: thuOH[1] },
+            fri: { open: friOH[0], close: friOH[1] },
+            sat: { open: satOH[0], close: satOH[1] },
+            sun: { open: sunOH[0], close: sunOH[1] },
+        },
+        organizers: rawSpace[spaceID].organizers,
+        serviceFee: rawSpace[spaceID].cost[0].price == '0' ? 0 : 3,
+        spaceDetail: {
+            parking: rawSpace[spaceID].property_vector.parking,
+            wifi: rawSpace[spaceID].property_vector.wifi,
+            plug: rawSpace[spaceID].property_vector.plug,
+        },
+        tags: rawSpace[spaceID].tags,
+        purposes: rawSpace[spaceID].purposes,
     };
 };
 
@@ -78161,24 +77927,8 @@ const redux_types = __importStar(__webpack_require__(/*! ../redux-types/current-
  * Initial State
  */
 const initialState = {
-    data: {
-        id: 'TESTSPACE',
-        spaceNames: { en: '', ko: 'TESTSPACE' },
-        types: [],
-        locationText: '',
-        location: { lat: 0, lng: 0 },
-        openingHours: [],
-        amenityTags: [],
-        spaceDescription: '',
-        images: [],
-        rank: 0,
-        busyLevel: '1',
-        paid: false,
-    },
     requestingStatus: { status: 'ready' },
-    updatingGIStatus: { status: 'ready' },
     updatingSDStatus: { status: 'ready' },
-    updatingATStatus: { status: 'ready' },
     updatingImagesStatus: { status: 'ready' },
 };
 /**
@@ -78211,33 +77961,6 @@ function Reducer(state = initialState, action) {
             return initialState;
         //
         //
-        // General information
-        //
-        //
-        case redux_types.START_UPDATE_GI:
-            return {
-                ...state,
-                updatingGIStatus: { status: 'requesting' },
-            };
-        case redux_types.SUCCEED_UPDATE_GI:
-            if (state.data)
-                return {
-                    ...state,
-                    data: {
-                        ...state.data,
-                        ...action.generalInfo,
-                    },
-                    updatingGIStatus: { status: 'succeed' },
-                };
-            else
-                return state;
-        case redux_types.FAIL_UPDATE_GI:
-            return {
-                ...state,
-                updatingGIStatus: { status: 'failed', message: action.message },
-            };
-        //
-        //
         // Space description
         //
         //
@@ -78265,33 +77988,6 @@ function Reducer(state = initialState, action) {
             };
         //
         //
-        // Amenity tags
-        //
-        //
-        case redux_types.START_UPDATE_AT:
-            return {
-                ...state,
-                updatingATStatus: { status: 'requesting' },
-            };
-        case redux_types.SUCCEED_UPDATE_AT:
-            if (state.data)
-                return {
-                    ...state,
-                    data: {
-                        ...state.data,
-                        amenityTags: action.amenityTags,
-                    },
-                    updatingATStatus: { status: 'succeed' },
-                };
-            else
-                return state;
-        case redux_types.FAIL_UPDATE_AT:
-            return {
-                ...state,
-                updatingATStatus: { status: 'failed', message: action.message },
-            };
-        //
-        //
         // Images
         //
         //
@@ -78315,24 +78011,14 @@ function Reducer(state = initialState, action) {
         case redux_types.FAIL_UPDATE_IMAGES:
             return {
                 ...state,
-                updatingATStatus: { status: 'failed', message: action.message },
+                updatingImagesStatus: {
+                    status: 'failed',
+                    message: action.message,
+                },
             };
         //
+        // Default
         //
-        // Busy level
-        //
-        //
-        case redux_types.SET_BUSY_LEVEL:
-            if (state.data)
-                return {
-                    ...state,
-                    data: {
-                        ...state.data,
-                        busyLevel: action.busyLevel,
-                    },
-                };
-            else
-                return state;
         default:
             return state;
     }
@@ -78361,7 +78047,6 @@ const space_list_1 = __importDefault(__webpack_require__(/*! ./space-list */ "./
 const space_search_1 = __importDefault(__webpack_require__(/*! ./space-search */ "./resources/js/reducer/space-search.ts"));
 const space_history_1 = __importDefault(__webpack_require__(/*! ./space-history */ "./resources/js/reducer/space-history.ts"));
 const current_space_1 = __importDefault(__webpack_require__(/*! ./current-space */ "./resources/js/reducer/current-space.ts"));
-const selected_amenities_1 = __importDefault(__webpack_require__(/*! ./selected-amenities */ "./resources/js/reducer/selected-amenities.ts"));
 const upload_images_1 = __importDefault(__webpack_require__(/*! ./upload-images */ "./resources/js/reducer/upload-images.ts"));
 /**
  * Root Reducer
@@ -78372,53 +78057,9 @@ const RootReducer = redux_1.combineReducers({
     spaceSearch: space_search_1.default,
     spaceHistory: space_history_1.default,
     currentSpace: current_space_1.default,
-    selectedAmenities: selected_amenities_1.default,
     selectedImages: upload_images_1.default,
 });
 exports.default = RootReducer;
-
-
-/***/ }),
-
-/***/ "./resources/js/reducer/selected-amenities.ts":
-/*!****************************************************!*\
-  !*** ./resources/js/reducer/selected-amenities.ts ***!
-  \****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const redux_types = __importStar(__webpack_require__(/*! ../redux-types/selected-amenities */ "./resources/js/redux-types/selected-amenities.ts"));
-/**
- * Initial State
- */
-const initialState = {
-    selectedAmenities: new Set([]),
-};
-/**
- * SelectedAmenitiesReducer
- */
-function SelectedAmenitiesReducer(state = initialState, action) {
-    switch (action.type) {
-        case redux_types.SET_SELECTED_AMENITIES:
-            return {
-                ...state,
-                selectedAmenities: action.selectedAmenities,
-            };
-        default:
-            return state;
-    }
-}
-exports.default = SelectedAmenitiesReducer;
 
 
 /***/ }),
@@ -78732,17 +78373,6 @@ exports.FAIL_REQUEST = 'current-space/FAIL_REQUEST';
 exports.RESET_DATA = 'current-space/RESET_DATA';
 //
 //
-// General information
-//
-//
-// prettier-ignore
-exports.START_UPDATE_GI = 'current-space/START_UPDATE_GI';
-// prettier-ignore
-exports.SUCCEED_UPDATE_GI = 'current-space/SUCCEED_UPDATE_GI';
-// prettier-ignore
-exports.FAIL_UPDATE_GI = 'current-space/FAIL_UPDATE_GI';
-//
-//
 // Space description
 //
 //
@@ -78754,17 +78384,6 @@ exports.SUCCEED_UPDATE_SD = 'current-space/SUCCEED_UPDATE_SD';
 exports.FAIL_UPDATE_SD = 'current-space/FAIL_UPDATE_SD';
 //
 //
-// Amenity tags
-//
-//
-// prettier-ignore
-exports.START_UPDATE_AT = 'current-space/START_UPDATE_AT';
-// prettier-ignore
-exports.SUCCEED_UPDATE_AT = 'current-space/SUCCEED_UPDATE_AT';
-// prettier-ignore
-exports.FAIL_UPDATE_AT = 'current-space/FAIL_UPDATE_AT';
-//
-//
 // Images
 //
 //
@@ -78774,32 +78393,6 @@ exports.START_UPDATE_IMAGES = 'current-space/START_UPDATE_IMAGES';
 exports.SUCCEED_UPDATE_IMAGES = 'current-space/SUCCEED_UPDATE_IMAGES';
 // prettier-ignore
 exports.FAIL_UPDATE_IMAGES = 'current-space/FAIL_UPDATE_IMAGES';
-//
-//
-// Busy level
-//
-//
-// prettier-ignore
-exports.SET_BUSY_LEVEL = 'current-space/SET_BUSY_LEVEL';
-
-
-/***/ }),
-
-/***/ "./resources/js/redux-types/selected-amenities.ts":
-/*!********************************************************!*\
-  !*** ./resources/js/redux-types/selected-amenities.ts ***!
-  \********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * Action Constants
- */
-// prettier-ignore
-exports.SET_SELECTED_AMENITIES = 'selected-amenities/SET_SELECTED_AMENITIES';
 
 
 /***/ }),
@@ -78921,7 +78514,6 @@ const react_router_1 = __webpack_require__(/*! react-router */ "./node_modules/r
 const space_list_1 = __importDefault(__webpack_require__(/*! ../components/space-list */ "./resources/js/components/space-list.tsx"));
 const general_info_1 = __importDefault(__webpack_require__(/*! ../components/general-info */ "./resources/js/components/general-info.tsx"));
 const space_description_1 = __importDefault(__webpack_require__(/*! ../components/space-description */ "./resources/js/components/space-description.tsx"));
-const amenity_tags_1 = __importDefault(__webpack_require__(/*! ../components/amenity-tags */ "./resources/js/components/amenity-tags/index.tsx"));
 const loaction_map_1 = __importDefault(__webpack_require__(/*! ../components/loaction-map */ "./resources/js/components/loaction-map.tsx"));
 const images_editor_1 = __importDefault(__webpack_require__(/*! ../components/images-editor */ "./resources/js/components/images-editor/index.tsx"));
 const os_page_status_1 = __importDefault(__webpack_require__(/*! ../components/os-page-status */ "./resources/js/components/os-page-status.tsx"));
@@ -78945,7 +78537,6 @@ class _HomeScreen extends react_1.default.Component {
                         react_1.default.createElement(general_info_1.default, null),
                         react_1.default.createElement(space_description_1.default, null),
                         react_1.default.createElement(opening_hours_1.default, null),
-                        react_1.default.createElement(amenity_tags_1.default, null),
                         react_1.default.createElement(loaction_map_1.default, null)),
                     react_1.default.createElement("div", { id: "right" },
                         react_1.default.createElement(images_editor_1.default, null))));
@@ -79017,6 +78608,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const osdb_axios_1 = __importDefault(__webpack_require__(/*! ../config/osdb-axios */ "./resources/js/config/osdb-axios.ts"));
 const firebase_1 = __importDefault(__webpack_require__(/*! ../config/firebase */ "./resources/js/config/firebase.ts"));
+const organizer_1 = __webpack_require__(/*! ../model/organizer */ "./resources/js/model/organizer.ts");
 const authActions = __importStar(__webpack_require__(/*! ../actions/auth */ "./resources/js/actions/auth.ts"));
 const space_list_1 = __webpack_require__(/*! ../actions/space-list */ "./resources/js/actions/space-list.ts");
 const space_history_1 = __webpack_require__(/*! ../actions/space-history */ "./resources/js/actions/space-history.ts");
@@ -79035,18 +78627,9 @@ exports.requestLogin = (userEmail, userPassword) => async (dispatch) => {
         let currentUser = await firebase_1.default.auth().currentUser;
         if (currentUser !== null) {
             try {
-                // const { data } = await OSDBAxios.get<RawOrganizer>(
-                //     `organizers/${currentUser.uid}`,
-                // );
-                // const organizer = rawOrganizer2Organizer(data);
-                // dispatch(authActions.succeedLogin(organizer));
-                dispatch(authActions.succeedLogin({
-                    uid: 'TESTUID',
-                    email: 'testuser@debug.test',
-                    name: 'debugmodeusesr',
-                    owningSpaces: [],
-                    authority: 'admin',
-                }));
+                const { data } = await osdb_axios_1.default.get(`organizer/organizer/${currentUser.uid}`);
+                const organizer = organizer_1.rawOrganizer2Organizer(currentUser.uid, data);
+                dispatch(authActions.succeedLogin(organizer));
             }
             catch (error) {
                 dispatch(authActions.failLogin('사용자 정보를 가져오는데 실패했습니다.'));
@@ -79087,7 +78670,11 @@ exports.requestLogout = () => async (dispatch) => {
     });
 };
 /**
+ *
+ *
  * Signup
+ *
+ *
  */
 exports.requestSignup = (userEmail, userName, userPassword) => async (dispatch) => {
     dispatch(authActions.requestSignup());
@@ -79151,7 +78738,7 @@ const space_history_1 = __webpack_require__(/*! ../actions/space-history */ "./r
 exports.requestSpace = (spaceID, pushHistory = false) => async (dispatch) => {
     dispatch(currentSpaceActions.startRequest());
     try {
-        const { data } = await osdb_axios_1.default.get(`/ospace/${spaceID}`);
+        const { data } = await osdb_axios_1.default.get(`/organizer/space/single/${spaceID}`);
         const space = space_1.rawSpaces2SpaceList(spaceID, data);
         dispatch(currentSpaceActions.receiveRequest(space));
         if (pushHistory) {
@@ -79163,39 +78750,6 @@ exports.requestSpace = (spaceID, pushHistory = false) => async (dispatch) => {
     }
     catch (error) {
         dispatch(currentSpaceActions.failRequest(error.message));
-    }
-};
-/**
- *
- *
- * Update general information of the space on server
- *
- *
- */
-exports.updateGeneralInfo = (spaceID, info) => async (dispatch) => {
-    let sendData = {};
-    info.spaceNames && (sendData['space_names'] = info.spaceNames);
-    info.types && (sendData['type'] = info.types.join());
-    info.locationText && (sendData['location_text'] = info.locationText);
-    info.location &&
-        (sendData['latitude'] = info.location.lat) &&
-        (sendData['latitude'] = info.location.lng);
-    info.openingHours &&
-        (sendData['operating_hours'] = info.openingHours.join());
-    if (sendData !== {}) {
-        dispatch(currentSpaceActions.startUpdateGI());
-        try {
-            const { data } = await osdb_axios_1.default.post(`/ospace/${spaceID}`, sendData);
-            if (data.updated_space_id === spaceID) {
-                dispatch(currentSpaceActions.succeedUpdateGI(info));
-            }
-            else {
-                dispatch(currentSpaceActions.failUpdateGI('업데이트에 실패했습니다.'));
-            }
-        }
-        catch (error) {
-            dispatch(currentSpaceActions.failUpdateGI(error.message));
-        }
     }
 };
 /**
@@ -79222,34 +78776,6 @@ exports.updateSpaceDescription = (spaceID, spaceDescription) => async (dispatch)
     }
     catch (error) {
         dispatch(currentSpaceActions.failUpdateSD(error.message));
-    }
-};
-/**
- *
- *
- * Update amenity tags of the space on server
- *
- *
- */
-exports.updateAmenityTags = (spaceID, amenityTags) => async (dispatch) => {
-    dispatch(currentSpaceActions.startUpdateAT());
-    try {
-        let amenities = {};
-        amenityTags.forEach((tag) => {
-            amenities[tag] = {};
-        });
-        const { data } = await osdb_axios_1.default.post(`/ospace/${spaceID}`, {
-            amenity_tags: amenities,
-        });
-        if (data.updated_space_id === spaceID) {
-            dispatch(currentSpaceActions.succeedUpdateAT(amenityTags));
-        }
-        else {
-            dispatch(currentSpaceActions.failUpdateAT('업데이트에 실패했습니다.'));
-        }
-    }
-    catch (error) {
-        dispatch(currentSpaceActions.failUpdateAT(error.message));
     }
 };
 exports.updateImages = (spaceID, spaceImages, uploadings) => async (dispatch) => {
@@ -79310,6 +78836,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const osdb_axios_1 = __importDefault(__webpack_require__(/*! ../config/osdb-axios */ "./resources/js/config/osdb-axios.ts"));
+const space_header_1 = __webpack_require__(/*! ../model/space-header */ "./resources/js/model/space-header.ts");
 const spaceListActions = __importStar(__webpack_require__(/*! ../actions/space-list */ "./resources/js/actions/space-list.ts"));
 const spaceSearchActions = __importStar(__webpack_require__(/*! ../actions/space-search */ "./resources/js/actions/space-search.ts"));
 const current_space_1 = __webpack_require__(/*! ./current-space */ "./resources/js/thunk-action/current-space.ts");
@@ -79320,15 +78847,15 @@ const current_space_1 = __webpack_require__(/*! ./current-space */ "./resources/
  *
  *
  */
-exports.requestSpaceList = (sids) => async (dispatch) => {
+exports.requestSpaceList = (spaceIDs) => async (dispatch) => {
     dispatch(spaceListActions.startRequest());
     try {
-        const responses = await Promise.all(sids.map((sid) => osdb_axios_1.default.get(`/ospace/${sid}`).then((response) => {
-            return { sid: sid, response: response };
+        const responses = await Promise.all(spaceIDs.map((id) => osdb_axios_1.default.get(`/ospace/${id}`).then((response) => {
+            return { spaceID: id, response: response };
         })));
-        const spaceList = responses.map(({ sid, response, }) => ({
-            id: sid,
-            names: response.data.space_names,
+        const spaceList = responses.map(({ spaceID, response, }) => ({
+            id: spaceID,
+            spaceNames: response.data[spaceID].space_names,
         }));
         dispatch(spaceListActions.receiveRequest(spaceList));
         // Set initial space
@@ -79350,29 +78877,8 @@ exports.requestSpaceList = (sids) => async (dispatch) => {
 exports.requestWholeSpaceList = () => async (dispatch) => {
     dispatch(spaceListActions.startRequest());
     try {
-        const spaceList = [
-            {
-                id: '1',
-                names: {
-                    en: '',
-                    ko: '폴바셋 교보문고점',
-                },
-            },
-            {
-                id: '12',
-                names: {
-                    en: '',
-                    ko: '아나바다 교보본점',
-                },
-            },
-            {
-                id: '13',
-                names: {
-                    en: '',
-                    ko: '알라딘문고 잠실점',
-                },
-            },
-        ];
+        const { data } = await osdb_axios_1.default.get(`organizer/space/all`);
+        const spaceList = space_header_1.rawSpaceHeaderMap2SpaceHeaderList(data);
         dispatch(spaceListActions.receiveRequest(spaceList));
     }
     catch (error) {
@@ -79392,7 +78898,7 @@ exports.searchSpaceList = (spaceList, query) => async (dispatch) => {
         return;
     }
     const regex = new RegExp(query, 'i');
-    const result = spaceList.filter((space) => regex.test(space.names.ko));
+    const result = spaceList.filter((space) => regex.test(space.spaceNames.ko));
     dispatch(spaceSearchActions.finishSearch(result));
 };
 

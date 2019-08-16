@@ -19,6 +19,9 @@
         }
 
         #space-search-result {
+            // direction
+            direction: ltr;
+
             // size
             max-height: 50vh;
             width: 30vw;
@@ -39,6 +42,9 @@
 
             // background
             background: $white;
+
+            // make scroll
+            overflow: scroll;
 
             // shadow
             -webkit-box-shadow: 10px 11px 10px -15px rgba(0, 0, 0, 0.75);

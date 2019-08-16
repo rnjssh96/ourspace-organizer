@@ -215,6 +215,8 @@ class _ImageUploadModal extends React.Component<ImageUploadModalProps> {
 import { connect } from 'react-redux';
 import RootState from '../../redux-types';
 
+import { SpaceImage } from '../../model/space';
+
 import { UploadImagesMap } from '../../redux-types/upload-images';
 
 import {
@@ -245,7 +247,7 @@ interface _ReduxProps {
     /**
      * Current images
      */
-    currentImages?: string[];
+    currentImages?: SpaceImage[];
 }
 
 interface _ReduxActionCreators {
@@ -274,7 +276,7 @@ interface _ReduxActionCreators {
      */
     updateImages: (
         spaceID: string,
-        spaceImages: string[],
+        spaceImages: SpaceImage[],
         uploadings: UploadImagesMap,
     ) => void;
 }

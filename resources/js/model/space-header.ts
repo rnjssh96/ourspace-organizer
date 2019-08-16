@@ -9,17 +9,27 @@ import { SpaceNames } from './space';
  */
 export interface SpaceHeader {
     id: string;
-    names: SpaceNames;
+    spaceNames: SpaceNames;
 }
 
 /**
  *
  *
- * Raw space header
+ * Raw space header map
  *
  *
  */
-export interface RawSpaceHeader {
-    id: string;
-    names: SpaceNames;
+export interface RawSpaceHeaderMap {
+    [id: string]: {
+        space_names: SpaceNames;
+        location_text: string;
+    };
 }
+
+export const rawSpaceHeaderMap2SpaceHeaderList = (
+    spaceMap: RawSpaceHeaderMap,
+): SpaceHeader[] =>
+    Object.keys(spaceMap).map((uid: string) => ({
+        id: uid,
+        spaceNames: spaceMap[uid].space_names,
+    }));
