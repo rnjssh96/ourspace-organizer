@@ -7,16 +7,16 @@ read https://www.howtoforge.com/tutorial/install-laravel-on-ubuntu-for-apache/ f
 1. Project Setup
 
     1. Clone project:
-       '''git clone https://github.com/rnjssh96/ourspace-organizer.git'''
+       ```git clone https://github.com/rnjssh96/ourspace-organizer.git```
 
     2. Install Composer Dependencies
-       '''composer install'''
+       ```composer install```
 
     3. Install NPM Dependencies
-       '''npm install'''
+       ```npm install```
 
-    4. Setup '''.env''' file
-       '''cp .env.example .env'''
+    4. Setup ```.env``` file
+       ```cp .env.example .env```
 
     5. Generate an app encryption key
-       '''php artisan key:generate'''
+       ```php artisan key:generate```
