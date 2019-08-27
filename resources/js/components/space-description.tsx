@@ -39,13 +39,15 @@ class _SpaceDescription extends React.Component<SpaceDescriptionProps> {
     };
 
     private _save = () => {
-        if (this.props.currentSpaceID) {
-            // this.props.updateSpaceDescription(
-            //     this.props.currentSpaceID,
-            //     this.state.textValue,
-            // );
-            this._swtichMode('display');
+        if (
+            this.props.currentSpaceID &&
+            this.props.spaceDescription != this.state.textValue
+        ) {
+            this.props.updateSpace(this.props.currentSpaceID, 'description', {
+                description: this.state.textValue,
+            });
         }
+        this._swtichMode('display');
     };
 
     private _renderDisplayMode = () =>
@@ -134,7 +136,14 @@ class _SpaceDescription extends React.Component<SpaceDescriptionProps> {
 import { connect } from 'react-redux';
 import RootState from '../redux-types';
 
-import { SpaceDataStatus } from '../model/space';
+import {
+    SpaceDataStatus,
+    SpaceID,
+    SpaceRequestUnit,
+    SpaceUpdate,
+} from '../model/space';
+
+import { updateSpace } from '../thunk-action/current-space';
 
 interface _ReduxProps {
     /**
@@ -145,7 +154,7 @@ interface _ReduxProps {
     /**
      * Description of the space
      */
-    spaceDescription?: string;
+    spaceDescription: string;
 
     /**
      * Space data status
@@ -153,16 +162,26 @@ interface _ReduxProps {
     dataStatus: SpaceDataStatus;
 }
 
-interface _ReduxActionCreators {}
+interface _ReduxActionCreators {
+    /**
+     * Update space data on the server
+     */
+    updateSpace: (
+        spaceID: SpaceID,
+        requestUnit: SpaceRequestUnit,
+        spaceUpdate: SpaceUpdate,
+    ) => void;
+}
 
 const mapStateToProps = (state: RootState): _ReduxProps => ({
     currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
-    spaceDescription:
-        state.currentSpace.data && state.currentSpace.data.spaceDescription,
+    spaceDescription: state.currentSpace.data
+        ? state.currentSpace.data.spaceDescription
+        : '',
     dataStatus: state.currentSpace.dataStatus,
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = { updateSpace };
 
 const SpaceDescription = connect(
     mapStateToProps,

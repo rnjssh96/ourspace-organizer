@@ -18,4 +18,30 @@
         padding-top: 1rem;
         padding-bottom: 1rem;
     }
+
+    .modal-body {
+        & > .form-control {
+            // margin
+            margin-top: 1rem;
+        }
+
+        & > #latlng-form {
+            // flex
+            display: flex;
+            flex-direction: row;
+
+            // margin
+            margin-top: 1rem;
+
+            & > .input-group {
+                // size
+                flex: 1;
+
+                &:last-child {
+                    // margin
+                    margin-left: 1rem;
+                }
+            }
+        }
+    }
 }

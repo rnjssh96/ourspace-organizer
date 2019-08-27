@@ -11,6 +11,13 @@ export type SpaceID = string;
  */
 export type SpaceNames = { [locale in Locale]: string };
 
+export const interpretRawSpaceName = (
+    rawNames: { [locale in Locale]?: string },
+): SpaceNames => ({
+    en: rawNames.en ? rawNames.en : '',
+    ko: rawNames.ko ? rawNames.ko : '',
+});
+
 /**
  * Space Type
  */
@@ -30,9 +37,23 @@ export const interpretSpaceType = (
 /**
  * Opening Hours
  */
-type DAYS_IN_WEEK = 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun';
+export type WeekDay = 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun';
+export const DAYS_IN_WEEK: WeekDay[] = [
+    'mon',
+    'tue',
+    'wed',
+    'thu',
+    'fri',
+    'sat',
+    'sun',
+];
 
-export type OpeningHours = { [day in DAYS_IN_WEEK]: OpeningHour };
+interface OpeningHour {
+    open: string;
+    close?: string;
+}
+
+export type OpeningHours = { [day in WeekDay]: OpeningHour };
 
 /**
  * LatLng
@@ -53,21 +74,13 @@ export interface SpaceImage {
 }
 
 /**
- * Day Opening Hour
- */
-export interface OpeningHour {
-    open: string;
-    close: string;
-}
-
-/**
  * Space Tag
  */
 import { space_tag } from '../config/space.json';
 
 export type SpaceTag = keyof typeof space_tag;
 
-const spaceTags: {
+export const spaceTags: {
     [code in SpaceTag]: { [locale in Locale]: string }
 } = space_tag;
 
@@ -83,7 +96,9 @@ import { purpose } from '../config/space.json';
 
 export type Purpose = keyof typeof purpose;
 
-const purposes: { [code in Purpose]: { [locale in Locale]: string } } = purpose;
+export const purposes: {
+    [code in Purpose]: { [locale in Locale]: string }
+} = purpose;
 
 export const interpretPurpose = (
     purpose: Purpose,
@@ -126,14 +141,17 @@ export default interface Space {
  *
  */
 export interface RawSpace {
-    space_names: SpaceNames;
+    space_names: {
+        en?: string;
+        ko?: string;
+    };
     description: string;
     images: SpaceImage[];
     location_text: string;
     latitude: number;
     longitude: number;
     likes: UserID[];
-    operating_hours: { [day in DAYS_IN_WEEK]: string };
+    operating_hours: { [day in WeekDay]: string };
     organizers: UserID[];
     tags: string[];
     cost: {
@@ -152,6 +170,7 @@ export interface RawSpace {
     metadata: any;
     operating_notes: any;
     special_notes: any;
+    rating: number;
 }
 
 export interface RawSpaceWithID {
@@ -179,10 +198,10 @@ export const rawSpaces2SpaceList = (
 
     return {
         id: spaceID,
-        spaceNames: rawSpace.space_names,
+        spaceNames: interpretRawSpaceName(rawSpace.space_names),
         spaceType: rawSpace.type.toString() as SpaceType,
         spaceDescription: rawSpace.description,
-        rating: 0,
+        rating: rawSpace.rating,
         images: rawSpace.images,
         spaceAddress: rawSpace.location_text,
         location: {
@@ -219,7 +238,14 @@ export const rawSpaces2SpaceList = (
  *
  *
  */
-export type SpaceRequestUnit = 'all' | 'title' | 'description';
+export type SpaceRequestUnit =
+    | 'all'
+    | 'title'
+    | 'description'
+    | 'operating-hours'
+    | 'purpose'
+    | 'tags'
+    | 'location';
 
 export interface SpaceDataStatus extends DataStatus {
     requestUnit?: SpaceRequestUnit;
@@ -233,8 +259,26 @@ export interface SpaceDataStatus extends DataStatus {
  *
  */
 export interface SpaceUpdate {
+    // title
     spaceNames?: SpaceNames;
     spaceType?: SpaceType;
+
+    // description
+    description?: string;
+
+    // operating-hours
+    operating_hours?: { [day in WeekDay]: string };
+
+    // purpose
+    purpose?: number[];
+
+    // tags
+    tags?: string[];
+
+    // location
+    location_text?: string;
+    latitude?: number;
+    longitude?: number;
 }
 
 export const encodeSpaceUpdate = (spaceUpdate: SpaceUpdate) => {
@@ -242,5 +286,17 @@ export const encodeSpaceUpdate = (spaceUpdate: SpaceUpdate) => {
     spaceUpdate.spaceNames && (encoded['space_names'] = spaceUpdate.spaceNames);
     spaceUpdate.spaceType &&
         (encoded['type'] = parseInt(spaceUpdate.spaceType));
+    spaceUpdate.description !== null &&
+        (encoded['description'] = spaceUpdate.description);
+    spaceUpdate.operating_hours !== null &&
+        (encoded['operating_hours'] = spaceUpdate.operating_hours);
+    spaceUpdate.purpose && (encoded['purposes'] = spaceUpdate.purpose);
+    spaceUpdate.tags && (encoded['tags'] = spaceUpdate.tags);
+    spaceUpdate.location_text !== null &&
+        (encoded['location_text'] = spaceUpdate.location_text);
+    spaceUpdate.latitude !== null &&
+        (encoded['latitude'] = spaceUpdate.latitude);
+    spaceUpdate.longitude !== null &&
+        (encoded['longitude'] = spaceUpdate.longitude);
     return encoded;
 };

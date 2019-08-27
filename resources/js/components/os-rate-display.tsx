@@ -7,7 +7,9 @@ import React from 'react';
  *
  *
  */
-interface OSRateDisplayProps extends _ReduxProps {}
+interface OSRateDisplayProps {
+    rate: number;
+}
 
 /**
  *
@@ -16,7 +18,7 @@ interface OSRateDisplayProps extends _ReduxProps {}
  *
  *
  */
-class _OSRateDisplay extends React.Component<OSRateDisplayProps> {
+export default class OSRateDisplay extends React.Component<OSRateDisplayProps> {
     private _renderStar = (index: number, percentage: number) => (
         <div key={index} className="star">
             <i className="far fa-star" />
@@ -50,33 +52,3 @@ class _OSRateDisplay extends React.Component<OSRateDisplayProps> {
         );
     }
 }
-
-/**
- *
- *
- * Connect redux
- *
- *
- */
-import { connect } from 'react-redux';
-import RootState from '../redux-types';
-
-interface _ReduxProps {
-    /**
-     * Overall rank of the spcae
-     */
-    rate: number;
-}
-
-const mapStateToProps = (state: RootState): _ReduxProps => ({
-    rate: (state.currentSpace.data && state.currentSpace.data.rating) || 0,
-});
-
-const mapDispatchToProps = {};
-
-const OSRateDisplay = connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(_OSRateDisplay);
-
-export default OSRateDisplay;

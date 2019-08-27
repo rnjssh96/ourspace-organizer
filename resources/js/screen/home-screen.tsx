@@ -25,6 +25,8 @@ import ImagesEditor from '../components/images-editor';
 import OSPageStatus from '../components/os-page-status';
 import SpaceSearch from '../components/space-search';
 import OpeningHours from '../components/opening-hours';
+import SpaceTags from '../components/space-tags';
+import SpacePurpose from '../components/space-purpose';
 
 class _HomeScreen extends React.Component<HomeScreenProps> {
     private _renderTitle = () => {
@@ -32,11 +34,8 @@ class _HomeScreen extends React.Component<HomeScreenProps> {
             return (
                 <div id="title-div">
                     <p className="h1">
-                        <b>{`${this.props.currentUser.name} 님,`}</b>
+                        <b>{`${this.props.currentUser.name} 님`}</b>
                     </p>
-                    <p className="h2">{`현재 ${
-                        this.props.currentUser.owningSpaces.length
-                    } 개의 공간을 가지고 계십니다.`}</p>
                 </div>
             );
         }
@@ -50,6 +49,8 @@ class _HomeScreen extends React.Component<HomeScreenProps> {
                         <GeneralInfo />
                         <SpaceDescription />
                         <OpeningHours />
+                        <SpacePurpose />
+                        <SpaceTags />
                         <LoactionMap />
                     </div>
                     <div id="right">

@@ -1,0 +1,179 @@
+#opening-hours {
+    p {
+        // margin
+        margin: 0;
+    }
+
+    .cell {
+        // size
+        flex: 1;
+
+        // flex
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        // padding
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+
+        // text
+        text-align: center;
+        color: $grey-1;
+    }
+
+    & > .body {
+        & > #oh-table {
+            & > #table-header {
+                // flex
+                display: flex;
+                flex-direction: row;
+                align-items: stretch;
+
+                & > .cell {
+                    // size
+                    flex: 1;
+
+                    // background
+                    background: $black;
+
+                    // text
+                    color: $white;
+                }
+            }
+
+            & > #table-body {
+                // flex
+                display: flex;
+                flex-direction: row;
+
+                & > #table-col-header {
+                    // size
+                    flex: 1;
+
+                    // flex
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                & > #table-data {
+                    // size
+                    flex: 7;
+
+                    // flex
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: stretch;
+
+                    & > #no-info {
+                        align-self: center;
+                    }
+
+                    & > .col {
+                        // size
+                        flex: 1;
+
+                        // flex
+                        display: flex;
+                        flex-direction: column;
+                    }
+                }
+            }
+        }
+    }
+
+    .modal-body {
+        & > .option-row {
+            &:not(:first-child) {
+                // margin
+                margin-top: 1rem;
+            }
+
+            & > label {
+                // margin
+                margin-left: 0.5rem;
+            }
+        }
+
+        & > #oh-edit-table {
+            // flex
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+
+            // border
+            border: 0.5px solid $black;
+            border-radius: 10px;
+
+            // overflow
+            overflow: hidden;
+
+            & > .table-row {
+                // size
+                height: 4rem;
+
+                // flex
+                display: flex;
+                flex-direction: row;
+                align-items: stretch;
+
+                .cell:not(.row-header) {
+                    // padding
+                    padding-left: 1rem;
+                    &:last-child {
+                        padding-right: 1rem;
+                    }
+
+                    & > input {
+                        // text
+                        text-align: center;
+                    }
+                }
+
+                &.header-row {
+                    // size
+                    height: auto;
+
+                    // border
+                    border-bottom: 1px solid $black;
+
+                    & > .cell {
+                        // text
+                        color: $black;
+                    }
+                }
+
+                & > .row-header {
+                    // size
+                    flex: none;
+                    width: 3rem;
+
+                    // text
+                    color: $black;
+                }
+
+                &:not(.header-row) > .row-header {
+                    // border
+                    border-right: 1px solid $black;
+
+                    // cursor
+                    cursor: pointer;
+
+                    &:hover {
+                        // background
+                        background: $grey-3;
+                    }
+
+                    &.active {
+                        // background
+                        background: $black;
+
+                        // text
+                        color: $white;
+                    }
+                }
+            }
+        }
+    }
+}

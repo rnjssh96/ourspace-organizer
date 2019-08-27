@@ -30,19 +30,21 @@ import OSRateDisplay from './os-rate-display';
 class _GeneralInfo extends React.Component<GeneralInfoProps> {
     private editModalID = 'general-info-edit-modal';
 
-    public state: { names: SpaceNames; type: SpaceType } = {
-        names: this.props.spaceNames,
-        type: this.props.type,
+    public state: { name_en: string; name_ko: string; type: SpaceType } = {
+        name_en: '',
+        name_ko: '',
+        type: '0',
     };
 
-    private _updateGeneralInfo = () => {
-        if (this.props.currentSpaceID) {
-            this.props.updateSpace(this.props.currentSpaceID, 'title', {
-                spaceNames: this.state.names,
-                spaceType: this.state.type,
-            });
-        }
-    };
+    private _updateGeneralInfo = () =>
+        this.props.currentSpaceID &&
+        this.props.updateSpace(this.props.currentSpaceID, 'title', {
+            spaceNames: {
+                en: this.state.name_en,
+                ko: this.state.name_ko,
+            },
+            spaceType: this.state.type,
+        });
 
     private _renderTitle = () => {
         const typeText = interpretSpaceType(this.props.type, 'ko');
@@ -58,14 +60,15 @@ class _GeneralInfo extends React.Component<GeneralInfoProps> {
                         modalID={this.editModalID}
                         onClick={() => {
                             this.setState({
-                                names: this.props.spaceNames,
+                                name_en: this.props.spaceNames.en,
+                                name_ko: this.props.spaceNames.ko,
                                 type: this.props.type,
                             });
                         }}
                     />
                 </div>
                 <div id="rate">
-                    <OSRateDisplay />
+                    <OSRateDisplay rate={this.props.rating} />
                 </div>
             </div>
         );
@@ -81,14 +84,11 @@ class _GeneralInfo extends React.Component<GeneralInfoProps> {
                 <input
                     className="form-control"
                     type="text"
-                    value={this.state.names.en}
+                    value={this.state.name_en}
                     onChange={(event: ChangeEvent<HTMLInputElement>) => {
                         this.setState({
                             ...this.state,
-                            names: {
-                                ...this.state.names,
-                                en: event.target.value,
-                            },
+                            name_en: event.target.value,
                         });
                     }}
                     placeholder="영어"
@@ -101,14 +101,11 @@ class _GeneralInfo extends React.Component<GeneralInfoProps> {
                 <input
                     className="form-control"
                     type="text"
-                    value={this.state.names.ko}
+                    value={this.state.name_ko}
                     onChange={(event: ChangeEvent<HTMLInputElement>) => {
                         this.setState({
                             ...this.state,
-                            names: {
-                                ...this.state.names,
-                                ko: event.target.value,
-                            },
+                            name_ko: event.target.value,
                         });
                     }}
                     placeholder="한국어"
@@ -199,7 +196,7 @@ import { updateSpace } from '../thunk-action/current-space';
 
 interface _ReduxProps {
     /**
-     * Current space
+     * Current space ID
      */
     currentSpaceID?: SpaceID;
 
@@ -212,6 +209,11 @@ interface _ReduxProps {
      * Types of the space
      */
     type: SpaceType;
+
+    /**
+     * Rating of the space
+     */
+    rating: number;
 }
 
 interface _ReduxActionCreators {
@@ -231,6 +233,7 @@ const mapStateToProps = (state: RootState): _ReduxProps => ({
         ? state.currentSpace.data.spaceNames
         : { en: '', ko: '' },
     type: state.currentSpace.data ? state.currentSpace.data.spaceType : '0',
+    rating: state.currentSpace.data ? state.currentSpace.data.rating : 0,
 });
 
 const mapDispatchToProps = { updateSpace };

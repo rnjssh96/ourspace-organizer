@@ -76485,17 +76485,18 @@ class _GeneralInfo extends react_1.default.Component {
         super(...arguments);
         this.editModalID = 'general-info-edit-modal';
         this.state = {
-            names: this.props.spaceNames,
-            type: this.props.type,
+            name_en: '',
+            name_ko: '',
+            type: '0',
         };
-        this._updateGeneralInfo = () => {
-            if (this.props.currentSpaceID) {
-                this.props.updateSpace(this.props.currentSpaceID, 'title', {
-                    spaceNames: this.state.names,
-                    spaceType: this.state.type,
-                });
-            }
-        };
+        this._updateGeneralInfo = () => this.props.currentSpaceID &&
+            this.props.updateSpace(this.props.currentSpaceID, 'title', {
+                spaceNames: {
+                    en: this.state.name_en,
+                    ko: this.state.name_ko,
+                },
+                spaceType: this.state.type,
+            });
         this._renderTitle = () => {
             const typeText = space_1.interpretSpaceType(this.props.type, 'ko');
             return (react_1.default.createElement("div", { id: "space-name-row" },
@@ -76504,37 +76505,32 @@ class _GeneralInfo extends react_1.default.Component {
                     react_1.default.createElement("p", { id: "type", className: "h4" }, typeText),
                     react_1.default.createElement(os_edit_button_1.default, { modalID: this.editModalID, onClick: () => {
                             this.setState({
-                                names: this.props.spaceNames,
+                                name_en: this.props.spaceNames.en,
+                                name_ko: this.props.spaceNames.ko,
                                 type: this.props.type,
                             });
                         } })),
                 react_1.default.createElement("div", { id: "rate" },
-                    react_1.default.createElement(os_rate_display_1.default, null))));
+                    react_1.default.createElement(os_rate_display_1.default, { rate: this.props.rating }))));
         };
         this._renderModalBody = () => (react_1.default.createElement("div", { className: "modal-body" },
             react_1.default.createElement("p", { className: "h5" }, "\uC774\uB984"),
             react_1.default.createElement("div", { className: "input-group" },
                 react_1.default.createElement("div", { className: "input-group-prepend" },
                     react_1.default.createElement("span", { className: "input-group-text" }, "\uC601\uC5B4")),
-                react_1.default.createElement("input", { className: "form-control", type: "text", value: this.state.names.en, onChange: (event) => {
+                react_1.default.createElement("input", { className: "form-control", type: "text", value: this.state.name_en, onChange: (event) => {
                         this.setState({
                             ...this.state,
-                            names: {
-                                ...this.state.names,
-                                en: event.target.value,
-                            },
+                            name_en: event.target.value,
                         });
                     }, placeholder: "\uC601\uC5B4" })),
             react_1.default.createElement("div", { className: "input-group" },
                 react_1.default.createElement("div", { className: "input-group-prepend" },
                     react_1.default.createElement("span", { className: "input-group-text" }, "\uD55C\uAD6D\uC5B4")),
-                react_1.default.createElement("input", { className: "form-control", type: "text", value: this.state.names.ko, onChange: (event) => {
+                react_1.default.createElement("input", { className: "form-control", type: "text", value: this.state.name_ko, onChange: (event) => {
                         this.setState({
                             ...this.state,
-                            names: {
-                                ...this.state.names,
-                                ko: event.target.value,
-                            },
+                            name_ko: event.target.value,
                         });
                     }, placeholder: "\uD55C\uAD6D\uC5B4" })),
             react_1.default.createElement("p", { className: "h5" }, "\uCE74\uD14C\uACE0\uB9AC"),
@@ -76576,6 +76572,7 @@ const mapStateToProps = (state) => ({
         ? state.currentSpace.data.spaceNames
         : { en: '', ko: '' },
     type: state.currentSpace.data ? state.currentSpace.data.spaceType : '0',
+    rating: state.currentSpace.data ? state.currentSpace.data.rating : 0,
 });
 const mapDispatchToProps = { updateSpace: current_space_1.updateSpace };
 const GeneralInfo = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_GeneralInfo);
@@ -76836,6 +76833,18 @@ const os_edit_button_1 = __importDefault(__webpack_require__(/*! ./os-edit-butto
 class _LoactionMap extends react_1.default.Component {
     constructor() {
         super(...arguments);
+        this.editModalID = 'location-edit-modal';
+        this.state = {
+            address: '',
+            lat: 0.0,
+            lng: 0.0,
+        };
+        this._updateLocationInfo = () => this.props.currentSpaceID &&
+            this.props.updateSpace(this.props.currentSpaceID, 'location', {
+                location_text: this.state.address,
+                latitude: this.state.lat,
+                longitude: this.state.lng,
+            });
         this._renderAddress = () => (react_1.default.createElement("p", { className: "h5", id: "address-text" }, this.props.spaceAddress
             ? this.props.spaceAddress
             : '등록된 주소가 없습니다.'));
@@ -76851,14 +76860,59 @@ class _LoactionMap extends react_1.default.Component {
                     react_1.default.createElement(os_page_status_1.default, { status: "information", info: "\uC704\uCE58\uC815\uBCF4\uAC00 \uC874\uC7AC\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4." })));
             }
         };
+        this._renderModalBody = () => (react_1.default.createElement("div", { className: "modal-body" },
+            react_1.default.createElement("p", { className: "h5" }, "\uC704\uCE58\uC815\uBCF4"),
+            react_1.default.createElement("input", { className: "form-control", type: "text", placeholder: "\uC0C1\uC138 \uC8FC\uC18C", value: this.state.address, onChange: (event) => {
+                    this.setState({
+                        ...this.state,
+                        address: event.target.value,
+                    });
+                } }),
+            react_1.default.createElement("div", { id: "latlng-form" },
+                react_1.default.createElement("div", { className: "input-group" },
+                    react_1.default.createElement("div", { className: "input-group-prepend" },
+                        react_1.default.createElement("span", { className: "input-group-text" }, "\uC704\uB3C4")),
+                    react_1.default.createElement("input", { className: "form-control", type: "number", min: "-90", max: "90", placeholder: "\uC704\uB3C4", value: this.state.lat, onChange: (event) => {
+                            this.setState({
+                                ...this.state,
+                                lat: parseFloat(event.target.value),
+                            });
+                        } })),
+                react_1.default.createElement("div", { className: "input-group" },
+                    react_1.default.createElement("div", { className: "input-group-prepend" },
+                        react_1.default.createElement("span", { className: "input-group-text" }, "\uACBD\uB3C4")),
+                    react_1.default.createElement("input", { className: "form-control", type: "number", min: "-180", max: "180", placeholder: "\uACBD\uB3C4", value: this.state.lng, onChange: (event) => {
+                            this.setState({
+                                ...this.state,
+                                lng: parseFloat(event.target.value),
+                            });
+                        } })))));
+        this._renderEditModal = () => (react_1.default.createElement("div", { id: this.editModalID, className: "modal fade", tabIndex: -1, role: "dialog", "aria-hidden": "true" },
+            react_1.default.createElement("div", { className: "modal-dialog", role: "document" },
+                react_1.default.createElement("div", { className: "modal-content" },
+                    react_1.default.createElement("div", { className: "modal-header" },
+                        react_1.default.createElement("p", { className: "modal-title h5" }, "\uC704\uCE58\uC815\uBCF4 \uC218\uC815")),
+                    this._renderModalBody(),
+                    react_1.default.createElement("div", { className: "modal-footer" },
+                        react_1.default.createElement("button", { type: "button", className: "btn btn-secondary", "data-dismiss": "modal" }, "\uB2EB\uAE30"),
+                        react_1.default.createElement("button", { type: "button", className: "btn btn-primary", "data-dismiss": "modal", onClick: this._updateLocationInfo }, "\uC800\uC7A5"))))));
     }
     render() {
         return (react_1.default.createElement("div", { id: "location-map", className: "category" },
             react_1.default.createElement("div", { className: "header" },
                 react_1.default.createElement("p", { className: "h5" }, "\uC704\uCE58"),
-                react_1.default.createElement(os_edit_button_1.default, { onClick: () => { } })),
+                react_1.default.createElement(os_edit_button_1.default, { modalID: this.editModalID, onClick: () => {
+                        this.props.spaceAddress &&
+                            this.props.location &&
+                            this.setState({
+                                address: this.props.spaceAddress,
+                                lat: this.props.location.lat,
+                                lng: this.props.location.lng,
+                            });
+                    } })),
             this._renderAddress(),
-            react_1.default.createElement("div", { className: "body" }, this._renderMap())));
+            react_1.default.createElement("div", { className: "body" }, this._renderMap()),
+            this._renderEditModal()));
     }
 }
 /**
@@ -76869,11 +76923,13 @@ class _LoactionMap extends react_1.default.Component {
  *
  */
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const current_space_1 = __webpack_require__(/*! ../thunk-action/current-space */ "./resources/js/thunk-action/current-space.ts");
 const mapStateToProps = (state) => ({
+    currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
     location: state.currentSpace.data && state.currentSpace.data.location,
     spaceAddress: state.currentSpace.data && state.currentSpace.data.spaceAddress,
 });
-const mapDispatchToProps = {};
+const mapDispatchToProps = { updateSpace: current_space_1.updateSpace };
 const LoactionMap = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_LoactionMap);
 exports.default = LoactionMap;
 
@@ -76902,13 +76958,160 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 const os_edit_button_1 = __importDefault(__webpack_require__(/*! ./os-edit-button */ "./resources/js/components/os-edit-button.tsx"));
+const space_1 = __webpack_require__(/*! ../model/space */ "./resources/js/model/space.ts");
+const DAYS = {
+    mon: '월',
+    tue: '화',
+    wed: '수',
+    thu: '목',
+    fri: '금',
+    sat: '토',
+    sun: '일',
+};
+const NO_PROVIDE_STATE = {
+    mon: { open: '' },
+    tue: { open: '' },
+    wed: { open: '' },
+    thu: { open: '' },
+    fri: { open: '' },
+    sat: { open: '' },
+    sun: { open: '' },
+};
+const ALL_OFF_STATE = {
+    mon: { open: '00:00', close: '00:00' },
+    tue: { open: '00:00', close: '00:00' },
+    wed: { open: '00:00', close: '00:00' },
+    thu: { open: '00:00', close: '00:00' },
+    fri: { open: '00:00', close: '00:00' },
+    sat: { open: '00:00', close: '00:00' },
+    sun: { open: '00:00', close: '00:00' },
+};
 class _OpeningHours extends react_1.default.Component {
+    constructor() {
+        super(...arguments);
+        this.editModalID = 'opening-hours-edit-modal';
+        this.state = NO_PROVIDE_STATE;
+        this._updateOpeningHours = () => {
+            if (this.props.currentSpaceID) {
+                let result = {};
+                space_1.DAYS_IN_WEEK.forEach((day) => {
+                    result[day] = this.state[day].open;
+                    this.state[day].close &&
+                        (result[day] += '\\' + this.state[day].close);
+                });
+                this.props.updateSpace(this.props.currentSpaceID, 'operating-hours', {
+                    operating_hours: result,
+                });
+            }
+        };
+        this._resetEditState = () => this.props.openingHours && this.setState(this.props.openingHours);
+        this._onOptionChanged = () => this.props.openingHours &&
+            this.setState(this.state.mon.open === ''
+                ? this.props.openingHours.mon.open === ''
+                    ? ALL_OFF_STATE
+                    : this.props.openingHours
+                : NO_PROVIDE_STATE);
+        this._onDayClicked = (day) => {
+            let newState = this.state;
+            newState[day] =
+                this.props.openingHours && newState[day].close == '00:00'
+                    ? this.props.openingHours[day].open === '' ||
+                        this.props.openingHours[day].close === '00:00'
+                        ? { open: '00:00', close: '24:00' }
+                        : this.props.openingHours[day]
+                    : { open: '00:00', close: '00:00' };
+            this.setState(newState);
+        };
+        this._onTimeChange = (day, oc, value) => this.props.openingHours &&
+            this.setState({
+                ...this.state,
+                [day]: { ...this.state[day], [oc]: value },
+            });
+        this._renderTableData = () => {
+            if (this.props.openingHours) {
+                if (this.props.openingHours.mon.open == '') {
+                    // If information is NOT provided
+                    return react_1.default.createElement("p", { id: "no-info" }, "\uC6B4\uC601\uC2DC\uAC04 \uC815\uBCF4\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.");
+                }
+                else {
+                    // If information is provied
+                    return space_1.DAYS_IN_WEEK.map((day) => {
+                        if (this.props.openingHours[day].close == '00:00') {
+                            // off
+                            return (react_1.default.createElement("div", { key: day, className: "col" },
+                                react_1.default.createElement("div", { className: "cell" },
+                                    react_1.default.createElement("p", null, "\uD734\uBB34"))));
+                        }
+                        else {
+                            // working
+                            return (react_1.default.createElement("div", { key: day, className: "col" },
+                                react_1.default.createElement("div", { className: "cell" },
+                                    react_1.default.createElement("p", null, this.props.openingHours[day].open)),
+                                react_1.default.createElement("div", { className: "cell" },
+                                    react_1.default.createElement("p", null, this.props.openingHours[day].close))));
+                        }
+                    });
+                }
+            }
+        };
+        this._renderModalBody = () => (react_1.default.createElement("div", { className: "modal-body" },
+            react_1.default.createElement("div", { className: "option-row" },
+                react_1.default.createElement("input", { type: "radio", name: "optionRadio", checked: this.state.mon.open === '', onChange: this._onOptionChanged }),
+                react_1.default.createElement("label", null, "\uC6B4\uC601\uC2DC\uAC04 \uC815\uBCF4 \uC81C\uACF5 \uC548\uD568")),
+            react_1.default.createElement("div", { className: "option-row" },
+                react_1.default.createElement("input", { type: "radio", name: "optionRadio", checked: this.state.mon.open !== '', onChange: this._onOptionChanged }),
+                react_1.default.createElement("label", null, "\uC6B4\uC601\uC2DC\uAC04 \uC815\uBCF4 \uC81C\uACF5")),
+            this.state.mon.open !== '' && (react_1.default.createElement("div", { id: "oh-edit-table" },
+                react_1.default.createElement("div", { className: "table-row header-row" },
+                    react_1.default.createElement("div", { className: "cell row-header" }),
+                    react_1.default.createElement("div", { className: "cell" }, "\uC624\uD508"),
+                    react_1.default.createElement("div", { className: "cell" }, "\uB9C8\uAC10")),
+                space_1.DAYS_IN_WEEK.map((day) => this.state[day].close === '00:00' ? (react_1.default.createElement("div", { key: day, className: "table-row" },
+                    react_1.default.createElement("div", { className: "cell row-header", onClick: () => {
+                            this._onDayClicked(day);
+                        } }, DAYS[day]),
+                    react_1.default.createElement("div", { className: "cell" },
+                        react_1.default.createElement("p", null, "\uD734\uBB34")))) : (react_1.default.createElement("div", { key: day, className: "table-row" },
+                    react_1.default.createElement("div", { className: "cell row-header active", onClick: () => {
+                            this._onDayClicked(day);
+                        } }, DAYS[day]),
+                    react_1.default.createElement("div", { className: "cell" },
+                        react_1.default.createElement("input", { className: "form-control", type: "text", value: this.state[day].open, onChange: (event) => {
+                                this._onTimeChange(day, 'open', event.target.value);
+                            }, placeholder: "hh:mm" })),
+                    react_1.default.createElement("div", { className: "cell" },
+                        react_1.default.createElement("input", { className: "form-control", type: "text", value: this.state[day].close, onChange: (event) => {
+                                this._onTimeChange(day, 'close', event.target.value);
+                            }, placeholder: "hh:mm" })))))))));
+        this._renderEditModal = () => (react_1.default.createElement("div", { id: this.editModalID, className: "modal fade", tabIndex: -1, role: "dialog", "aria-hidden": "true" },
+            react_1.default.createElement("div", { className: "modal-dialog", role: "document" },
+                react_1.default.createElement("div", { className: "modal-content" },
+                    react_1.default.createElement("div", { className: "modal-header" },
+                        react_1.default.createElement("p", { className: "modal-title h5" }, "\uC6B4\uC601\uC2DC\uAC04 \uC218\uC815")),
+                    this._renderModalBody(),
+                    react_1.default.createElement("div", { className: "modal-footer" },
+                        react_1.default.createElement("button", { type: "button", className: "btn btn-secondary", "data-dismiss": "modal" }, "\uB2EB\uAE30"),
+                        react_1.default.createElement("button", { type: "button", className: "btn btn-primary", "data-dismiss": "modal", onClick: this._updateOpeningHours }, "\uC800\uC7A5"))))));
+    }
     render() {
-        return (react_1.default.createElement("div", { id: "location-map", className: "category" },
+        if (!this.props.openingHours) {
+            return null;
+        }
+        return (react_1.default.createElement("div", { id: "opening-hours", className: "category" },
             react_1.default.createElement("div", { className: "header" },
                 react_1.default.createElement("p", { className: "h5" }, "\uC6B4\uC601\uC2DC\uAC04"),
-                react_1.default.createElement(os_edit_button_1.default, { onClick: () => { } })),
-            react_1.default.createElement("div", { className: "body" })));
+                react_1.default.createElement(os_edit_button_1.default, { modalID: this.editModalID, onClick: this._resetEditState })),
+            react_1.default.createElement("div", { className: "body" },
+                react_1.default.createElement("div", { id: "oh-table" },
+                    react_1.default.createElement("div", { id: "table-header" },
+                        react_1.default.createElement("div", { className: "cell" }),
+                        space_1.DAYS_IN_WEEK.map((day) => (react_1.default.createElement("div", { key: day, className: "cell h5" }, DAYS[day])))),
+                    react_1.default.createElement("div", { id: "table-body" },
+                        react_1.default.createElement("div", { id: "table-col-header" },
+                            react_1.default.createElement("div", { className: "cell" }, "\uC624\uD508"),
+                            react_1.default.createElement("div", { className: "cell" }, "\uB9C8\uAC10")),
+                        react_1.default.createElement("div", { id: "table-data" }, this._renderTableData())))),
+            this._renderEditModal()));
     }
 }
 /**
@@ -76919,10 +77122,12 @@ class _OpeningHours extends react_1.default.Component {
  *
  */
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const current_space_1 = __webpack_require__(/*! ../thunk-action/current-space */ "./resources/js/thunk-action/current-space.ts");
 const mapStateToProps = (state) => ({
+    currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
     openingHours: state.currentSpace.data && state.currentSpace.data.openingHours,
 });
-const mapDispatchToProps = {};
+const mapDispatchToProps = { updateSpace: current_space_1.updateSpace };
 const OpeningHours = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_OpeningHours);
 exports.default = OpeningHours;
 
@@ -77079,7 +77284,7 @@ const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules
  *
  *
  */
-class _OSRateDisplay extends react_1.default.Component {
+class OSRateDisplay extends react_1.default.Component {
     constructor() {
         super(...arguments);
         this._renderStar = (index, percentage) => (react_1.default.createElement("div", { key: index, className: "star" },
@@ -77105,19 +77310,6 @@ class _OSRateDisplay extends react_1.default.Component {
             react_1.default.createElement("div", { id: "stars" }, this._renderStars())));
     }
 }
-/**
- *
- *
- * Connect redux
- *
- *
- */
-const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-const mapStateToProps = (state) => ({
-    rate: (state.currentSpace.data && state.currentSpace.data.rating) || 0,
-});
-const mapDispatchToProps = {};
-const OSRateDisplay = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_OSRateDisplay);
 exports.default = OSRateDisplay;
 
 
@@ -77163,13 +77355,13 @@ class _SpaceDescription extends react_1.default.Component {
             });
         };
         this._save = () => {
-            if (this.props.currentSpaceID) {
-                // this.props.updateSpaceDescription(
-                //     this.props.currentSpaceID,
-                //     this.state.textValue,
-                // );
-                this._swtichMode('display');
+            if (this.props.currentSpaceID &&
+                this.props.spaceDescription != this.state.textValue) {
+                this.props.updateSpace(this.props.currentSpaceID, 'description', {
+                    description: this.state.textValue,
+                });
             }
+            this._swtichMode('display');
         };
         this._renderDisplayMode = () => this.props.spaceDescription ? (react_1.default.createElement("p", { id: "description-text", className: "h6" }, this.props.spaceDescription)) : (react_1.default.createElement("p", { id: "no-intro", className: "h6" }, "\uB4F1\uB85D\uB41C \uC18C\uAC1C\uAE00\uC774 \uC5C6\uC2B5\uB2C8\uB2E4."));
         this._renderEditMode = () => (react_1.default.createElement("div", { id: "editor" },
@@ -77209,12 +77401,15 @@ class _SpaceDescription extends react_1.default.Component {
  *
  */
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const current_space_1 = __webpack_require__(/*! ../thunk-action/current-space */ "./resources/js/thunk-action/current-space.ts");
 const mapStateToProps = (state) => ({
     currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
-    spaceDescription: state.currentSpace.data && state.currentSpace.data.spaceDescription,
+    spaceDescription: state.currentSpace.data
+        ? state.currentSpace.data.spaceDescription
+        : '',
     dataStatus: state.currentSpace.dataStatus,
 });
-const mapDispatchToProps = {};
+const mapDispatchToProps = { updateSpace: current_space_1.updateSpace };
 const SpaceDescription = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_SpaceDescription);
 exports.default = SpaceDescription;
 
@@ -77291,6 +77486,123 @@ const mapDispatchToProps = {
 };
 const SpaceList = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_SpaceList);
 exports.default = SpaceList;
+
+
+/***/ }),
+
+/***/ "./resources/js/components/space-purpose.tsx":
+/*!***************************************************!*\
+  !*** ./resources/js/components/space-purpose.tsx ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ *
+ *
+ * SpacePurpose component
+ *
+ *
+ */
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const os_edit_button_1 = __importDefault(__webpack_require__(/*! ./os-edit-button */ "./resources/js/components/os-edit-button.tsx"));
+const space_1 = __webpack_require__(/*! ../model/space */ "./resources/js/model/space.ts");
+const TAGS_PER_ROW = 3;
+class _SpacePurpose extends react_1.default.Component {
+    constructor() {
+        super(...arguments);
+        this.editModalID = 'space-purpose-edit-modal';
+        this.state = {
+            selected: new Set(),
+        };
+        this._updateSpacePurpose = () => {
+            if (this.props.currentSpaceID) {
+                const spacePurpose = [];
+                this.state.selected.forEach((purpose) => spacePurpose.push(parseInt(purpose)));
+                this.props.updateSpace(this.props.currentSpaceID, 'purpose', {
+                    purpose: spacePurpose,
+                });
+            }
+        };
+        this._setPurposeAsSelected = () => {
+            const selectedSet = new Set();
+            this.props.spacePurpose.forEach((purpose) => selectedSet.add(purpose));
+            this.setState({ selected: selectedSet });
+        };
+        this._onPurposeClicked = (purpose) => {
+            const set = this.state.selected;
+            if (this.state.selected.has(purpose)) {
+                set.delete(purpose);
+            }
+            else {
+                set.add(purpose);
+            }
+            this.setState({ selected: set });
+        };
+        this._renderPurposes = () => (react_1.default.createElement("div", { id: "tags" }, this.props.spacePurpose.map((purpose) => (react_1.default.createElement("p", { key: purpose, className: "h5 tag" }, space_1.interpretPurpose(purpose, 'ko'))))));
+        this._renderModalBody = () => {
+            const numOfTags = Object.keys(space_1.purposes).length;
+            const numOfRows = Math.ceil(numOfTags / TAGS_PER_ROW);
+            let tagsJSX = [];
+            let rowsJSX = [];
+            for (let purpose in space_1.purposes) {
+                tagsJSX.push(react_1.default.createElement("p", { key: purpose, className: `h5 tag-radio ${this.state.selected.has(purpose)
+                        ? 'selected'
+                        : ''}`, onClick: () => {
+                        this._onPurposeClicked(purpose);
+                    } }, space_1.interpretPurpose(purpose, 'ko')));
+            }
+            for (let i = 0; i < numOfRows; i++) {
+                rowsJSX.push(react_1.default.createElement("div", { key: i, className: "tagsRow" },
+                    tagsJSX[i * TAGS_PER_ROW + 0],
+                    tagsJSX[i * TAGS_PER_ROW + 1],
+                    tagsJSX[i * TAGS_PER_ROW + 2]));
+            }
+            return react_1.default.createElement("div", { className: "modal-body" }, rowsJSX);
+        };
+        this._renderEditModal = () => (react_1.default.createElement("div", { id: this.editModalID, className: "modal fade", tabIndex: -1, role: "dialog", "aria-hidden": "true" },
+            react_1.default.createElement("div", { className: "modal-dialog", role: "document" },
+                react_1.default.createElement("div", { className: "modal-content" },
+                    react_1.default.createElement("div", { className: "modal-header" },
+                        react_1.default.createElement("p", { className: "modal-title h5" }, "\uBAA9\uC801 \uC218\uC815")),
+                    this._renderModalBody(),
+                    react_1.default.createElement("div", { className: "modal-footer" },
+                        react_1.default.createElement("button", { type: "button", className: "btn btn-secondary", "data-dismiss": "modal" }, "\uB2EB\uAE30"),
+                        react_1.default.createElement("button", { type: "button", className: "btn btn-primary", "data-dismiss": "modal", onClick: this._updateSpacePurpose }, "\uC800\uC7A5"))))));
+    }
+    render() {
+        return (react_1.default.createElement("div", { id: "space-tags", className: "category" },
+            react_1.default.createElement("div", { className: "header" },
+                react_1.default.createElement("p", { className: "h5" }, "\uACF5\uAC04 \uBAA9\uC801"),
+                react_1.default.createElement(os_edit_button_1.default, { modalID: this.editModalID, onClick: this._setPurposeAsSelected })),
+            react_1.default.createElement("div", { className: "body" }, this._renderPurposes()),
+            this._renderEditModal()));
+    }
+}
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const current_space_1 = __webpack_require__(/*! ../thunk-action/current-space */ "./resources/js/thunk-action/current-space.ts");
+const mapStateToProps = (state) => ({
+    currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
+    spacePurpose: state.currentSpace.data
+        ? state.currentSpace.data.purposes
+        : [],
+});
+const mapDispatchToProps = { updateSpace: current_space_1.updateSpace };
+const SpacePurpose = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_SpacePurpose);
+exports.default = SpacePurpose;
 
 
 /***/ }),
@@ -77396,6 +77708,121 @@ const mapDispatchToProps = {
 };
 const SpaceSearch = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_SpaceSearch);
 exports.default = SpaceSearch;
+
+
+/***/ }),
+
+/***/ "./resources/js/components/space-tags.tsx":
+/*!************************************************!*\
+  !*** ./resources/js/components/space-tags.tsx ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ *
+ *
+ * SpaceTags component
+ *
+ *
+ */
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const os_edit_button_1 = __importDefault(__webpack_require__(/*! ./os-edit-button */ "./resources/js/components/os-edit-button.tsx"));
+const space_1 = __webpack_require__(/*! ../model/space */ "./resources/js/model/space.ts");
+const TAGS_PER_ROW = 3;
+class _SpaceTags extends react_1.default.Component {
+    constructor() {
+        super(...arguments);
+        this.editModalID = 'space-tags-edit-modal';
+        this.state = {
+            selected: new Set(),
+        };
+        this._updateSpaceTags = () => {
+            if (this.props.currentSpaceID) {
+                const tags = [];
+                this.state.selected.forEach((tag) => tags.push(tag));
+                this.props.updateSpace(this.props.currentSpaceID, 'tags', {
+                    tags: tags,
+                });
+            }
+        };
+        this._setTagsAsSelected = () => {
+            const selectedSet = new Set();
+            this.props.spaceTags.forEach((tag) => selectedSet.add(tag));
+            this.setState({ selected: selectedSet });
+        };
+        this._renderTags = () => (react_1.default.createElement("div", { id: "tags" }, this.props.spaceTags.map((tag) => (react_1.default.createElement("p", { key: tag, className: "h5 tag" }, `#${space_1.interpretSpaceTag(tag, 'ko')}`)))));
+        this._onTagClicked = (tag) => {
+            const set = this.state.selected;
+            if (this.state.selected.has(tag)) {
+                set.delete(tag);
+            }
+            else {
+                set.add(tag);
+            }
+            this.setState({ selected: set });
+        };
+        this._renderModalBody = () => {
+            const numOfTags = Object.keys(space_1.spaceTags).length;
+            const numOfRows = Math.ceil(numOfTags / TAGS_PER_ROW);
+            let tagsJSX = [];
+            let rowsJSX = [];
+            for (let tag in space_1.spaceTags) {
+                tagsJSX.push(react_1.default.createElement("p", { key: tag, className: `h5 tag-radio ${this.state.selected.has(tag)
+                        ? 'selected'
+                        : ''}`, onClick: () => {
+                        this._onTagClicked(tag);
+                    } }, `#${space_1.interpretSpaceTag(tag, 'ko')}`));
+            }
+            for (let i = 0; i < numOfRows; i++) {
+                rowsJSX.push(react_1.default.createElement("div", { key: i, className: "tagsRow" },
+                    tagsJSX[i * TAGS_PER_ROW + 0],
+                    tagsJSX[i * TAGS_PER_ROW + 1],
+                    tagsJSX[i * TAGS_PER_ROW + 2]));
+            }
+            return react_1.default.createElement("div", { className: "modal-body" }, rowsJSX);
+        };
+        this._renderEditModal = () => (react_1.default.createElement("div", { id: this.editModalID, className: "modal fade", tabIndex: -1, role: "dialog", "aria-hidden": "true" },
+            react_1.default.createElement("div", { className: "modal-dialog", role: "document" },
+                react_1.default.createElement("div", { className: "modal-content" },
+                    react_1.default.createElement("div", { className: "modal-header" },
+                        react_1.default.createElement("p", { className: "modal-title h5" }, "\uD0DC\uADF8 \uC218\uC815")),
+                    this._renderModalBody(),
+                    react_1.default.createElement("div", { className: "modal-footer" },
+                        react_1.default.createElement("button", { type: "button", className: "btn btn-secondary", "data-dismiss": "modal" }, "\uB2EB\uAE30"),
+                        react_1.default.createElement("button", { type: "button", className: "btn btn-primary", "data-dismiss": "modal", onClick: this._updateSpaceTags }, "\uC800\uC7A5"))))));
+    }
+    render() {
+        return (react_1.default.createElement("div", { id: "space-tags", className: "category" },
+            react_1.default.createElement("div", { className: "header" },
+                react_1.default.createElement("p", { className: "h5" }, "\uD0DC\uADF8"),
+                react_1.default.createElement(os_edit_button_1.default, { modalID: this.editModalID, onClick: this._setTagsAsSelected })),
+            react_1.default.createElement("div", { className: "body" }, this._renderTags()),
+            this._renderEditModal()));
+    }
+}
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const current_space_1 = __webpack_require__(/*! ../thunk-action/current-space */ "./resources/js/thunk-action/current-space.ts");
+const mapStateToProps = (state) => ({
+    currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
+    spaceTags: state.currentSpace.data ? state.currentSpace.data.tags : [],
+});
+const mapDispatchToProps = { updateSpace: current_space_1.updateSpace };
+const SpaceTags = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_SpaceTags);
+exports.default = SpaceTags;
 
 
 /***/ }),
@@ -77560,24 +77987,37 @@ exports.rawSpaceHeaderMap2SpaceHeaderList = (spaceMap) => Object.keys(spaceMap).
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.interpretRawSpaceName = (rawNames) => ({
+    en: rawNames.en ? rawNames.en : '',
+    ko: rawNames.ko ? rawNames.ko : '',
+});
 /**
  * Space Type
  */
 const space_json_1 = __webpack_require__(/*! ../config/space.json */ "./resources/js/config/space.json");
 exports.spaceTypes = space_json_1.space_type;
 exports.interpretSpaceType = (type, locale = 'en') => exports.spaceTypes[type][locale];
+exports.DAYS_IN_WEEK = [
+    'mon',
+    'tue',
+    'wed',
+    'thu',
+    'fri',
+    'sat',
+    'sun',
+];
 /**
  * Space Tag
  */
 const space_json_2 = __webpack_require__(/*! ../config/space.json */ "./resources/js/config/space.json");
-const spaceTags = space_json_2.space_tag;
-exports.interpretSpaceTag = (tag, locale = 'en') => spaceTags[tag][locale];
+exports.spaceTags = space_json_2.space_tag;
+exports.interpretSpaceTag = (tag, locale = 'en') => exports.spaceTags[tag][locale];
 /**
  * Purpose
  */
 const space_json_3 = __webpack_require__(/*! ../config/space.json */ "./resources/js/config/space.json");
-const purposes = space_json_3.purpose;
-exports.interpretPurpose = (purpose, locale = 'en') => purposes[purpose][locale];
+exports.purposes = space_json_3.purpose;
+exports.interpretPurpose = (purpose, locale = 'en') => exports.purposes[purpose][locale];
 /**
  *
  *
@@ -77595,10 +78035,10 @@ exports.rawSpaces2SpaceList = (spaceID, rawSpace) => {
     let sunOH = rawSpace.operating_hours.sun.split('\\');
     return {
         id: spaceID,
-        spaceNames: rawSpace.space_names,
+        spaceNames: exports.interpretRawSpaceName(rawSpace.space_names),
         spaceType: rawSpace.type.toString(),
         spaceDescription: rawSpace.description,
-        rating: 0,
+        rating: rawSpace.rating,
         images: rawSpace.images,
         spaceAddress: rawSpace.location_text,
         location: {
@@ -77630,6 +78070,18 @@ exports.encodeSpaceUpdate = (spaceUpdate) => {
     spaceUpdate.spaceNames && (encoded['space_names'] = spaceUpdate.spaceNames);
     spaceUpdate.spaceType &&
         (encoded['type'] = parseInt(spaceUpdate.spaceType));
+    spaceUpdate.description !== null &&
+        (encoded['description'] = spaceUpdate.description);
+    spaceUpdate.operating_hours !== null &&
+        (encoded['operating_hours'] = spaceUpdate.operating_hours);
+    spaceUpdate.purpose && (encoded['purposes'] = spaceUpdate.purpose);
+    spaceUpdate.tags && (encoded['tags'] = spaceUpdate.tags);
+    spaceUpdate.location_text !== null &&
+        (encoded['location_text'] = spaceUpdate.location_text);
+    spaceUpdate.latitude !== null &&
+        (encoded['latitude'] = spaceUpdate.latitude);
+    spaceUpdate.longitude !== null &&
+        (encoded['longitude'] = spaceUpdate.longitude);
     return encoded;
 };
 
@@ -78550,6 +79002,8 @@ const images_editor_1 = __importDefault(__webpack_require__(/*! ../components/im
 const os_page_status_1 = __importDefault(__webpack_require__(/*! ../components/os-page-status */ "./resources/js/components/os-page-status.tsx"));
 const space_search_1 = __importDefault(__webpack_require__(/*! ../components/space-search */ "./resources/js/components/space-search.tsx"));
 const opening_hours_1 = __importDefault(__webpack_require__(/*! ../components/opening-hours */ "./resources/js/components/opening-hours.tsx"));
+const space_tags_1 = __importDefault(__webpack_require__(/*! ../components/space-tags */ "./resources/js/components/space-tags.tsx"));
+const space_purpose_1 = __importDefault(__webpack_require__(/*! ../components/space-purpose */ "./resources/js/components/space-purpose.tsx"));
 class _HomeScreen extends react_1.default.Component {
     constructor() {
         super(...arguments);
@@ -78557,8 +79011,7 @@ class _HomeScreen extends react_1.default.Component {
             if (this.props.currentUser) {
                 return (react_1.default.createElement("div", { id: "title-div" },
                     react_1.default.createElement("p", { className: "h1" },
-                        react_1.default.createElement("b", null, `${this.props.currentUser.name} 님,`)),
-                    react_1.default.createElement("p", { className: "h2" }, `현재 ${this.props.currentUser.owningSpaces.length} 개의 공간을 가지고 계십니다.`)));
+                        react_1.default.createElement("b", null, `${this.props.currentUser.name} 님`))));
             }
         };
         this._renderWorkspace = () => {
@@ -78568,6 +79021,8 @@ class _HomeScreen extends react_1.default.Component {
                         react_1.default.createElement(general_info_1.default, null),
                         react_1.default.createElement(space_description_1.default, null),
                         react_1.default.createElement(opening_hours_1.default, null),
+                        react_1.default.createElement(space_purpose_1.default, null),
+                        react_1.default.createElement(space_tags_1.default, null),
                         react_1.default.createElement(loaction_map_1.default, null)),
                     react_1.default.createElement("div", { id: "right" },
                         react_1.default.createElement(images_editor_1.default, null))));
@@ -78858,6 +79313,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const osdb_axios_1 = __importDefault(__webpack_require__(/*! ../config/osdb-axios */ "./resources/js/config/osdb-axios.ts"));
+const space_1 = __webpack_require__(/*! ../model/space */ "./resources/js/model/space.ts");
 const space_header_1 = __webpack_require__(/*! ../model/space-header */ "./resources/js/model/space-header.ts");
 const spaceListActions = __importStar(__webpack_require__(/*! ../actions/space-list */ "./resources/js/actions/space-list.ts"));
 const spaceSearchActions = __importStar(__webpack_require__(/*! ../actions/space-search */ "./resources/js/actions/space-search.ts"));
@@ -78877,7 +79333,7 @@ exports.requestSpaceList = (spaceIDs) => async (dispatch) => {
         })));
         const spaceList = responses.map(({ spaceID, response, }) => ({
             id: spaceID,
-            spaceNames: response.data.space_names,
+            spaceNames: space_1.interpretRawSpaceName(response.data.space_names),
         }));
         dispatch(spaceListActions.finishRequest(spaceList));
         // Set initial space

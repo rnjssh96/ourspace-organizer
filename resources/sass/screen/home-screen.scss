@@ -1,21 +1,28 @@
 #home-container {
     // size
-    height: 100vh;
+    height: 100%;
+
+    // flex
+    display: flex;
+    flex-direction: column;
 
     // padding
     padding: 0;
 
-    #home-header {
+    & > #home-header {
         // size
-        height: 23%;
         width: 100%;
 
         // flex
         display: flex;
         flex-direction: row;
 
+        // padding
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+
         // background
-        background-color: $grey-2;
+        background-color: $black;
 
         #title-div {
             // size
@@ -46,19 +53,20 @@
 
             // padding
             padding-right: 2rem;
-
-            background-color: pink;
         }
     }
 
-    #home-body {
+    & > #home-body {
         // size
-        height: 77%;
+        flex: 1;
         width: 100%;
 
         // flex
         display: flex;
         flex-direction: column;
+
+        // overflow
+        overflow: hidden;
 
         #space-menu {
             // padding
@@ -68,7 +76,7 @@
 
         #workspace {
             // size
-            height: 100%;
+            flex: 1;
 
             // flex
             display: flex;
@@ -80,6 +88,9 @@
             // padding
             padding-left: 1rem;
             padding-right: 1rem;
+
+            // overflow
+            overflow: hidden;
 
             #left {
                 // size

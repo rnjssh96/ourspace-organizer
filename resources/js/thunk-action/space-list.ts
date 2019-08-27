@@ -4,7 +4,7 @@ import { AxiosResponse } from 'axios';
 
 import OSDBAxios from '../config/osdb-axios';
 
-import { SpaceID, RawSpace } from '../model/space';
+import { SpaceID, RawSpace, interpretRawSpaceName } from '../model/space';
 import {
     SpaceHeader,
     RawSpaceHeaderMap,
@@ -49,7 +49,7 @@ export const requestSpaceList: ActionCreator<
                 response: AxiosResponse<RawSpace>;
             }): SpaceHeader => ({
                 id: spaceID,
-                spaceNames: response.data.space_names,
+                spaceNames: interpretRawSpaceName(response.data.space_names),
             }),
         );
         dispatch(spaceListActions.finishRequest(spaceList));

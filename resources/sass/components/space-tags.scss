@@ -1,0 +1,93 @@
+#space-tags {
+    & > .body {
+        & > #tags {
+            // size
+            width: 100%;
+
+            // flex
+            display: flex;
+            flex-direction: row;
+
+            // padding
+            padding: 0.5rem;
+
+            // make scroll
+            overflow: scroll;
+
+            & > .tag {
+                // size
+                min-width: max-content;
+
+                // padding
+                padding-left: 1rem;
+                padding-right: 1rem;
+                padding-top: 0.5rem;
+                padding-bottom: 0.5rem;
+
+                // margin
+                margin: 0;
+
+                // text color
+                color: $grey-1;
+
+                // border
+                border-radius: 2rem;
+                border: 0.5px solid $grey-2;
+
+                &:not(:first-child) {
+                    // margin
+                    margin-left: 0.5rem;
+                }
+            }
+        }
+    }
+
+    .modal-body {
+        & > .tagsRow {
+            // flex
+            display: flex;
+            flex-direction: row;
+
+            // margin
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+
+            & > .tag-radio {
+                // size
+                flex: 1;
+
+                // padding
+                padding-top: 0.5rem;
+                padding-bottom: 0.5rem;
+
+                // text
+                color: $grey-2;
+                text-align: center;
+
+                // border
+                border: 1px solid $grey-2;
+                border-radius: 2rem;
+
+                &:not(:first-child) {
+                    // margin
+                    margin-left: 0.5rem;
+                }
+
+                // cursor
+                cursor: pointer;
+
+                // animation
+                transition: color 0.3s ease-in-out;
+
+                &:hover,
+                &.selected {
+                    // background
+                    background: $grey-2;
+
+                    // text
+                    color: $white;
+                }
+            }
+        }
+    }
+}
