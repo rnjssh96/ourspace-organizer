@@ -33,7 +33,7 @@ OurSpace Organizer Web-app
 
      4. Activate config file<br />
       `sudo a2dissite 000-default.conf`<br />
-      `sudo a2ensite laravel.conf`<br />
+      `sudo a2ensite ourspace-organizer.conf`<br />
       `sudo a2enmod rewrite`<br />
       `sudo service apache2 restart`<br />
 
