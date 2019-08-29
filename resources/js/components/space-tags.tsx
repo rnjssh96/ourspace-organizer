@@ -34,7 +34,7 @@ class _SpaceTags extends React.Component<SpaceTagsProps> {
             const tags: string[] = [];
             this.state.selected.forEach((tag: SpaceTag) => tags.push(tag));
             this.props.updateSpace(this.props.currentSpaceID, 'tags', {
-                tags: tags,
+                spaceTags: tags,
             });
         }
     };

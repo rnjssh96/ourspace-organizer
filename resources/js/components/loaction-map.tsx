@@ -32,7 +32,7 @@ class _LoactionMap extends React.Component<LoactionMapProps> {
     private _updateLocationInfo = () =>
         this.props.currentSpaceID &&
         this.props.updateSpace(this.props.currentSpaceID, 'location', {
-            location_text: this.state.address,
+            address: this.state.address,
             latitude: this.state.lat,
             longitude: this.state.lng,
         });

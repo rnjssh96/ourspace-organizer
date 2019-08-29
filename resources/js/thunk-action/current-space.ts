@@ -9,9 +9,9 @@ import {
     rawSpaces2SpaceList,
     SpaceID,
     SpaceUpdate,
-    encodeSpaceUpdate,
     SpaceRequestUnit,
     RawSpaceWithID,
+    encodeSpaceUpdate,
 } from '../model/space';
 
 import * as currentSpaceActions from '../actions/current-space';

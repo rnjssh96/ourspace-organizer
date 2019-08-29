@@ -27,6 +27,7 @@ import SpaceSearch from '../components/space-search';
 import OpeningHours from '../components/opening-hours';
 import SpaceTags from '../components/space-tags';
 import SpacePurpose from '../components/space-purpose';
+import SpaceDetail from '../components/space-detail';
 
 class _HomeScreen extends React.Component<HomeScreenProps> {
     private _renderTitle = () => {
@@ -51,6 +52,7 @@ class _HomeScreen extends React.Component<HomeScreenProps> {
                         <OpeningHours />
                         <SpacePurpose />
                         <SpaceTags />
+                        <SpaceDetail />
                         <LoactionMap />
                     </div>
                     <div id="right">

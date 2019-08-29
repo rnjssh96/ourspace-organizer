@@ -52,5 +52,23 @@
         "7": { "en": "", "ko": "창업" },
         "8": { "en": "", "ko": "산책" },
         "9": { "en": "", "ko": "소비" }
+    },
+    "service_fee": {
+        "0": { "en": "Free", "ko": "무료" },
+        "3": { "en": "Paid", "ko": "유료" }
+    },
+    "wifi_status": {
+        "0": { "en": "Not Available", "ko": "없음" },
+        "1": { "en": "Available", "ko": "있음" }
+    },
+    "plug_status": {
+        "0": { "en": "Not Available", "ko": "없음" },
+        "0.3": { "en": "Not Many", "ko": "적음" },
+        "0.7": { "en": "Normal", "ko": "보통" },
+        "1": { "en": "Plenty", "ko": "많음" }
+    },
+    "parking_status": {
+        "0": { "en": "Not Available", "ko": "없음" },
+        "1": { "en": "Available", "ko": "있음" }
     }
 }

@@ -31,12 +31,12 @@ class _SpacePurpose extends React.Component<SpacePurposeProps> {
 
     private _updateSpacePurpose = () => {
         if (this.props.currentSpaceID) {
-            const spacePurpose: number[] = [];
+            const purposes: number[] = [];
             this.state.selected.forEach((purpose: Purpose) =>
-                spacePurpose.push(parseInt(purpose)),
+                purposes.push(parseInt(purpose)),
             );
             this.props.updateSpace(this.props.currentSpaceID, 'purpose', {
-                purpose: spacePurpose,
+                spacePurpose: purposes,
             });
         }
     };

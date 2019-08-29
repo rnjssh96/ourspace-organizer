@@ -11212,7 +11212,7 @@ button {
   width: 100%;
   display: flex;
   flex-direction: row;
-  padding: 0.5rem;
+  padding: 1rem;
   overflow: scroll;
 }
 
@@ -11261,6 +11261,65 @@ button {
 #space-tags .modal-body > .tagsRow > .tag-radio.selected {
   background: #b6b6b6;
   color: #ffffff;
+}
+
+#space-detail > .body {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 1rem;
+}
+
+#space-detail > .body > .option-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#space-detail > .body > .option-group:not(:first-child) {
+  margin-top: 1rem;
+}
+
+#space-detail > .body > .option-group p {
+  margin: 0;
+}
+
+#space-detail > .body > .option-group > .options {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  margin-left: 1rem;
+  border-radius: 10px;
+  border: 1px solid #6f6f6f;
+  overflow: hidden;
+}
+
+#space-detail > .body > .option-group > .options > p {
+  color: #6f6f6f;
+}
+
+#space-detail > .body > .option-group > .options > .option {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+#space-detail > .body > .option-group > .options > .option.selected {
+  background: #6f6f6f;
+  color: #ffffff;
+}
+
+#space-detail > .body > .option-group > .options > .option:not(:first-child) {
+  border-left: 1px solid #6f6f6f;
+}
+
+#space-detail .modal-body > .input-group:not(:first-child) {
+  margin-top: 1rem;
 }
 
 #location-map #address-text {

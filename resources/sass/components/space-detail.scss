@@ -1,0 +1,90 @@
+#space-detail {
+    & > .body {
+        // flex
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+
+        // padding
+        padding: 1rem;
+
+        & > .option-group {
+            // flex
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            &:not(:first-child) {
+                // margin
+                margin-top: 1rem;
+            }
+
+            p {
+                // margin
+                margin: 0;
+            }
+
+            & > .options {
+                // size
+                flex: 1;
+
+                // flex
+                display: flex;
+                flex-direction: row;
+                align-items: stretch;
+
+                // margin
+                margin-left: 1rem;
+
+                // border
+                border-radius: 10px;
+                border: 1px solid $grey-1;
+
+                // overflow
+                overflow: hidden;
+
+                & > p {
+                    // text
+                    color: $grey-1;
+                }
+
+                & > .option {
+                    // size
+                    flex: 1;
+
+                    // flex
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+
+                    // padding
+                    padding-top: 0.5rem;
+                    padding-bottom: 0.5rem;
+
+                    &.selected {
+                        // background
+                        background: $grey-1;
+
+                        // text
+                        color: $white;
+                    }
+
+                    &:not(:first-child) {
+                        // border
+                        border-left: 1px solid $grey-1;
+                    }
+                }
+            }
+        }
+    }
+
+    .modal-body {
+        & > .input-group {
+            &:not(:first-child) {
+                //margin
+                margin-top: 1rem;
+            }
+        }
+    }
+}

@@ -43,7 +43,7 @@ class _GeneralInfo extends React.Component<GeneralInfoProps> {
                 en: this.state.name_en,
                 ko: this.state.name_ko,
             },
-            spaceType: this.state.type,
+            spaceType: parseInt(this.state.type),
         });
 
     private _renderTitle = () => {
@@ -116,16 +116,16 @@ class _GeneralInfo extends React.Component<GeneralInfoProps> {
             <div className="form-group">
                 <select
                     className="form-control"
-                    value={spaceTypes[this.state.type].ko}
+                    value={this.state.type}
                     onChange={(event: ChangeEvent<HTMLSelectElement>) => {
                         this.setState({
                             ...this.state,
-                            type: event.target.selectedIndex.toString() as SpaceType,
+                            type: event.target.value.toString() as SpaceType,
                         });
                     }}
                 >
                     {Object.keys(spaceTypes).map((type: string) => (
-                        <option key={type}>
+                        <option key={type} value={type}>
                             {spaceTypes[type as SpaceType].ko}
                         </option>
                     ))}

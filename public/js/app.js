@@ -76495,7 +76495,7 @@ class _GeneralInfo extends react_1.default.Component {
                     en: this.state.name_en,
                     ko: this.state.name_ko,
                 },
-                spaceType: this.state.type,
+                spaceType: parseInt(this.state.type),
             });
         this._renderTitle = () => {
             const typeText = space_1.interpretSpaceType(this.props.type, 'ko');
@@ -76535,12 +76535,12 @@ class _GeneralInfo extends react_1.default.Component {
                     }, placeholder: "\uD55C\uAD6D\uC5B4" })),
             react_1.default.createElement("p", { className: "h5" }, "\uCE74\uD14C\uACE0\uB9AC"),
             react_1.default.createElement("div", { className: "form-group" },
-                react_1.default.createElement("select", { className: "form-control", value: space_1.spaceTypes[this.state.type].ko, onChange: (event) => {
+                react_1.default.createElement("select", { className: "form-control", value: this.state.type, onChange: (event) => {
                         this.setState({
                             ...this.state,
-                            type: event.target.selectedIndex.toString(),
+                            type: event.target.value.toString(),
                         });
-                    } }, Object.keys(space_1.spaceTypes).map((type) => (react_1.default.createElement("option", { key: type }, space_1.spaceTypes[type].ko)))))));
+                    } }, Object.keys(space_1.spaceTypes).map((type) => (react_1.default.createElement("option", { key: type, value: type }, space_1.spaceTypes[type].ko)))))));
         this._renderEditModal = () => (react_1.default.createElement("div", { id: this.editModalID, className: "modal fade", tabIndex: -1, role: "dialog", "aria-hidden": "true" },
             react_1.default.createElement("div", { className: "modal-dialog", role: "document" },
                 react_1.default.createElement("div", { className: "modal-content" },
@@ -76841,7 +76841,7 @@ class _LoactionMap extends react_1.default.Component {
         };
         this._updateLocationInfo = () => this.props.currentSpaceID &&
             this.props.updateSpace(this.props.currentSpaceID, 'location', {
-                location_text: this.state.address,
+                address: this.state.address,
                 latitude: this.state.lat,
                 longitude: this.state.lng,
             });
@@ -76999,8 +76999,8 @@ class _OpeningHours extends react_1.default.Component {
                     this.state[day].close &&
                         (result[day] += '\\' + this.state[day].close);
                 });
-                this.props.updateSpace(this.props.currentSpaceID, 'operating-hours', {
-                    operating_hours: result,
+                this.props.updateSpace(this.props.currentSpaceID, 'opening-hours', {
+                    openingHours: result,
                 });
             }
         };
@@ -77416,6 +77416,137 @@ exports.default = SpaceDescription;
 
 /***/ }),
 
+/***/ "./resources/js/components/space-detail.tsx":
+/*!**************************************************!*\
+  !*** ./resources/js/components/space-detail.tsx ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * SpaceDetail Config
+ */
+const space_json_1 = __webpack_require__(/*! ../config/space.json */ "./resources/js/config/space.json");
+const extractConfigKeys = (configSet) => Object.keys(configSet).map(key => parseFloat(key));
+/**
+ *
+ *
+ * SpaceDetail component
+ *
+ *
+ */
+const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const os_edit_button_1 = __importDefault(__webpack_require__(/*! ./os-edit-button */ "./resources/js/components/os-edit-button.tsx"));
+class _SpaceDetail extends react_1.default.Component {
+    constructor() {
+        super(...arguments);
+        this.editModalID = 'space-detail-edit-modal';
+        this.state = {
+            selected: {},
+        };
+        this._resetEditState = () => this.setState({
+            selected: {
+                serviceFee: this.props.serviceFee,
+                wifi: this.props.wifi,
+                plug: this.props.plug,
+                parking: this.props.parking,
+            },
+        });
+        this._updateSpaceDetail = () => this.props.currentSpaceID &&
+            this.props.updateSpace(this.props.currentSpaceID, 'detail', {
+                spaceDetail: {
+                    serviceFee: this.state.selected['serviceFee'],
+                    wifi: this.state.selected['wifi'],
+                    plug: this.state.selected['plug'],
+                    parking: this.state.selected['parking'],
+                },
+            });
+        this._renderOptionGroup = (title, configs, selected) => (react_1.default.createElement("div", { className: "option-group" },
+            react_1.default.createElement("div", { className: "option-title" },
+                react_1.default.createElement("p", { className: "h5" }, title)),
+            react_1.default.createElement("div", { className: "options" }, configs[selected] ? (extractConfigKeys(configs).map((configKey) => (react_1.default.createElement("div", { key: configKey, className: `option ${configKey == selected ? 'selected' : ''}` },
+                react_1.default.createElement("p", null, configs[configKey].ko))))) : (react_1.default.createElement("div", { className: "option" },
+                react_1.default.createElement("p", null, "\uC815\uBCF4\uC5C6\uC74C"))))));
+        this._renderEditOptionGroup = (title, configName, configs) => (react_1.default.createElement("div", { className: "input-group" },
+            react_1.default.createElement("div", { className: "input-group-prepend" },
+                react_1.default.createElement("div", { className: "input-group-text" },
+                    react_1.default.createElement("input", { type: "checkbox", checked: this.state.selected[configName] != -1, onChange: (event) => this.setState({
+                            selected: {
+                                ...this.state.selected,
+                                [configName]: event.target.checked ? 0 : -1,
+                            },
+                        }) })),
+                react_1.default.createElement("label", { className: "input-group-text" }, title)),
+            react_1.default.createElement("select", { className: "custom-select", value: this.state.selected[configName], onChange: (event) => this.setState({
+                    selected: {
+                        ...this.state.selected,
+                        [configName]: parseFloat(event.target.value),
+                    },
+                }), disabled: this.state.selected[configName] == -1 }, extractConfigKeys(configs).map((configKey) => (react_1.default.createElement("option", { key: configKey, value: configKey }, configs[configKey].ko))))));
+        this._renderEditModal = () => (react_1.default.createElement("div", { id: this.editModalID, className: "modal fade", tabIndex: -1, role: "dialog", "aria-hidden": "true" },
+            react_1.default.createElement("div", { className: "modal-dialog", role: "document" },
+                react_1.default.createElement("div", { className: "modal-content" },
+                    react_1.default.createElement("div", { className: "modal-header" },
+                        react_1.default.createElement("p", { className: "modal-title h5" }, "\uCD94\uAC00\uC815\uBCF4 \uC218\uC815")),
+                    react_1.default.createElement("div", { className: "modal-body" },
+                        this._renderEditOptionGroup('시설이용', 'serviceFee', space_json_1.service_fee),
+                        this._renderEditOptionGroup('와이파이', 'wifi', space_json_1.wifi_status),
+                        this._renderEditOptionGroup('플러그', 'plug', space_json_1.plug_status),
+                        this._renderEditOptionGroup('주차공간', 'parking', space_json_1.parking_status)),
+                    react_1.default.createElement("div", { className: "modal-footer" },
+                        react_1.default.createElement("button", { type: "button", className: "btn btn-secondary", "data-dismiss": "modal" }, "\uB2EB\uAE30"),
+                        react_1.default.createElement("button", { type: "button", className: "btn btn-primary", "data-dismiss": "modal", onClick: this._updateSpaceDetail }, "\uC800\uC7A5"))))));
+    }
+    render() {
+        return (react_1.default.createElement("div", { id: "space-detail", className: "category" },
+            react_1.default.createElement("div", { className: "header" },
+                react_1.default.createElement("p", { className: "h5" }, "\uCD94\uAC00 \uC815\uBCF4"),
+                react_1.default.createElement(os_edit_button_1.default, { modalID: this.editModalID, onClick: this._resetEditState })),
+            react_1.default.createElement("div", { className: "body" },
+                this._renderOptionGroup('시설이용', space_json_1.service_fee, this.props.serviceFee),
+                this._renderOptionGroup('와이파이', space_json_1.wifi_status, this.props.wifi),
+                this._renderOptionGroup('플러그', space_json_1.plug_status, this.props.plug),
+                this._renderOptionGroup('주차공간', space_json_1.parking_status, this.props.parking)),
+            this._renderEditModal()));
+    }
+}
+/**
+ *
+ *
+ * Connect redux
+ *
+ *
+ */
+const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+const current_space_1 = __webpack_require__(/*! ../thunk-action/current-space */ "./resources/js/thunk-action/current-space.ts");
+const mapStateToProps = (state) => ({
+    currentSpaceID: state.currentSpace.data && state.currentSpace.data.id,
+    serviceFee: state.currentSpace.data
+        ? state.currentSpace.data.spaceDetail.serviceFee
+        : -1,
+    wifi: state.currentSpace.data
+        ? state.currentSpace.data.spaceDetail.wifi
+        : -1,
+    plug: state.currentSpace.data
+        ? state.currentSpace.data.spaceDetail.plug
+        : -1,
+    parking: state.currentSpace.data
+        ? state.currentSpace.data.spaceDetail.parking
+        : -1,
+});
+const mapDispatchToProps = { updateSpace: current_space_1.updateSpace };
+const SpaceDetail = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_SpaceDetail);
+exports.default = SpaceDetail;
+
+
+/***/ }),
+
 /***/ "./resources/js/components/space-list.tsx":
 /*!************************************************!*\
   !*** ./resources/js/components/space-list.tsx ***!
@@ -77523,10 +77654,10 @@ class _SpacePurpose extends react_1.default.Component {
         };
         this._updateSpacePurpose = () => {
             if (this.props.currentSpaceID) {
-                const spacePurpose = [];
-                this.state.selected.forEach((purpose) => spacePurpose.push(parseInt(purpose)));
+                const purposes = [];
+                this.state.selected.forEach((purpose) => purposes.push(parseInt(purpose)));
                 this.props.updateSpace(this.props.currentSpaceID, 'purpose', {
-                    purpose: spacePurpose,
+                    spacePurpose: purposes,
                 });
             }
         };
@@ -77748,7 +77879,7 @@ class _SpaceTags extends react_1.default.Component {
                 const tags = [];
                 this.state.selected.forEach((tag) => tags.push(tag));
                 this.props.updateSpace(this.props.currentSpaceID, 'tags', {
-                    tags: tags,
+                    spaceTags: tags,
                 });
             }
         };
@@ -77922,10 +78053,10 @@ exports.default = axios_1.default;
 /*!****************************************!*\
   !*** ./resources/js/config/space.json ***!
   \****************************************/
-/*! exports provided: space_type, space_tag, purpose, default */
+/*! exports provided: space_type, space_tag, purpose, service_fee, wifi_status, plug_status, parking_status, default */
 /***/ (function(module) {
 
-module.exports = {"space_type":{"0":{"en":"Uncategorized","ko":"미분류"},"1":{"en":"Startup Space","ko":"창업공간"},"2":{"en":"Museum","ko":"박물관"},"3":{"en":"Bookstore","ko":"서점"},"4":{"en":"Activity","ko":"체험공간"},"5":{"en":"Nature","ko":"자연"},"6":{"en":"Youth","ko":"청년공간"},"7":{"en":"Lounge","ko":"라운지"},"8":{"en":"Cafe","ko":"카페"},"9":{"en":"Study Cafe","ko":"스터디카페"},"10":{"en":"Library","ko":"도서관"},"11":{"en":"Book Cafe","ko":"북카페"},"12":{"en":"Share Office","ko":"공유오피스"},"13":{"en":"Multicultural space","ko":"복합문화공간"},"14":{"en":"Art Gallery","ko":"미술관"},"15":{"en":"Historic Site","ko":"유적지"},"16":{"en":"Flagship Store","ko":"플래그십스토어"},"17":{"en":"Meetin Space","ko":"모임공간"}},"space_tag":{"0":{"en":"","ko":"화려한"},"1":{"en":"","ko":"소박한"},"2":{"en":"","ko":"고급스러운"},"3":{"en":"","ko":"편안한"},"4":{"en":"","ko":"한국적인"},"5":{"en":"","ko":"이국적인"},"6":{"en":"","ko":"아기자기한"},"7":{"en":"","ko":"미니멀"},"8":{"en":"","ko":"모던한"},"9":{"en":"","ko":"빈티지"},"10":{"en":"","ko":"레트로"},"11":{"en":"","ko":"엔틱한"},"12":{"en":"","ko":"감성적인"},"13":{"en":"","ko":"개성있는"},"14":{"en":"","ko":"밝은"},"15":{"en":"","ko":"어두운"},"16":{"en":"","ko":"정돈된"},"17":{"en":"","ko":"자유분방한"},"18":{"en":"","ko":"따뜻한"},"19":{"en":"","ko":"시원한"}},"purpose":{"0":{"en":"","ko":"공부"},"1":{"en":"","ko":"액티비티"},"2":{"en":"","ko":"데이트"},"3":{"en":"","ko":"일"},"4":{"en":"","ko":"독서"},"5":{"en":"","ko":"수다"},"6":{"en":"","ko":"미팅"},"7":{"en":"","ko":"창업"},"8":{"en":"","ko":"산책"},"9":{"en":"","ko":"소비"}}};
+module.exports = {"space_type":{"0":{"en":"Uncategorized","ko":"미분류"},"1":{"en":"Startup Space","ko":"창업공간"},"2":{"en":"Museum","ko":"박물관"},"3":{"en":"Bookstore","ko":"서점"},"4":{"en":"Activity","ko":"체험공간"},"5":{"en":"Nature","ko":"자연"},"6":{"en":"Youth","ko":"청년공간"},"7":{"en":"Lounge","ko":"라운지"},"8":{"en":"Cafe","ko":"카페"},"9":{"en":"Study Cafe","ko":"스터디카페"},"10":{"en":"Library","ko":"도서관"},"11":{"en":"Book Cafe","ko":"북카페"},"12":{"en":"Share Office","ko":"공유오피스"},"13":{"en":"Multicultural space","ko":"복합문화공간"},"14":{"en":"Art Gallery","ko":"미술관"},"15":{"en":"Historic Site","ko":"유적지"},"16":{"en":"Flagship Store","ko":"플래그십스토어"},"17":{"en":"Meetin Space","ko":"모임공간"}},"space_tag":{"0":{"en":"","ko":"화려한"},"1":{"en":"","ko":"소박한"},"2":{"en":"","ko":"고급스러운"},"3":{"en":"","ko":"편안한"},"4":{"en":"","ko":"한국적인"},"5":{"en":"","ko":"이국적인"},"6":{"en":"","ko":"아기자기한"},"7":{"en":"","ko":"미니멀"},"8":{"en":"","ko":"모던한"},"9":{"en":"","ko":"빈티지"},"10":{"en":"","ko":"레트로"},"11":{"en":"","ko":"엔틱한"},"12":{"en":"","ko":"감성적인"},"13":{"en":"","ko":"개성있는"},"14":{"en":"","ko":"밝은"},"15":{"en":"","ko":"어두운"},"16":{"en":"","ko":"정돈된"},"17":{"en":"","ko":"자유분방한"},"18":{"en":"","ko":"따뜻한"},"19":{"en":"","ko":"시원한"}},"purpose":{"0":{"en":"","ko":"공부"},"1":{"en":"","ko":"액티비티"},"2":{"en":"","ko":"데이트"},"3":{"en":"","ko":"일"},"4":{"en":"","ko":"독서"},"5":{"en":"","ko":"수다"},"6":{"en":"","ko":"미팅"},"7":{"en":"","ko":"창업"},"8":{"en":"","ko":"산책"},"9":{"en":"","ko":"소비"}},"service_fee":{"0":{"en":"Free","ko":"무료"},"3":{"en":"Paid","ko":"유료"}},"wifi_status":{"0":{"en":"Not Available","ko":"없음"},"1":{"en":"Available","ko":"있음"}},"plug_status":{"0":{"en":"Not Available","ko":"없음"},"1":{"en":"Plenty","ko":"많음"},"0.3":{"en":"Not Many","ko":"적음"},"0.7":{"en":"Normal","ko":"보통"}},"parking_status":{"0":{"en":"Not Available","ko":"없음"},"1":{"en":"Available","ko":"있음"}}};
 
 /***/ }),
 
@@ -78055,8 +78186,8 @@ exports.rawSpaces2SpaceList = (spaceID, rawSpace) => {
             sun: { open: sunOH[0], close: sunOH[1] },
         },
         organizers: rawSpace.organizers,
-        serviceFee: rawSpace.cost[0].price == '0' ? 0 : 3,
         spaceDetail: {
+            serviceFee: parseInt(rawSpace.cost[0].type),
             parking: rawSpace.property_vector.parking,
             wifi: rawSpace.property_vector.wifi,
             plug: rawSpace.property_vector.plug,
@@ -78067,21 +78198,35 @@ exports.rawSpaces2SpaceList = (spaceID, rawSpace) => {
 };
 exports.encodeSpaceUpdate = (spaceUpdate) => {
     let encoded = {};
+    // title
     spaceUpdate.spaceNames && (encoded['space_names'] = spaceUpdate.spaceNames);
-    spaceUpdate.spaceType &&
-        (encoded['type'] = parseInt(spaceUpdate.spaceType));
-    spaceUpdate.description !== null &&
+    spaceUpdate.spaceType && (encoded['type'] = spaceUpdate.spaceType);
+    // description
+    spaceUpdate.description &&
         (encoded['description'] = spaceUpdate.description);
-    spaceUpdate.operating_hours !== null &&
-        (encoded['operating_hours'] = spaceUpdate.operating_hours);
-    spaceUpdate.purpose && (encoded['purposes'] = spaceUpdate.purpose);
-    spaceUpdate.tags && (encoded['tags'] = spaceUpdate.tags);
-    spaceUpdate.location_text !== null &&
-        (encoded['location_text'] = spaceUpdate.location_text);
-    spaceUpdate.latitude !== null &&
-        (encoded['latitude'] = spaceUpdate.latitude);
-    spaceUpdate.longitude !== null &&
-        (encoded['longitude'] = spaceUpdate.longitude);
+    // opening-hours
+    spaceUpdate.openingHours &&
+        (encoded['operating_hours'] = spaceUpdate.openingHours);
+    // purpose
+    spaceUpdate.spacePurpose &&
+        (encoded['purposes'] = spaceUpdate.spacePurpose);
+    // tags
+    spaceUpdate.spaceTags && (encoded['tags'] = spaceUpdate.spaceTags);
+    // location
+    spaceUpdate.address && (encoded['location_text'] = spaceUpdate.address);
+    spaceUpdate.latitude && (encoded['latitude'] = spaceUpdate.latitude);
+    spaceUpdate.longitude && (encoded['longitude'] = spaceUpdate.longitude);
+    // detail
+    if (spaceUpdate.spaceDetail) {
+        encoded['cost'] = [
+            { price: '0', type: spaceUpdate.spaceDetail.serviceFee.toString() },
+        ];
+        encoded['property_vector'] = {
+            wifi: spaceUpdate.spaceDetail.wifi,
+            plug: spaceUpdate.spaceDetail.plug,
+            parking: spaceUpdate.spaceDetail.parking,
+        };
+    }
     return encoded;
 };
 
@@ -79004,6 +79149,7 @@ const space_search_1 = __importDefault(__webpack_require__(/*! ../components/spa
 const opening_hours_1 = __importDefault(__webpack_require__(/*! ../components/opening-hours */ "./resources/js/components/opening-hours.tsx"));
 const space_tags_1 = __importDefault(__webpack_require__(/*! ../components/space-tags */ "./resources/js/components/space-tags.tsx"));
 const space_purpose_1 = __importDefault(__webpack_require__(/*! ../components/space-purpose */ "./resources/js/components/space-purpose.tsx"));
+const space_detail_1 = __importDefault(__webpack_require__(/*! ../components/space-detail */ "./resources/js/components/space-detail.tsx"));
 class _HomeScreen extends react_1.default.Component {
     constructor() {
         super(...arguments);
@@ -79023,6 +79169,7 @@ class _HomeScreen extends react_1.default.Component {
                         react_1.default.createElement(opening_hours_1.default, null),
                         react_1.default.createElement(space_purpose_1.default, null),
                         react_1.default.createElement(space_tags_1.default, null),
+                        react_1.default.createElement(space_detail_1.default, null),
                         react_1.default.createElement(loaction_map_1.default, null)),
                     react_1.default.createElement("div", { id: "right" },
                         react_1.default.createElement(images_editor_1.default, null))));

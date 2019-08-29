@@ -65,13 +65,9 @@ class _OpeningHours extends React.Component<OpeningHoursProps> {
                 this.state[day].close &&
                     (result[day] += '\\' + this.state[day].close);
             });
-            this.props.updateSpace(
-                this.props.currentSpaceID,
-                'operating-hours',
-                {
-                    operating_hours: result,
-                },
-            );
+            this.props.updateSpace(this.props.currentSpaceID, 'opening-hours', {
+                openingHours: result,
+            });
         }
     };
 

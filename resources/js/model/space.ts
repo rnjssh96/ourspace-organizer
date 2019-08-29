@@ -123,8 +123,8 @@ export default interface Space {
     location: LatLng;
     openingHours: OpeningHours;
     organizers: UserID[];
-    serviceFee: 0 | 3;
     spaceDetail: {
+        serviceFee: number;
         parking: number;
         wifi: number;
         plug: number;
@@ -218,8 +218,8 @@ export const rawSpaces2SpaceList = (
             sun: { open: sunOH[0], close: sunOH[1] },
         },
         organizers: rawSpace.organizers,
-        serviceFee: rawSpace.cost[0].price == '0' ? 0 : 3,
         spaceDetail: {
+            serviceFee: parseInt(rawSpace.cost[0].type),
             parking: rawSpace.property_vector.parking,
             wifi: rawSpace.property_vector.wifi,
             plug: rawSpace.property_vector.plug,
@@ -242,10 +242,11 @@ export type SpaceRequestUnit =
     | 'all'
     | 'title'
     | 'description'
-    | 'operating-hours'
+    | 'opening-hours'
     | 'purpose'
     | 'tags'
-    | 'location';
+    | 'location'
+    | 'detail';
 
 export interface SpaceDataStatus extends DataStatus {
     requestUnit?: SpaceRequestUnit;
@@ -261,42 +262,70 @@ export interface SpaceDataStatus extends DataStatus {
 export interface SpaceUpdate {
     // title
     spaceNames?: SpaceNames;
-    spaceType?: SpaceType;
+    spaceType?: number;
 
     // description
     description?: string;
 
-    // operating-hours
-    operating_hours?: { [day in WeekDay]: string };
+    // opening-hours
+    openingHours?: { [day in WeekDay]: string };
 
     // purpose
-    purpose?: number[];
+    spacePurpose?: number[];
 
     // tags
-    tags?: string[];
+    spaceTags?: string[];
 
     // location
-    location_text?: string;
+    address?: string;
     latitude?: number;
     longitude?: number;
+
+    // detail
+    spaceDetail?: {
+        serviceFee: number;
+        wifi: number;
+        plug: number;
+        parking: number;
+    };
 }
 
 export const encodeSpaceUpdate = (spaceUpdate: SpaceUpdate) => {
     let encoded: { [key: string]: any } = {};
+    // title
     spaceUpdate.spaceNames && (encoded['space_names'] = spaceUpdate.spaceNames);
-    spaceUpdate.spaceType &&
-        (encoded['type'] = parseInt(spaceUpdate.spaceType));
-    spaceUpdate.description !== null &&
+    spaceUpdate.spaceType && (encoded['type'] = spaceUpdate.spaceType);
+
+    // description
+    spaceUpdate.description &&
         (encoded['description'] = spaceUpdate.description);
-    spaceUpdate.operating_hours !== null &&
-        (encoded['operating_hours'] = spaceUpdate.operating_hours);
-    spaceUpdate.purpose && (encoded['purposes'] = spaceUpdate.purpose);
-    spaceUpdate.tags && (encoded['tags'] = spaceUpdate.tags);
-    spaceUpdate.location_text !== null &&
-        (encoded['location_text'] = spaceUpdate.location_text);
-    spaceUpdate.latitude !== null &&
-        (encoded['latitude'] = spaceUpdate.latitude);
-    spaceUpdate.longitude !== null &&
-        (encoded['longitude'] = spaceUpdate.longitude);
+
+    // opening-hours
+    spaceUpdate.openingHours &&
+        (encoded['operating_hours'] = spaceUpdate.openingHours);
+
+    // purpose
+    spaceUpdate.spacePurpose &&
+        (encoded['purposes'] = spaceUpdate.spacePurpose);
+
+    // tags
+    spaceUpdate.spaceTags && (encoded['tags'] = spaceUpdate.spaceTags);
+
+    // location
+    spaceUpdate.address && (encoded['location_text'] = spaceUpdate.address);
+    spaceUpdate.latitude && (encoded['latitude'] = spaceUpdate.latitude);
+    spaceUpdate.longitude && (encoded['longitude'] = spaceUpdate.longitude);
+
+    // detail
+    if (spaceUpdate.spaceDetail) {
+        encoded['cost'] = [
+            { price: '0', type: spaceUpdate.spaceDetail.serviceFee.toString() },
+        ];
+        encoded['property_vector'] = {
+            wifi: spaceUpdate.spaceDetail.wifi,
+            plug: spaceUpdate.spaceDetail.plug,
+            parking: spaceUpdate.spaceDetail.parking,
+        };
+    }
     return encoded;
 };
