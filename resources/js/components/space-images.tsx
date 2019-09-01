@@ -40,7 +40,7 @@ class _SpaceImages extends React.Component<SpaceImagesProps> {
         });
 
     private _swtichMode = (m: Mode) => {
-        this.setState({ mode: m, editingImages: this.props.images });
+        this.setState({ mode: m, editingImages: [...this.props.images] });
     };
 
     private _onDragEnd(result: DropResult) {
@@ -67,7 +67,6 @@ class _SpaceImages extends React.Component<SpaceImagesProps> {
 
     private _renderEditableImagesList = () => (
         <DragDropContext onDragEnd={this._onDragEnd.bind(this)}>
-            {console.log(this.state.editingImages)}
             <Droppable droppableId="droppable">
                 {provided => (
                     <div ref={provided.innerRef} {...provided.droppableProps}>

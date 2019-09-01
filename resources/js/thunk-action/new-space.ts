@@ -3,14 +3,12 @@ import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 
 import OSDBAxios from '../config/osdb-axios';
 
-import {
-    RawSpace,
-    rawSpaces2SpaceList,
-    SpaceUpdate,
-    encodeSpaceUpdate,
-} from '../model/space';
+import { RawSpace, SpaceUpdate, encodeSpaceUpdate } from '../model/space';
 
 import * as currentSpaceActions from '../actions/current-space';
+
+import { requestSpace } from './current-space';
+import { requestWholeSpaceList } from './space-list';
 
 /**
  *
@@ -21,19 +19,16 @@ import * as currentSpaceActions from '../actions/current-space';
  */
 export const createNewSpace: ActionCreator<
     ThunkAction<void, any, null, Action<any>>
-> = (newSpace: SpaceUpdate) => async (
+> = (organizerUID: string, newSpace: SpaceUpdate) => async (
     dispatch: ThunkDispatch<any, null, Action<any>>,
 ) => {
     try {
-        // const { data } = await OSDBAxios.post<RawSpace>(
-        //     '/organizer/space',
-        //     encodeSpaceUpdate(newSpace),
-        // );
-        // dispatch(
-        //     currentSpaceActions.finishRequest(
-        //         rawSpaces2SpaceList(spaceID, data),
-        //     ),
-        // );
+        const { data } = await OSDBAxios.post<RawSpace>('/organizer/space', {
+            organizers: [organizerUID],
+            ...encodeSpaceUpdate(newSpace),
+        });
+        dispatch(requestSpace(data));
+        dispatch(requestWholeSpaceList());
     } catch (error) {
         dispatch(currentSpaceActions.failRequest(error.message));
     }

@@ -54,6 +54,9 @@ class _HomeScreen extends React.Component<HomeScreenProps> {
                         <SpaceTags />
                         <SpaceDetail />
                         <LoactionMap />
+                        <div id="space-id-footer">
+                            <p>{`UID: ${this.props.currentSpace.id}`}</p>
+                        </div>
                     </div>
                     <div id="right">
                         <SpaceImages />

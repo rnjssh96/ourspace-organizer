@@ -84793,6 +84793,31 @@ class _NewSpaceButton extends react_1.default.Component {
             lat: '',
             lng: '',
         };
+        this._resetEditState = () => this.setState({
+            enName: '',
+            koName: '',
+            type: '0',
+            address: '',
+            lat: '',
+            lng: '',
+        });
+        this._createNewSpace = () => this.props.currentUser &&
+            this.props.currentUser.authority == 'admin' &&
+            this.state.enName != '' &&
+            this.state.koName != '' &&
+            this.state.address != '' &&
+            this.state.lat != '' &&
+            this.state.lng != '' &&
+            this.props.createNewSpace(this.props.currentUser.uid, {
+                spaceNames: {
+                    en: this.state.enName,
+                    ko: this.state.koName,
+                },
+                spaceType: parseInt(this.state.type),
+                address: this.state.address,
+                latitude: parseFloat(this.state.lat),
+                longitude: parseFloat(this.state.lng),
+            });
         this._renderModalBody = () => (react_1.default.createElement("div", { className: "modal-body" },
             react_1.default.createElement("p", { className: "h5" }, "\uC774\uB984"),
             react_1.default.createElement("div", { className: "input-group input-row" },
@@ -84851,15 +84876,16 @@ class _NewSpaceButton extends react_1.default.Component {
             react_1.default.createElement("div", { className: "modal-dialog", role: "document" },
                 react_1.default.createElement("div", { className: "modal-content" },
                     react_1.default.createElement("div", { className: "modal-header" },
-                        react_1.default.createElement("p", { className: "modal-title h5" }, "\uACF5\uAC04 \uC218\uC815")),
+                        react_1.default.createElement("p", { className: "modal-title h5" }, "\uACF5\uAC04 \uC0DD\uC131")),
                     this._renderModalBody(),
                     react_1.default.createElement("div", { className: "modal-footer" },
                         react_1.default.createElement("button", { type: "button", className: "btn btn-secondary", "data-dismiss": "modal" }, "\uCDE8\uC18C"),
-                        react_1.default.createElement("button", { type: "button", className: "btn btn-primary", "data-dismiss": "modal" }, "\uC0DD\uC131"))))));
+                        react_1.default.createElement("button", { type: "button", className: "btn btn-primary", "data-dismiss": "modal", onClick: this._createNewSpace }, "\uC644\uB8CC"))))));
     }
     render() {
         return (react_1.default.createElement("div", { id: "new-space-button" },
-            react_1.default.createElement("a", { id: "os-edit-button", "data-toggle": 'modal', "data-target": `#${this.editModalID}`, onClick: () => { } }, "Create New"),
+            react_1.default.createElement("div", { id: "button", "data-toggle": 'modal', "data-target": `#${this.editModalID}`, onClick: this._resetEditState },
+                react_1.default.createElement("i", { className: "fa fa-plus" })),
             this._renderEditModal()));
     }
 }
@@ -84871,8 +84897,11 @@ class _NewSpaceButton extends react_1.default.Component {
  *
  */
 const react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-const mapStateToProps = (state) => ({});
-const mapDispatchToProps = {};
+const new_space_1 = __webpack_require__(/*! ../thunk-action/new-space */ "./resources/js/thunk-action/new-space.ts");
+const mapStateToProps = (state) => ({
+    currentUser: state.auth.currentUser,
+});
+const mapDispatchToProps = { createNewSpace: new_space_1.createNewSpace };
 const NewSpaceButton = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(_NewSpaceButton);
 exports.default = NewSpaceButton;
 
@@ -85526,7 +85555,7 @@ class _SpaceImages extends react_1.default.Component {
                 images: this.state.editingImages,
             });
         this._swtichMode = (m) => {
-            this.setState({ mode: m, editingImages: this.props.images });
+            this.setState({ mode: m, editingImages: [...this.props.images] });
         };
         this._writeOwner = (index, owner) => {
             const images = this.state.editingImages;
@@ -85537,7 +85566,6 @@ class _SpaceImages extends react_1.default.Component {
             });
         };
         this._renderEditableImagesList = () => (react_1.default.createElement(react_beautiful_dnd_1.DragDropContext, { onDragEnd: this._onDragEnd.bind(this) },
-            console.log(this.state.editingImages),
             react_1.default.createElement(react_beautiful_dnd_1.Droppable, { droppableId: "droppable" }, provided => (react_1.default.createElement("div", Object.assign({ ref: provided.innerRef }, provided.droppableProps),
                 this.state.editingImages.map((image, idx) => (react_1.default.createElement(react_beautiful_dnd_1.Draggable, { index: idx, key: image.uid, draggableId: image.uid }, (provided, snapshot) => (react_1.default.createElement("div", Object.assign({ ref: provided.innerRef, className: `img-item ${snapshot.isDragging
                         ? 'dragging'
@@ -85883,8 +85911,9 @@ class _SpaceSearch extends react_1.default.Component {
     }
     render() {
         return (react_1.default.createElement("div", { id: "space-search" },
-            react_1.default.createElement("p", { className: "h2" }, "Space"),
-            react_1.default.createElement(new_space_button_1.default, null),
+            react_1.default.createElement("div", { id: "search-title" },
+                react_1.default.createElement("p", { className: "h2" }, "Space"),
+                react_1.default.createElement(new_space_button_1.default, null)),
             react_1.default.createElement("div", { id: "space-search-group", ref: node => (this.searchGroup = node) },
                 react_1.default.createElement("input", { id: "space-search-input", className: "form-control", type: "search", value: this.state.searchQuery, placeholder: "Search", "aria-label": "Search", autoComplete: "off", onChange: this._searchSpace }),
                 this._renderSearchResult())));
@@ -87212,7 +87241,9 @@ class _HomeScreen extends react_1.default.Component {
                         react_1.default.createElement(space_purpose_1.default, null),
                         react_1.default.createElement(space_tags_1.default, null),
                         react_1.default.createElement(space_detail_1.default, null),
-                        react_1.default.createElement(loaction_map_1.default, null)),
+                        react_1.default.createElement(loaction_map_1.default, null),
+                        react_1.default.createElement("div", { id: "space-id-footer" },
+                            react_1.default.createElement("p", null, `UID: ${this.props.currentSpace.id}`))),
                     react_1.default.createElement("div", { id: "right" },
                         react_1.default.createElement(space_images_1.default, null))));
             }
@@ -87475,6 +87506,55 @@ exports.updateImages = (spaceID, spaceImages, uploadings) => async (dispatch) =>
     }
     catch (error) {
         dispatch(currentSpaceActions.failImagesUpdate(error.message));
+    }
+};
+
+
+/***/ }),
+
+/***/ "./resources/js/thunk-action/new-space.ts":
+/*!************************************************!*\
+  !*** ./resources/js/thunk-action/new-space.ts ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const osdb_axios_1 = __importDefault(__webpack_require__(/*! ../config/osdb-axios */ "./resources/js/config/osdb-axios.ts"));
+const space_1 = __webpack_require__(/*! ../model/space */ "./resources/js/model/space.ts");
+const currentSpaceActions = __importStar(__webpack_require__(/*! ../actions/current-space */ "./resources/js/actions/current-space.ts"));
+const current_space_1 = __webpack_require__(/*! ./current-space */ "./resources/js/thunk-action/current-space.ts");
+const space_list_1 = __webpack_require__(/*! ./space-list */ "./resources/js/thunk-action/space-list.ts");
+/**
+ *
+ *
+ * Create new space on the server
+ *
+ *
+ */
+exports.createNewSpace = (organizerUID, newSpace) => async (dispatch) => {
+    try {
+        const { data } = await osdb_axios_1.default.post('/organizer/space', {
+            organizers: [organizerUID],
+            ...space_1.encodeSpaceUpdate(newSpace),
+        });
+        dispatch(current_space_1.requestSpace(data));
+        dispatch(space_list_1.requestWholeSpaceList());
+    }
+    catch (error) {
+        dispatch(currentSpaceActions.failRequest(error.message));
     }
 };
 

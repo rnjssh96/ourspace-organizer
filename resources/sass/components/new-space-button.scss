@@ -1,4 +1,36 @@
 #new-space-button {
+    & > #button {
+        // size
+        width: 1.5rem;
+        height: 1.5rem;
+
+        // flex
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        // cursor
+        cursor: pointer;
+
+        // border
+        border-radius: 1.5rem;
+        border: 2px solid $black;
+
+        // star size
+        font-size: 0.8rem;
+
+        // animation
+        transition: color 0.3s ease-in-out;
+
+        &:hover {
+            // background
+            background: $black;
+
+            // text
+            color: $white;
+        }
+    }
+
     & > #space-name-row {
         // flex
         display: flex;

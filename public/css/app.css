@@ -10857,6 +10857,18 @@ button {
   overflow: scroll;
 }
 
+#home-container > #home-body #workspace #left > #space-id-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+#home-container > #home-body #workspace #left > #space-id-footer > p {
+  color: #b6b6b6;
+  margin: 0;
+}
+
 #home-container > #home-body #workspace #left > .category {
   margin-top: 3rem;
 }
@@ -10926,6 +10938,16 @@ button {
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
+}
+
+#space-search > #search-title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#space-search > #search-title > p {
+  margin-right: 1rem;
 }
 
 #space-search #space-search-group {
@@ -11373,6 +11395,24 @@ button {
 
 #location-map .modal-body > #latlng-form > .input-group:last-child {
   margin-left: 1rem;
+}
+
+#new-space-button > #button {
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 1.5rem;
+  border: 2px solid #292929;
+  font-size: 0.8rem;
+  transition: color 0.3s ease-in-out;
+}
+
+#new-space-button > #button:hover {
+  background: #292929;
+  color: #ffffff;
 }
 
 #new-space-button > #space-name-row {

@@ -96,8 +96,10 @@ class _SpaceSearch extends React.Component<SpaceSearchProps> {
     render() {
         return (
             <div id="space-search">
-                <p className="h2">Space</p>
-                <NewSpaceButton />
+                <div id="search-title">
+                    <p className="h2">Space</p>
+                    <NewSpaceButton />
+                </div>
                 <div
                     id="space-search-group"
                     ref={node => (this.searchGroup = node)}

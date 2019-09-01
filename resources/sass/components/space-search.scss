@@ -8,6 +8,18 @@
     // padding
     padding: 1rem;
 
+    & > #search-title {
+        // flex
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        & > p {
+            // margin
+            margin-right: 1rem;
+        }
+    }
+
     #space-search-group {
         // position
         position: relative;

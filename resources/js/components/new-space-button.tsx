@@ -37,6 +37,35 @@ class _NewSpaceButton extends React.Component<NewSpaceButtonProps> {
         lng: '',
     };
 
+    private _resetEditState = () =>
+        this.setState({
+            enName: '',
+            koName: '',
+            type: '0',
+            address: '',
+            lat: '',
+            lng: '',
+        });
+
+    private _createNewSpace = () =>
+        this.props.currentUser &&
+        this.props.currentUser.authority == 'admin' &&
+        this.state.enName != '' &&
+        this.state.koName != '' &&
+        this.state.address != '' &&
+        this.state.lat != '' &&
+        this.state.lng != '' &&
+        this.props.createNewSpace(this.props.currentUser.uid, {
+            spaceNames: {
+                en: this.state.enName,
+                ko: this.state.koName,
+            },
+            spaceType: parseInt(this.state.type),
+            address: this.state.address,
+            latitude: parseFloat(this.state.lat),
+            longitude: parseFloat(this.state.lng),
+        });
+
     private _renderModalBody = () => (
         <div className="modal-body">
             <p className="h5">이름</p>
@@ -166,7 +195,7 @@ class _NewSpaceButton extends React.Component<NewSpaceButtonProps> {
             <div className="modal-dialog" role="document">
                 <div className="modal-content">
                     <div className="modal-header">
-                        <p className="modal-title h5">공간 수정</p>
+                        <p className="modal-title h5">공간 생성</p>
                     </div>
                     {this._renderModalBody()}
                     <div className="modal-footer">
@@ -181,8 +210,9 @@ class _NewSpaceButton extends React.Component<NewSpaceButtonProps> {
                             type="button"
                             className="btn btn-primary"
                             data-dismiss="modal"
+                            onClick={this._createNewSpace}
                         >
-                            생성
+                            완료
                         </button>
                     </div>
                 </div>
@@ -193,14 +223,14 @@ class _NewSpaceButton extends React.Component<NewSpaceButtonProps> {
     render() {
         return (
             <div id="new-space-button">
-                <a
-                    id="os-edit-button"
+                <div
+                    id="button"
                     data-toggle={'modal'}
                     data-target={`#${this.editModalID}`}
-                    onClick={() => {}}
+                    onClick={this._resetEditState}
                 >
-                    Create New
-                </a>
+                    <i className="fa fa-plus" />
+                </div>
                 {this._renderEditModal()}
             </div>
         );
@@ -217,13 +247,30 @@ class _NewSpaceButton extends React.Component<NewSpaceButtonProps> {
 import { connect } from 'react-redux';
 import RootState from '../redux-types';
 
-interface _ReduxProps {}
+import { SpaceUpdate } from '../model/space';
+import Organizer from '../model/organizer';
 
-interface _ReduxActionCreators {}
+import { createNewSpace } from '../thunk-action/new-space';
 
-const mapStateToProps = (state: RootState): _ReduxProps => ({});
+interface _ReduxProps {
+    /**
+     * Current user
+     */
+    currentUser?: Organizer;
+}
 
-const mapDispatchToProps = {};
+interface _ReduxActionCreators {
+    /**
+     * Create new space on the server
+     */
+    createNewSpace: (organizerUID: string, newSpace: SpaceUpdate) => void;
+}
+
+const mapStateToProps = (state: RootState): _ReduxProps => ({
+    currentUser: state.auth.currentUser,
+});
+
+const mapDispatchToProps = { createNewSpace };
 
 const NewSpaceButton = connect(
     mapStateToProps,
