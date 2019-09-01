@@ -21,13 +21,13 @@ import SpaceList from '../components/space-list';
 import GeneralInfo from '../components/general-info';
 import SpaceDescription from '../components/space-description';
 import LoactionMap from '../components/loaction-map';
-import ImagesEditor from '../components/images-editor';
 import OSPageStatus from '../components/os-page-status';
 import SpaceSearch from '../components/space-search';
 import OpeningHours from '../components/opening-hours';
 import SpaceTags from '../components/space-tags';
 import SpacePurpose from '../components/space-purpose';
 import SpaceDetail from '../components/space-detail';
+import SpaceImages from '../components/space-images';
 
 class _HomeScreen extends React.Component<HomeScreenProps> {
     private _renderTitle = () => {
@@ -56,7 +56,7 @@ class _HomeScreen extends React.Component<HomeScreenProps> {
                         <LoactionMap />
                     </div>
                     <div id="right">
-                        <ImagesEditor />
+                        <SpaceImages />
                     </div>
                 </div>
             );

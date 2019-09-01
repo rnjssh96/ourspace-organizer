@@ -1,4 +1,4 @@
-#general-info {
+#new-space-button {
     & > #space-name-row {
         // flex
         display: flex;
@@ -24,8 +24,7 @@
     }
 
     .modal-body {
-        & > .input-group,
-        & > .form-control {
+        & > .input-row {
             // margin
             margin-top: 0.5rem;
         }
@@ -34,6 +33,22 @@
             &:not(:first-child) {
                 // margin
                 margin-top: 1rem;
+            }
+        }
+
+        & > #latlng-form {
+            // flex
+            display: flex;
+            flex-direction: row;
+
+            & > .input-group {
+                // size
+                flex: 1;
+
+                &:last-child {
+                    // margin
+                    margin-left: 1rem;
+                }
             }
         }
     }

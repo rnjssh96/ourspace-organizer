@@ -67,6 +67,7 @@ export interface LatLng {
  * Image
  */
 export interface SpaceImage {
+    uid: string;
     low: string;
     mid: string;
     high: string;
@@ -246,7 +247,8 @@ export type SpaceRequestUnit =
     | 'purpose'
     | 'tags'
     | 'location'
-    | 'detail';
+    | 'detail'
+    | 'images';
 
 export interface SpaceDataStatus extends DataStatus {
     requestUnit?: SpaceRequestUnit;
@@ -288,6 +290,9 @@ export interface SpaceUpdate {
         plug: number;
         parking: number;
     };
+
+    // images
+    images?: SpaceImage[];
 }
 
 export const encodeSpaceUpdate = (spaceUpdate: SpaceUpdate) => {
@@ -327,5 +332,9 @@ export const encodeSpaceUpdate = (spaceUpdate: SpaceUpdate) => {
             parking: spaceUpdate.spaceDetail.parking,
         };
     }
+
+    // iamges
+    spaceUpdate.images && (encoded['images'] = spaceUpdate.images);
+
     return encoded;
 };

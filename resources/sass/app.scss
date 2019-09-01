@@ -28,18 +28,20 @@
 // Components
 @import 'components/space-list';
 @import 'components/space-search';
-@import 'components/images-editor';
+// @import 'components/image-editor';
+@import 'components/space-images';
 @import 'components/general-info';
 @import 'components/space-description';
 @import 'components/opening-hours';
 @import 'components/space-tags';
 @import 'components/space-detail';
 @import 'components/location-map';
+@import 'components/new-space-button';
 
 @import 'components/os-edit-button';
 @import 'components/os-rate-display';
 
-@import 'components/image-upload-modal';
+// @import 'components/image-upload-modal';
 
 // needs update
 @import 'components/os-space-history';

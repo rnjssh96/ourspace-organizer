@@ -30,9 +30,9 @@ import OSRateDisplay from './os-rate-display';
 class _GeneralInfo extends React.Component<GeneralInfoProps> {
     private editModalID = 'general-info-edit-modal';
 
-    public state: { name_en: string; name_ko: string; type: SpaceType } = {
-        name_en: '',
-        name_ko: '',
+    public state: { enName: string; koName: string; type: SpaceType } = {
+        enName: '',
+        koName: '',
         type: '0',
     };
 
@@ -40,8 +40,8 @@ class _GeneralInfo extends React.Component<GeneralInfoProps> {
         this.props.currentSpaceID &&
         this.props.updateSpace(this.props.currentSpaceID, 'title', {
             spaceNames: {
-                en: this.state.name_en,
-                ko: this.state.name_ko,
+                en: this.state.enName,
+                ko: this.state.koName,
             },
             spaceType: parseInt(this.state.type),
         });
@@ -60,8 +60,8 @@ class _GeneralInfo extends React.Component<GeneralInfoProps> {
                         modalID={this.editModalID}
                         onClick={() => {
                             this.setState({
-                                name_en: this.props.spaceNames.en,
-                                name_ko: this.props.spaceNames.ko,
+                                enName: this.props.spaceNames.en,
+                                koName: this.props.spaceNames.ko,
                                 type: this.props.type,
                             });
                         }}
@@ -84,11 +84,11 @@ class _GeneralInfo extends React.Component<GeneralInfoProps> {
                 <input
                     className="form-control"
                     type="text"
-                    value={this.state.name_en}
+                    value={this.state.enName}
                     onChange={(event: ChangeEvent<HTMLInputElement>) => {
                         this.setState({
                             ...this.state,
-                            name_en: event.target.value,
+                            enName: event.target.value,
                         });
                     }}
                     placeholder="영어"
@@ -101,11 +101,11 @@ class _GeneralInfo extends React.Component<GeneralInfoProps> {
                 <input
                     className="form-control"
                     type="text"
-                    value={this.state.name_ko}
+                    value={this.state.koName}
                     onChange={(event: ChangeEvent<HTMLInputElement>) => {
                         this.setState({
                             ...this.state,
-                            name_ko: event.target.value,
+                            koName: event.target.value,
                         });
                     }}
                     placeholder="한국어"
@@ -113,24 +113,22 @@ class _GeneralInfo extends React.Component<GeneralInfoProps> {
             </div>
 
             <p className="h5">카테고리</p>
-            <div className="form-group">
-                <select
-                    className="form-control"
-                    value={this.state.type}
-                    onChange={(event: ChangeEvent<HTMLSelectElement>) => {
-                        this.setState({
-                            ...this.state,
-                            type: event.target.value.toString() as SpaceType,
-                        });
-                    }}
-                >
-                    {Object.keys(spaceTypes).map((type: string) => (
-                        <option key={type} value={type}>
-                            {spaceTypes[type as SpaceType].ko}
-                        </option>
-                    ))}
-                </select>
-            </div>
+            <select
+                className="form-control"
+                value={this.state.type}
+                onChange={(event: ChangeEvent<HTMLSelectElement>) => {
+                    this.setState({
+                        ...this.state,
+                        type: event.target.value.toString() as SpaceType,
+                    });
+                }}
+            >
+                {Object.keys(spaceTypes).map((type: string) => (
+                    <option key={type} value={type}>
+                        {spaceTypes[type as SpaceType].ko}
+                    </option>
+                ))}
+            </select>
         </div>
     );
 

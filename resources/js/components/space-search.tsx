@@ -17,6 +17,8 @@ interface SpaceSearchProps extends _ReduxProps, _ReduxActionCreators {}
 
 import React from 'react';
 
+import NewSpaceButton from './new-space-button';
+
 class _SpaceSearch extends React.Component<SpaceSearchProps> {
     private searchGroup: HTMLDivElement | null = null;
 
@@ -95,6 +97,7 @@ class _SpaceSearch extends React.Component<SpaceSearchProps> {
         return (
             <div id="space-search">
                 <p className="h2">Space</p>
+                <NewSpaceButton />
                 <div
                     id="space-search-group"
                     ref={node => (this.searchGroup = node)}

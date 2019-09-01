@@ -10878,6 +10878,7 @@ button {
 #home-container > #home-body #workspace #right {
   flex: 1;
   padding: 1rem;
+  padding-bottom: 0;
   border-left: 1px solid #b6b6b6;
 }
 
@@ -10964,74 +10965,93 @@ button {
   margin: 0;
 }
 
-#images-editor {
+#space-images {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
 }
 
-#images-editor #header {
+#space-images #header {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
 
-#images-editor #header > #title {
+#space-images #header > #title {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
 }
 
-#images-editor #header > #title > span {
+#space-images #header > #title > span {
   margin-left: 0.5rem;
 }
 
-#images-editor #body {
+#space-images #body {
   flex: 1;
   display: flex;
   flex-direction: column;
   margin-top: 1rem;
-  margin-bottom: 1rem;
   max-height: 100%;
   overflow: scroll;
 }
 
-#images-editor #body > #empty {
+#space-images #body > #empty {
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-#images-editor #body > #empty > p {
+#space-images #body > #empty > p {
   color: #6f6f6f;
 }
 
-#images-editor #body > .img-item {
+#space-images #body .img-item {
   display: flex;
   flex-direction: "row";
   align-items: center;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding: 0.4rem;
+  margin: 0 0 0.5rem 0;
+  border-radius: 10px;
+  background: #ffffff;
 }
 
-#images-editor #body > .img-item:not(:first-child) {
-  margin-top: 1rem;
+#space-images #body .img-item.dragging {
+  box-shadow: 5px 5px 20px -10px rgba(0, 0, 0, 0.75);
 }
 
-#images-editor #body > .img-item > img {
+#space-images #body .img-item > img {
   width: 50%;
   height: 8rem;
 }
 
-#images-editor #body > .img-item > p {
+#space-images #body .img-item > p {
   margin-left: 1rem;
 }
 
-#images-editor #footer > p {
-  text-align: end;
-  color: #6f6f6f;
+#space-images #body .img-item > .source-input {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-left: 1rem;
+}
+
+#space-images #body .img-item > .source-input > p {
+  margin-bottom: 0.5rem;
+}
+
+#space-images #footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+#space-images #footer > button:last-child {
+  margin-left: 1rem;
 }
 
 #general-info > #space-name-row {
@@ -11054,7 +11074,7 @@ button {
 }
 
 #general-info .modal-body > .input-group,
-#general-info .modal-body > .form-group {
+#general-info .modal-body > .form-control {
   margin-top: 0.5rem;
 }
 
@@ -11355,6 +11375,46 @@ button {
   margin-left: 1rem;
 }
 
+#new-space-button > #space-name-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+#new-space-button > #space-name-row > #space-name {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#new-space-button > #space-name-row > #space-name > #type {
+  color: #6f6f6f;
+  margin-left: 0.5rem;
+  margin-right: 1rem;
+}
+
+#new-space-button .modal-body > .input-row {
+  margin-top: 0.5rem;
+}
+
+#new-space-button .modal-body > p:not(:first-child) {
+  margin-top: 1rem;
+}
+
+#new-space-button .modal-body > #latlng-form {
+  display: flex;
+  flex-direction: row;
+}
+
+#new-space-button .modal-body > #latlng-form > .input-group {
+  flex: 1;
+}
+
+#new-space-button .modal-body > #latlng-form > .input-group:last-child {
+  margin-left: 1rem;
+}
+
 #os-edit-button {
   height: 1rem;
   display: flex;
@@ -11408,103 +11468,6 @@ button {
   top: 0;
   left: 0;
   overflow: hidden;
-}
-
-#image-upload-modal .modal-body {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-}
-
-#image-upload-modal .modal-body > p {
-  margin-top: 0.5rem;
-  color: #6f6f6f;
-}
-
-#image-upload-modal .modal-body > #image-uploader {
-  width: 100%;
-}
-
-#image-upload-modal .modal-body > #image-uploader > :not(:first-child) {
-  margin-top: 1rem;
-}
-
-#image-upload-modal .modal-body > #image-uploader > #upload-images {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-}
-
-#image-upload-modal .modal-body > #image-uploader > #upload-images > .upload-image-row {
-  display: flex;
-  align-items: center;
-}
-
-#image-upload-modal .modal-body > #image-uploader > #upload-images > .upload-image-row > .upload-image {
-  width: 90px;
-  height: 90px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-#image-upload-modal .modal-body > #image-uploader > #upload-images > .upload-image-row > .upload-image > img {
-  max-width: 100%;
-  max-height: 100%;
-  border-radius: 5px;
-}
-
-#image-upload-modal .modal-body > #image-uploader > #upload-images > .upload-image-row > .upload-image-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding-top: 0.7rem;
-  padding-bottom: 0.7rem;
-  margin-left: 0.7rem;
-  margin-right: 0.7rem;
-}
-
-#image-upload-modal .modal-body > #image-uploader > #upload-images > .upload-image-row > .upload-image-content > .image-name {
-  margin-bottom: 0.5rem;
-}
-
-#image-upload-modal .modal-body > #image-uploader > #upload-images > .upload-image-row > .upload-image-content > .image-size {
-  color: #6f6f6f;
-  text-align: end;
-}
-
-#image-upload-modal .modal-body > #image-uploader > #upload-images > .upload-image-row > .delete-image-button {
-  color: #dc3545;
-  font-size: 1.7rem;
-}
-
-#image-upload-modal .modal-body > #image-uploader > #upload-images > .upload-image-row:not(:first-child) {
-  margin-top: 1rem;
-}
-
-#image-upload-modal .modal-body > #image-uploader #image-drop-area {
-  width: 100%;
-  border: 5px dashed #f3c66d;
-  border-radius: 1rem;
-}
-
-#image-upload-modal .modal-body > #image-uploader #image-drop-area #uploading-info {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  padding: 1rem;
-  border-radius: 1rem;
-}
-
-#image-upload-modal .modal-body > #image-uploader #image-drop-area #uploading-info > p {
-  color: #f3c66d;
-  text-align: center;
-}
-
-#image-upload-modal .modal-body > #image-uploader #image-drop-area #uploading-info > p#upload-icon {
-  font-size: 3rem;
-  margin-bottom: 0;
 }
 
 #os-space-history {

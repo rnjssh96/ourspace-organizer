@@ -9,6 +9,11 @@ import React from 'react';
  */
 interface OSEditButtonProps {
     /**
+     * Text to be displayed (by default ```Edit```)
+     */
+    text?: string;
+
+    /**
      * Modal ID
      */
     modalID?: string;
@@ -37,7 +42,9 @@ export default class OSEditButton extends React.Component<OSEditButtonProps> {
                 }
                 onClick={this.props.onClick}
             >
-                <p className="h6">Edit</p>
+                <p className="h6">
+                    {this.props.text ? this.props.text : 'Edit'}
+                </p>
             </a>
         );
     }
